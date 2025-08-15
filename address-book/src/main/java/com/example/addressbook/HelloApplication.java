@@ -26,3 +26,4 @@ public class HelloApplication extends Application {
         launch();
     }
 }
+// comment by Jihoon
