@@ -1,25 +1,30 @@
 package com.example.addressbook;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
+
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Button;
-import javafx.scene.control.*;
 
+import java.io.IOException;
 
 public class HelloController {
-    @FXML
-    private Label welcomeText;
     @FXML
     private TextArea termsAndConditions;
     @FXML
     private CheckBox agreeCheckBox;
     @FXML
     private Button nextButton;
+    @FXML
+    private Label welcomeText;
 
     @FXML
-    public void initialize() {
+    public void initialize()
+    {
         termsAndConditions.setText("""
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -35,15 +40,26 @@ public class HelloController {
                 Amet justo donec enim diam vulputate ut pharetra.
                 Sapien pellentesque habitant morbi tristique.
                 Lorem sed risus ultricies tristique nulla aliquet.
-                Elementum nibh tellus molestie nunc non blandit massa. """);
+                Elementum nibh tellus molestie nunc non blandit massa.
+                """);
     }
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to Address Book Application!");
-    }
-    @FXML
-    protected void onAgreeCheckBoxClick() {
+    protected void onAgreeCheckBoxClick()
+    {
         boolean accepted = agreeCheckBox.isSelected();
         nextButton.setDisable(!accepted);
+    }
+    @FXML
+    protected void onNextButtonClick() throws IOException
+    {
+        Stage stage = (Stage) nextButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(com.example.addressbook.HelloApplication.class.getResource("main-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), com.example.addressbook.HelloApplication.WIDTH, com.example.addressbook.HelloApplication.HEIGHT);
+        stage.setScene(scene);
+    }
+    @FXML
+    protected void onHelloButtonClick()
+    {
+        welcomeText.setText("Welcome to the Address Book Application!");
     }
 }
