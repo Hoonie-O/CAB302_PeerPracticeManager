@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.peerpractice.Controllers.MainMenuController"
+            prefHeight="640"
+            prefWidth="380">
+
+    <top>
+        <ToolBar>
+            <Label text="Main Menu"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button fx:id="backButton"
+                    text="Log out"
+                    onAction="#onBackToLogin"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <StackPane>
+            <Label text="Welcome! Group-Ten PeerPracticeManager"/>
+        </StackPane>
+    </center>
+
+</BorderPane>

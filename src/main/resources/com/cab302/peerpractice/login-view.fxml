@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cab302.peerpractice.Controllers.LoginController"
+      spacing="12"
+      alignment="TOP_CENTER"
+      prefWidth="380"
+      prefHeight="520">
+
+    <padding>
+        <Insets top="24"
+                right="56"
+                bottom="24"
+                left="56"/>
+    </padding>
+
+    <Label text="Login"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;">
+        <VBox.margin>
+            <Insets top="20"
+                    bottom="20"/>
+        </VBox.margin>
+    </Label>
+
+    <VBox spacing="4">
+        <Label text="Email:"/>
+        <TextField fx:id="emailField"
+                   promptText="example@email.com"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Password:"/>
+        <PasswordField fx:id="passwordField"
+                       promptText="************"/>
+    </VBox>
+
+    <HBox spacing="12"
+          alignment="CENTER_LEFT">
+        <CheckBox fx:id="rememberMe"
+                  text="Remember me"/>
+        <Region maxWidth="Infinity"
+                HBox.hgrow="ALWAYS"/>
+        <Hyperlink fx:id="forgotpasswordlink"
+                   text="Forgot password?"/>
+    </HBox>
+
+    <HBox>
+        <Button fx:id="loginButton"
+                text="Log in"
+                defaultButton="true"
+                maxWidth="Infinity"
+                HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <HBox spacing="6"
+          alignment="CENTER">
+        <VBox.margin>
+            <Insets top="20"
+                    bottom="20"/>
+        </VBox.margin>
+        <Label text="Don't have an account?"/>
+        <Hyperlink fx:id="signupLink"
+                   text="Sign up"/>
+    </HBox>
+
+    <Label fx:id="messageLabel"
+           textFill="red"/>
+
+</VBox>

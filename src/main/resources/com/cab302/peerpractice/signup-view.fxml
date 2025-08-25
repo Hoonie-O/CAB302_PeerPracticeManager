@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cab302.peerpractice.Controllers.SignupController"
+      spacing="12"
+      alignment="TOP_CENTER"
+      prefWidth="380"
+      prefHeight="520">
+
+    <padding>
+        <Insets top="24"
+                right="56"
+                bottom="24"
+                left="56"/>
+    </padding>
+
+    <VBox alignment="CENTER">
+        <Label text="Sign up"
+               style="-fx-font-size: 24px; -fx-font-weight: bold;">
+            <VBox.margin>
+                <Insets top="20"
+                        bottom="20"/>
+            </VBox.margin>
+        </Label>
+    </VBox>
+
+    <VBox spacing="8">
+        <TextField fx:id="usernameField"
+                   promptText="Username"
+                   prefWidth="320"/>
+
+        <TextField fx:id="emailField"
+                   promptText="Email"
+                   prefWidth="320"/>
+
+        <PasswordField fx:id="passwordField"
+                       promptText="Password"
+                       prefWidth="320"/>
+
+        <PasswordField fx:id="confirmPasswordField"
+                       promptText="Confirm password"/>
+    </VBox>
+
+    <HBox>
+        <Button fx:id="signupButton"
+                text="Sign up"
+                onAction="#onSignupButton"
+                maxWidth="Infinity"
+                HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <HBox spacing="6"
+          alignment="CENTER">
+        <VBox.margin>
+            <Insets top="20"
+                    bottom="20"/>
+        </VBox.margin>
+        <Label text="Already have an account?"/>
+        <Hyperlink fx:id="backButton"
+                   text="Login"
+                   onAction="#onBackToLogin"/>
+    </HBox>
+
+    <Label fx:id="messageLabel"
+           textFill="red"/>
+
+</VBox>
