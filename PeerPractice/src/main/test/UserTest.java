@@ -43,10 +43,34 @@ public class UserTest {
     }
 
     @Test
-    public void testInvalidFirstName(){
-        assertThrows(IllegalArgumentException.class, () -> )
+    public void testNumberFirstName(){
+        assertThrows(IllegalArgumentException.class, () -> user.setFirstName("12342"));
     }
 
+    @Test
+    public void testSymbolFirstName(){
+        assertThrows(IllegalArgumentException.class, () -> user.setFirstName("?!:-"));
+    }
+
+    @Test
+    public void testMixedInvalidFirstName(){
+        assertThrows(IllegalArgumentException.class, () -> user.setFirstName("henry2_"));
+    }
+
+    @Test
+    public void testLastNameNull(){
+        assertThrows(IllegalArgumentException.class, () -> user.setLastName(null));
+    }
+
+    @Test
+    public void testSymbolLastName(){
+        assertThrows(IllegalArgumentException.class, () -> user.setLastName("?!:-"));
+    }
+
+    @Test
+    public void testMixedInvalidLastName(){
+        assertThrows(IllegalArgumentException.class, () -> user.setLastName("henry2_"));
+    }
 
 
     @Test
