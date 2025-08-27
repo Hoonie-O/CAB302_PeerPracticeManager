@@ -237,25 +237,37 @@ public class CalendarController implements Initializable {
         for (Event event : events) {
             VBox eventBox = new VBox(5);
             eventBox.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
-            
+
             Label titleLabel = new Label(event.getTitle());
             titleLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
             titleLabel.setTextFill(getColorForLabel(event.getColorLabel()));
-            
+
             Label timeLabel = new Label(
-                event.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) + 
-                " - " + 
-                event.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                    event.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
+                            " - " +
+                            event.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
             );
-            
-            Label descriptionLabel = new Label(event.getDescription().isEmpty() ? "No description" : event.getDescription());
+
+            Label descriptionLabel = new Label(
+                    event.getDescription().isEmpty() ? "No description" : event.getDescription()
+            );
             descriptionLabel.setWrapText(true);
-            
-            eventBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel);
-            
-            // TODO: Add edit and delete buttons here
-            // add HBox with Edit/Delete buttons and wire functionality
-            
+
+            // Buttons row
+            HBox buttons = new HBox(8);
+            Button editButton = new Button("Edit");
+            editButton.setOnAction(e -> {
+                dialog.close();               // close the list before opening edit
+                showEditEventDialog(event);   // opens pre-filled edit dialog
+            });
+
+            // TODO: Add Delete button here later
+            // Button deleteButton = new Button("Delete");
+            // deleteButton.setOnAction(e -> { /* confirm + delete + refresh */ });
+
+            buttons.getChildren().addAll(editButton);
+
+            eventBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, buttons);
             content.getChildren().add(eventBox);
         }
 
@@ -269,8 +281,71 @@ public class CalendarController implements Initializable {
         ScrollPane scrollPane = new ScrollPane(content);
         scrollPane.setPrefSize(400, 300);
         scrollPane.setFitToWidth(true);
-        
+
         dialog.getDialogPane().setContent(scrollPane);
         dialog.showAndWait();
+    }
+
+    private void showEditEventDialog(Event oldEvent) {
+        Dialog<Event> dialog = new Dialog<>();
+        dialog.setTitle("Edit Event");
+        dialog.setHeaderText("Edit event: " + oldEvent.getTitle());
+
+        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField titleField = new TextField(oldEvent.getTitle());
+        TextArea descriptionField = new TextArea(oldEvent.getDescription());
+        descriptionField.setPrefRowCount(3);
+
+        Spinner<Integer> startHour = new Spinner<>(0, 23, oldEvent.getStartTime().getHour());
+        Spinner<Integer> startMinute = new Spinner<>(0, 59, oldEvent.getStartTime().getMinute(), 15);
+        Spinner<Integer> endHour = new Spinner<>(0, 23, oldEvent.getEndTime().getHour());
+        Spinner<Integer> endMinute = new Spinner<>(0, 59, oldEvent.getEndTime().getMinute(), 15);
+
+        ComboBox<String> colorCombo = new ComboBox<>();
+        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE");
+        colorCombo.setValue(oldEvent.getColorLabel().toUpperCase());
+
+        grid.add(new Label("Title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descriptionField, 1, 1);
+        grid.add(new Label("Start time:"), 0, 2);
+        grid.add(new VBox(5, new Label("Hour"), startHour), 1, 2);
+        grid.add(new VBox(5, new Label("Minute"), startMinute), 2, 2);
+        grid.add(new Label("End time:"), 0, 3);
+        grid.add(new VBox(5, new Label("Hour"), endHour), 1, 3);
+        grid.add(new VBox(5, new Label("Minute"), endMinute), 2, 3);
+        grid.add(new Label("Color:"), 0, 4);
+        grid.add(colorCombo, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButtonType) {
+                String title = titleField.getText().trim();
+                if (!title.isEmpty()) {
+                    LocalDate date = oldEvent.getStartTime().toLocalDate();
+                    LocalDateTime startTime = LocalDateTime.of(date, LocalTime.of(startHour.getValue(), startMinute.getValue()));
+                    LocalDateTime endTime = LocalDateTime.of(date, LocalTime.of(endHour.getValue(), endMinute.getValue()));
+
+                    if (endTime.isAfter(startTime)) {
+                        return new Event(title, descriptionField.getText(), startTime, endTime, colorCombo.getValue());
+                    }
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(newEvent -> {
+            eventManager.updateEvent(oldEvent, newEvent);
+            updateCalendarView();
+        });
     }
 }
