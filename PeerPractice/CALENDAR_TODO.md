@@ -14,6 +14,7 @@
 - Also need to create a new method `showEditEventDialog(Event event)` similar to `showAddEventDialog`
 - Wire up the edit button to open the dialog with pre-filled values
 - Update the EventManager to handle event edits
+- [DONE]
 
 ### 2. Delete unctionality  
 **Location**: `CalendarController.java` 
