@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 
 public class MainMenuController {
     @FXML private Button backButton;
+    @FXML private Button calendarButton;
 
     private Navigation navigate() {
         return (Navigation) backButton.getScene().getWindow().getUserData();
@@ -16,5 +17,10 @@ public class MainMenuController {
     @FXML
     private void onBackToLogin() {
         navigate().Display(View.Login);
+    }
+
+    @FXML
+    private void onOpenCalendar() {
+        navigate().Display(View.Calendar);
     }
 }
