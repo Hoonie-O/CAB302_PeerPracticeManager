@@ -34,7 +34,7 @@ public class UserTest {
     public void setUp(){
         user = new User(FIRST_NAME,LAST_NAME,USERNAME,EMAIL,PASSWORD,INSTITUTION);
         user2 = new User(FIRST_NAME2,LAST_NAME2,USERNAME2,EMAIL2,PASSWORD2,INSTITUTION2);
-        user3 = new User("Bon","Jovi","bonjo","bonjovi@email.com","hello","UNSW");
+        user3 = new User("Bon","Jovi","bonjo","bonjovi@email.com", new char[]{'h', 'e', 'l', 'l', 'o'},"UNSW");
     }
 
     @Test
@@ -70,7 +70,7 @@ public class UserTest {
 
     @Test
     public void testTrimmedFirstName(){
-        User u = new User("     Henry    ","Boggus","hebo","hebo@gmail.com","perro","QUT");
+        User u = new User("     Henry    ","Boggus","hebo","hebo@gmail.com",new char[]{'e','e','f','a','!'},"QUT");
         assertEquals("Henry",user.getFirstName());
     }
 
@@ -102,14 +102,16 @@ public class UserTest {
 
     @Test
     public void testTrimmedLastName(){
-        User u = new User("Henry","  Boggus     ","hebo","hebo@gmail.com","perro","QUT");
+        User u = new User("Henry","  Boggus     ","hebo","hebo@gmail.com",new char[]{'e','e','f','a','!'},"QUT");
         assertEquals("Boggus",user.getLastName());
     }
 
+    @Test
     public void testGetUsername(){
         assertEquals(USERNAME,user.getUsername());
     }
 
+    @Test
     public void testSetUsername(){
         user.setUsername(USERNAME2);
         assertEquals(USERNAME2,user.getUsername());
@@ -127,8 +129,19 @@ public class UserTest {
 
     @Test
     public void testUsernameUnderscore(){
-        user.setUsername("hola_");
+        user.setUsername("hola_perro");
         assertEquals("hola_",user.getUsername());
+    }
+
+    @Test
+    public void testUsernameDot(){
+        user.setUsername("hola.perro");
+        assertEquals("hola.perro",user.getUsername());
+    }
+
+    @Test
+    public void testShortUsername(){
+        assertThrows(IllegalArgumentException.class, () -> user.setUsername("dale"));
     }
 
     @Test
@@ -170,7 +183,7 @@ public class UserTest {
 
     @Test
     public void testTrimmedEmail(){
-        User u = new User(Henry","Boggus","hebo","  hebo@gmail.com   ","perro","QUT");
+        User u = new User("Henry","Boggus","hebo","  hebo@gmail.com   ",new char[] {'e','e','r','s','?'},"QUT");
         assertEquals("hebo@gmail.com",user.getEmail());
     }
 
@@ -265,6 +278,6 @@ public class UserTest {
         assertEquals(expected,user.getEvents());
     }
 
-    
+
 
 }
