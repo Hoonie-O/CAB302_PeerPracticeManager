@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 public class SignupController {
+    @FXML private TextField firstNameField;
+    @FXML private TextField lastNameField;
     @FXML private TextField usernameField;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;

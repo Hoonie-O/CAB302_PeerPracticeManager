@@ -14,7 +14,7 @@ public class EventStorage {
 
     public void addEvent(Event event) {
         if (event != null) {
-            events.add(event)
+            events.add(event);
         }
     }
 

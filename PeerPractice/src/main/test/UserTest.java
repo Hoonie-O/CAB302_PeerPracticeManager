@@ -1,7 +1,9 @@
+import com.cab302.peerpractice.Model.Event;
 import com.cab302.peerpractice.Model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +16,8 @@ public class UserTest {
     private String FIRST_NAME2 = "Jack";
     private String LAST_NAME = "Sato";
     private String LAST_NAME2 = "Smith";
+    private String USERNAME = "sati2030";
+    private String USERNAME2 = "jack_Harlow";
     private String EMAIL = "seiji@email.com";
     private String EMAIL2 = "jack@email.com";
     private String INSTITUTION = "QUT";
@@ -28,9 +32,9 @@ public class UserTest {
 
     @BeforeEach
     public void setUp(){
-        user = new User(FIRST_NAME,LAST_NAME,EMAIL,PASSWORD,INSTITUTION);
-        user2 = new User(FIRST_NAME2,LAST_NAME2,EMAIL2,PASSWORD2,INSTITUTION2);
-        user3 = new User("Bon","Jovi","bonjovi@email.com","hello","UNSW");
+        user = new User(FIRST_NAME,LAST_NAME,USERNAME,EMAIL,PASSWORD,INSTITUTION);
+        user2 = new User(FIRST_NAME2,LAST_NAME2,USERNAME2,EMAIL2,PASSWORD2,INSTITUTION2);
+        user3 = new User("Bon","Jovi","bonjo","bonjovi@email.com","hello","UNSW");
     }
 
     @Test
@@ -65,6 +69,12 @@ public class UserTest {
     }
 
     @Test
+    public void testTrimmedFirstName(){
+        User u = new User("     Henry    ","Boggus","hebo","hebo@gmail.com","perro","QUT");
+        assertEquals("Henry",user.getFirstName());
+    }
+
+    @Test
     public void testGetLastName(){
         assertEquals(LAST_NAME,user.getLastName());
     }
@@ -88,6 +98,48 @@ public class UserTest {
     @Test
     public void testMixedInvalidLastName(){
         assertThrows(IllegalArgumentException.class, () -> user.setLastName("henry2_"));
+    }
+
+    @Test
+    public void testTrimmedLastName(){
+        User u = new User("Henry","  Boggus     ","hebo","hebo@gmail.com","perro","QUT");
+        assertEquals("Boggus",user.getLastName());
+    }
+
+    public void testGetUsername(){
+        assertEquals(USERNAME,user.getUsername());
+    }
+
+    public void testSetUsername(){
+        user.setUsername(USERNAME2);
+        assertEquals(USERNAME2,user.getUsername());
+    }
+
+    @Test
+    public void testUsernameNull(){
+        assertThrows(IllegalArgumentException.class, () -> user.setUsername(null));
+    }
+
+    @Test
+    public void testUsernameInvalidSymbols(){
+        assertThrows(IllegalArgumentException.class, () -> user.setUsername("!@#$%^&*()"));
+    }
+
+    @Test
+    public void testUsernameUnderscore(){
+        user.setUsername("hola_");
+        assertEquals("hola_",user.getUsername());
+    }
+
+    @Test
+    public void testUsernameOnlyNumbers(){
+        assertThrows(IllegalArgumentException.class, () -> user.setUsername("123124215"));
+    }
+
+    @Test
+    public void testUsernameTrim(){
+        user.setUsername("   sati203   ");
+        assertEquals("sati203",user.getUsername());
     }
 
     @Test
@@ -117,6 +169,12 @@ public class UserTest {
     }
 
     @Test
+    public void testTrimmedEmail(){
+        User u = new User(Henry","Boggus","hebo","  hebo@gmail.com   ","perro","QUT");
+        assertEquals("hebo@gmail.com",user.getEmail());
+    }
+
+    @Test
     public void testGetInstitution(){
         assertEquals(INSTITUTION,user.getInstitution());
     }
@@ -140,7 +198,7 @@ public class UserTest {
 
     @Test
     public void testEmptyGetFriendList(){
-        assertEquals(null,user.getFriendList());
+        assertEquals(Collections.emptyList(),user.getFriendList());
     }
 
     @Test
@@ -176,16 +234,37 @@ public class UserTest {
         assertThrows(IllegalArgumentException.class, () -> user.setBio(null));
     }
 
-    /*
-     * Bio should be max 200 chars
-    */
+    //Bio should be max 200 chars
     @Test
     public void testSetBioMaxChar(){
         String longBio = "k9fLQ2zXv3M1pRt8NwYbUc7Dh4jSaZ5Vg0eHxTiOqLmBnCrKsPuJdFoGlWyEnMbR7t6p5q4z3x2c1v0a9s8d7f6g5h4j3k2l1m0n9o8p7QWERTYuiopASDFghjkLZXCVbnm1234567890!@#$%^&*()_+[]{}|;:,.<>?";
         assertThrows(IllegalArgumentException.class, ()-> user.setBio(longBio));
     }
 
+    @Test
+    public void testGetEventsEmpty(){
+        assertEquals(Collections.emptyList(),user.getEvents());
+    }
 
+    @Test
+    public void testAddEvent(){
+        Event ev = new Event("CAB302","CAB302 study session", LocalDateTime.now(),LocalDateTime.of(2026,8,28,14,30),"b");
+        user.addEvent(ev);
+        assertEquals(Collections.singletonList(ev),user.getEvents());
+    }
 
+    @Test
+    public void testAddMultipleEvents(){
+        Event ev = new Event("CAB302","CAB302 study session", LocalDateTime.now(),LocalDateTime.of(2026,8,28,14,30),"b");
+        Event ev2 = new Event("CAB202","CAB202 study session",LocalDateTime.now(),LocalDateTime.of(2027,10,30,12,0),"r");
+        user.addEvent(ev);
+        user.addEvent(ev2);
+        List<Event> expected = new ArrayList<>();
+        expected.add(ev);
+        expected.add(ev2);
+        assertEquals(expected,user.getEvents());
+    }
+
+    
 
 }

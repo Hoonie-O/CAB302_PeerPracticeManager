@@ -32,6 +32,12 @@
     </VBox>
 
     <VBox spacing="8">
+        <TextField fx:id="firsNameField"
+                   promptText="First Name"
+                   prefWidth="320"/>
+        <TextField fx:id="lastNameField"
+                   promptText="Last Name"
+                   prefWidth="320"/>
         <TextField fx:id="usernameField"
                    promptText="Username"
                    prefWidth="320"/>
