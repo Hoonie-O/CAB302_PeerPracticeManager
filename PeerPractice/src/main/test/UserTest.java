@@ -177,13 +177,15 @@ public class UserTest {
     }
 
     /*
-     * Bio's should be max 200 chars
+     * Bio should be max 200 chars
     */
     @Test
     public void testSetBioMaxChar(){
         String longBio = "k9fLQ2zXv3M1pRt8NwYbUc7Dh4jSaZ5Vg0eHxTiOqLmBnCrKsPuJdFoGlWyEnMbR7t6p5q4z3x2c1v0a9s8d7f6g5h4j3k2l1m0n9o8p7QWERTYuiopASDFghjkLZXCVbnm1234567890!@#$%^&*()_+[]{}|;:,.<>?";
         assertThrows(IllegalArgumentException.class, ()-> user.setBio(longBio));
     }
+
+
 
 
 }
