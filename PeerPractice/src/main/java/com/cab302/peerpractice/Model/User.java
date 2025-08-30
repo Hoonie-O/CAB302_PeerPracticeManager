@@ -12,6 +12,9 @@ public class User {
     private String email;
     private char[] password;
     private String institution;
+    private List<User> friendsList;
+    private String bio;
+    private List<Event> events;
 
     public User(String firstName, String lastName, String username, String email, char[] password, String institution) {
         this.firstName = validateNames(firstName);
@@ -102,22 +105,27 @@ public class User {
         this.password = password;
     }
 
-    public List<Object> getFriendList() {
-        
+    public List<User> getFriendList() {
+        return friendsList;
     }
 
-    public void addFriend(User user2) {
+    public void addFriend(User user) {
+        friendsList.add(user);
     }
 
     public void setBio(String bio) {
+        this.bio = getBio();
     }
 
     public String getBio() {
+        return bio;
     }
 
-    public List<Object> getEvents() {
+    public List<Event> getEvents() {
+        return events;
     }
 
     public void addEvent(Event ev) {
+        events.add(ev);
     }
 }
