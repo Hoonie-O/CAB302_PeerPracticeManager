@@ -82,4 +82,8 @@ public class EventManager {
         storage.removeEvent(oldEvent);
         storage.addEvent(newEvent);
     }
+
+    public void deleteEvent(Event event) {
+        storage.removeEvent(event);
+    }
 }
