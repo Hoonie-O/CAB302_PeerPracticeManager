@@ -72,4 +72,14 @@ public class EventManager {
     public boolean hasEventsOnDate(LocalDate date) {
         return !getEventsForDate(date).isEmpty();
     }
+
+    public void updateEvent(Event oldEvent, Event newEvent) {
+        if (oldEvent == null || newEvent == null) {
+            throw new IllegalArgumentException("Events must not be null");
+        }
+
+        // remove the old event and add the new one
+        storage.removeEvent(oldEvent);
+        storage.addEvent(newEvent);
+    }
 }
