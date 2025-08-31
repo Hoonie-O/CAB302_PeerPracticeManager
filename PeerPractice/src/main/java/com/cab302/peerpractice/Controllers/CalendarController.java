@@ -293,33 +293,52 @@
             });
         }
 
+        private void showDeleteEventDialog(Event event) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Event");
+            alert.setHeaderText("Are you sure you want to delete \"" + event.getTitle() + "\"?");
+            alert.setContentText("This action cannot be undone.");
+
+            ButtonType deleteButton = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(deleteButton, cancelButton);
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == deleteButton) {
+                    eventManager.deleteEvent(event);
+                    updateCalendarView();
+                }
+            });
+        }
+
         private void showEventListDialog(LocalDate date, List<Event> events) {
             Dialog<Void> dialog = new Dialog<>();
             dialog.setTitle("Events for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-    
+
             VBox content = new VBox(10);
             content.setPadding(new Insets(20));
-    
+
             for (Event event : events) {
                 VBox eventBox = new VBox(5);
                 eventBox.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
-    
+
                 Label titleLabel = new Label(event.getTitle());
                 titleLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
                 titleLabel.setTextFill(getColorForLabel(event.getColorLabel()));
-    
+
                 Label timeLabel = new Label(
                         event.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
                                 " - " +
                                 event.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
                 );
-    
+
                 Label descriptionLabel = new Label(
                         event.getDescription().isEmpty() ? "No description" : event.getDescription()
                 );
                 descriptionLabel.setWrapText(true);
-    
+
                 // Buttons row
                 HBox buttons = new HBox(8);
                 Button editButton = new Button("Edit");
@@ -328,27 +347,29 @@
                     javafx.application.Platform.runLater(() -> showEditEventDialog(event));
                 });
 
-                // TODO: Add Delete button here later
-                // Button deleteButton = new Button("Delete");
-                // deleteButton.setOnAction(e -> { /* confirm + delete + refresh */ });
-    
-                buttons.getChildren().addAll(editButton);
-    
+                Button deleteButton = new Button("Delete");
+                deleteButton.setOnAction(e -> {
+                    dialog.close();
+                    javafx.application.Platform.runLater(() -> showDeleteEventDialog(event));
+                });
+
+                buttons.getChildren().addAll(editButton, deleteButton);
+
                 eventBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, buttons);
                 content.getChildren().add(eventBox);
             }
-    
+
             Button addNewButton = new Button("Add Another Event");
             addNewButton.setOnAction(e -> {
                 dialog.close();
                 showAddEventDialog(date);
             });
             content.getChildren().add(addNewButton);
-    
+
             ScrollPane scrollPane = new ScrollPane(content);
             scrollPane.setPrefSize(400, 300);
             scrollPane.setFitToWidth(true);
-    
+
             dialog.getDialogPane().setContent(scrollPane);
             dialog.showAndWait();
         }
