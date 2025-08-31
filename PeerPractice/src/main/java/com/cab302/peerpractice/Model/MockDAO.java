@@ -2,6 +2,7 @@ package com.cab302.peerpractice.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MockDAO implements IUserDAO{
 
@@ -24,7 +25,7 @@ public class MockDAO implements IUserDAO{
     }
 
     @Override
-    public User searchByUsername(String username) {
-        return null;
+    public Optional<User> searchByUsername(String username) {
+        return users.stream().filter(u -> u.getUsername().equalsIgnoreCase(username)).findFirst();
     }
 }
