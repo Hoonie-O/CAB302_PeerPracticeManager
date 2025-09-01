@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class UserManager {
 
     private IUserDAO userDAO;
-    private Hasher hasher;
+    private PasswordHasher hasher;
 
     public UserManager(IUserDAO userDAO){
         this.userDAO = userDAO;
