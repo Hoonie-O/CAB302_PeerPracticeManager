@@ -20,8 +20,6 @@ public class UserManager {
         validateNames(lastName);
         validateUsername(username);
 
-
-
         if(userDAO.existsByEmail(email)) throw new DuplicateEmailException("Email already exists");
         if(userDAO.existsByUsername(username)) throw new DuplicateUsernameException("Username already exists");
 
