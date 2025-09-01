@@ -10,18 +10,18 @@ public class User {
     private String lastName;
     private String username;
     private String email;
-    private char[] password;
+    private String passwordHash;
     private String institution;
     private List<User> friendsList;
     private String bio;
     private List<Event> events;
 
-    public User(String firstName, String lastName, String username, String email, char[] password, String institution) {
-        this.firstName = validateNames(firstName);
-        this.lastName = validateNames(lastName);
-        this.username = validateUsername(username);
-        this.email = validateEmail(email);
-        this.password = password;
+    public User(String firstName, String lastName, String username, String email, String passwordHash, String institution) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
         this.institution = institution;
     }
 
@@ -31,7 +31,7 @@ public class User {
 
 
     public void setFirstName(String firstName) {
-        this. firstName = validateNames(firstName);
+        this. firstName = firstName;
     }
 
 
@@ -41,34 +41,18 @@ public class User {
 
 
     public void setLastName(String lastName) {
-        this.lastName = validateNames(lastName);
+        this.lastName = lastName;
     }
 
-    private static String validateNames(String name){
-        if(name == null) throw new IllegalArgumentException("Name can't be null");
-        name = name.trim();
-        if(name.isEmpty()) throw new IllegalArgumentException("Name can't be blank");
-        if(Pattern.compile("\\P{L}").matcher(name).find()) throw new IllegalArgumentException("Name can't contain non-letter characters");
-        return name;
-    }
 
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
-        this.username = validateUsername(username);
+        this.username = username;
     }
 
-    private static String validateUsername(String username){
-        if(username == null) throw new IllegalArgumentException("Username can't be null");
-        username.trim();
-        if(username.isEmpty()) throw new IllegalArgumentException("Username can't be blank");
-        if(!Pattern.compile("^(?!\\\\d+$)[A-Za-z0-9._]{6,}$").matcher(username).find()){
-            throw new IllegalArgumentException("Username must be at least 6 characters long, and only contain letter, numbers or . _");
-        }
-        return username;
-    }
 
 
     public String getEmail() {
@@ -79,15 +63,6 @@ public class User {
         this.email = email;
     }
 
-    private static String validateEmail(String email){
-        if(email == null) throw new IllegalArgumentException("Email can't be null");
-        email.trim();
-        if(email.isEmpty()) throw new IllegalArgumentException("Email can't be blank");
-        if(!Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$").matcher(email).find()){
-            throw new IllegalArgumentException("Invalid email");
-        }
-        return email;
-    }
 
     public String getInstitution() {
         return institution;
@@ -97,12 +72,12 @@ public class User {
         this.institution = institution;
     }
 
-    public char[] getPassword() {
-        return password;
+    public String getPassword() {
+        return passwordHash;
     }
 
-    public void setPassword(char[] password) {
-        this.password = password;
+    public void setPassword(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public List<User> getFriendList() {

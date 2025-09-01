@@ -8,4 +8,8 @@ public interface IUserDAO {
     List<User> searchByUsername(String username);
     List<User> searchByInstitution(String institution);
     boolean deleteUser(User user);
+    boolean updateUser(User user);
+    boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
+    List<User> getAllUsers();
 }

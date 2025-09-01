@@ -27,37 +27,63 @@ public class MockDAO implements IUserDAO{
 
     @Override
     public List<User> searchByUsername(String username) {
-        if (username == null || username.isBlank()) return List.of();
-
-        String target = username.trim();
-
         List<User> matches = users.stream()
-                .filter(Objects::nonNull)
                 .filter(u -> {
                     String un = u.getUsername();
-                    return un != null && un.equalsIgnoreCase(target);
+                    return un != null && un.equalsIgnoreCase(username);
                 })
-                .toList();   // use .toList() on Java 16+
-
-        return List.copyOf(matches); // return unmodifiable list (optional)
+                .toList();
+        return List.copyOf(matches); // return unmodifiable list
     }
 
     @Override
     public List<User> searchByInstitution(String institution) {
-        if (institution == null || institution.isBlank()) return List.of();
-        String target = institution.trim();
-
-        return users.stream()
-                .filter(Objects::nonNull)
+        List<User> matches = users.stream()
                 .filter(u -> {
                     String inst = u.getInstitution();
-                    return inst != null && inst.equalsIgnoreCase(target);
+                    return inst != null && inst.equalsIgnoreCase(institution);
                 })
-                .toList(); // or .toList() on Java 16+
+                .toList();
+        return List.copyOf(matches);
     }
 
     public boolean deleteUser(User user){
         users.remove(user);
+        return true;
+    }
+
+    public boolean updateUser(User user){
+        for(int i = 0; i<users.size() ; i++){
+            if(Objects.equals(users.get(i).getUsername(),user.getUsername())){
+                users.set(i,user);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        for (User user : users) {
+            if (Objects.equals(user.getEmail(), email)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        for (User user : users) {
+            if (Objects.equals(user.getUsername(), username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<User> getAllUsers() {
+        return users;
     }
 
 }
