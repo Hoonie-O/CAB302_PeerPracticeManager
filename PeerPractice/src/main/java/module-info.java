@@ -12,6 +12,8 @@ module com.cab302.peerpractice {
     requires java.prefs;
     requires java.desktop;
     requires javafx.graphics;
+    requires java.sql;
+    requires java.sql.rowset;
 
     opens com.cab302.peerpractice to javafx.fxml;
     exports com.cab302.peerpractice;
