@@ -1,6 +1,6 @@
 package com.cab302.peerpractice;
 
-import javax.sql.rowset.CachedRowSet;
+import com.sun.rowset.CachedRowSetImpl;
 import java.sql.*;
 
 /**
@@ -22,8 +22,7 @@ public class ConnectionDB
             Class.forName(jdbcDriver);
 
         } catch (ClassNotFoundException e) {
-            System.out.println("JDBC driver not found");
-            e.printStackTrace();
+            System.out.println("JDBC driver not found" + e);
             throw e;
         }
 
@@ -31,8 +30,7 @@ public class ConnectionDB
         try {
             conn = DriverManager.getConnection(urlString);
         } catch (SQLException e) {
-            System.out.println("Failed to connect");
-            e.printStackTrace();
+            System.out.println("Failed to connect" + e);
             throw e;
         }
     }
@@ -44,7 +42,7 @@ public class ConnectionDB
                 conn.close();
             }
         } catch (SQLException e){
-            e.printStackTrace();
+            System.out.println("Failed to disconnect" + e);
             throw e;
         }
     }
@@ -53,7 +51,8 @@ public class ConnectionDB
     public static ResultSet executeQuery(String queryStatement) throws ClassNotFoundException, SQLException {
         // Declare statement and result set
         Statement stmt = null;
-        ResultSet result= null;
+        ResultSet result = null;
+        CachedRowSetImpl cachedRowSet = null;
 
         try {
             connectToDB();
@@ -61,9 +60,11 @@ public class ConnectionDB
             // Perform select operation
             stmt = conn.createStatement();
             result = stmt.executeQuery(queryStatement);
+
+            cachedRowSet = new CachedRowSetImpl();
+            cachedRowSet.populate(result);
         } catch (SQLException e) {
-            System.out.println("Query failed to execute");
-            e.printStackTrace();
+            System.out.println("Query failed to execute" + e);
             throw e;
         } finally {
             // Close result set and statement
@@ -77,7 +78,7 @@ public class ConnectionDB
             disconnectFromDB();
         }
 
-        return result;
+        return cachedRowSet;
     }
 
     public static void executeUpdate (String updateStatement) throws ClassNotFoundException, SQLException {
@@ -91,8 +92,7 @@ public class ConnectionDB
             stmt = conn.createStatement();
             stmt.executeUpdate(updateStatement);
         } catch (SQLException e) {
-            System.out.println("Update failed to execute: ");
-            e.printStackTrace();
+            System.out.println("Update failed to execute" + e);
             throw e;
         } finally {
             // Close statement
