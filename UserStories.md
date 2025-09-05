@@ -206,7 +206,7 @@ so that **I can find classmates and study groups to collaborate with**.
 - Given I find a group, when I click “Request to join”, then my join request is sent.  
 - Given no results match, when the search completes, then I see a “No results found” message.  
 
-### Setup s Mock DAO and Respective User Management Class
+### Setup a Mock DAO and Respective User Management Class
 As a **developer**, 
 I want **a mock DAO and a UserManagement class**, 
 so that **we can build and test user features without needing a real database yet**.
@@ -214,21 +214,14 @@ so that **we can build and test user features without needing a real database ye
 ---
 
 ### Acceptance Criteria
-- A UserDaoMock (or similar) exists that stores users in-memory (e.g., map/list) and supports:
-- create(user), getById(id), getByEmail(email), update(user), delete(id), listAll().
-- Methods return predictable results and errors (e.g., duplicate email throws/returns error).
-- A UserManagement (service) class exists that:
-- Depends on a DAO interface (e.g., UserDao) via constructor injection.
-- Provides methods: register(userDto), findUser(id/email), updateProfile(id, updates), removeUser(id).
-- Validates inputs (non-empty name/email, valid email format).
-- Does not contain DB logic (delegates to DAO).
-- Swapping the mock with a real DAO later requires no changes outside the composition/wiring (interface-based).
-- Unit tests cover:
-- Creating, reading, updating, deleting users via the service.
-- Duplicate email path, user-not-found path.
-- Interface contract of the DAO (mock meets it).
-- Basic logging (or comments) for key operations and failure cases.
-- README or class-level comment explains how to run tests and why the mock exists (iteration note).
+- Given the app runs with a mock DAO, when I create, update, delete, or list users, then these actions work using in-memory storage (e.g., map or list).  
+- Given I register a user, when the email already exists, then the operation fails with an appropriate error.  
+- Given I use the UserManagement service, when I call register, find, update, or remove, then the request is validated and delegated to the DAO (no DB logic in service).  
+- Given I provide invalid input (e.g., empty name, invalid email format), when I call register or update, then the operation is rejected with an error.  
+- Given the mock DAO follows the UserDao interface, when I swap it with a real DAO later, then no external code changes are required.  
+- Given unit tests are run, when CRUD operations, duplicate emails, and user-not-found cases are tested, then they all pass.  
+- Given documentation exists, when a developer reads it, then they understand how to run the tests and why the mock is used.  
+
 
 ### Password Hashing
 As a **user**,
@@ -238,18 +231,10 @@ so that **my account stays safe even if the database is leaked**.
 ---
 
 ### Acceptance Criteria
-- Passwords are never stored or logged in plain text.
-- A hashing utility/service is implemented using an industry-standard algorithm (e.g., bcrypt or Argon2):
-- Generates a unique salt per password.
-- Uses a configurable work factor (e.g., bcrypt cost rounds) set via config/env.
-- Exposes two methods: hash(plainPassword) and verify(plainPassword, storedHash).
-- UserManagement.register() hashes the password before persisting the user.
-- Login flow (or a test double) uses verify to check credentials; comparison is constant-time (via library).
-- Unit tests:
-- Hashing produces different hashes for the same input (due to salting).
-- verify returns true for correct password and false for wrong password.
-- Work factor is read from config and can be adjusted without code changes.
-- No plaintext password ever leaves the boundary (no logs, exceptions, or API responses).
-- Backward-compatibility note (comment/README) describes how to migrate hashes if the algorithm/cost changes later.
-- Security check: dependency versions are pinned and reviewed; default cost set to a sensible value for current environment.
-
+- Given a user registers, when their password is stored, then it is hashed using a secure algorithm (e.g., bcrypt or Argon2) and never saved in plain text.  
+- Given the hashing utility is used, when the same password is hashed twice, then the results differ due to unique salts.  
+- Given a user logs in, when the password is verified, then the correct password returns true and an incorrect password returns false.  
+- Given configuration exists, when the work factor (e.g., cost rounds) is updated in settings, then the hashing adjusts without requiring code changes.  
+- Given logging is enabled, when passwords are processed, then no plain text password ever appears in logs, exceptions, or API responses.  
+- Given the system evolves, when hashing algorithms or cost factors change, then documentation describes how to migrate existing hashes.  
+- Given tests are run, when hashing and verification are executed, then they confirm salting, correct verification, and rejection of invalid passwords.  
