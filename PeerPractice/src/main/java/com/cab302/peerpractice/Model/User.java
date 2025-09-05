@@ -3,15 +3,15 @@ package com.cab302.peerpractice.Model;
 import javafx.beans.property.*;
 
 public class User {
-    private IntegerProperty userID;
-    private StringProperty username;
-    private StringProperty password;
-    private StringProperty firstName;
-    private StringProperty lastName;
-    private StringProperty email;
-    private StringProperty institution;
-    private StringProperty biography;
-    private SimpleObjectProperty<Event> events;
+    private final IntegerProperty userID;
+    private final StringProperty username;
+    private final StringProperty password;
+    private final StringProperty firstName;
+    private final StringProperty lastName;
+    private final StringProperty email;
+    private final StringProperty institution;
+    private final StringProperty biography;
+    private final SimpleObjectProperty<Event> events;
 
     public User() {
         this.userID = new SimpleIntegerProperty();
@@ -46,7 +46,7 @@ public class User {
     }
 
     public String getPassword() {
-        return pasword.get();
+        return password.get();
     }
     public void setPassword(String password) {
         this.password.set(password);
@@ -85,7 +85,7 @@ public class User {
         return email;
     }
 
-    public String getInstituion() {
+    public String getInstitution() {
         return institution.get();
     }
     public void setInstitution(String institution) {
