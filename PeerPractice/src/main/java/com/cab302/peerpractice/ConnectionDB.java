@@ -52,7 +52,7 @@ public class ConnectionDB
         // Declare statement and result set
         Statement stmt = null;
         ResultSet result = null;
-        CachedRowSetImpl cachedRowSet = null;
+        CachedRowSetImpl cachedRowSet;
 
         try {
             connectToDB();
