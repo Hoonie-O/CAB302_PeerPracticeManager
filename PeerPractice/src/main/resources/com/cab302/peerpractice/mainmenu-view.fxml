@@ -4,29 +4,154 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.MainMenuController"
-            prefHeight="640"
-            prefWidth="380">
+            prefHeight="1000"
+            prefWidth="1200">
 
+    <!-- Top Header -->
     <top>
-        <ToolBar>
-            <Label text="Main Menu"/>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <Button fx:id="backButton"
-                    text="Log out"
-                    onAction="#onBackToLogin"/>
-        </ToolBar>
+        <VBox>
+            <BorderPane>
+                <padding>
+                    <Insets top="10"
+                            right="10"
+                            bottom="10"
+                            left="10">
+                    </Insets>
+                </padding>
+                <left>
+                    <Button fx:id="menuButton"
+                            text="Menu"
+                            onAction="#onToggleMenu"/>
+                </left>
+                <center>
+                    <Label text="Peer Practice - GROUPTEN"/>
+                </center>
+                <right>
+                    <HBox spacing="8">
+                        <Button fx:id="profileButton"
+                                text="Profile"
+                                onAction="#onToggleProfile"/>
+                    </HBox>
+                </right>
+            </BorderPane>
+            <Separator/>
+        </VBox>
     </top>
 
-    <center>
-        <VBox spacing="20" alignment="CENTER">
-            <Label text="Welcome! Group-Ten PeerPracticeManager"/>
-            <Button fx:id="calendarButton" 
-                    text="Open Calendar" 
-                    onAction="#onOpenCalendar"
-                    prefWidth="150"/>
-        </VBox>
-    </center>
+    <!-- Left Sidebar Menu -->
+    <left>
+        <BorderPane fx:id="menu"
+                    prefWidth="180">
+            <right>
+                <Separator orientation="VERTICAL"/>
+            </right>
+            <center>
+                <VBox alignment="TOP_CENTER"
+                      spacing="8">
+                    <padding>
+                        <Insets top="12"
+                                right="12"
+                                bottom="12"
+                                left="12">
+                        </Insets>
+                    </padding>
+                    <Label text="Menu"/>
+                    <Separator/>
+                    <Button text="Study Group"
+                            prefWidth="180"/>
+                    <Button fx:id="calendarButton"
+                            text="Calendar"
+                            onAction="#onOpenCalendar"
+                            prefWidth="220"
+                            prefHeight="32"/>
+                    <Button text="Friends"
+                            prefWidth="180"/>
+                </VBox>
+            </center>
+        </BorderPane>
+    </left>
 
+    <!-- Right Sidebar Profile -->
+    <right>
+        <BorderPane fx:id="profile"
+                    prefWidth="180">
+            <left>
+                <Separator orientation="VERTICAL"/>
+            </left>
+            <center>
+                <VBox alignment="TOP_CENTER"
+                      spacing="12">
+                    <padding>
+                        <Insets top="12"
+                                right="12"
+                                bottom="12"
+                                left="12">
+                        </Insets>
+                    </padding>
+                    <!-- Header -->
+                    <Label text="Profile"/>
+                    <Separator/>
+                        <VBox alignment="CENTER_LEFT" spacing="6">
+                            <Label text="John Doe"/>
+                            <Label text="#johndoe123"/>
+                    <!-- Availability Status -->
+                            <ComboBox fx:id="availabilityStatus" prefWidth="180">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Online"/>
+                                        <String fx:value="Away"/>
+                                        <String fx:value="Busy"/>
+                                        <String fx:value="Offline"/>
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </VBox>
+                    <Separator/>
+                    <!-- Buttons -->
+                    <Button text="Edit profile"
+                            prefWidth="180"/>
+                    <Button text="Setting"
+                            prefWidth="180"/>
+                    <Button text="Logout"
+                            prefWidth="180" onAction="#onBackToLogin"/>
+                </VBox>
+            </center>
+        </BorderPane>
+    </right>
+
+    <!-- Body -->
+    <center>
+        <StackPane>
+            <VBox alignment="CENTER"
+                  spacing="10"
+                  maxWidth="420">
+                <Label text="Build your study group"/>
+                <Label text="Take your study group outside of a class for a more efficient way to get things done."
+                       wrapText="true"
+                       maxWidth="360"/>
+                <VBox alignment="CENTER"
+                      spacing="10">
+                    <padding>
+                        <Insets top="10"
+                                right="10"
+                                bottom="10"
+                                left="10">
+                        </Insets>
+                    </padding>
+                    <Button fx:id="createGroupButton"
+                            text="Create group"
+                            prefWidth="220"
+                            prefHeight="32"/>
+                    <Button fx:id="joinGroupButton"
+                            text="Join group"
+                            prefWidth="220"
+                            prefHeight="32"/>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
 </BorderPane>
