@@ -48,9 +48,16 @@ public class LoginController extends BaseController{
         String password = passwordField.getText();
 
         if (userManager.authenticate(ID, password)) {
+            // Fetch user from DAO (since authenticate only returns boolean)
+            ctx.getUserDao().getAllUsers().stream()
+                    .filter(u -> u.getEmail().equalsIgnoreCase(ID) ||
+                            u.getUsername().equalsIgnoreCase(ID))
+                    .findFirst().ifPresent(loggedIn -> ctx.getUserSession().setCurrentUser(loggedIn));
+
             nav.Display(View.MainMenu);
         } else {
             messageLabel.setText("Invalid email/username or password.");
         }
     }
+
 }
