@@ -17,7 +17,7 @@ public class LoginController extends BaseController{
     @FXML private Hyperlink signupLink;
     @FXML private Label messageLabel;
 
-    protected LoginController(AppContext ctx, Navigation nav) {
+    public LoginController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 

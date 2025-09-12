@@ -13,7 +13,7 @@ public class ForgotPasswordController extends BaseController{
     @FXML private Button backButton;
     @FXML private Label messageLabel;
 
-    protected ForgotPasswordController(AppContext ctx, Navigation nav) {
+    public ForgotPasswordController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 

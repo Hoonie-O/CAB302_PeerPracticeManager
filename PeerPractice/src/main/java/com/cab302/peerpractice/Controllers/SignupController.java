@@ -16,7 +16,7 @@ public class SignupController extends BaseController{
     @FXML private Button signupButton;
     @FXML private Label messageLabel;
 
-    protected SignupController(AppContext ctx, Navigation nav) {
+    public SignupController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 

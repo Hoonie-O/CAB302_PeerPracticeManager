@@ -18,7 +18,7 @@ public class MainMenuController extends BaseController{
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
-    protected MainMenuController(AppContext ctx, Navigation nav) {
+    public MainMenuController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 

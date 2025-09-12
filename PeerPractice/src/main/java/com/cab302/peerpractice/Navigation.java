@@ -45,7 +45,7 @@ public final class Navigation {
             });
 
 
-            Parent root = FXMLLoader.load(url);
+            Parent root = fx.load();
             Scene scene = new Scene(root);
             stage.setTitle(view.title());
             stage.setScene(scene);
