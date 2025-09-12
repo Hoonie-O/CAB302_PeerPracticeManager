@@ -31,7 +31,11 @@ public class LoginController {
                         .or(passwordField.textProperty().isEmpty()));
 
         // Seed a test user
-        userManager.signUp("John", "Doe", "username", "email@email.com", "password", "QUT");
+        try {
+            userManager.signUp("John", "Doe", "username", "email@email.com", "password", "QUT");
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to seed test user", e);
+        }
 
         // Event handlers
         loginButton.setOnAction(e -> login());
