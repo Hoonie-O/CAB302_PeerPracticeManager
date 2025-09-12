@@ -86,4 +86,14 @@ public class MockDAO implements IUserDAO{
         return users;
     }
 
+    @Override
+    public boolean storePassword(User user, String hash) {
+        user.setPassword(hash);
+        return true;
+    }
+
+    public String getPassword(User user){
+        return user.getPassword();
+    }
+
 }

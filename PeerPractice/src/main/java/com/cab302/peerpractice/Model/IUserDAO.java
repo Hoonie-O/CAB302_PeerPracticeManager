@@ -12,4 +12,6 @@ public interface IUserDAO {
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
     List<User> getAllUsers();
+    boolean storePassword(User user, String hash);
+    String getPassword(User user);
 }

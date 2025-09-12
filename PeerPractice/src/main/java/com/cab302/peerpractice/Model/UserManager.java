@@ -27,6 +27,10 @@ public class UserManager {
         return userDAO.signUp(u);
     }
 
+
+
+
+
     private static void validateUsername(String username){
         if(username == null) throw new IllegalArgumentException("Username can't be null");
         username.trim();

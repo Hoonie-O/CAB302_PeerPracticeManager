@@ -1,5 +1,6 @@
 package com.cab302.peerpractice.Controllers;
 
+import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.animation.*;
@@ -9,13 +10,17 @@ import javafx.scene.layout.*;
 import javafx.util.*;
 
 
-public class MainMenuController {
+public class MainMenuController extends BaseController{
     @FXML private BorderPane menu;
     @FXML private BorderPane profile;
     @FXML private ComboBox<String> availabilityStatus;
 
     private boolean menuOpen = false;
     private boolean profileOpen = false;
+
+    protected MainMenuController(AppContext ctx, Navigation nav) {
+        super(ctx, nav);
+    }
 
     @FXML
     private void initialize() {
