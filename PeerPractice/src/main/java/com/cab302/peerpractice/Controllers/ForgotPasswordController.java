@@ -17,10 +17,6 @@ public class ForgotPasswordController extends BaseController{
         super(ctx, nav);
     }
 
-    private Navigation navigate() {
-        return (Navigation) sendButton.getScene().getWindow().getUserData();
-    }
-
     @FXML
     private void onSendResetLink() {
 
@@ -30,7 +26,7 @@ public class ForgotPasswordController extends BaseController{
 
     @FXML
     private void onBackToLogin() {
-        navigate().Display(View.Login);
+        nav.Display(View.Login);
     }
 }
 

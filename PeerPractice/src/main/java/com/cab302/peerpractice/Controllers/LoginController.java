@@ -23,10 +23,6 @@ public class LoginController extends BaseController{
 
     private final UserManager userManager = ctx.getUserManager();
 
-    private Navigation navigate() {
-        return (Navigation) loginButton.getScene().getWindow().getUserData();
-    }
-
     @FXML
     private void initialize() {
         // Disable login button until fields filled
@@ -42,8 +38,8 @@ public class LoginController extends BaseController{
 
         // Event handlers
         loginButton.setOnAction(e -> login());
-        forgotpasswordlink.setOnAction(e -> navigate().Display(View.ForgotPassword));
-        signupLink.setOnAction(e -> navigate().Display(View.Signup));
+        forgotpasswordlink.setOnAction(e -> nav.Display(View.ForgotPassword));
+        signupLink.setOnAction(e -> nav.Display(View.Signup));
     }
 
     private void login() {
@@ -52,7 +48,7 @@ public class LoginController extends BaseController{
         String password = passwordField.getText();
 
         if (userManager.authenticate(ID, password)) {
-            navigate().Display(View.MainMenu);
+            nav.Display(View.MainMenu);
         } else {
             messageLabel.setText("Invalid email/username or password.");
         }

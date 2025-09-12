@@ -49,18 +49,14 @@ public class MainMenuController extends BaseController{
     }
     @FXML
     private void onOpenCalendar(javafx.event.ActionEvent event) {
-        Navigation navigate = (Navigation) ((javafx.scene.Node) event.getSource())
-                .getScene().getWindow().getUserData();
         // Display Calendar view
-        navigate.Display(View.Calendar);
+        nav.Display(View.Calendar);
     }
 
     @FXML
     private void onBackToLogin(javafx.event.ActionEvent event) {
-        Navigation navigate = (Navigation) ((javafx.scene.Node) event.getSource())
-                .getScene().getWindow().getUserData();
         // Display Login view
-        navigate.Display(View.Login);
+        nav.Display(View.Login);
     }
     // Duration of the slide-in and slide out animation
     private static final Duration SLIDE = Duration.millis(180);

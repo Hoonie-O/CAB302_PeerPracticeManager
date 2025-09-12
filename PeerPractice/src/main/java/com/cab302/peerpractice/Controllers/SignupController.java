@@ -20,10 +20,6 @@ public class SignupController extends BaseController{
         super(ctx, nav);
     }
 
-    private Navigation navigate() {
-        return (Navigation) signupButton.getScene().getWindow().getUserData();
-    }
-
     @FXML
     private void onSignupButton() {
         messageLabel.setText("Account for '" + usernameField.getText() + "' has been created");
@@ -31,6 +27,6 @@ public class SignupController extends BaseController{
 
     @FXML
     private void onBackToLogin() {
-        navigate().Display(View.Login);
+        nav.Display(View.Login);
     }
 }
