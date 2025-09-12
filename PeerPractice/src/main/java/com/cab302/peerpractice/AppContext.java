@@ -5,7 +5,7 @@ import com.cab302.peerpractice.Model.*;
 public class AppContext {
     private final UserSession userSession = new UserSession();
     private final IUserDAO userDao = new MockDAO();
-    private final PasswordHasher passwordHasher = new BcryptHasher();
+    private final PasswordHasher passwordHasher = new SimplePasswordHasher(); // use BcryptHasher once implemented
     private final UserManager userManager = new UserManager(userDao,passwordHasher);
 
     public UserSession getUserSession(){return userSession;}
