@@ -27,15 +27,15 @@
     </Label>
 
     <VBox spacing="4">
-        <Label text="Email:"/>
-        <TextField fx:id="emailField"
-                   promptText="example@email.com"/>
+        <Label text="Email or Username:"/>
+        <TextField fx:id="IDField"
+                   promptText="email@email.com || username"/>
     </VBox>
 
     <VBox spacing="4">
         <Label text="Password:"/>
         <PasswordField fx:id="passwordField"
-                       promptText="************"/>
+                       promptText="password"/>
     </VBox>
 
     <HBox spacing="12"
