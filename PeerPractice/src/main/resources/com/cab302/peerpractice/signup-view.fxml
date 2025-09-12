@@ -32,7 +32,7 @@
     </VBox>
 
     <VBox spacing="8">
-        <TextField fx:id="firsNameField"
+        <TextField fx:id="firstNameField"
                    promptText="First Name"
                    prefWidth="320"/>
         <TextField fx:id="lastNameField"
@@ -44,6 +44,10 @@
 
         <TextField fx:id="emailField"
                    promptText="Email"
+                   prefWidth="320"/>
+
+        <TextField fx:id="institutionField"
+                   promptText="Institution or School"
                    prefWidth="320"/>
 
         <PasswordField fx:id="passwordField"

@@ -15,8 +15,21 @@ public class MockDAO implements IUserDAO{
 
     @Override
     public boolean addUser(User user) {
-        users.add(user);
-        return true;
+        if (user == null) {
+            return false; // don’t add null
+        }
+
+        // prevent duplicate email or username
+        boolean exists = users.stream().anyMatch(u ->
+                (u.getEmail() != null && u.getEmail().equalsIgnoreCase(user.getEmail())) ||
+                        (u.getUsername() != null && u.getUsername().equalsIgnoreCase(user.getUsername()))
+        );
+
+        if (exists) {
+            return false;
+        }
+
+        return users.add(user);
     }
 
     @Override
@@ -24,7 +37,7 @@ public class MockDAO implements IUserDAO{
         return users.remove(user);
     }
 
-
+    @Override
     public boolean updateUser(User user){
         for(int i = 0; i<users.size() ; i++){
             if(Objects.equals(users.get(i).getUsername(),user.getUsername())){
