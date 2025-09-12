@@ -14,43 +14,16 @@ public class MockDAO implements IUserDAO{
     }
 
     @Override
-    public boolean logIn(User user) {
-        users.contains(user);
-        return true;
-    }
-
-    @Override
-    public boolean signUp(User user) {
+    public boolean addUser(User user) {
         users.add(user);
         return true;
     }
 
     @Override
-    public List<User> searchByUsername(String username) {
-        List<User> matches = users.stream()
-                .filter(u -> {
-                    String un = u.getUsername();
-                    return un != null && un.equalsIgnoreCase(username);
-                })
-                .toList();
-        return List.copyOf(matches); // return unmodifiable list
+    public boolean deleteUser(User user) {
+        return users.remove(user);
     }
 
-    @Override
-    public List<User> searchByInstitution(String institution) {
-        List<User> matches = users.stream()
-                .filter(u -> {
-                    String inst = u.getInstitution();
-                    return inst != null && inst.equalsIgnoreCase(institution);
-                })
-                .toList();
-        return List.copyOf(matches);
-    }
-
-    public boolean deleteUser(User user){
-        users.remove(user);
-        return true;
-    }
 
     public boolean updateUser(User user){
         for(int i = 0; i<users.size() ; i++){
@@ -61,6 +34,35 @@ public class MockDAO implements IUserDAO{
         }
         return false;
     }
+
+    @Override
+    public List<User> searchByUsername(String username) {
+        return users.stream()
+                .filter(u -> u.getUsername() != null && u.getUsername().equalsIgnoreCase(username))
+                .toList();
+    }
+
+    @Override
+    public List<User> searchByInstitution(String institution) {
+        return users.stream()
+                .filter(u -> u.getInstitution() != null && u.getInstitution().equalsIgnoreCase(institution))
+                .toList();
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return users.stream()
+                .filter(u -> Objects.equals(u.getEmail(), email))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<User> getUserByUsername(String username) {
+        return users.stream()
+                .filter(u -> Objects.equals(u.getUsername(), username))
+                .findFirst();
+    }
+
 
     @Override
     public boolean existsByEmail(String email) {
@@ -82,18 +84,19 @@ public class MockDAO implements IUserDAO{
         return false;
     }
 
+    @Override
     public List<User> getAllUsers() {
         return users;
     }
 
     @Override
     public boolean storePassword(User user, String hash) {
-        user.setPassword(hash);
-        return true;
+        return false;
     }
 
-    public String getPassword(User user){
-        return user.getPassword();
+    @Override
+    public String getPassword(User user) {
+        return "";
     }
 
 }

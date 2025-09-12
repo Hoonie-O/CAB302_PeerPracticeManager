@@ -1,3 +1,4 @@
+import com.cab302.peerpractice.Model.BcryptHasher;
 import com.cab302.peerpractice.Model.IUserDAO;
 import com.cab302.peerpractice.Model.MockDAO;
 import com.cab302.peerpractice.Model.UserManager;
@@ -12,7 +13,7 @@ public class UserManagerTest {
     @BeforeEach
     public void setUp(){
         userdao = new MockDAO();
-        manager = new UserManager(userdao);
+        manager = new UserManager(userdao, new BcryptHasher());
     }
 
     @Test
