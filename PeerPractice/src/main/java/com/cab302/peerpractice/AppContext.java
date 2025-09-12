@@ -7,10 +7,12 @@ public class AppContext {
     private final IUserDAO userDao = new MockDAO();
     private final PasswordHasher passwordHasher = new BcryptHasher();
     private final UserManager userManager = new UserManager(userDao,passwordHasher);
+    private final MailService mailService = new MailService();
 
     public UserSession getUserSession(){return userSession;}
     public IUserDAO getUserDao(){return userDao;}
     public PasswordHasher getPasswordHasher(){return passwordHasher;}
     public UserManager getUserManager(){return userManager;}
+    public MailService getMailService(){return mailService;}
 
 }

@@ -2,6 +2,9 @@ package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.IUserDAO;
+import com.cab302.peerpractice.Model.MailService;
+import com.cab302.peerpractice.Model.User;
+import com.cab302.peerpractice.Model.UserSession;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;
@@ -20,12 +23,19 @@ public class ForgotPasswordController extends BaseController{
     @FXML
     private void onSendResetLink() {
         IUserDAO userDAO = ctx.getUserDao();
+        MailService mailService = ctx.getMailService();
+        User user = ctx.getUserSession().getCurrentUser();
         if(userDAO.existsByEmail(emailField.getText())){
+            String msg = String.format("Hello %s,%n" +
+                    "Your PeerPractice password can be reset by accessing the folowing link: %s.%n" +
+                    "If you did not request a new password, please ignore this email.",user.getFirstName(),"null");
+            mailService.sendMessage(msg,emailField.getText());
             messageLabel.setText("Password reset link has been sent to your email. The link will expire in 10 minutes.");
         }
         else{
             messageLabel.setText("Email does not exist or is not valid.");
         }
+        nav.Display(View.ResetPassword);
     }
 
     @FXML
