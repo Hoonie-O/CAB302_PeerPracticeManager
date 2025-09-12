@@ -19,9 +19,13 @@ public class ForgotPasswordController extends BaseController{
 
     @FXML
     private void onSendResetLink() {
-
-        messageLabel.setText("Reset link sent to: " + emailField.getText());
-
+        IUserDAO userDAO = ctx.getUserDao();
+        if(userDAO.existsByEmail(emailField.getText())){
+            messageLabel.setText("Password reset link has been sent to your email. The link will expire in 10 minutes.");
+        }
+        else{
+            messageLabel.setText("Email does not exist or is not valid.");
+        }
     }
 
     @FXML
