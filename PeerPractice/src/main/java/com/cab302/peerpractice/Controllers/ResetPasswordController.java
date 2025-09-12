@@ -2,8 +2,7 @@ package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Exceptions.InvalidPasswordException;
-import com.cab302.peerpractice.Model.PasswordHasher;
-import com.cab302.peerpractice.Model.PasswordValidator;
+import com.cab302.peerpractice.Model.*;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.event.ActionEvent;
@@ -28,6 +27,9 @@ public class ResetPasswordController extends BaseController {
 
     public void onConfirm(ActionEvent actionEvent) {
         try {
+            UserManager userManager = ctx.getUserManager();
+            User user = ctx.getUserSession().getCurrentUser();
+
             if(newPasswordField.getText().isEmpty()) {
                 messageLabel.setText("Password has not been filled");
             }
@@ -35,6 +37,7 @@ public class ResetPasswordController extends BaseController {
                 messageLabel.setText("Passwords don't match");
             }
             else if(PasswordValidator.validate(newPasswordField.getText())){
+                userManager.changePassword(user,confirmPassword.getText());
                 messageLabel.setText("Password has been changed");
             }
         }catch(InvalidPasswordException e){

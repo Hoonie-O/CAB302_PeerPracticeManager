@@ -45,6 +45,13 @@ public class UserManager {
                 .orElse(false);
     }
 
+    //Password changer
+    public boolean changePassword(User user, String rawPassword){
+        String hashed = hasher.hasher(rawPassword);
+        userDAO.storePassword(user,hashed);
+        return true;
+    }
+
     // Validation helpers
     private static void validateUsername(String username) {
         if (username == null) throw new IllegalArgumentException("Username can't be null");
