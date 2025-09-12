@@ -36,6 +36,7 @@ public class ForgotPasswordController extends BaseController{
             messageLabel.setText("Email does not exist or is not valid.");
         }
         nav.Display(View.ResetPassword);
+
     }
 
     @FXML
