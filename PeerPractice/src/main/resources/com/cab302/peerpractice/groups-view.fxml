@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.peerpractice.Controllers.GroupController"
+            prefHeight="720"
+            prefWidth="1280">
+
+    <!-- Top Header -->
+    <top>
+        <VBox>
+            <BorderPane>
+                <padding>
+                    <Insets top="10"
+                            right="10"
+                            bottom="10"
+                            left="10">
+                    </Insets>
+                </padding>
+                <left>
+                    <Button fx:id="menuButton"
+                            text="Menu"
+                            onAction="#onToggleMenu"/>
+                </left>
+                <center>
+                    <Label text="Peer Practice - GROUPTEN"/>
+                </center>
+                <right>
+                    <HBox spacing="8">
+                        <Button fx:id="profileButton"
+                                text="Profile"
+                                onAction="#onToggleProfile"/>
+                    </HBox>
+                </right>
+            </BorderPane>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <!-- Left Sidebar Menu -->
+    <left>
+        <BorderPane fx:id="menu"
+                    prefWidth="180">
+            <right>
+                <Separator orientation="VERTICAL"/>
+            </right>
+            <center>
+                <VBox alignment="TOP_CENTER"
+                      spacing="8">
+                    <padding>
+                        <Insets top="12"
+                                right="12"
+                                bottom="12"
+                                left="12">
+                        </Insets>
+                    </padding>
+                    <Label text="Menu"/>
+                    <Separator/>
+                    <Button text="Study Group"
+                            prefWidth="180"/>
+                    <Button fx:id="calendarButton"
+                            text="Calendar"
+                            onAction="#onOpenCalendar"
+                            prefWidth="220"
+                            prefHeight="32"/>
+                    <Button text="Friends"
+                            prefWidth="180"/>
+                </VBox>
+            </center>
+        </BorderPane>
+    </left>
+
+    <!-- Right Sidebar Profile -->
+    <right>
+        <BorderPane fx:id="profile"
+                    prefWidth="180">
+            <left>
+                <Separator orientation="VERTICAL"/>
+            </left>
+            <center>
+                <VBox alignment="TOP_CENTER"
+                      spacing="12">
+                    <padding>
+                        <Insets top="12"
+                                right="12"
+                                bottom="12"
+                                left="12">
+                        </Insets>
+                    </padding>
+                    <!-- Header -->
+                    <Label text="Profile"/>
+                    <Separator/>
+                    <VBox alignment="CENTER_LEFT" spacing="6">
+                        <Label text="John Doe"/>
+                        <Label text="#johndoe123"/>
+                        <!-- Availability Status -->
+                        <ComboBox fx:id="availabilityStatus" prefWidth="180">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Online"/>
+                                    <String fx:value="Away"/>
+                                    <String fx:value="Busy"/>
+                                    <String fx:value="Offline"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
+                    <Separator/>
+                    <!-- Buttons -->
+                    <Button text="Edit profile"
+                            prefWidth="180"/>
+                    <Button text="Setting"
+                            prefWidth="180"/>
+                    <Button text="Logout"
+                            prefWidth="180" onAction="#onBackToLogin"/>
+                </VBox>
+            </center>
+        </BorderPane>
+    </right>
+
+    <center>
+        <BorderPane>
+            <!-- Left: Group list -->
+            <left>
+                <VBox spacing="8" prefWidth="200" style="-fx-background-color: #f5f5f5;">
+                    <padding>
+                        <Insets top="10" left="12" right="10" bottom="10"/>
+                    </padding>
+                    <Label text="Groups" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <HBox spacing="5">
+                        <Button text="+" prefWidth="30"/>
+                        <TextField promptText="Search..." HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <ListView fx:id="groupListView" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </left>
+
+            <!-- Center: Group details -->
+            <center>
+                <VBox spacing="10">
+                    <!-- Group header with tabs -->
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label fx:id="groupNameLabel"
+                               text="Example 1"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        <TabPane fx:id="groupTabs" HBox.hgrow="ALWAYS">
+                            <tabs>
+                                <Tab text="Calendar"/>
+                                <Tab text="Sessions"/>
+                                <Tab text="Chat"/>
+                                <Tab text="Files"/>
+                            </tabs>
+                        </TabPane>
+                    </HBox>
+
+                    <!-- Placeholder content area -->
+                    <StackPane style="-fx-background-color: #e8e8e8; -fx-alignment: center;"
+                               VBox.vgrow="ALWAYS">
+                        <Label text="CALENDAR" style="-fx-font-size: 24px; -fx-text-fill: #444;"/>
+                    </StackPane>
+                </VBox>
+            </center>
+        </BorderPane>
+    </center>
+</BorderPane>
