@@ -12,9 +12,9 @@ public class AppContext {
 
     public AppContext() {
         try {
-            userManager.signUp("John", "Doe", "username", "email@email.com", "password", "QUT");
+            userManager.signUp("John", "Doe", "username", "email@email.com", "passWORD123?!", "QUT");
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to seed test user", e);
+            throw new IllegalStateException("Failed to seed test user" + e.getMessage());
         }
     }
 

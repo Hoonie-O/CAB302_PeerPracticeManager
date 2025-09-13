@@ -49,7 +49,7 @@ public class MockDAO implements IUserDAO{
     }
 
     @Override
-    public List<User> searchByUsername(String username) {
+    public User searchByUsername(String username) {
         return users.stream()
                 .filter(u -> u.getUsername() != null && u.getUsername().equalsIgnoreCase(username))
                 .toList();
@@ -110,6 +110,16 @@ public class MockDAO implements IUserDAO{
     @Override
     public String getPassword(User user) {
         return "";
+    }
+
+    @Override
+    public boolean addNotification(String username, Notification notification) {
+        return false;
+    }
+
+    @Override
+    public boolean removeNotification(String username, Notification notification) {
+        return false;
     }
 
 }
