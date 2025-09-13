@@ -37,8 +37,9 @@ public class ResetPasswordController extends BaseController {
                 messageLabel.setText("Passwords don't match");
             }
             else if(PasswordValidator.validate(newPasswordField.getText())){
-                userManager.changePassword(user,confirmPassword.getText());
-                messageLabel.setText("Password has been changed");
+                if(userManager.changePassword(user,confirmPassword.getText())) {
+                    messageLabel.setText("Password has been changed");
+                }
             }
         }catch(InvalidPasswordException e){
             messageLabel.setText(e.getMessage());

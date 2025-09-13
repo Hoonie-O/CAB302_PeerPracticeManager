@@ -1,5 +1,4 @@
 package com.cab302.peerpractice.Model;
-
 import org.mindrot.jbcrypt.BCrypt;
 
 public class BcryptHasher implements PasswordHasher {
