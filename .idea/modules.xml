@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CAB302_PeerPracticeManager.iml" filepath="$PROJECT_DIR$/.idea/CAB302_PeerPracticeManager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/PeerPractice/PeerPractice.iml" filepath="$PROJECT_DIR$/PeerPractice/PeerPractice.iml" />
     </modules>
   </component>
 </project>
