@@ -6,7 +6,8 @@ public enum View {
     ForgotPassword("forgotpassword-view.fxml", "Forgot password"),
     MainMenu("mainmenu-view.fxml", "Main menu"),
     Calendar("calendar-view.fxml", "Calendar"),
-    ResetPassword("resetpassword-view.fxml","ResetPassword");
+    ResetPassword("resetpassword-view.fxml","Reset Password"),
+    EditProfile("editprofile-view.fxml", "Edit Profile");
 
     private final String fxml;
     private final String title;
@@ -22,5 +23,9 @@ public enum View {
 
     public String title() {
         return title;
+    }
+
+    public java.net.URL url() {
+        return View.class.getResource("/com/cab302/peerpractice/" + fxml);
     }
 }

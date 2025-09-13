@@ -6,7 +6,7 @@
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.MainMenuController"
             prefHeight="1000"
             prefWidth="1200">
@@ -113,11 +113,13 @@
                     <Separator/>
                     <!-- Buttons -->
                     <Button text="Edit profile"
-                            prefWidth="180"/>
+                            prefWidth="180"
+                            onAction="#onEditProfile"/>
                     <Button text="Setting"
                             prefWidth="180"/>
                     <Button text="Logout"
-                            prefWidth="180" onAction="#onBackToLogin"/>
+                            prefWidth="180"
+                            onAction="#onBackToLogin"/>
                 </VBox>
             </center>
         </BorderPane>

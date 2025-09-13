@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cab302.peerpractice.Controllers.EditProfileController"
+      spacing="8"
+      prefWidth="580">
+    <padding>
+        <Insets top="12"
+                right="12"
+                bottom="12"
+                left="12"/>
+    </padding>
+
+    <GridPane hgap="12"
+              vgap="12">
+        <!-- Two equal columns -->
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"
+                               minWidth="290"/>
+            <ColumnConstraints hgrow="ALWAYS"
+                               minWidth="290"/>
+        </columnConstraints>
+
+        <!-- First name -->
+        <VBox spacing="4"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="0">
+            <Label text="First name:"/>
+            <TextField fx:id="firstNameField"
+                       maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Last name -->
+        <VBox spacing="4"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="1">
+            <Label text="Last name:"/>
+            <TextField fx:id="lastNameField"
+                       maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Email -->
+        <VBox spacing="4"
+              GridPane.rowIndex="1"
+              GridPane.columnIndex="0">
+            <Label text="Email:"/>
+            <TextField fx:id="emailField"
+                       disable="true"
+                       editable="false"
+                       maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Username -->
+        <VBox spacing="4" GridPane.rowIndex="1"
+              GridPane.columnIndex="1">
+            <Label text="Username:"/>
+            <TextField fx:id="usernameField"
+                       maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Date of birth -->
+        <VBox spacing="4"
+              GridPane.rowIndex="2"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2">
+            <Label text="Date of birth:"/>
+            <DatePicker fx:id="dateOfBirthField"
+                        maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Phone number -->
+        <VBox spacing="4"
+              GridPane.rowIndex="3"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2">
+            <Label text="Phone number:"/>
+            <TextField fx:id="phoneField"
+                       maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Home address -->
+        <VBox spacing="4"
+              GridPane.rowIndex="4"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2">
+            <Label text="Home address:"/>
+            <TextField fx:id="addressField"
+                       maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Institute -->
+        <VBox spacing="4"
+              GridPane.rowIndex="5"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2">
+            <Label text="Institute:"/>
+            <TextField fx:id="instituteField"
+                       maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Buttons -->
+        <HBox alignment="CENTER_RIGHT"
+              spacing="8"
+              GridPane.rowIndex="7"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2">
+            <Button text="Close"
+                    onAction="#onClose"
+                    minWidth="110"/>
+            <Button text="Save"
+                    onAction="#onSave"
+                    minWidth="110"/>
+        </HBox>
+    </GridPane>
+</VBox>

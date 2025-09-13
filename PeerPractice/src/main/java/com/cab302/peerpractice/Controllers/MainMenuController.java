@@ -4,16 +4,31 @@ import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.animation.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.*;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.*;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 
-public class MainMenuController extends BaseController{
-    @FXML private BorderPane menu;
-    @FXML private BorderPane profile;
-    @FXML private ComboBox<String> availabilityStatus;
+
+public class MainMenuController extends BaseController {
+    @FXML
+    private BorderPane menu;
+    @FXML
+    private BorderPane profile;
+    @FXML
+    private ComboBox<String> availabilityStatus;
+
 
     private boolean menuOpen = false;
     private boolean profileOpen = false;
@@ -43,10 +58,12 @@ public class MainMenuController extends BaseController{
             // Changes in availability selection
             availabilityStatus.getSelectionModel().selectedItemProperty()
                     .addListener((observable, oldValue, newValue) -> {
-                System.out.println("Status changed to: " + newValue);
-            });
+                        System.out.println("Status changed to: " + newValue);
+                    });
+
         }
     }
+
     @FXML
     private void onOpenCalendar(javafx.event.ActionEvent event) {
         // Display Calendar view
@@ -58,6 +75,7 @@ public class MainMenuController extends BaseController{
         // Display Login view
         nav.Display(View.Login);
     }
+
     // Duration of the slide-in and slide out animation
     private static final Duration SLIDE = Duration.millis(180);
 
@@ -118,5 +136,43 @@ public class MainMenuController extends BaseController{
             profile.setManaged(false);
             profile.setTranslateX(0);
         });
+    }
+
+    @FXML
+    private void onEditProfile(ActionEvent event) {
+        try {
+            // Locate FXML file
+            URL fxml = java.util.Objects
+                    .requireNonNull(View.EditProfile.url());
+            // Create FXMLLoader
+            FXMLLoader loader = new FXMLLoader(fxml);
+            loader.setControllerFactory(cls -> {
+                try {
+                    if (cls == EditProfileController.class) {
+                        return new EditProfileController(ctx, nav);
+                    }
+                    return cls.getDeclaredConstructor().newInstance();
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+            });
+
+            // Load view and get controller
+            Parent root = loader.load();
+            EditProfileController controller = loader.getController();
+
+            // Create and configure a modal dialog 'Stage'
+            Stage dialog = new Stage();
+            dialog.setTitle("Edit profile");
+            dialog.initOwner(((Node) event.getSource()).getScene().getWindow()); // Ensure that dialog stays on top of main window
+            dialog.initModality(Modality.WINDOW_MODAL); // Blocks main window until this window is closed
+            dialog.setResizable(false); // Blocks window resize
+            dialog.setScene(new Scene(root)); // Load FXML content inside the opened window
+            controller.setStage(dialog); // Allow controller to handle this window
+            dialog.showAndWait();   // Show the popup window and wait until it closes
+        }
+        catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }
