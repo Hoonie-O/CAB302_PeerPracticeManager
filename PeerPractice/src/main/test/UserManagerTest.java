@@ -1,7 +1,4 @@
-import com.cab302.peerpractice.Model.BcryptHasher;
-import com.cab302.peerpractice.Model.IUserDAO;
-import com.cab302.peerpractice.Model.MockDAO;
-import com.cab302.peerpractice.Model.UserManager;
+import com.cab302.peerpractice.Model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +14,11 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testGetAllContacts(){
+    public void testSignUpNormal(){
+
+        manager.signUp("Seiji","Sato","sati2030","seigifabian@gmail.com","perra","")
+
+
 
     }
 

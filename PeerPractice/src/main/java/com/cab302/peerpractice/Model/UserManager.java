@@ -17,12 +17,12 @@ public class UserManager {
 
     // Signup
     public boolean signUp(String firstName, String lastName, String username,
-                          String email, String rawPassword, String institution) {
-
+                          String email, String rawPassword, String institution) throws InvalidPasswordException {
         validateEmail(email);
         validateNames(firstName);
         validateNames(lastName);
         validateUsername(username);
+        validatePassword(rawPassword);
 
         if (userDAO.existsByEmail(email)) throw new DuplicateEmailException("Email already exists");
         if (userDAO.existsByUsername(username)) throw new DuplicateUsernameException("Username already exists");
@@ -46,15 +46,12 @@ public class UserManager {
     }
 
     //Password changer
-    public boolean changePassword(User user, String rawPassword){
+    public boolean changePassword(User user, String rawPassword) throws InvalidPasswordException{
+        validatePassword(rawPassword);
         String hashed = hasher.hasher(rawPassword);
         userDAO.storePassword(user,hashed);
         return true;
     }
-
-    
-
-
 
     // Validation helpers
     private static void validateUsername(String username) {
@@ -66,7 +63,7 @@ public class UserManager {
         }
     }
 
-    public static boolean validatePassword(String password) throws InvalidPasswordException{
+    private static void validatePassword(String password) throws InvalidPasswordException{
         int min_len = 8;
         int max_len = 72;
         if(password == null || password.isEmpty()){
@@ -90,7 +87,6 @@ public class UserManager {
         if(password.chars().noneMatch(c -> "!@#$%^&*()-_=+[]{};:'\",.<>/?\\|`~".indexOf(c) >= 0)){
             throw new InvalidPasswordException("Password must contain at least one special character");
         }
-        return true;
     }
 
     private static void validateEmail(String email) {
