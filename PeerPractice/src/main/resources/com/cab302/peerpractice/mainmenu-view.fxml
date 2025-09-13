@@ -8,8 +8,8 @@
 <?import java.lang.String?>
 <BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.MainMenuController"
-            prefHeight="1000"
-            prefWidth="1200">
+            prefHeight="720"
+            prefWidth="1280">
 
     <!-- Top Header -->
     <top>
@@ -145,11 +145,14 @@
                     <Button fx:id="createGroupButton"
                             text="Create group"
                             prefWidth="220"
-                            prefHeight="32"/>
+                            prefHeight="32"
+                            onAction="#onCreateGroup"/>
+
                     <Button fx:id="joinGroupButton"
                             text="Join group"
                             prefWidth="220"
-                            prefHeight="32"/>
+                            prefHeight="32"
+                            onAction="#onJoinGroup"/>
                 </VBox>
             </VBox>
         </StackPane>
