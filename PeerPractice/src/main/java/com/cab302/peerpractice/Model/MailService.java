@@ -27,8 +27,8 @@ public class MailService {
         }
     }
 
-    private static Session getEmailSession(){
-        return Session.getInstance(getGmailProperties(), new Authenticator(){
+    private static jakarta.mail.Session getEmailSession(){
+        return jakarta.mail.Session.getInstance(getGmailProperties(), new Authenticator(){
             protected PasswordAuthentication getPasswordAuthentication(){
                 return new PasswordAuthentication(emailFrom,appPassword);
             }

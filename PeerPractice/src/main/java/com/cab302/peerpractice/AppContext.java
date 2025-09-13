@@ -9,6 +9,7 @@ public class AppContext {
     private final UserManager userManager = new UserManager(userDao,passwordHasher);
     private final MailService mailService = new MailService();
     private final EventManager eventManager = new EventManager();
+    private final SessionManager sessionManager = new SessionManager();
 
     public AppContext() {
         try {
@@ -24,5 +25,6 @@ public class AppContext {
     public UserManager getUserManager(){return userManager;}
     public MailService getMailService(){return mailService;}
     public EventManager getEventManager(){return eventManager;}
+    public SessionManager getSessionManager(){return sessionManager;}
 
 }
