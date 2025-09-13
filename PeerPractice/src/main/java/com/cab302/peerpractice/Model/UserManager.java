@@ -17,7 +17,7 @@ public class UserManager {
 
     // Signup
     public boolean signUp(String firstName, String lastName, String username,
-                          String email, String rawPassword, String institution) throws InvalidPasswordException {
+                          String email, String rawPassword, String institution) throws Exception {
         validateEmail(email);
         validateNames(firstName);
         validateNames(lastName);
