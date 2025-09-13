@@ -1,6 +1,7 @@
 package com.cab302.peerpractice.Model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,7 @@ public class MockGroupDAO implements IGroupDAO {
     @Override
     public List<Group> searchByMembers(List<User> users) {
         return groups.stream()
-                .filter(g -> g.getMembers() != null && g.getMembers().containsAll(users))
+                .filter(g -> g.getMembers() != null && new HashSet<>(g.getMembers()).containsAll(users))
                 .collect(Collectors.toList());
     }
 
