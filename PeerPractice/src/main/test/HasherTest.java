@@ -8,28 +8,45 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HasherTest {
 
     private PasswordHasher hasher;
+    private String rawPassword;
+    private String hash;
 
     @BeforeEach
     public void setUp() {
         hasher = new BcryptHasher();
+        rawPassword = "password";
+        hash = hasher.hasher(rawPassword);
     }
 
     @Test
-    public void testHashingAndMatching() {
-        String rawPassword = "password";
-        String hash = hasher.hasher(rawPassword);
-
-        // hash should not be null or empty
+    public void testHashIsGenerated() {
         assertNotNull(hash);
         assertFalse(hash.isEmpty());
-
-        // hash should not equal the raw password
         assertNotEquals(rawPassword, hash);
+    }
 
-        // the same password should match the hash
-        assertTrue(hasher.matches(rawPassword,hash));
+    @Test
+    public void testCorrectPasswordMatches() {
+        assertTrue(hasher.matches(rawPassword, hash));
+    }
 
-        // a different password should not match
-        assertFalse(hasher.matches("wrongpassword",hash ));
+    @Test
+    public void testWrongPasswordDoesNotMatch() {
+        assertFalse(hasher.matches("wrongpassword", hash));
+    }
+
+    @Test
+    public void testInvalidHashFormatReturnsFalse() {
+        assertFalse(hasher.matches(rawPassword, "notAHash"));
+    }
+
+    @Test
+    public void testNullHashReturnsFalse() {
+        assertFalse(hasher.matches(rawPassword, null));
+    }
+
+    @Test
+    public void testEmptyHashReturnsFalse() {
+        assertFalse(hasher.matches(rawPassword, ""));
     }
 }
