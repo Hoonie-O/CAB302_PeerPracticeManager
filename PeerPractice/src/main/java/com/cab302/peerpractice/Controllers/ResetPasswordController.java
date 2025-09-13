@@ -19,7 +19,6 @@ public class ResetPasswordController extends BaseController {
     @FXML private Button confirmButton;
     @FXML private Button backToLogin;
     @FXML private Label messageLabel;
-    private final PasswordValidator passwordValidator = new PasswordValidator();
 
     public ResetPasswordController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
@@ -36,7 +35,7 @@ public class ResetPasswordController extends BaseController {
             else if(!confirmPassword.getText().equals(newPasswordField.getText())){
                 messageLabel.setText("Passwords don't match");
             }
-            else if(PasswordValidator.validate(newPasswordField.getText())){
+            else if(userManager.validatePassword(newPasswordField.getText())){
                 if(userManager.changePassword(user,confirmPassword.getText())) {
                     messageLabel.setText("Password has been changed");
                 }
