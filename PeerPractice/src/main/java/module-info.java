@@ -16,6 +16,7 @@ module com.cab302.peerpractice {
     requires java.sql.rowset;
     requires jakarta.mail;
     requires jbcrypt;
+    requires java.management;
 
     opens com.cab302.peerpractice to javafx.fxml;
     exports com.cab302.peerpractice;
