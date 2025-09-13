@@ -5,7 +5,8 @@ public enum View {
     Signup("signup-view.fxml", "Sign up"),
     ForgotPassword("forgotpassword-view.fxml", "Forgot password"),
     MainMenu("mainmenu-view.fxml", "Main menu"),
-    Calendar("calendar-view.fxml", "Calendar");
+    Calendar("calendar-view.fxml", "Calendar"),
+    ResetPassword("resetpassword-view.fxml","ResetPassword");
 
     private final String fxml;
     private final String title;

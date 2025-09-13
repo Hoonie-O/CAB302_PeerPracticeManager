@@ -53,5 +53,4 @@ public class LoginController extends BaseController{
             messageLabel.setText("Invalid email/username or password.");
         }
     }
-
 }

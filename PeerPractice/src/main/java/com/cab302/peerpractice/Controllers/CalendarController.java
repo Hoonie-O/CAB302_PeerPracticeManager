@@ -1,5 +1,6 @@
     package com.cab302.peerpractice.Controllers;
     
+    import com.cab302.peerpractice.AppContext;
     import com.cab302.peerpractice.Model.Event;
     import com.cab302.peerpractice.Model.EventManager;
     import com.cab302.peerpractice.Navigation;
@@ -25,7 +26,7 @@
     import java.util.List;
     import java.util.ResourceBundle;
     
-    public class CalendarController implements Initializable {
+    public class CalendarController extends BaseController {
         @FXML private Label monthYearLabel;
         @FXML private GridPane calendarGrid;
         @FXML private Button prevButton;
@@ -34,21 +35,21 @@
     
         private YearMonth currentYearMonth;
         private EventManager eventManager;
-    
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-            currentYearMonth = YearMonth.now();
-            eventManager = new EventManager();
-            updateCalendarView();
+
+        public CalendarController(AppContext ctx, Navigation nav) {
+            super(ctx, nav);
+            this.eventManager = ctx.getEventManager();
         }
-    
-        private Navigation navigate() {
-            return (Navigation) backToMenuButton.getScene().getWindow().getUserData();
+
+        @FXML
+        private void initialize(){
+            currentYearMonth = YearMonth.now();
+            updateCalendarView();
         }
     
         @FXML
         private void onBackToMenu() {
-            navigate().Display(View.MainMenu);
+            nav.Display(View.MainMenu);
         }
     
         @FXML

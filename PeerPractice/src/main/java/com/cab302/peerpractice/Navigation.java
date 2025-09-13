@@ -40,7 +40,7 @@ public final class Navigation {
                     return type.getDeclaredConstructor(AppContext.class, Navigation.class).newInstance(ctx,this);
                 }catch(Exception e){
                     throw new ControllerFactoryFailedException("Controller " + type.getName() +
-                        " failed, constructor must be declared as (AppContext ctx, Navigation nav)");
+                        " failed, constructor must be declared as (AppContext ctx, Navigation nav) and be declared as public");
                 }
             });
 

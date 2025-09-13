@@ -102,7 +102,7 @@ public class UserTest {
 
     @Test
     public void testTrimmedLastName(){
-        User u = new User("Henry","  Boggus     ","hebo","hebo@gmail.com",new char[]{'e','e','f','a','!'},"QUT");
+        User u = new User("Henry","  Boggus     ","hebo","hebo@gmail.com",,"QUT");
         assertEquals("Boggus",user.getLastName());
     }
 
