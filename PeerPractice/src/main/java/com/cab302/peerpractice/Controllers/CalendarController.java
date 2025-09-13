@@ -36,19 +36,20 @@
         private YearMonth currentYearMonth;
         private EventManager eventManager;
 
-        protected CalendarController(AppContext ctx, Navigation nav) {
+        public CalendarController(AppContext ctx, Navigation nav) {
             super(ctx, nav);
+            this.eventManager = ctx.getEventManager();
+        }
+
+        @FXML
+        private void initialize(){
             currentYearMonth = YearMonth.now();
             updateCalendarView();
         }
     
-        private Navigation navigate() {
-            return (Navigation) backToMenuButton.getScene().getWindow().getUserData();
-        }
-    
         @FXML
         private void onBackToMenu() {
-            navigate().Display(View.MainMenu);
+            nav.Display(View.MainMenu);
         }
     
         @FXML
