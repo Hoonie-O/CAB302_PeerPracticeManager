@@ -20,5 +20,6 @@ module com.cab302.peerpractice {
     opens com.cab302.peerpractice to javafx.fxml;
     exports com.cab302.peerpractice;
     exports com.cab302.peerpractice.Controllers;
+    exports com.cab302.peerpractice.Model;
     opens com.cab302.peerpractice.Controllers to javafx.fxml;
 }

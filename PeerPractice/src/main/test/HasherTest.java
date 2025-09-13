@@ -1,32 +1,35 @@
+import com.cab302.peerpractice.Model.BcryptHasher;
 import com.cab302.peerpractice.Model.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HasherTest {
 
     private PasswordHasher hasher;
 
-    //Change for current implementation of hasher
     @BeforeEach
-    public void setUp(){
-        hasher = new bcrypt();
+    public void setUp() {
+        hasher = new BcryptHasher();
     }
 
     @Test
-    public void testHashing(){
-        assertEquals("$2a$12$mYPDrFpdRS9XODR8EEPouus7jZGrdJjGTbSKE4w6JArohOT7jhbZy",hasher.hash("password"));
+    public void testHashingAndMatching() {
+        String rawPassword = "password";
+        String hash = hasher.hasher(rawPassword);
+
+        // hash should not be null or empty
+        assertNotNull(hash);
+        assertFalse(hash.isEmpty());
+
+        // hash should not equal the raw password
+        assertNotEquals(rawPassword, hash);
+
+        // the same password should match the hash
+        assertTrue(hasher.matches(rawPassword,hash));
+
+        // a different password should not match
+        assertFalse(hasher.matches("wrongpassword",hash ));
     }
-
-    @Test
-    public void testVerifyTrue(){
-        assertEquals(true,hasher.verify("$2a$12$mYPDrFpdRS9XODR8EEPouus7jZGrdJjGTbSKE4w6JArohOT7jhbZy","password"));
-    }
-
-    @Test
-    public void testVerifyFalse(){
-        assertEquals(false,hasher.verify("$2a$12$mYPDrFpdRS9XODR8EEPouus7jZGrdJjGTbSKE4w6JArohOT7jhbZy","password2"));
-    }
-
-
 }

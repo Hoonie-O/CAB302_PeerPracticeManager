@@ -3,6 +3,7 @@ import com.cab302.peerpractice.Model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +23,8 @@ public class UserTest {
     private String EMAIL2 = "jack@email.com";
     private String INSTITUTION = "QUT";
     private String INSTITUTION2 = "UQ";
-    private char[] PASSWORD = {'e','x','a','m','p','l','e'};
-    private char[] PASSWORD2 = {'1','2','3','4','5','6'};
+    private String PASSWORD = "password";
+    private String PASSWORD2 = "password2";
     private String BIO = "Im a student";
 
     private User user;
@@ -34,7 +35,7 @@ public class UserTest {
     public void setUp(){
         user = new User(FIRST_NAME,LAST_NAME,USERNAME,EMAIL,PASSWORD,INSTITUTION);
         user2 = new User(FIRST_NAME2,LAST_NAME2,USERNAME2,EMAIL2,PASSWORD2,INSTITUTION2);
-        user3 = new User("Bon","Jovi","bonjo","bonjovi@email.com", new char[]{'h', 'e', 'l', 'l', 'o'},"UNSW");
+        user3 = new User("Bon","Jovi","bonjo","bonjovi@email.com", "hello","UNSW");
     }
 
     @Test
@@ -70,7 +71,7 @@ public class UserTest {
 
     @Test
     public void testTrimmedFirstName(){
-        User u = new User("     Henry    ","Boggus","hebo","hebo@gmail.com",new char[]{'e','e','f','a','!'},"QUT");
+        User u = new User("     Henry    ","Boggus","hebo","hebo@gmail.com","hello","QUT");
         assertEquals("Henry",user.getFirstName());
     }
 
@@ -102,7 +103,7 @@ public class UserTest {
 
     @Test
     public void testTrimmedLastName(){
-        User u = new User("Henry","  Boggus     ","hebo","hebo@gmail.com",,"QUT");
+        User u = new User("Henry","  Boggus     ","hebo","hebo@gmail.com","hello","QUT");
         assertEquals("Boggus",user.getLastName());
     }
 
@@ -183,7 +184,7 @@ public class UserTest {
 
     @Test
     public void testTrimmedEmail(){
-        User u = new User("Henry","Boggus","hebo","  hebo@gmail.com   ",new char[] {'e','e','r','s','?'},"QUT");
+        User u = new User("Henry","Boggus","hebo","  hebo@gmail.com   ","hello","QUT");
         assertEquals("hebo@gmail.com",user.getEmail());
     }
 
