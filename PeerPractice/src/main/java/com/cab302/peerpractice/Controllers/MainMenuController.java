@@ -1,6 +1,8 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
+import com.cab302.peerpractice.Model.Group;
+import com.cab302.peerpractice.Model.User;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.animation.*;
@@ -11,6 +13,8 @@ import javafx.util.*;
 
 
 public class MainMenuController extends BaseController{
+    public Button createGroupButton;
+    public Button joinGroupButton;
     @FXML private BorderPane menu;
     @FXML private BorderPane profile;
     @FXML private ComboBox<String> availabilityStatus;
@@ -242,5 +246,90 @@ public class MainMenuController extends BaseController{
             profile.setManaged(false);
             profile.setTranslateX(0);
         });
+    }
+
+    @FXML
+    private void onCreateGroup() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Create Study Group");
+        dialog.setHeaderText("Enter group details:");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Group name");
+
+        TextArea descriptionField = new TextArea();
+        descriptionField.setPromptText("Description");
+
+        CheckBox approvalCheck = new CheckBox("Require approval to join");
+
+        VBox content = new VBox(10, new Label("Group name:"), nameField,
+                new Label("Description:"), descriptionField,
+                approvalCheck);
+        dialog.getDialogPane().setContent(content);
+
+        ButtonType createButton = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createButton, ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(response -> {
+            if (response == createButton) {
+                String name = nameField.getText();
+                String description = descriptionField.getText();
+                boolean requireApproval = approvalCheck.isSelected();
+
+                try {
+                    User currentUser = ctx.getUserSession().getCurrentUser();
+                    ctx.getGroupManager().createGroup(name, description, requireApproval, currentUser);
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Group created successfully!");
+                    alert.showAndWait();
+                    nav.Display(View.Groups);
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Error creating group: " + e.getMessage());
+                    alert.showAndWait();
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void onJoinGroup() {
+        boolean joined = false;
+
+        while (!joined) {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Join Study Group");
+            dialog.setHeaderText("Enter the code to join the group:");
+            dialog.setContentText("Group Code:");
+
+            var result = dialog.showAndWait();
+            if (result.isEmpty()) {
+                break;
+            }
+
+            String code = result.get();
+            try {
+                Group group = ctx.getGroupDao().getAllGroups().stream()
+                        .filter(g -> String.valueOf(g.getID()).equals(code))
+                        .findFirst()
+                        .orElse(null);
+
+                if (group == null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "No group found with that code. Please try again.");
+                    alert.showAndWait();
+                    continue;
+                }
+
+                User currentUser = ctx.getUserSession().getCurrentUser();
+                ctx.getGroupManager().joinGroup(group, currentUser);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Request to join sent / group joined successfully!");
+                alert.showAndWait();
+                joined = true;
+                nav.Display(View.Groups);
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error joining group: " + e.getMessage());
+                alert.showAndWait();
+            }
+        }
     }
 }

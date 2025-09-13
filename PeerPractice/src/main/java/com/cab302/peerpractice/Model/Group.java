@@ -1,6 +1,7 @@
 package com.cab302.peerpractice.Model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Group {
         this.require_approval = require_approval;
         this.owner = owner;
         this.created_at = created_at;
+        this.members = new ArrayList<>();
     }
 
     public List<User> getMembers() { return Collections.unmodifiableList(members); }

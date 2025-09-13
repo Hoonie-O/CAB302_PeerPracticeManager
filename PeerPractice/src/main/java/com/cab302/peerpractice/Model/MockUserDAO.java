@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MockDAO implements IUserDAO{
+public class MockUserDAO implements IUserDAO{
 
     private final List<User> users;
 
-    public MockDAO(){
+    public MockUserDAO(){
         users = new ArrayList<>();
     }
 
@@ -50,7 +50,7 @@ public class MockDAO implements IUserDAO{
 
     @Override
     public User searchByUsername(String username) {
-        return users.stream()
+        return (User) users.stream()
                 .filter(u -> u.getUsername() != null && u.getUsername().equalsIgnoreCase(username))
                 .toList();
     }

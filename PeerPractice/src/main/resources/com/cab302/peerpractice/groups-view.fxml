@@ -7,7 +7,7 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 <BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.cab302.peerpractice.Controllers.MainMenuController"
+            fx:controller="com.cab302.peerpractice.Controllers.GroupController"
             prefHeight="720"
             prefWidth="1280">
 
@@ -95,21 +95,21 @@
                     <!-- Header -->
                     <Label text="Profile"/>
                     <Separator/>
-                        <VBox alignment="CENTER_LEFT" spacing="6">
-                            <Label fx:id="userNameLabel" text="John Doe"/>
-                            <Label fx:id="userUsernameLabel" text="#johndoe123"/>
-                    <!-- Availability Status -->
-                            <ComboBox fx:id="availabilityStatus" prefWidth="180">
-                                <items>
-                                    <FXCollections fx:factory="observableArrayList">
-                                        <String fx:value="Online"/>
-                                        <String fx:value="Away"/>
-                                        <String fx:value="Busy"/>
-                                        <String fx:value="Offline"/>
-                                    </FXCollections>
-                                </items>
-                            </ComboBox>
-                        </VBox>
+                    <VBox alignment="CENTER_LEFT" spacing="6">
+                        <Label text="John Doe"/>
+                        <Label text="#johndoe123"/>
+                        <!-- Availability Status -->
+                        <ComboBox fx:id="availabilityStatus" prefWidth="180">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Online"/>
+                                    <String fx:value="Away"/>
+                                    <String fx:value="Busy"/>
+                                    <String fx:value="Offline"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
                     <Separator/>
                     <!-- Buttons -->
                     <Button text="Edit profile"
@@ -117,44 +117,54 @@
                     <Button text="Setting"
                             prefWidth="180"/>
                     <Button text="Logout"
-                            prefWidth="180" onAction="#onLogout"/>
+                            prefWidth="180" onAction="#onBackToLogin"/>
                 </VBox>
             </center>
         </BorderPane>
     </right>
 
-    <!-- Body -->
     <center>
-        <StackPane>
-            <VBox alignment="CENTER"
-                  spacing="10"
-                  maxWidth="420">
-                <Label text="Build your study group"/>
-                <Label text="Take your study group outside of a class for a more efficient way to get things done."
-                       wrapText="true"
-                       maxWidth="360"/>
-                <VBox alignment="CENTER"
-                      spacing="10">
+        <BorderPane>
+            <!-- Left: Group list -->
+            <left>
+                <VBox spacing="8" prefWidth="200" style="-fx-background-color: #f5f5f5;">
                     <padding>
-                        <Insets top="10"
-                                right="10"
-                                bottom="10"
-                                left="10">
-                        </Insets>
+                        <Insets top="10" left="12" right="10" bottom="10"/>
                     </padding>
-                    <Button fx:id="createGroupButton"
-                            text="Create group"
-                            prefWidth="220"
-                            prefHeight="32"
-                            onAction="#onCreateGroup"/>
-
-                    <Button fx:id="joinGroupButton"
-                            text="Join group"
-                            prefWidth="220"
-                            prefHeight="32"
-                            onAction="#onJoinGroup"/>
+                    <Label text="Groups" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <HBox spacing="5">
+                        <Button text="+" prefWidth="30"/>
+                        <TextField promptText="Search..." HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <ListView fx:id="groupListView" VBox.vgrow="ALWAYS"/>
                 </VBox>
-            </VBox>
-        </StackPane>
+            </left>
+
+            <!-- Center: Group details -->
+            <center>
+                <VBox spacing="10">
+                    <!-- Group header with tabs -->
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label fx:id="groupNameLabel"
+                               text="Example 1"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        <TabPane fx:id="groupTabs" HBox.hgrow="ALWAYS">
+                            <tabs>
+                                <Tab text="Calendar"/>
+                                <Tab text="Sessions"/>
+                                <Tab text="Chat"/>
+                                <Tab text="Files"/>
+                            </tabs>
+                        </TabPane>
+                    </HBox>
+
+                    <!-- Placeholder content area -->
+                    <StackPane style="-fx-background-color: #e8e8e8; -fx-alignment: center;"
+                               VBox.vgrow="ALWAYS">
+                        <Label text="CALENDAR" style="-fx-font-size: 24px; -fx-text-fill: #444;"/>
+                    </StackPane>
+                </VBox>
+            </center>
+        </BorderPane>
     </center>
 </BorderPane>
