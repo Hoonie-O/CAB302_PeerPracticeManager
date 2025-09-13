@@ -13,6 +13,7 @@ public class AppContext {
     private final GroupManager groupManager = new GroupManager(groupDao, notifier, userDao);
     private final MailService mailService = new MailService();
     private final EventManager eventManager = new EventManager();
+    private final SessionManager sessionManager = new SessionManager();
 
     public AppContext() {
         try {
@@ -39,4 +40,6 @@ public class AppContext {
     public EventManager getEventManager(){return eventManager;}
     public GroupManager getGroupManager(){return  groupManager;}
     public IGroupDAO getGroupDao() {return groupDao;}
+    public SessionManager getSessionManager(){return sessionManager;}
+
 }

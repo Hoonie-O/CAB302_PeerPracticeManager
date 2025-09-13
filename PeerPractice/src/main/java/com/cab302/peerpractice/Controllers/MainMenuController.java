@@ -18,6 +18,8 @@ public class MainMenuController extends BaseController{
     @FXML private BorderPane menu;
     @FXML private BorderPane profile;
     @FXML private ComboBox<String> availabilityStatus;
+    @FXML private Label userNameLabel;
+    @FXML private Label userUsernameLabel;
 
     private boolean menuOpen = false;
     private boolean profileOpen = false;
@@ -36,7 +38,10 @@ public class MainMenuController extends BaseController{
         profile.setVisible(false);
         profile.setManaged(false);
 
-        // Availability status dropdown
+        // Initialise user profile information
+        initializeUserProfile();
+
+        // This is the availability status dropdown
         if (availabilityStatus != null) {
             // Ensure dropdown is not empty
             if (availabilityStatus.getItems().isEmpty()) {
@@ -51,6 +56,31 @@ public class MainMenuController extends BaseController{
             });
         }
     }
+
+    /**
+     * This part initialises the user profile section with current user information.
+     * Safely handles cases where user might not be logged in.
+     */
+    private void initializeUserProfile() {
+        var currentUser = ctx.getUserSession().getCurrentUser();
+        if (currentUser != null) {
+            // Update UI with actual user data
+            if (userNameLabel != null) {
+                userNameLabel.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+            }
+            if (userUsernameLabel != null) {
+                userUsernameLabel.setText("@" + currentUser.getUsername());
+            }
+        } else {
+            // Case where user is not logged in (this shouldnt happen in normal flow tho)
+            if (userNameLabel != null) {
+                userNameLabel.setText("Not logged in");
+            }
+            if (userUsernameLabel != null) {
+                userUsernameLabel.setText("@unknown");
+            }
+        }
+    }
     @FXML
     private void onOpenCalendar(javafx.event.ActionEvent event) {
         // Display Calendar view
@@ -58,8 +88,102 @@ public class MainMenuController extends BaseController{
     }
 
     @FXML
+    private void onLogout(javafx.event.ActionEvent event) {
+        handleLogout();
+    }
+
+    @FXML
     private void onBackToLogin(javafx.event.ActionEvent event) {
-        // Display Login view
+        handleLogout();
+    }
+
+    /**
+     * This handles the logout process with proper session cleanup and user confirmation.
+     * Shows a confirmation dialog before logging out to prevent accidental logouts.
+     */
+    private void handleLogout() {
+        // Show confirmation dialog
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirm Logout");
+        confirmationAlert.setHeaderText("Are you sure you want to logout?");
+        confirmationAlert.setContentText("You will be returned to the login screen.");
+        
+        // Customise button text
+        confirmationAlert.getButtonTypes().setAll(
+            new ButtonType("Logout", ButtonType.OK.getButtonData()),
+            new ButtonType("Cancel", ButtonType.CANCEL.getButtonData())
+        );
+        
+        confirmationAlert.showAndWait().ifPresent(response -> {
+            if (response.getButtonData() == ButtonType.OK.getButtonData()) {
+                performLogout();
+            }
+        });
+    }
+
+    /**
+     * This section performs the actual logout operation with proper session cleanup.
+     * Shows success message and handles errors gracefully.
+     */
+    private void performLogout() {
+        try {
+            String currentUserName = ctx.getUserSession().getCurrentUser() != null ? 
+                ctx.getUserSession().getCurrentUser().getFirstName() : "User";
+            
+            // Clear the user session
+            ctx.getUserSession().logout();
+            
+            // Close any open sidebars for clean state
+            if (menuOpen) {
+                closeMenu();
+            }
+            if (profileOpen) {
+                closeProfile();
+            }
+            
+            // Show success message
+            showLogoutSuccessMessage(currentUserName);
+            
+            // Navigate back to login screen
+            nav.Display(View.Login);
+            
+        } catch (Exception e) {
+            handleLogoutError(e);
+        }
+    }
+
+    /**
+     * Shows a success message after successful logout.
+     */
+    private void showLogoutSuccessMessage(String userName) {
+        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+        successAlert.setTitle("Logout Successful");
+        successAlert.setHeaderText("Goodbye, " + userName + "!");
+        successAlert.setContentText("You have been successfully logged out. Thank you for using Peer Practice.");
+        
+        // Auto-close after 2 seconds
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> successAlert.close()));
+        timeline.play();
+        
+        successAlert.show();
+    }
+
+    /**
+     * Handles logout errors with appropriate user feedback.
+     */
+    private void handleLogoutError(Exception e) {
+        System.err.println("Error during logout: " + e.getMessage());
+        
+        // Force logout for security even if error occurred
+        ctx.getUserSession().logout();
+        
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setTitle("Logout Error");
+        errorAlert.setHeaderText("Logout encountered an issue");
+        errorAlert.setContentText("You have been logged out for security, but some cleanup may not have completed properly.");
+        errorAlert.showAndWait();
+        
+        // Still navigate to login screen for security
         nav.Display(View.Login);
     }
     // Duration of the slide-in and slide out animation
