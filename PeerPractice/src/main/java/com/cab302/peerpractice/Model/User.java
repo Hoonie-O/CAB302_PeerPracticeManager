@@ -77,9 +77,6 @@ public class User {
         friendsList.add(user); 
     }
 
-    public List<Event> getEvents() { return events; }
-    public void addEvent(Event ev) { events.add(ev); }
-
     public List<Notification> getNotifications() { return notifications; }
     public void addNotification(Notification n) {notifications.add(n); }
 }
