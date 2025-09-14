@@ -12,7 +12,7 @@
       spacing="12"
       alignment="TOP_CENTER"
       prefHeight="720"
-      prefWidth="1280">
+      prefWidth="480">
 
     <padding>
         <Insets top="24"
