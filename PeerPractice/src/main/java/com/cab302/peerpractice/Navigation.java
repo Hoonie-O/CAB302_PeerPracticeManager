@@ -1,6 +1,7 @@
 package com.cab302.peerpractice;
 
 import com.cab302.peerpractice.Exceptions.ControllerFactoryFailedException;
+import com.cab302.peerpractice.Model.User;
 import com.cab302.peerpractice.Model.UserSession;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -60,4 +61,16 @@ public final class Navigation {
             throw new IllegalStateException("Failed to load: " + view, e);
         }
     }
+
+    public void DisplayMainMenuOrGroup() {
+        User currentUser = ctx.getUserSession().getCurrentUser();
+        boolean hasGroups = !ctx.getGroupDao().searchByUser(currentUser).isEmpty();
+
+        if (hasGroups) {
+            Display(View.Groups);
+        } else {
+            Display(View.MainMenu);
+        }
+    }
+
 }

@@ -8,6 +8,8 @@ import com.cab302.peerpractice.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.util.List;
+
 public class LoginController extends BaseController{
     @FXML private TextField IDField;
     @FXML private PasswordField passwordField;
@@ -48,7 +50,7 @@ public class LoginController extends BaseController{
                             u.getUsername().equalsIgnoreCase(ID))
                     .findFirst().ifPresent(loggedIn -> ctx.getUserSession().setCurrentUser(loggedIn));
 
-            nav.Display(View.MainMenu);
+            nav.DisplayMainMenuOrGroup();
         } else {
             messageLabel.setText("Invalid email/username or password.");
         }
