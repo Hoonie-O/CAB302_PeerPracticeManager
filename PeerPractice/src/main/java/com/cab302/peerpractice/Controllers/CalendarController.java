@@ -26,7 +26,6 @@ public class CalendarController extends SidebarController {
     @FXML private GridPane calendarGrid;
     @FXML private Button prevButton;
     @FXML private Button nextButton;
-    @FXML private Button backToMenuButton;
     @FXML private ToggleButton sessionViewButton;
     @FXML private ToggleButton availabilityViewButton;
 
@@ -72,11 +71,6 @@ public class CalendarController extends SidebarController {
     private void switchToAvailabilityView() {
         isSessionView = false;
         updateCalendarView();
-    }
-
-    @FXML
-    private void onBackToMenu() {
-        nav.DisplayMainMenuOrGroup();
     }
 
     @FXML
