@@ -8,6 +8,9 @@ import java.sql.*;
  */
 public class ConnectionDB
 {
+    /**
+     *
+     */
     // Declare the MySQL JDBC driver to interact with database
     private static final String jdbcDriver = "com.mysql.cj.jdbc.Driver";
     // Declare the URL used to connect to the MySQL database
