@@ -1,5 +1,7 @@
 package com.cab302.peerpractice.Model;
 
+import java.sql.SQLException;
+
 public class Notifier {
 
     private IUserDAO userDAO;
@@ -8,10 +10,10 @@ public class Notifier {
         this.userDAO = userDAO;
     }
 
-    public void groupApprovalRequest(User user, Group group){
+    public void groupApprovalRequest(User user, Group group) throws SQLException {
         String ownerUsername = group.getOwner();
         GroupApprovalNotification notification = new GroupApprovalNotification(user,ownerUsername,group);
-        userDAO.addNotification(ownerUsername,notification);
+        userDAO.addNotification(ownerUsername, notification.getTo(), notification.getMessage());
     }
 
     //Method for approving a notification (should check if the user has permission to accept)

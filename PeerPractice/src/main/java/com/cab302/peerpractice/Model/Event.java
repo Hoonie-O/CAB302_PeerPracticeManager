@@ -1,99 +1,74 @@
 package com.cab302.peerpractice.Model;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
+import eu.hansolo.toolbox.time.Times;
+import javafx.beans.property.*;
+
+import java.sql.Time;
+import java.sql.Timestamp;
 
 // kept for backward compatibility - will be phased out
 public class Event {
-    private String title;
-    private String description;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private String colorLabel;
+    private final StringProperty title;
+    private final StringProperty description;
+    private final StringProperty colourLabel;
+    private final SimpleObjectProperty<Timestamp> startTime;
+    private final SimpleObjectProperty<Timestamp> endTime;
 
-    public Event(String title, String description, LocalDateTime startTime, LocalDateTime endTime, String colorLabel) {
-        this.title = Objects.requireNonNull(title, "title");
-        this.description = description != null ? description : "";
-        this.startTime = Objects.requireNonNull(startTime, "startTime");
-        this.endTime = Objects.requireNonNull(endTime, "endTime");
-        this.colorLabel = colorLabel != null ? colorLabel : "BLUE";
-        
-        if (endTime.isBefore(startTime)) {
-            throw new IllegalArgumentException("End time cannot be before start time");
-        }
+    public Event() {
+        this.title = new SimpleStringProperty();
+        this.description = new SimpleStringProperty();
+        this.colourLabel = new SimpleStringProperty();
+        this.startTime = new SimpleObjectProperty<>();
+        this.endTime = new SimpleObjectProperty<>();
     }
 
     public String getTitle() {
+        return title.get();
+    }
+    public void setTitle (String title) {
+        this.title.set(title);
+    }
+    public StringProperty titleProperty() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = Objects.requireNonNull(title, "title");
-    }
-
     public String getDescription() {
+        return description.get();
+    }
+    public void setDescription (String description) {
+        this.description.set(description);
+    }
+    public StringProperty descriptionProperty() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description != null ? description : "";
+    public String getColourLabel() {
+        return colourLabel.get();
+    }
+    public void setColourLabel (String colourLabel) {
+        this.colourLabel.set(colourLabel);
+    }
+    public StringProperty colourLabelProperty() {
+        return colourLabel;
     }
 
-    public LocalDateTime getStartTime() {
+    public Timestamp getStartTime() {
+        return startTime.get();
+    }
+    public void setStartTime(Timestamp startTime) {
+        this.startTime.set(startTime);
+    }
+    public SimpleObjectProperty<Timestamp> startTimeProperty() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = Objects.requireNonNull(startTime, "startTime");
-        if (endTime != null && endTime.isBefore(startTime)) {
-            throw new IllegalArgumentException("Start time cannot be after end time");
-        }
+    public Timestamp getEndTime() {
+        return endTime.get();
     }
-
-    public LocalDateTime getEndTime() {
+    public void setEndTime(Timestamp endTime) {
+        this.endTime.set(endTime);
+    }
+    public SimpleObjectProperty<Timestamp> endTimeProperty() {
         return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = Objects.requireNonNull(endTime, "endTime");
-        if (endTime.isBefore(startTime)) {
-            throw new IllegalArgumentException("End time cannot be before start time");
-        }
-    }
-
-    public String getColorLabel() {
-        return colorLabel;
-    }
-
-    public void setColorLabel(String colorLabel) {
-        this.colorLabel = colorLabel != null ? colorLabel : "BLUE";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return Objects.equals(title, event.title) &&
-               Objects.equals(description, event.description) &&
-               Objects.equals(startTime, event.startTime) &&
-               Objects.equals(endTime, event.endTime) &&
-               Objects.equals(colorLabel, event.colorLabel);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, description, startTime, endTime, colorLabel);
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", colorLabel='" + colorLabel + '\'' +
-                '}';
     }
 }

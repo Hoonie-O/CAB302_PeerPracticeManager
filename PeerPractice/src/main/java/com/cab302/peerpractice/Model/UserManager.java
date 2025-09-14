@@ -2,6 +2,7 @@ package com.cab302.peerpractice.Model;
 
 import com.cab302.peerpractice.Exceptions.*;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -16,28 +17,23 @@ public class UserManager {
     }
 
     // Signup
-    public boolean signUp(String firstName, String lastName, String username,
-                          String email, String rawPassword, String institution) throws Exception {
+    public boolean signUp(String firstName, String lastName, String username, String email, String rawPassword, String institution) throws Exception {
         validateEmail(email);
         validateNames(firstName);
         validateNames(lastName);
         validateUsername(username);
         validatePassword(rawPassword);
 
-        if (userDAO.existsByEmail(email)) throw new DuplicateEmailException("Email already exists");
-        if (userDAO.existsByUsername(username)) throw new DuplicateUsernameException("Username already exists");
-
         String hashed = hasher.hasher(rawPassword);
-        User u = new User(firstName, lastName, username, email, hashed, institution);
-        return userDAO.addUser(u);
+        return userDAO.createUser(username, hashed, firstName, lastName, email, institution);
     }
 
     // Login/authenticate
-    public boolean authenticate(String identifier, String rawPassword) {
+    public boolean authenticate(String identifier, String rawPassword) throws SQLException {
         // Try email first, then username
-        Optional<User> userOpt = userDAO.getUserByEmail(identifier);
+        Optional<User> userOpt = Optional.ofNullable(userDAO.findUser("email", identifier));
         if (userOpt.isEmpty()) {
-            userOpt = userDAO.getUserByUsername(identifier);
+            userOpt = Optional.ofNullable(userDAO.findUser("username", identifier));
         }
 
         return userOpt
@@ -46,11 +42,11 @@ public class UserManager {
     }
 
     //Password changer
-    public boolean changePassword(User user, String rawPassword) throws InvalidPasswordException{
+    public boolean changePassword(String username, String rawPassword) throws InvalidPasswordException, SQLException {
         validatePassword(rawPassword);
         String hashed = hasher.hasher(rawPassword);
-        userDAO.storePassword(user,hashed);
-        return true;
+
+        return userDAO.updateValue(username, "password", hashed);
     }
 
     // Validation helpers

@@ -11,6 +11,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
+import java.sql.SQLException;
+
 
 public class ResetPasswordController extends BaseController {
 
@@ -27,7 +29,7 @@ public class ResetPasswordController extends BaseController {
     public void onConfirm(ActionEvent actionEvent) {
         try {
             UserManager userManager = ctx.getUserManager();
-            User user = ctx.getUserSession().getCurrentUser();
+            String username = ctx.getUserSession().getCurrentUser().getUsername();
 
             if(newPasswordField.getText().isEmpty()) {
                 messageLabel.setText("Password has not been filled");
@@ -35,11 +37,13 @@ public class ResetPasswordController extends BaseController {
             else if(!confirmPassword.getText().equals(newPasswordField.getText())){
                 messageLabel.setText("Passwords don't match");
             }
-            if(userManager.changePassword(user,confirmPassword.getText())) {
+            if(userManager.changePassword(username,confirmPassword.getText())) {
                 messageLabel.setText("Password has been changed");
             }
         }catch(InvalidPasswordException e){
             messageLabel.setText(e.getMessage());
+        } catch (Exception e) {
+            System.err.println("SQLException: " + e);
         }
     }
 

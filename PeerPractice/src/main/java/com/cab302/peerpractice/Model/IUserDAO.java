@@ -1,21 +1,15 @@
 package com.cab302.peerpractice.Model;
 
-import java.util.List;
-import java.util.Optional;
+import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
+import com.cab302.peerpractice.Exceptions.DuplicateEmailException;
+import javafx.collections.ObservableList;
+import java.sql.SQLException;
 
 public interface IUserDAO {
-    boolean addUser(User user);
-    boolean deleteUser(User user);
-    boolean updateUser(User user);
-    User searchByUsername(String username);
-    List<User> searchByInstitution(String institution);
-    Optional<User> getUserByEmail(String email);
-    Optional<User> getUserByUsername(String username);
-    boolean existsByEmail(String email);
-    boolean existsByUsername(String username);
-    List<User> getAllUsers();
-    boolean storePassword(User user, String hash);
-    String getPassword(User user);
-    boolean addNotification(String username, Notification notification);
-    boolean removeNotification(String username, Notification notification);
+    User findUser(String column, String value) throws SQLException;
+    ObservableList<User> findUsers() throws SQLException;
+    boolean createUser(String username, String password, String firstName, String lastName, String email, String institution) throws SQLException, DuplicateUsernameException, DuplicateEmailException;
+    boolean addNotification(String sentFrom, String receivedBy, String message) throws SQLException;
+    boolean updateValue(String username, String column, String value) throws SQLException;
+    boolean deleteUser(String userID) throws SQLException;
 }
