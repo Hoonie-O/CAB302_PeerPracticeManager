@@ -20,7 +20,7 @@
 
     <GridPane hgap="12"
               vgap="12">
-        <!-- Two equal columns -->
+        <!-- Two columns -->
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS"
                                minWidth="290"/>

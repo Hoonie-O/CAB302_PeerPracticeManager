@@ -6,10 +6,19 @@ import com.cab302.peerpractice.Model.User;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.animation.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.*;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.*;
+
+import java.io.IOException;
+import java.net.URL;
 
 
 public class MainMenuController extends BaseController{
@@ -246,6 +255,43 @@ public class MainMenuController extends BaseController{
             profile.setManaged(false);
             profile.setTranslateX(0);
         });
+    }
+    @FXML
+    private void onEditProfile(ActionEvent event) {
+        try {
+            // Locate FXML file
+            URL fxml = java.util.Objects
+                    .requireNonNull(View.EditProfile.url());
+            // Create FXMLLoader
+            FXMLLoader loader = new FXMLLoader(fxml);
+            loader.setControllerFactory(cls -> {
+                try {
+                    if (cls == EditProfileController.class) {
+                        return new EditProfileController(ctx, nav);
+                    }
+                    return cls.getDeclaredConstructor().newInstance();
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+            });
+
+            // Load view and get controller
+            Parent root = loader.load();
+            EditProfileController controller = loader.getController();
+
+            // Create and configure a modal dialog 'Stage'
+            Stage dialog = new Stage();
+            dialog.setTitle("Edit profile");
+            dialog.initOwner(((Node) event.getSource()).getScene().getWindow()); // Ensure that dialog stays on top of main window
+            dialog.initModality(Modality.WINDOW_MODAL); // Blocks main window until this window is closed
+            dialog.setResizable(false); // Blocks window resize
+            dialog.setScene(new Scene(root)); // Load FXML content inside the opened window
+            controller.setStage(dialog); // Allow controller to handle this window
+            dialog.showAndWait();   // Show the popup window and wait until it closes
+        }
+        catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @FXML

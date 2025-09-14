@@ -66,8 +66,7 @@
                     <Button fx:id="calendarButton"
                             text="Calendar"
                             onAction="#onOpenCalendar"
-                            prefWidth="220"
-                            prefHeight="32"/>
+                            prefWidth="180"/>
                     <Button text="Friends"
                             prefWidth="180"/>
                 </VBox>
@@ -113,11 +112,13 @@
                     <Separator/>
                     <!-- Buttons -->
                     <Button text="Edit profile"
-                            prefWidth="180"/>
+                            prefWidth="180"
+                            onAction="#onEditProfile"/>
                     <Button text="Setting"
                             prefWidth="180"/>
                     <Button text="Logout"
-                            prefWidth="180" onAction="#onLogout"/>
+                            prefWidth="180"
+                            onAction="#onLogout"/>
                 </VBox>
             </center>
         </BorderPane>
