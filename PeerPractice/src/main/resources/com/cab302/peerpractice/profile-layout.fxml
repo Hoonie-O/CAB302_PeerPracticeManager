@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane fx:id="profile" xmlns:fx="http://javafx.com/fxml"
+            prefWidth="180" visible="false" managed="false">
+    <left>
+        <Separator orientation="VERTICAL"/>
+    </left>
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="12">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+            <VBox alignment="CENTER_LEFT" spacing="6">
+                <Label fx:id="userNameLabel" text="John Doe"/>
+                <Label fx:id="userUsernameLabel" text="\@johndoe123"/>
+                <ComboBox fx:id="availabilityStatus" prefWidth="180"/>
+            </VBox>
+            <Separator/>
+            <Button fx:id="editProfileButton" text="Edit profile" prefWidth="180"/>
+            <Button fx:id="settingsButton" text="Setting" prefWidth="180"/>
+            <Button fx:id="logoutButton" text="Logout" prefWidth="180"/>
+        </VBox>
+    </center>
+</BorderPane>

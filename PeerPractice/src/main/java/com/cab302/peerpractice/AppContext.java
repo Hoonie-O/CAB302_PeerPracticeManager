@@ -13,9 +13,11 @@ public class AppContext {
     private final UserManager userManager = new UserManager(userDao,passwordHasher);
     private final GroupManager groupManager = new GroupManager(groupDao, notifier, userDao);
     private final MailService mailService = new MailService();
-private final SessionManager sessionManager = new SessionManager();
+    private final SessionManager sessionManager = new SessionManager();
     private final SessionCalendarManager sessionCalendarManager = new SessionCalendarManager();
     private final AvailabilityManager availabilityManager = new AvailabilityManager();
+    private boolean menuOpen = false;
+    private boolean profileOpen = false;
 
     public AppContext() {
         try {
@@ -39,10 +41,13 @@ private final SessionManager sessionManager = new SessionManager();
     public PasswordHasher getPasswordHasher(){return passwordHasher;}
     public UserManager getUserManager(){return userManager;}
     public MailService getMailService(){return mailService;}
-public GroupManager getGroupManager(){return  groupManager;}
+    public GroupManager getGroupManager(){return  groupManager;}
     public IGroupDAO getGroupDao() {return groupDao;}
     public SessionManager getSessionManager(){return sessionManager;}
     public SessionCalendarManager getSessionCalendarManager(){return sessionCalendarManager;}
     public AvailabilityManager getAvailabilityManager(){return availabilityManager;}
-
+    public boolean isMenuOpen() { return menuOpen; }
+    public void setMenuOpen(boolean value) { this.menuOpen = value; }
+    public boolean isProfileOpen() { return profileOpen; }
+    public void setProfileOpen(boolean value) { this.profileOpen = value; }
 }

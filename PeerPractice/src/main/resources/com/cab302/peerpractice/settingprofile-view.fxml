@@ -10,9 +10,7 @@
 <?import javafx.collections.FXCollections?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.cab302.peerpractice.Controllers.SettingProfileController"
-      spacing="8"
-      prefWidth="1280"
-      prefHeight="720">
+      spacing="8">
     <padding>
         <Insets top="12"
                 right="12"

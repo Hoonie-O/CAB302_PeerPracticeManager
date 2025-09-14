@@ -4,25 +4,16 @@ import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Group;
 import com.cab302.peerpractice.Model.User;
 import com.cab302.peerpractice.Navigation;
-import com.cab302.peerpractice.View;
-import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.util.*;
+import javafx.scene.layout.VBox;
 
 import java.util.Comparator;
 import java.util.List;
 
-
-public class GroupController extends BaseController{
-    public Button createGroupButton;
-    public Button joinGroupButton;
-    @FXML private BorderPane menu;
-    @FXML private BorderPane profile;
-    @FXML private ComboBox<String> availabilityStatus;
+public class GroupController extends SidebarController {
     @FXML private TabPane groupTabs;
     @FXML private Label tabContentLabel;
     @FXML private ListView<Group> groupListView;
@@ -30,8 +21,6 @@ public class GroupController extends BaseController{
     @FXML private Button addGroupButton;
     @FXML private Button sortGroupsButton;
 
-    private boolean menuOpen = false;
-    private boolean profileOpen = false;
     private boolean sortAlphabetical = false;
 
     public GroupController(AppContext ctx, Navigation nav) {
@@ -39,26 +28,8 @@ public class GroupController extends BaseController{
     }
 
     @FXML
-    private void initialize() {
-        // Menu hidden by default
-        menu.setVisible(false);
-        menu.setManaged(false);
-
-        // Profile hidden by default
-        profile.setVisible(false);
-        profile.setManaged(false);
-
-        // Availability status dropdown
-        if (availabilityStatus != null) {
-            if (availabilityStatus.getItems().isEmpty()) {
-                availabilityStatus.getItems().setAll();
-            }
-            availabilityStatus.getSelectionModel().select("Online");
-            availabilityStatus.getSelectionModel().selectedItemProperty()
-                    .addListener((observable, oldValue, newValue) -> {
-                        System.out.println("Status changed to: " + newValue);
-                    });
-        }
+    public void initialize() {
+        super.initialize(); // setup sidebar + header
 
         // Update placeholder text when switching tabs
         if (groupTabs != null && tabContentLabel != null) {
@@ -69,7 +40,7 @@ public class GroupController extends BaseController{
             });
         }
 
-        // Load groups into the sidebar
+        // Load groups into the sidebar list
         User currentUser = ctx.getUserSession().getCurrentUser();
         List<Group> userGroups = ctx.getGroupDao().searchByUser(currentUser);
         groupListView.setItems(FXCollections.observableArrayList(userGroups));
@@ -90,79 +61,6 @@ public class GroupController extends BaseController{
         });
     }
 
-    @FXML
-    private void onOpenCalendar(javafx.event.ActionEvent event) {
-        // Display Calendar view
-        nav.Display(View.Calendar);
-    }
-
-    @FXML
-    private void onBackToLogin(javafx.event.ActionEvent event) {
-        // Display Login view
-        nav.Display(View.Login);
-    }
-    // Duration of the slide-in and slide out animation
-    private static final Duration SLIDE = Duration.millis(180);
-
-    private void animate(Region sidebar, double targetX, Runnable onComplete) {
-        TranslateTransition transition = new TranslateTransition(SLIDE, sidebar);
-        transition.setToX(targetX);                     // Make changes to target value
-        transition.setOnFinished(event -> {
-            if (onComplete != null) onComplete.run();   // Make sure animation ends with hiding sidebar
-        });
-        transition.play();
-    }
-
-    @FXML
-    private void onToggleMenu() {
-        if (!menuOpen) openMenu();      // Open if closed
-        else closeMenu();               // Close if opened
-    }
-
-    private void openMenu() {
-        menu.setVisible(true);
-        menu.setManaged(true);
-        double width = menu.getPrefWidth();             // Get width of sidebar
-        menu.setTranslateX(-width);                     // Start hidden and opens from the left
-        animate(menu, 0, () -> menuOpen = true); // Animate to view the menu
-    }
-
-    private void closeMenu() {
-        double width = menu.getPrefWidth();
-        animate(menu, -width, () -> {
-            menuOpen = false;
-            // Hide the menu when it is closed
-            menu.setVisible(false);
-            menu.setManaged(false);
-            menu.setTranslateX(0);
-        });
-    }
-
-    @FXML
-    private void onToggleProfile() {
-        if (profileOpen) closeProfile();    // Open if closed
-        else openProfile();                 // Close if opened
-    }
-
-    private void openProfile() {
-        profile.setVisible(true);
-        profile.setManaged(true);
-        double width = profile.getPrefWidth();                  // Get width of sidebar
-        profile.setTranslateX(width);                           // Start hidden and opens from the right
-        animate(profile, 0, () -> profileOpen = true);   // Animate to view the profile
-    }
-
-    private void closeProfile() {
-        double width = profile.getPrefWidth();
-        animate(profile, width, () -> {
-            profileOpen = false;
-            // Hide the profile when it is closed
-            profile.setVisible(false);
-            profile.setManaged(false);
-            profile.setTranslateX(0);
-        });
-    }
-
     private void openCreateGroupDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Create Study Group");
@@ -176,7 +74,8 @@ public class GroupController extends BaseController{
 
         CheckBox approvalCheck = new CheckBox("Require approval to join");
 
-        VBox content = new VBox(10, new Label("Group name:"), nameField,
+        VBox content = new VBox(10,
+                new Label("Group name:"), nameField,
                 new Label("Description:"), descriptionField,
                 approvalCheck);
         dialog.getDialogPane().setContent(content);
@@ -189,7 +88,6 @@ public class GroupController extends BaseController{
                 try {
                     User currentUser = ctx.getUserSession().getCurrentUser();
 
-                    // Create group
                     ctx.getGroupManager().createGroup(
                             nameField.getText(),
                             descriptionField.getText(),
@@ -197,20 +95,24 @@ public class GroupController extends BaseController{
                             currentUser
                     );
 
-                    // Auto-join group (safe to call again — GroupManager will handle logic)
-                    Group newGroup = ctx.getGroupDao().searchByName(nameField.getText()).stream().findFirst().orElse(null);
+                    Group newGroup = ctx.getGroupDao()
+                            .searchByName(nameField.getText())
+                            .stream()
+                            .findFirst()
+                            .orElse(null);
+
                     if (newGroup != null) {
                         ctx.getGroupManager().joinGroup(newGroup, currentUser);
                     }
 
                     refreshGroupList();
-                    groupListView.getSelectionModel().select(newGroup); // auto-select new group
+                    groupListView.getSelectionModel().select(newGroup);
 
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Group created and joined successfully!");
-                    alert.showAndWait();
+                    new Alert(Alert.AlertType.INFORMATION,
+                            "Group created and joined successfully!").showAndWait();
                 } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Error creating group: " + e.getMessage());
-                    alert.showAndWait();
+                    new Alert(Alert.AlertType.ERROR,
+                            "Error creating group: " + e.getMessage()).showAndWait();
                 }
             }
         });
@@ -230,8 +132,8 @@ public class GroupController extends BaseController{
                         .orElse(null);
 
                 if (group == null) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "No group found with that code.");
-                    alert.showAndWait();
+                    new Alert(Alert.AlertType.ERROR,
+                            "No group found with that code.").showAndWait();
                     return;
                 }
 
@@ -239,11 +141,11 @@ public class GroupController extends BaseController{
                 ctx.getGroupManager().joinGroup(group, currentUser);
 
                 refreshGroupList();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Request to join sent / group joined successfully!");
-                alert.showAndWait();
+                new Alert(Alert.AlertType.INFORMATION,
+                        "Request to join sent / group joined successfully!").showAndWait();
             } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error joining group: " + e.getMessage());
-                alert.showAndWait();
+                new Alert(Alert.AlertType.ERROR,
+                        "Error joining group: " + e.getMessage()).showAndWait();
             }
         });
     }
@@ -276,12 +178,11 @@ public class GroupController extends BaseController{
         if (sortAlphabetical) {
             userGroups.sort(Comparator.comparing(Group::getName, String.CASE_INSENSITIVE_ORDER));
         } else {
-            userGroups.sort(Comparator.comparing(Group::getCreated_at)); // assumes your Group has created_at
+            userGroups.sort(Comparator.comparing(Group::getCreated_at));
         }
 
         groupListView.setItems(FXCollections.observableArrayList(userGroups));
 
-        // Auto-select first group if available
         if (!userGroups.isEmpty()) {
             groupListView.getSelectionModel().select(0);
             groupNameLabel.setText(userGroups.getFirst().getName());
@@ -289,16 +190,14 @@ public class GroupController extends BaseController{
     }
 
     @FXML
-    private void onSortGroups() {
+    private void onSortGroups(ActionEvent event) {
         sortAlphabetical = !sortAlphabetical;
         refreshGroupList();
 
-        // Toggle icon
         if (sortAlphabetical) {
-            sortGroupsButton.setText("A-Z"); // Alphabetical
+            sortGroupsButton.setText("A-Z");
         } else {
-            sortGroupsButton.setText("Date"); // Join date
+            sortGroupsButton.setText("Date");
         }
     }
-
 }

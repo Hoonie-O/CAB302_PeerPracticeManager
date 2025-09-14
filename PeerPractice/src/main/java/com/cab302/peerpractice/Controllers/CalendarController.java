@@ -3,7 +3,6 @@ package com.cab302.peerpractice.Controllers;
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.*;
 import com.cab302.peerpractice.Navigation;
-import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +21,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class CalendarController extends BaseController {
+public class CalendarController extends SidebarController {
     @FXML private Label monthYearLabel;
     @FXML private GridPane calendarGrid;
     @FXML private Button prevButton;
@@ -31,11 +30,12 @@ public class CalendarController extends BaseController {
     @FXML private ToggleButton sessionViewButton;
     @FXML private ToggleButton availabilityViewButton;
 
+
     private YearMonth currentYearMonth;
     private SessionCalendarManager sessionCalendarManager;
     private AvailabilityManager availabilityManager;
     private boolean isSessionView = true; // default to session view
-    
+
     public CalendarController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
         this.sessionCalendarManager = ctx.getSessionCalendarManager();
@@ -43,31 +43,32 @@ public class CalendarController extends BaseController {
     }
 
     @FXML
-    private void initialize(){
+    public void initialize() {
+        super.initialize(); // setup sidebar + header
         currentYearMonth = YearMonth.now();
         setupViewToggle();
         updateCalendarView();
     }
-    
+
     private void setupViewToggle() {
         // create toggle group so only one can be selected
         ToggleGroup viewToggle = new ToggleGroup();
         sessionViewButton.setToggleGroup(viewToggle);
         availabilityViewButton.setToggleGroup(viewToggle);
-        
+
         // default to session view
         sessionViewButton.setSelected(true);
-        
+
         // add listeners
         sessionViewButton.setOnAction(e -> switchToSessionView());
         availabilityViewButton.setOnAction(e -> switchToAvailabilityView());
     }
-    
+
     private void switchToSessionView() {
         isSessionView = true;
         updateCalendarView();
     }
-    
+
     private void switchToAvailabilityView() {
         isSessionView = false;
         updateCalendarView();
@@ -75,7 +76,7 @@ public class CalendarController extends BaseController {
 
     @FXML
     private void onBackToMenu() {
-        nav.Display(View.MainMenu);
+        nav.DisplayMainMenuOrGroup();
     }
 
     @FXML
@@ -163,10 +164,10 @@ public class CalendarController extends BaseController {
             User currentUser = ctx.getUserSession().getCurrentUser();
             if (currentUser != null) {
                 List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date)
-                    .stream()
-                    .filter(avail -> avail.getUser().equals(currentUser))
-                    .toList();
-                
+                        .stream()
+                        .filter(avail -> avail.getUser().equals(currentUser))
+                        .toList();
+
                 for (Availability availability : availabilities) {
                     Label availLabel = new Label(availability.getTitle());
                     availLabel.setFont(Font.font("System", 8));
@@ -205,10 +206,10 @@ public class CalendarController extends BaseController {
             User currentUser = ctx.getUserSession().getCurrentUser();
             if (currentUser != null) {
                 List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date)
-                    .stream()
-                    .filter(avail -> avail.getUser().equals(currentUser))
-                    .toList();
-                
+                        .stream()
+                        .filter(avail -> avail.getUser().equals(currentUser))
+                        .toList();
+
                 if (availabilities.isEmpty()) {
                     showAddAvailabilityDialog(date);
                 } else {
@@ -236,7 +237,7 @@ public class CalendarController extends BaseController {
 
         TextField titleField = new TextField();
         titleField.setPromptText("Session title");
-        
+
         TextArea descriptionField = new TextArea();
         descriptionField.setPromptText("Description optional");
         descriptionField.setPrefRowCount(2);
@@ -255,13 +256,13 @@ public class CalendarController extends BaseController {
         grid.add(new Label("Description:"), 0, 1);
         grid.add(descriptionField, 1, 1);
         grid.add(new Label("Start time:"), 0, 2);
-        grid.add(new HBox(5, 
-            new VBox(5, new Label("Hour"), startHour),
-            new VBox(5, new Label("Minute"), startMinute)), 1, 2);
+        grid.add(new HBox(5,
+                new VBox(5, new Label("Hour"), startHour),
+                new VBox(5, new Label("Minute"), startMinute)), 1, 2);
         grid.add(new Label("End time:"), 0, 3);
         grid.add(new HBox(5,
-            new VBox(5, new Label("Hour"), endHour),
-            new VBox(5, new Label("Minute"), endMinute)), 1, 3);
+                new VBox(5, new Label("Hour"), endHour),
+                new VBox(5, new Label("Minute"), endMinute)), 1, 3);
         grid.add(new Label("Color:"), 0, 4);
         grid.add(colorCombo, 1, 4);
 
@@ -330,12 +331,12 @@ public class CalendarController extends BaseController {
         grid.add(descriptionField, 1, 1);
         grid.add(new Label("Start time:"), 0, 2);
         grid.add(new HBox(5,
-            new VBox(5, new Label("Hour"), startHour),
-            new VBox(5, new Label("Minute"), startMinute)), 1, 2);
+                new VBox(5, new Label("Hour"), startHour),
+                new VBox(5, new Label("Minute"), startMinute)), 1, 2);
         grid.add(new Label("End time:"), 0, 3);
         grid.add(new HBox(5,
-            new VBox(5, new Label("Hour"), endHour),
-            new VBox(5, new Label("Minute"), endMinute)), 1, 3);
+                new VBox(5, new Label("Hour"), endHour),
+                new VBox(5, new Label("Minute"), endMinute)), 1, 3);
         grid.add(new Label("Color:"), 0, 4);
         grid.add(colorCombo, 1, 4);
 
@@ -360,11 +361,11 @@ public class CalendarController extends BaseController {
 
         dialog.showAndWait().ifPresent(availability -> {
             availabilityManager.createAvailability(
-                availability.getTitle(),
-                availability.getUser(),
-                availability.getStartTime(),
-                availability.getEndTime(),
-                availability.getColorLabel()
+                    availability.getTitle(),
+                    availability.getUser(),
+                    availability.getStartTime(),
+                    availability.getEndTime(),
+                    availability.getColorLabel()
             );
             updateCalendarView();
         });

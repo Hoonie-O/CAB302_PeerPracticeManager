@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.peerpractice.Controllers.DefaultController"
+            prefWidth="1280" prefHeight="720">
+
+    <!-- Top Header -->
+    <top>
+        <fx:include source="header-layout.fxml" fx:id="header"/>
+    </top>
+
+    <!-- Left Sidebar -->
+    <left>
+        <fx:include source="sidebar-layout.fxml" fx:id="menu"/>
+    </left>
+
+    <!-- Right Sidebar -->
+    <right>
+        <fx:include source="profile-layout.fxml" fx:id="profile"/>
+    </right>
+
+    <!-- Body -->
+    <center>
+        <VBox fx:id="defaultMenu" alignment="CENTER" spacing="10" maxWidth="420">
+            <Label text="Build your study group"/>
+            <Label text="Take your study group outside of a class for a more efficient way to get things done."
+                   wrapText="true" maxWidth="360"/>
+            <VBox alignment="CENTER" spacing="10">
+                <Button fx:id="createGroupButton" text="Create group" prefWidth="220" onAction="#onCreateGroup"/>
+                <Button fx:id="joinGroupButton" text="Join group" prefWidth="220" onAction="#onJoinGroup"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
