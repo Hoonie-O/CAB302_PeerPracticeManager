@@ -11,24 +11,20 @@
             prefWidth="1280"
             prefHeight="720">
 
-    <!-- Top Header -->
     <top>
         <fx:include source="header-layout.fxml" fx:id="header"/>
     </top>
 
-    <!-- Left Sidebar -->
     <left>
         <fx:include source="sidebar-layout.fxml" fx:id="menu"/>
     </left>
 
-    <!-- Right Sidebar -->
     <right>
         <fx:include source="profile-layout.fxml" fx:id="profile"/>
     </right>
 
     <center>
         <BorderPane>
-            <!-- Left: Group list -->
             <left>
                 <VBox spacing="8" prefWidth="300" style="-fx-background-color: #f5f5f5;">
                     <padding>
@@ -46,10 +42,8 @@
                 </VBox>
             </left>
 
-            <!-- Center: Group details -->
             <center>
                 <VBox spacing="10">
-                    <!-- Group header with tabs -->
                     <HBox spacing="15" alignment="CENTER_LEFT">
                         <Label fx:id="groupNameLabel"
                                text="Select Group"
@@ -62,7 +56,6 @@
                         </TabPane>
                     </HBox>
 
-                    <!-- Placeholder content area -->
                     <StackPane style="-fx-background-color: #e8e8e8; -fx-alignment: center;"
                                VBox.vgrow="ALWAYS">
                         <Label fx:id="tabContentLabel" text="CALENDAR" style="-fx-font-size: 24px; -fx-text-fill: #444;"/>

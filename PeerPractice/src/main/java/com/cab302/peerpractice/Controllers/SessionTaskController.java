@@ -40,9 +40,7 @@ public class SessionTaskController extends BaseController {
     private SessionTask selectedTask;
     private ObservableList<SessionTask> taskList;
     
-    public SessionTaskController(AppContext ctx, Navigation nav) {
-        super(ctx, nav);
-    }
+    public SessionTaskController(AppContext ctx, Navigation nav) { super(ctx, nav); }
     
     @FXML
     private void initialize() {
@@ -129,7 +127,6 @@ public class SessionTaskController extends BaseController {
     public void setSession(String sessionId) {
         this.currentSessionId = sessionId;
         
-        // find session to get title and participants
         Session session = ctx.getSessionManager().findSessionById(sessionId);
         if (session != null) {
             sessionTitleLabel.setText("Tasks for: " + session.getTitle());
@@ -394,7 +391,9 @@ public class SessionTaskController extends BaseController {
         errorLabel.setText("");
         errorLabel.setVisible(false);
     }
+
     
+
     /**
      * Gets the current user ID from the session
      */

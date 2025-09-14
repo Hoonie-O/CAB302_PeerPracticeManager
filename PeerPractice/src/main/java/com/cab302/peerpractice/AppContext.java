@@ -14,16 +14,20 @@ public class AppContext {
     private final UserManager userManager = new UserManager(userDao,passwordHasher);
     private final GroupManager groupManager = new GroupManager(groupDao, notifier, userDao);
     private final MailService mailService = new MailService();
-    private final SessionManager sessionManager = new SessionManager();
+    private final SessionManager sessionManager;
     private final SessionTaskStorage sessionTaskStorage = new SessionTaskStorage();
-    private final SessionTaskManager sessionTaskManager = new SessionTaskManager(sessionTaskStorage, sessionManager);
-    private final SessionCalendarManager sessionCalendarManager = new SessionCalendarManager();
+    private final SessionTaskManager sessionTaskManager;
+    private final SessionCalendarManager sessionCalendarManager;
     private final AvailabilityManager availabilityManager = new AvailabilityManager();
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
     public AppContext() throws SQLException {
         try {
+            var sessionStorage = new SessionCalendarDBStorage(userDao);
+            this.sessionCalendarManager = new SessionCalendarManager(sessionStorage);
+            this.sessionManager = new SessionManager(this.sessionCalendarManager);
+            this.sessionTaskManager = new SessionTaskManager(sessionTaskStorage, this.sessionManager);
             User testUser = userDao.findUser("username", "hollyfloweer");
 
             if (testUser != null) {
@@ -53,4 +57,5 @@ public class AppContext {
     public void setMenuOpen(boolean value) { this.menuOpen = value; }
     public boolean isProfileOpen() { return profileOpen; }
     public void setProfileOpen(boolean value) { this.profileOpen = value; }
+    
 }
