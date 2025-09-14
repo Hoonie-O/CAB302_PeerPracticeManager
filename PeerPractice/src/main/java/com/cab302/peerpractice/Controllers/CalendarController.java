@@ -164,9 +164,9 @@ public class CalendarController extends SidebarController {
             User currentUser = ctx.getUserSession().getCurrentUser();
             if (currentUser != null) {
                 List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date)
-                    .stream()
-                    .filter(avail -> avail.getUser().equals(currentUser))
-                    .toList();
+                        .stream()
+                        .filter(avail -> avail.getUser().equals(currentUser))
+                        .toList();
 
                 for (Availability availability : availabilities) {
                     Label availLabel = new Label(availability.getTitle());
@@ -206,9 +206,9 @@ public class CalendarController extends SidebarController {
             User currentUser = ctx.getUserSession().getCurrentUser();
             if (currentUser != null) {
                 List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date)
-                    .stream()
-                    .filter(avail -> avail.getUser().equals(currentUser))
-                    .toList();
+                        .stream()
+                        .filter(avail -> avail.getUser().equals(currentUser))
+                        .toList();
 
                 if (availabilities.isEmpty()) {
                     showAddAvailabilityDialog(date);
@@ -257,12 +257,12 @@ public class CalendarController extends SidebarController {
         grid.add(descriptionField, 1, 1);
         grid.add(new Label("Start time:"), 0, 2);
         grid.add(new HBox(5,
-            new VBox(5, new Label("Hour"), startHour),
-            new VBox(5, new Label("Minute"), startMinute)), 1, 2);
+                new VBox(5, new Label("Hour"), startHour),
+                new VBox(5, new Label("Minute"), startMinute)), 1, 2);
         grid.add(new Label("End time:"), 0, 3);
         grid.add(new HBox(5,
-            new VBox(5, new Label("Hour"), endHour),
-            new VBox(5, new Label("Minute"), endMinute)), 1, 3);
+                new VBox(5, new Label("Hour"), endHour),
+                new VBox(5, new Label("Minute"), endMinute)), 1, 3);
         grid.add(new Label("Color:"), 0, 4);
         grid.add(colorCombo, 1, 4);
 
@@ -331,12 +331,12 @@ public class CalendarController extends SidebarController {
         grid.add(descriptionField, 1, 1);
         grid.add(new Label("Start time:"), 0, 2);
         grid.add(new HBox(5,
-            new VBox(5, new Label("Hour"), startHour),
-            new VBox(5, new Label("Minute"), startMinute)), 1, 2);
+                new VBox(5, new Label("Hour"), startHour),
+                new VBox(5, new Label("Minute"), startMinute)), 1, 2);
         grid.add(new Label("End time:"), 0, 3);
         grid.add(new HBox(5,
-            new VBox(5, new Label("Hour"), endHour),
-            new VBox(5, new Label("Minute"), endMinute)), 1, 3);
+                new VBox(5, new Label("Hour"), endHour),
+                new VBox(5, new Label("Minute"), endMinute)), 1, 3);
         grid.add(new Label("Color:"), 0, 4);
         grid.add(colorCombo, 1, 4);
 
@@ -361,11 +361,11 @@ public class CalendarController extends SidebarController {
 
         dialog.showAndWait().ifPresent(availability -> {
             availabilityManager.createAvailability(
-                availability.getTitle(),
-                availability.getUser(),
-                availability.getStartTime(),
-                availability.getEndTime(),
-                availability.getColorLabel()
+                    availability.getTitle(),
+                    availability.getUser(),
+                    availability.getStartTime(),
+                    availability.getEndTime(),
+                    availability.getColorLabel()
             );
             updateCalendarView();
         });
