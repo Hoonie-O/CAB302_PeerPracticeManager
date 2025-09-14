@@ -20,7 +20,7 @@ public class AppContext {
 
     public AppContext() throws SQLException {
         try {
-            User testUser = userDao.findUser("hollyfloweer");
+            User testUser = userDao.findUser("username", "hollyfloweer");
 
             if (testUser != null) {
                 Group testGroup = new Group("Example Group", "This is a seeded test group", false,

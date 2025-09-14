@@ -10,8 +10,8 @@ public class User {
     private String email;
     private String passwordHash;
     private String institution;
-    private List<User> friendsList;
     private String bio;
+    private List<User> friendsList;
     private List<Event> events;
 
     public User(String firstName, String lastName, String username, String email, String passwordHash, String institution) {
