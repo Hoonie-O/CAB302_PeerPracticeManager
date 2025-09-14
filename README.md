@@ -1,6 +1,6 @@
 ## Test User
-username: username
-password: Password1!
+- username: username
+- password: Password1!
 
 ## Test Group
-ID: 1
+- ID: 1
