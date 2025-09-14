@@ -23,8 +23,8 @@ public class AppContext {
             if (testUser != null) {
                 Group testGroup = new Group("Example Group", "This is a seeded test group", false,
                         testUser.getUsername(), LocalDateTime.now());
-                testGroup.setMembers(new ArrayList<>());
-                testGroup.addMember(testUser);
+//                testGroup.setMembers(new ArrayList<>());
+//                testGroup.addMember(testUser);
                 this.groupDao.addGroup(testGroup);
             }
         } catch (Exception e) {
