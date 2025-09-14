@@ -393,13 +393,18 @@ public class CalendarController extends SidebarController {
             descriptionLabel.setWrapText(true);
 
             HBox buttons = new HBox(8);
+            Button createTaskButton = new Button("Create Task");
+            createTaskButton.setOnAction(e -> {
+                dialog.close();
+                openCreateTaskDialog(session);
+            });
             Button deleteButton = new Button("Delete");
             deleteButton.setOnAction(e -> {
                 dialog.close();
                 javafx.application.Platform.runLater(() -> showDeleteSessionDialog(session));
             });
 
-            buttons.getChildren().add(deleteButton);
+            buttons.getChildren().addAll(createTaskButton, deleteButton);
             sessionBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, buttons);
             content.getChildren().add(sessionBox);
         }
@@ -417,6 +422,48 @@ public class CalendarController extends SidebarController {
 
         dialog.getDialogPane().setContent(scrollPane);
         dialog.showAndWait();
+    }
+
+    private void openCreateTaskDialog(Session session) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Create Task");
+        dialog.setHeaderText("Create task for " + session.getTitle());
+        TextField titleField = new TextField();
+        titleField.setPromptText("Task title");
+        TextField deadlineField = new TextField();
+        deadlineField.setPromptText("yyyy-MM-dd HH:mm");
+        ComboBox<User> assigneeBox = new ComboBox<>();
+        var participants = session.getParticipants();
+        if (participants != null && !participants.isEmpty()) assigneeBox.getItems().addAll(participants);
+        var cellFactory = new javafx.util.Callback<ListView<User>, ListCell<User>>() {
+            @Override public ListCell<User> call(ListView<User> lv) { return new ListCell<>() { @Override protected void updateItem(User u, boolean empty) { super.updateItem(u, empty); setText(empty||u==null?null:u.getUsername()); } }; }
+        };
+        assigneeBox.setButtonCell(cellFactory.call(null));
+        assigneeBox.setCellFactory(cellFactory);
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20, 20, 10, 20));
+        content.getChildren().addAll(new Label("Title"), titleField, new Label("Deadline"), deadlineField, new Label("Assignee"), assigneeBox);
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().setPrefWidth(420);
+        ButtonType createBtn = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createBtn, ButtonType.CANCEL);
+        dialog.showAndWait().ifPresent(bt -> {
+            if (bt == createBtn) {
+                String title = titleField.getText() == null ? "" : titleField.getText().trim();
+                String dl = deadlineField.getText() == null ? "" : deadlineField.getText().trim();
+                User assignee = assigneeBox.getValue();
+                if (!title.isEmpty() && !dl.isEmpty() && assignee != null) {
+                    try {
+                        LocalDateTime deadline = LocalDateTime.parse(dl, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                        String createdBy = ctx.getUserSession().getCurrentUser() != null ? ctx.getUserSession().getCurrentUser().getUserId() : assignee.getUserId();
+                        ctx.getSessionTaskManager().createTask(session.getSessionId(), title, deadline, assignee.getUserId(), createdBy);
+                        new Alert(Alert.AlertType.INFORMATION, "Task created").showAndWait();
+                    } catch (Exception ex) {
+                        new Alert(Alert.AlertType.ERROR, "Failed to create task").showAndWait();
+                    }
+                }
+            }
+        });
     }
 
     private void showAvailabilityListDialog(LocalDate date, List<Availability> availabilities) {
