@@ -13,7 +13,6 @@ public class User {
     private String institution;
     private String bio;
     private List<User> friendsList;
-    private List<Event> events;
     private List<Notification> notifications;
 
     public User(String firstName, String lastName, String username, String email, String passwordHash, String institution) {

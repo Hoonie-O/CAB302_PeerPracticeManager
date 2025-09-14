@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class AppContext {
     private final UserSession userSession = new UserSession();
-    private final IUserDAO userDao = new UserDAO();
+    private final IUserDAO userDao = new MockUserDAO();
     private final IGroupDAO groupDao = new MockGroupDAO();
     private final Notifier notifier = new Notifier(userDao);
     private final PasswordHasher passwordHasher = new BcryptHasher();

@@ -15,6 +15,12 @@ public class MockUserDAO implements IUserDAO{
 
     private final ObservableList<User> users = FXCollections.observableArrayList();
 
+    public MockUserDAO(){
+        BcryptHasher hasher = new BcryptHasher();
+        String hash = hasher.hasher("password");
+        User user = new User("Seiji","Sato","username","email@email.com",hash,"qut");
+    }
+
     @Override
     public User findUser(String column, String value) throws SQLException {
         for (User u : users) {

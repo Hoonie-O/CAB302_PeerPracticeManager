@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +19,7 @@ public class GroupManagerTest {
     private String NAME = "Group1";
     private String DESCRIPTION = "This is the decription of a group";
     private String USERNAME = "sati2030";
+    private Group group;
 
     @BeforeEach
     public void setUp(){
@@ -26,11 +28,12 @@ public class GroupManagerTest {
         notifier = new Notifier(userDAO);
         groupManager = new GroupManager(groupDAO,notifier,userDAO);
         user = new User("Seiji","Sato",USERNAME,"email@email.com","masfsa","qut");
+        group = new Group(NAME,DESCRIPTION,false,user.getUsername(),LocalDateTime.now());
     }
 
     @Test
     void testCreateGroupNormal(){
-        assertDoesNotThrow(() -> {groupManager.createGroup(NAME,DESCRIPTION,false,creator);});
+        assertDoesNotThrow(() -> {groupManager.createGroup(NAME,DESCRIPTION,false,user);});
     }
 
     @Test
@@ -118,18 +121,46 @@ public class GroupManagerTest {
     }
 
     @Test
-    void testCreateGroupContainsCreator(){
+    void testCreateGroupRefelectedInDAO(){
         try{
             groupManager.createGroup(NAME,DESCRIPTION,false,user);
-            
-
+            Group group = new Group(NAME,DESCRIPTION,false,user.getUsername(),LocalDateTime.now());
+            List<Group> groups = groupDAO.getAllGroups();
+            assertEquals(group, groups.get(0));
         }catch(Exception e){
             fail();
         }
+    }
+
+    @Test
+    void testCreateGroupContainsCreator(){
+        try{
+            groupManager.createGroup(NAME,DESCRIPTION,false,user);
+            List<Group> groups = groupDAO.getAllGroups();
+            Group g = groups.get(0);
+            assertTrue(g.getMembers().contains(user));
+        }catch(Exception e){
+            fail();
+        }
+    }
 
 
+    @Test
+    void testRequireApprovalNormal(){
+        try{
+            groupManager.createGroup(NAME,DESCRIPTION,false,user);
+            groupManager.requireApproval(group,true);
+            assertTrue(group.isRequire_approval());
+        }catch(Exception e){
+            fail();
+        }
+    }
+
+    @Test
+    void testAddMemberNormal(){
 
     }
+
 
 
 
