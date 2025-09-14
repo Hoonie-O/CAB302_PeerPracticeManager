@@ -26,8 +26,8 @@ public class ForgotPasswordController extends BaseController{
     private void onSendResetLink() throws SQLException {
         IUserDAO userDAO = ctx.getUserDao();
         MailService mailService = ctx.getMailService();
-        User user = ctx.getUserSession().getCurrentUser();
-        if(userDAO.findUser("email", user.getEmail()) != null){
+        User user = userDAO.findUser("email",emailField.getText());
+        if(user != null){
             String msg = String.format("Hello %s,%n" +
                     "Your PeerPractice password can be reset by accessing the folowing link: %s.%n" +
                     "If you did not request a new password, please ignore this email.",user.getFirstName(),"null");

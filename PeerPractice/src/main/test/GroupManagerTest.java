@@ -17,7 +17,7 @@ public class GroupManagerTest {
     private IUserDAO userDAO;
     private User user;
     private String NAME = "Group1";
-    private String DESCRIPTION = "This is the decription of a group";
+    private String DESCRIPTION = "This is the description of a group";
     private String USERNAME = "sati2030";
     private Group group;
 
