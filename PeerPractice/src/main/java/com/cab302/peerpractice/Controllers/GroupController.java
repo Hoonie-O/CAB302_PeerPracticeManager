@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.Comparator;
 import java.util.List;
+ 
 
 public class GroupController extends SidebarController {
     @FXML private TabPane groupTabs;
@@ -20,6 +21,7 @@ public class GroupController extends SidebarController {
     @FXML private Label groupNameLabel;
     @FXML private Button addGroupButton;
     @FXML private Button sortGroupsButton;
+    
 
     private boolean sortAlphabetical = false;
 
@@ -56,7 +58,9 @@ public class GroupController extends SidebarController {
                 groupNameLabel.setText(newGroup.getName());
             }
         });
+        
     }
+    
 
     private void openCreateGroupDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
