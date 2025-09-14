@@ -38,7 +38,7 @@ public class Group {
     public void setDescription(String description) { this.description = description; }
 
     public String getOwner() { return owner; }
-    public void setOwner(String owner_id) { this.owner = owner; }
+    public void setOwner(String owner) { this.owner = owner; }
 
     public boolean isRequire_approval() { return require_approval; }
     public void setRequire_approval(boolean require_approval) { this.require_approval = require_approval; }

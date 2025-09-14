@@ -14,7 +14,6 @@ public class User {
     private String institution;
     private String bio;
     private List<User> friendsList;
-    private List<Event> events;
     private List<Notification> notifications;
 
     public User(String firstName, String lastName, String username, String email, String passwordHash, String institution) {
@@ -92,9 +91,6 @@ public class User {
         if (user == null) throw new IllegalArgumentException("Cannot add null user as friend");
         friendsList.add(user); 
     }
-
-    public List<Event> getEvents() { return events; }
-    public void addEvent(Event ev) { events.add(ev); }
 
     public List<Notification> getNotifications() { return notifications; }
     public void addNotification(Notification n) {notifications.add(n); }
