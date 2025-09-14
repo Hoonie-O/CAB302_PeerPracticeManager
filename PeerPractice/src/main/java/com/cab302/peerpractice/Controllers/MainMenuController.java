@@ -29,6 +29,8 @@ public class MainMenuController extends BaseController{
     @FXML private ComboBox<String> availabilityStatus;
     @FXML private Label userNameLabel;
     @FXML private Label userUsernameLabel;
+    @FXML private VBox studygroupPane;
+    @FXML private AnchorPane calendarPane;
 
     private boolean menuOpen = false;
     private boolean profileOpen = false;
@@ -93,7 +95,7 @@ public class MainMenuController extends BaseController{
     @FXML
     private void onOpenCalendar(javafx.event.ActionEvent event) {
         // Display Calendar view
-        nav.Display(View.Calendar);
+        onOpenCalendarCenter();
     }
 
     @FXML
@@ -156,7 +158,8 @@ public class MainMenuController extends BaseController{
             // Navigate back to login screen
             nav.Display(View.Login);
             
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             handleLogoutError(e);
         }
     }
@@ -256,6 +259,23 @@ public class MainMenuController extends BaseController{
             profile.setTranslateX(0);
         });
     }
+
+    @FXML
+    private void onOpenCalendarCenter() {
+        studygroupPane.setVisible(false);
+        studygroupPane.setManaged(false);
+        calendarPane.setVisible(true);
+        calendarPane.setManaged(true);
+    }
+
+    @FXML
+    private void onOpenStudyGroup() {
+        calendarPane.setVisible(false);
+        calendarPane.setManaged(false);
+        studygroupPane.setVisible(true);
+        studygroupPane.setManaged(true);
+    }
+
     @FXML
     private void onEditProfile(ActionEvent event) {
         try {

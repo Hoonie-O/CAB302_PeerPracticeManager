@@ -62,7 +62,8 @@
                     <Label text="Menu"/>
                     <Separator/>
                     <Button text="Study Group"
-                            prefWidth="180"/>
+                            prefWidth="180"
+                            onAction="#onOpenStudyGroup"/>
                     <Button fx:id="calendarButton"
                             text="Calendar"
                             onAction="#onOpenCalendar"
@@ -128,7 +129,8 @@
     <!-- Body -->
     <center>
         <StackPane>
-            <VBox alignment="CENTER"
+            <VBox fx:id="studygroupPane"
+                  alignment="CENTER"
                   spacing="10"
                   maxWidth="420">
                 <Label text="Build your study group"/>
@@ -157,6 +159,19 @@
                             onAction="#onJoinGroup"/>
                 </VBox>
             </VBox>
+            <!-- Calendar  -->
+            <AnchorPane fx:id="calendarPane"
+                        visible="false"
+                        managed="false">
+                <children>
+                    <fx:include source="calendar-view.fxml"
+                                AnchorPane.topAnchor="0.0"
+                                AnchorPane.rightAnchor="0.0"
+                                AnchorPane.bottomAnchor="0.0"
+                                AnchorPane.leftAnchor="0.0"/>
+                </children>
+            </AnchorPane>
+
         </StackPane>
     </center>
 </BorderPane>
