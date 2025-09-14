@@ -9,6 +9,7 @@ public interface IUserDAO {
     User findUser(String column, String value) throws SQLException;
     ObservableList<User> findUsers() throws SQLException;
     boolean createUser(String username, String password, String firstName, String lastName, String email, String institution) throws SQLException, DuplicateUsernameException, DuplicateEmailException;
+    boolean addNotification(String sentFrom, String receivedBy, String message) throws SQLException;
     boolean updateValue(String username, String column, String value) throws SQLException;
     boolean deleteUser(String userID) throws SQLException;
 }

@@ -45,14 +45,28 @@ public class UserDAO implements IUserDAO{
             stmt.execute(createFriendsTable);
 
             String createEventsTable = "CREATE TABLE IF NOT EXISTS events ("
-                    + "event_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT"
-                    + "title VARCHAR(24) NOT NULL DEFAULT 'Untitled'"
-                    + "description VARCHAR(128) NOT NULL DEFAULT 'No description given'"
-                    + "colour_label ENUM('clear', 'red', 'blue', 'yellow', 'green') NOT NULL DEFAULT 'clear'"
-                    + "start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+                    + "event_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,"
+                    + "title VARCHAR(24) NOT NULL DEFAULT 'Untitled',"
+                    + "description VARCHAR(128) NOT NULL DEFAULT 'No description given',"
+                    + "colour_label ENUM('clear', 'red', 'blue', 'yellow', 'green') NOT NULL DEFAULT 'clear',"
+                    + "start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
                     + "end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
                     + ");";
             stmt.execute(createEventsTable);
+
+            String createNotifsTable = "CREATE TABLE IF NOT EXISTS notifications ("
+                    + "notif_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,"
+                    + "sent_from VARCHAR(16) NOT NULL,"
+                    + "received_by VARCHAR(16) NOT NULL,"
+                    + "message VARCHAR(128) NOT NULL DEFAULT 'No message given',"
+                    + "checked BOOLEAN DEFAULT 'false',"
+                    + "CONSTRAINT fk_received"
+                    + "FOREIGN KEY (received)"
+                    + "REFERENCES users(username)"
+                    + "ON UPDATE CASCADE"
+                    + "ON DELETE CASCADE"
+                    + ");";
+            stmt.execute(createNotifsTable);
         } catch (SQLException e) {
             System.err.println("SQLException: " + e);
         }
@@ -168,6 +182,24 @@ public class UserDAO implements IUserDAO{
             } else if (errorMsg.contains("email")) {
                 throw new DuplicateEmailException("Email already exists");
             }
+            System.err.println("Error occurred during update statement" + e);
+            return false;
+        }
+    }
+
+    // Adds a notification
+    public boolean addNotification(String sentFrom, String receivedBy, String message) throws SQLException {
+        // Declare statement and update query
+        Statement stmt = connection.createStatement();
+        String updateQuery =
+                "INSERT INTO notifications [sent_from, received_by, message) " +
+                "VALUES ('" + sentFrom + "','" + receivedBy + "','" + message + "');";
+
+        // Execute update statement, return true if successful, false if not
+        try {
+            stmt.executeUpdate(updateQuery);
+            return true;
+        } catch (SQLException e) {
             System.err.println("Error occurred during update statement" + e);
             return false;
         }

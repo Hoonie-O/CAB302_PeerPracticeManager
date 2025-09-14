@@ -13,6 +13,7 @@ public class User {
     private String bio;
     private List<User> friendsList;
     private List<Event> events;
+    private List<Notification> notifications;
 
     public User(String firstName, String lastName, String username, String email, String passwordHash, String institution) {
         this.firstName = firstName;
@@ -40,15 +41,18 @@ public class User {
     public String getInstitution() { return institution; }
     public void setInstitution(String institution) { this.institution = institution; }
 
+    public void setBio(String bio) { this.bio = bio; } // fixed bug
+    public String getBio() { return bio; }
+
     public String getPassword() { return passwordHash; }
     public void setPassword(String passwordHash) { this.passwordHash = passwordHash; }
 
     public List<User> getFriendList() { return friendsList; }
     public void addFriend(User user) { friendsList.add(user); }
 
-    public void setBio(String bio) { this.bio = bio; } // fixed bug
-    public String getBio() { return bio; }
-
     public List<Event> getEvents() { return events; }
     public void addEvent(Event ev) { events.add(ev); }
+
+    public List<Notification> getNotifications() { return notifications; }
+    public void addNotification(Notification n) {notifications.add(n); }
 }

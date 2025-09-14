@@ -10,6 +10,8 @@ import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.sql.SQLException;
+
 public class ForgotPasswordController extends BaseController{
     @FXML private TextField emailField;
     @FXML private Button sendButton;
@@ -21,11 +23,11 @@ public class ForgotPasswordController extends BaseController{
     }
 
     @FXML
-    private void onSendResetLink() {
+    private void onSendResetLink() throws SQLException {
         IUserDAO userDAO = ctx.getUserDao();
         MailService mailService = ctx.getMailService();
         User user = ctx.getUserSession().getCurrentUser();
-        if(userDAO.existsByEmail(emailField.getText())){
+        if(userDAO.findUser("email", user.getEmail()) != null){
             String msg = String.format("Hello %s,%n" +
                     "Your PeerPractice password can be reset by accessing the folowing link: %s.%n" +
                     "If you did not request a new password, please ignore this email.",user.getFirstName(),"null");

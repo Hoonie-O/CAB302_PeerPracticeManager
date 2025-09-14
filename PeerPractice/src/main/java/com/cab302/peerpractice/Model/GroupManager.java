@@ -4,6 +4,7 @@ import com.cab302.peerpractice.Exceptions.DuplicateGroupException;
 import com.cab302.peerpractice.Exceptions.InsufficientPermissionsException;
 import com.cab302.peerpractice.Exceptions.UserNotFoundException;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
@@ -41,16 +42,16 @@ public class GroupManager {
         groupDAO.setRequireApproval(group.getID(),require_approval);
     }
 
-    public void addMember(Group group,User user,String toAdd){
+    public void addMember(Group group,User user,String toAdd) throws SQLException {
         if(!group.getOwner().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
 
-        User userToAdd = userDAO.searchByUsername(toAdd);
-        if(userToAdd == null) throw new UserNotFoundException("User to add coldn't be found");
+        User userToAdd = userDAO.findUser("username", toAdd);
+        if(userToAdd == null) throw new UserNotFoundException("User to add couldn't be found");
 
         group.addMember(userToAdd);
     }
 
-    public void joinGroup(Group group, User user){
+    public void joinGroup(Group group, User user) throws SQLException {
         if(user == null) throw new IllegalArgumentException("User can't be null");
         if(group == null) throw new IllegalArgumentException("Group can't be null");
         if(group.isRequire_approval()){

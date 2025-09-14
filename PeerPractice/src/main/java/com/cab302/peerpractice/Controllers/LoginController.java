@@ -8,6 +8,7 @@ import com.cab302.peerpractice.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class LoginController extends BaseController{
@@ -33,26 +34,36 @@ public class LoginController extends BaseController{
                         .or(passwordField.textProperty().isEmpty()));
 
         // Event handlers
-        loginButton.setOnAction(e -> login());
+        loginButton.setOnAction(e -> {
+            try {
+                login();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         forgotpasswordlink.setOnAction(e -> nav.Display(View.ForgotPassword));
         signupLink.setOnAction(e -> nav.Display(View.Signup));
     }
 
-    private void login() {
+    private void login() throws SQLException {
         messageLabel.setText("");
         String ID = IDField.getText();
         String password = passwordField.getText();
 
-        if (userManager.authenticate(ID, password)) {
-            // Fetch user from DAO (since authenticate only returns boolean)
-            ctx.getUserDao().getAllUsers().stream()
-                    .filter(u -> u.getEmail().equalsIgnoreCase(ID) ||
-                            u.getUsername().equalsIgnoreCase(ID))
-                    .findFirst().ifPresent(loggedIn -> ctx.getUserSession().setCurrentUser(loggedIn));
+        try {
+            if (userManager.authenticate(ID, password)) {
+                // Fetch user from DAO (since authenticate only returns boolean)
+                ctx.getUserDao().findUsers().stream()
+                        .filter(u -> u.getEmail().equalsIgnoreCase(ID) ||
+                                u.getUsername().equalsIgnoreCase(ID))
+                        .findFirst().ifPresent(loggedIn -> ctx.getUserSession().setCurrentUser(loggedIn));
 
-            nav.DisplayMainMenuOrGroup();
-        } else {
-            messageLabel.setText("Invalid email/username or password.");
+                nav.DisplayMainMenuOrGroup();
+            } else {
+                messageLabel.setText("Invalid email/username or password.");
+            }
+        } catch (SQLException e) {
+            System.err.println("SQLException: " + e);
         }
     }
 }
