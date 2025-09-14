@@ -6,6 +6,7 @@ import javafx.beans.property.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 
+// kept for backward compatibility - will be phased out
 public class Event {
     private final StringProperty title;
     private final StringProperty description;

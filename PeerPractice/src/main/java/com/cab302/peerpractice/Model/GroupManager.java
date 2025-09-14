@@ -29,6 +29,7 @@ public class GroupManager {
         validateDescription(description);
 
         Group group = new Group(name,description,require_approval,user.getUsername(), LocalDateTime.now());
+        group.addMember(user);
 
         if(groupDAO.groupExists(group)) throw new DuplicateGroupException("Group already exists");
 

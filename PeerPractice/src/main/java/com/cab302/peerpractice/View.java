@@ -4,7 +4,7 @@ public enum View {
     Login("login-view.fxml", "Login"),
     Signup("signup-view.fxml", "Sign up"),
     ForgotPassword("forgotpassword-view.fxml", "Forgot password"),
-    MainMenu("mainmenu-view.fxml", "Main menu"),
+    Default("default-view.fxml", "Main menu"),
     Calendar("calendar-view.fxml", "Calendar"),
     ResetPassword("resetpassword-view.fxml","ResetPassword"),
     Groups("groups-view.fxml","Groups"),

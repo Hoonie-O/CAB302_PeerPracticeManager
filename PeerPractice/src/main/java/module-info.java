@@ -22,6 +22,7 @@ module com.cab302.peerpractice {
     exports com.cab302.peerpractice;
     exports com.cab302.peerpractice.Controllers;
     exports com.cab302.peerpractice.Model;
+    exports com.cab302.peerpractice.Exceptions;
     opens com.cab302.peerpractice.Controllers to javafx.fxml;
     opens com.cab302.peerpractice.Model to javafx.fxml;
 }

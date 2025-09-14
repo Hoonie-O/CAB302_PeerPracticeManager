@@ -1,7 +1,5 @@
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Controllers.MainMenuController;
 import com.cab302.peerpractice.Model.*;
-import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test class for MainMenuController logout functionality
  * Tests core logic of logout operations without JavaFX UI dependencies
  */
-public class MainMenuControllerLogoutTest {
+public class DefaultControllerLogoutTest {
 
     private AppContext appContext;
     private MockNavigation mockNavigation;
@@ -95,7 +93,7 @@ public class MainMenuControllerLogoutTest {
     @Test
     public void testLogoutSecurityCleanup() {
         //User with sensitive data is logged in
-        User sensitiveUser = new User("Admin", "Super", "admin", "admin@secure.com", "topsecret", "SECURE_ORG");
+        User sensitiveUser = new User("Admin", "Super", "adminuser", "admin@secure.com", "topsecret", "SECURE_ORG");
         userSession.setCurrentUser(sensitiveUser);
         assertTrue(userSession.isLoggedIn());
         
