@@ -105,7 +105,7 @@ public class User {
         return biography;
     }
 
-    public Object getEvents() {
+    public Event getEvents() {
         return events.get();
     }
     public void setEvents(Event events) {

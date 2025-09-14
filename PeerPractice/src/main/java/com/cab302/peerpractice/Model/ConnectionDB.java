@@ -1,16 +1,10 @@
-package com.cab302.peerpractice;
+package com.cab302.peerpractice.Model;
 
 import com.sun.rowset.CachedRowSetImpl;
 import java.sql.*;
 
-/**
- * Database operation utilities
- */
 public class ConnectionDB
 {
-    /**
-     *
-     */
     // Declare the MySQL JDBC driver to interact with database
     private static final String jdbcDriver = "com.mysql.cj.jdbc.Driver";
     // Declare the URL used to connect to the MySQL database
