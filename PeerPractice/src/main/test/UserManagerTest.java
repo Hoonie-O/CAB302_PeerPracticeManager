@@ -29,7 +29,7 @@ public class UserManagerTest {
 
     @BeforeEach
     public void setUp(){
-        userdao = new MockDAO();
+        userdao = new MockUserDAO();
         hasher = new BcryptHasher();
         manager = new UserManager(userdao, hasher);
         user = new User(NAME,LASTNAME,USERNAME,EMAIL,"$oldHash",INSTITUTION);
@@ -51,7 +51,7 @@ public class UserManagerTest {
         }catch(Exception e){
             fail();
         }
-        assertThrows(DuplicateEmailException.class, () -> manager.signUp(NAME,LASTNAME,"asss",EMAIL,PASSWORD,INSTITUTION));
+        assertThrows(DuplicateEmailException.class, () -> manager.signUp(NAME,LASTNAME,"asssss",EMAIL,PASSWORD,INSTITUTION));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class UserManagerTest {
     @Test
     void changePassword_validPassword_doesNotThrow() {
         assertDoesNotThrow(() ->
-                manager.changePassword(user, "Valid1!")
+                manager.changePassword(user, "ValidPass1!")
         );
     }
 

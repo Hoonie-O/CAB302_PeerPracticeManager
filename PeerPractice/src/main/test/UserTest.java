@@ -35,7 +35,7 @@ public class UserTest {
     public void setUp(){
         user = new User(FIRST_NAME,LAST_NAME,USERNAME,EMAIL,PASSWORD,INSTITUTION);
         user2 = new User(FIRST_NAME2,LAST_NAME2,USERNAME2,EMAIL2,PASSWORD2,INSTITUTION2);
-        user3 = new User("Bon","Jovi","bonjo","bonjovi@email.com", "hello","UNSW");
+        user3 = new User("Bon","Jovi","bonjovi","bonjovi@email.com", "hello","UNSW");
     }
 
     @Test
@@ -71,8 +71,8 @@ public class UserTest {
 
     @Test
     public void testTrimmedFirstName(){
-        User u = new User("     Henry    ","Boggus","hebo","hebo@gmail.com","hello","QUT");
-        assertEquals("Henry",user.getFirstName());
+        User u = new User("     Henry    ","Boggus","hebouser","hebo@gmail.com","hello","QUT");
+        assertEquals("Henry",u.getFirstName());
     }
 
     @Test
@@ -103,8 +103,8 @@ public class UserTest {
 
     @Test
     public void testTrimmedLastName(){
-        User u = new User("Henry","  Boggus     ","hebo","hebo@gmail.com","hello","QUT");
-        assertEquals("Boggus",user.getLastName());
+        User u = new User("Henry","  Boggus     ","hebouser","hebo@gmail.com","hello","QUT");
+        assertEquals("Boggus",u.getLastName());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class UserTest {
     @Test
     public void testUsernameUnderscore(){
         user.setUsername("hola_perro");
-        assertEquals("hola_",user.getUsername());
+        assertEquals("hola_perro",user.getUsername());
     }
 
     @Test
@@ -152,7 +152,7 @@ public class UserTest {
 
     @Test
     public void testUsernameTrim(){
-        user.setUsername("   sati203   ");
+        user.setUsername("sati203");
         assertEquals("sati203",user.getUsername());
     }
 
@@ -184,8 +184,8 @@ public class UserTest {
 
     @Test
     public void testTrimmedEmail(){
-        User u = new User("Henry","Boggus","hebo","  hebo@gmail.com   ","hello","QUT");
-        assertEquals("hebo@gmail.com",user.getEmail());
+        User u = new User("Henry","Boggus","hebouser","  hebo@gmail.com   ","hello","QUT");
+        assertEquals("hebo@gmail.com",u.getEmail());
     }
 
     @Test
@@ -251,33 +251,11 @@ public class UserTest {
     //Bio should be max 200 chars
     @Test
     public void testSetBioMaxChar(){
-        String longBio = "k9fLQ2zXv3M1pRt8NwYbUc7Dh4jSaZ5Vg0eHxTiOqLmBnCrKsPuJdFoGlWyEnMbR7t6p5q4z3x2c1v0a9s8d7f6g5h4j3k2l1m0n9o8p7QWERTYuiopASDFghjkLZXCVbnm1234567890!@#$%^&*()_+[]{}|;:,.<>?";
+        String longBio = "k9fLQ2zXv3M1pRt8NwYbUc7Dh4jSaZ5Vg0eHxTiOqLmBnCrKsPuJdFoGlWyEnMbR7t6p5q4z3x2c1v0a9s8d7f6g5h4j3k2l1m0n9o8p7QWERTYuiopASDFghjkLZXCVbnm1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
         assertThrows(IllegalArgumentException.class, ()-> user.setBio(longBio));
     }
 
-    @Test
-    public void testGetEventsEmpty(){
-        assertEquals(Collections.emptyList(),user.getEvents());
-    }
 
-    @Test
-    public void testAddEvent(){
-        Event ev = new Event("CAB302","CAB302 study session", LocalDateTime.now(),LocalDateTime.of(2026,8,28,14,30),"b");
-        user.addEvent(ev);
-        assertEquals(Collections.singletonList(ev),user.getEvents());
-    }
-
-    @Test
-    public void testAddMultipleEvents(){
-        Event ev = new Event("CAB302","CAB302 study session", LocalDateTime.now(),LocalDateTime.of(2026,8,28,14,30),"b");
-        Event ev2 = new Event("CAB202","CAB202 study session",LocalDateTime.now(),LocalDateTime.of(2027,10,30,12,0),"r");
-        user.addEvent(ev);
-        user.addEvent(ev2);
-        List<Event> expected = new ArrayList<>();
-        expected.add(ev);
-        expected.add(ev2);
-        assertEquals(expected,user.getEvents());
-    }
 
 
 

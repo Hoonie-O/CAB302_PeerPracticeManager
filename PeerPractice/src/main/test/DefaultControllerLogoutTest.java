@@ -93,7 +93,7 @@ public class DefaultControllerLogoutTest {
     @Test
     public void testLogoutSecurityCleanup() {
         //User with sensitive data is logged in
-        User sensitiveUser = new User("Admin", "Super", "admin", "admin@secure.com", "topsecret", "SECURE_ORG");
+        User sensitiveUser = new User("Admin", "Super", "adminuser", "admin@secure.com", "topsecret", "SECURE_ORG");
         userSession.setCurrentUser(sensitiveUser);
         assertTrue(userSession.isLoggedIn());
         
