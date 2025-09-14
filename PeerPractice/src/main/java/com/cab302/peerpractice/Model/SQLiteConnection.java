@@ -1,4 +1,4 @@
-package com.cab302.peerpractice;
+package com.cab302.peerpractice.Model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
