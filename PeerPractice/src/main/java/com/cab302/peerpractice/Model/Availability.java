@@ -3,20 +3,25 @@ package com.cab302.peerpractice.Model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-// kept for backward compatibility - will be phased out
-public class Event {
+public class Availability {
     private String title;
     private String description;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String colorLabel;
+    private User user;
+    private boolean isRecurring;
+    private String recurringPattern; // DAILY WEEKLY MONTHLY
 
-    public Event(String title, String description, LocalDateTime startTime, LocalDateTime endTime, String colorLabel) {
+    public Availability(String title, User user, LocalDateTime startTime, LocalDateTime endTime, String colorLabel) {
         this.title = Objects.requireNonNull(title, "title");
-        this.description = description != null ? description : "";
+        this.user = Objects.requireNonNull(user, "user cannot be null");
         this.startTime = Objects.requireNonNull(startTime, "startTime");
         this.endTime = Objects.requireNonNull(endTime, "endTime");
         this.colorLabel = colorLabel != null ? colorLabel : "BLUE";
+        this.description = "";
+        this.isRecurring = false;
+        this.recurringPattern = "NONE";
         
         if (endTime.isBefore(startTime)) {
             throw new IllegalArgumentException("End time cannot be before start time");
@@ -69,31 +74,61 @@ public class Event {
         this.colorLabel = colorLabel != null ? colorLabel : "BLUE";
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = Objects.requireNonNull(user, "user cannot be null");
+    }
+
+    public boolean isRecurring() {
+        return isRecurring;
+    }
+
+    public void setRecurring(boolean recurring) {
+        isRecurring = recurring;
+    }
+
+    public String getRecurringPattern() {
+        return recurringPattern;
+    }
+
+    // sets recurring pattern and automatically enables recurring if pattern is set
+    public void setRecurringPattern(String recurringPattern) {
+        this.recurringPattern = recurringPattern != null ? recurringPattern : "NONE";
+        this.isRecurring = !this.recurringPattern.equals("NONE");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return Objects.equals(title, event.title) &&
-               Objects.equals(description, event.description) &&
-               Objects.equals(startTime, event.startTime) &&
-               Objects.equals(endTime, event.endTime) &&
-               Objects.equals(colorLabel, event.colorLabel);
+        Availability that = (Availability) o;
+        return isRecurring == that.isRecurring &&
+               Objects.equals(title, that.title) &&
+               Objects.equals(description, that.description) &&
+               Objects.equals(startTime, that.startTime) &&
+               Objects.equals(endTime, that.endTime) &&
+               Objects.equals(colorLabel, that.colorLabel) &&
+               Objects.equals(user, that.user) &&
+               Objects.equals(recurringPattern, that.recurringPattern);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description, startTime, endTime, colorLabel);
+        return Objects.hash(title, description, startTime, endTime, colorLabel, user, isRecurring, recurringPattern);
     }
 
     @Override
     public String toString() {
-        return "Event{" +
+        return "Availability{" +
                 "title='" + title + '\'' +
-                ", description='" + description + '\'' +
+                ", user=" + (user != null ? user.getUsername() : "null") +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", colorLabel='" + colorLabel + '\'' +
+                ", isRecurring=" + isRecurring +
                 '}';
     }
 }
