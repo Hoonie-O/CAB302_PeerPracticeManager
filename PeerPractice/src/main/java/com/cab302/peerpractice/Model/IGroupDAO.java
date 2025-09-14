@@ -1,0 +1,20 @@
+package com.cab302.peerpractice.Model;
+
+import java.util.List;
+
+public interface IGroupDAO {
+    //Should return the group ID, or throw exception if failed (or -1 change GroupManager :) )
+    int addGroup(Group group);
+
+    boolean deleteGroup(Group group);
+    boolean updateGroup(Group group);
+    List<Group>searchByUser(User user);
+    List<Group>searchByMembers(List<User> users);
+    List<Group>searchByName(String name);
+    boolean existsByName(String name);
+    boolean existstByUser(User user);
+    List<Group>getAllGroups();
+    boolean setRequireApproval(int id,boolean require_approval);
+    boolean addToGroup(int id, User user);
+    boolean groupExists(Group group);
+}

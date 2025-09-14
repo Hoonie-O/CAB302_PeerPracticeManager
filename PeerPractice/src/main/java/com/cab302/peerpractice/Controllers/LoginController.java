@@ -1,12 +1,17 @@
 package com.cab302.peerpractice.Controllers;
 
+import com.cab302.peerpractice.AppContext;
+import com.cab302.peerpractice.Model.UserManager;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
+import com.cab302.peerpractice.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class LoginController {
-    @FXML private TextField emailField;
+import java.util.List;
+
+public class LoginController extends BaseController{
+    @FXML private TextField IDField;
     @FXML private PasswordField passwordField;
     @FXML private Button loginButton;
     @FXML private CheckBox rememberMe;
@@ -14,25 +19,40 @@ public class LoginController {
     @FXML private Hyperlink signupLink;
     @FXML private Label messageLabel;
 
-    private Navigation navigate() {
-        return (Navigation) loginButton.getScene().getWindow().getUserData();
+    public LoginController(AppContext ctx, Navigation nav) {
+        super(ctx, nav);
     }
+
+    private final UserManager userManager = ctx.getUserManager();
 
     @FXML
     private void initialize() {
-        // Disables login button until email and password field are filled
+        // Disable login button until fields filled
         loginButton.disableProperty()
-                .bind(emailField.textProperty().isEmpty()
-                .or(passwordField.textProperty().isEmpty()));
+                .bind(IDField.textProperty().isEmpty()
+                        .or(passwordField.textProperty().isEmpty()));
 
         // Event handlers
         loginButton.setOnAction(e -> login());
-        forgotpasswordlink.setOnAction(e -> navigate().Display(View.ForgotPassword));
-        signupLink.setOnAction(e -> navigate().Display(View.Signup));
+        forgotpasswordlink.setOnAction(e -> nav.Display(View.ForgotPassword));
+        signupLink.setOnAction(e -> nav.Display(View.Signup));
     }
 
     private void login() {
         messageLabel.setText("");
-        navigate().Display(View.MainMenu);
+        String ID = IDField.getText();
+        String password = passwordField.getText();
+
+        if (userManager.authenticate(ID, password)) {
+            // Fetch user from DAO (since authenticate only returns boolean)
+            ctx.getUserDao().getAllUsers().stream()
+                    .filter(u -> u.getEmail().equalsIgnoreCase(ID) ||
+                            u.getUsername().equalsIgnoreCase(ID))
+                    .findFirst().ifPresent(loggedIn -> ctx.getUserSession().setCurrentUser(loggedIn));
+
+            nav.DisplayMainMenuOrGroup();
+        } else {
+            messageLabel.setText("Invalid email/username or password.");
+        }
     }
 }

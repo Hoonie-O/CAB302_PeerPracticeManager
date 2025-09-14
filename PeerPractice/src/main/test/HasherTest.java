@@ -1,32 +1,52 @@
+import com.cab302.peerpractice.Model.BcryptHasher;
 import com.cab302.peerpractice.Model.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HasherTest {
 
     private PasswordHasher hasher;
+    private String rawPassword;
+    private String hash;
 
-    //Change for current implementation of hasher
     @BeforeEach
-    public void setUp(){
-        hasher = new bcrypt();
+    public void setUp() {
+        hasher = new BcryptHasher();
+        rawPassword = "password";
+        hash = hasher.hasher(rawPassword);
     }
 
     @Test
-    public void testHashing(){
-        assertEquals("$2a$12$mYPDrFpdRS9XODR8EEPouus7jZGrdJjGTbSKE4w6JArohOT7jhbZy",hasher.hash("password"));
+    public void testHashIsGenerated() {
+        assertNotNull(hash);
+        assertFalse(hash.isEmpty());
+        assertNotEquals(rawPassword, hash);
     }
 
     @Test
-    public void testVerifyTrue(){
-        assertEquals(true,hasher.verify("$2a$12$mYPDrFpdRS9XODR8EEPouus7jZGrdJjGTbSKE4w6JArohOT7jhbZy","password"));
+    public void testCorrectPasswordMatches() {
+        assertTrue(hasher.matches(rawPassword, hash));
     }
 
     @Test
-    public void testVerifyFalse(){
-        assertEquals(false,hasher.verify("$2a$12$mYPDrFpdRS9XODR8EEPouus7jZGrdJjGTbSKE4w6JArohOT7jhbZy","password2"));
+    public void testWrongPasswordDoesNotMatch() {
+        assertFalse(hasher.matches("wrongpassword", hash));
     }
 
+    @Test
+    public void testInvalidHashFormatReturnsFalse() {
+        assertFalse(hasher.matches(rawPassword, "notAHash"));
+    }
 
+    @Test
+    public void testNullHashReturnsFalse() {
+        assertFalse(hasher.matches(rawPassword, null));
+    }
+
+    @Test
+    public void testEmptyHashReturnsFalse() {
+        assertFalse(hasher.matches(rawPassword, ""));
+    }
 }

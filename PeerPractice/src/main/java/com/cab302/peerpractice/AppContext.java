@@ -1,0 +1,45 @@
+package com.cab302.peerpractice;
+
+import com.cab302.peerpractice.Model.*;import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+public class AppContext {
+    private final UserSession userSession = new UserSession();
+    private final IUserDAO userDao = new MockUserDAO();
+    private final IGroupDAO groupDao = new MockGroupDAO();
+    private final Notifier notifier = new Notifier(userDao);
+    private final PasswordHasher passwordHasher = new BcryptHasher();
+    private final UserManager userManager = new UserManager(userDao,passwordHasher);
+    private final GroupManager groupManager = new GroupManager(groupDao, notifier, userDao);
+    private final MailService mailService = new MailService();
+    private final EventManager eventManager = new EventManager();
+    private final SessionManager sessionManager = new SessionManager();
+
+    public AppContext() {
+        try {
+            userManager.signUp("John", "Doe", "username", "email@email.com", "Password1!", "QUT");
+            User testUser = userDao.getUserByUsername("username").orElse(null);
+
+            if (testUser != null) {
+                Group testGroup = new Group("Example Group", "This is a seeded test group", false,
+                        testUser.getUsername(), LocalDateTime.now());
+//                testGroup.setMembers(new ArrayList<>());
+//                testGroup.addMember(testUser);
+                this.groupDao.addGroup(testGroup);
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to seed test data", e);
+        }
+    }
+
+    public UserSession getUserSession(){return userSession;}
+    public IUserDAO getUserDao(){return userDao;}
+    public PasswordHasher getPasswordHasher(){return passwordHasher;}
+    public UserManager getUserManager(){return userManager;}
+    public MailService getMailService(){return mailService;}
+    public EventManager getEventManager(){return eventManager;}
+    public GroupManager getGroupManager(){return  groupManager;}
+    public IGroupDAO getGroupDao() {return groupDao;}
+    public SessionManager getSessionManager(){return sessionManager;}
+
+}

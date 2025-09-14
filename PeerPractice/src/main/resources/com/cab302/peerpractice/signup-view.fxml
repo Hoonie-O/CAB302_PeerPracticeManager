@@ -11,8 +11,8 @@
       fx:controller="com.cab302.peerpractice.Controllers.SignupController"
       spacing="12"
       alignment="TOP_CENTER"
-      prefWidth="380"
-      prefHeight="520">
+      prefWidth="1280"
+      prefHeight="720">
 
     <padding>
         <Insets top="24"
@@ -32,7 +32,7 @@
     </VBox>
 
     <VBox spacing="8">
-        <TextField fx:id="firsNameField"
+        <TextField fx:id="firstNameField"
                    promptText="First Name"
                    prefWidth="320"/>
         <TextField fx:id="lastNameField"
@@ -44,6 +44,10 @@
 
         <TextField fx:id="emailField"
                    promptText="Email"
+                   prefWidth="320"/>
+
+        <TextField fx:id="institutionField"
+                   promptText="Institution or School"
                    prefWidth="320"/>
 
         <PasswordField fx:id="passwordField"

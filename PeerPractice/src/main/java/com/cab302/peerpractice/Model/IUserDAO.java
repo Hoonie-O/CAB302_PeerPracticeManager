@@ -1,12 +1,21 @@
 package com.cab302.peerpractice.Model;
 
-import javafx.collections.ObservableList;
-import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 public interface IUserDAO {
-    User findUser(String userID) throws ClassNotFoundException, SQLException;
-    ObservableList<User> findUsers() throws ClassNotFoundException, SQLException;
-    void createUser(String username, String password, String firstName, String email, String institution) throws ClassNotFoundException, SQLException;
-    void updateUsername(String userID, String username) throws ClassNotFoundException, SQLException;
-    void deleteUser(String userID) throws ClassNotFoundException, SQLException;
+    boolean addUser(User user);
+    boolean deleteUser(User user);
+    boolean updateUser(User user);
+    User searchByUsername(String username);
+    List<User> searchByInstitution(String institution);
+    Optional<User> getUserByEmail(String email);
+    Optional<User> getUserByUsername(String username);
+    boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
+    List<User> getAllUsers();
+    boolean storePassword(User user, String hash);
+    String getPassword(User user);
+    boolean addNotification(String username, Notification notification);
+    boolean removeNotification(String username, Notification notification);
 }
