@@ -127,13 +127,16 @@
         <BorderPane>
             <!-- Left: Group list -->
             <left>
-                <VBox spacing="8" prefWidth="200" style="-fx-background-color: #f5f5f5;">
+                <VBox spacing="8" prefWidth="300" style="-fx-background-color: #f5f5f5;">
                     <padding>
                         <Insets top="10" left="12" right="10" bottom="10"/>
                     </padding>
                     <Label text="Groups" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                    <HBox spacing="5">
-                        <Button text="+" prefWidth="30"/>
+                    <HBox spacing="8">
+                        <HBox spacing="5">
+                            <Button fx:id="addGroupButton" text="+" onAction="#onAddGroup"/>
+                            <Button fx:id="sortGroupsButton" text="A-Z" onAction="#onSortGroups"/>
+                        </HBox>
                         <TextField promptText="Search..." HBox.hgrow="ALWAYS"/>
                     </HBox>
                     <ListView fx:id="groupListView" VBox.vgrow="ALWAYS"/>
@@ -146,22 +149,20 @@
                     <!-- Group header with tabs -->
                     <HBox spacing="15" alignment="CENTER_LEFT">
                         <Label fx:id="groupNameLabel"
-                               text="Example 1"
+                               text="Select Group"
                                style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                         <TabPane fx:id="groupTabs" HBox.hgrow="ALWAYS">
-                            <tabs>
-                                <Tab text="Calendar"/>
-                                <Tab text="Sessions"/>
-                                <Tab text="Chat"/>
-                                <Tab text="Files"/>
-                            </tabs>
+                            <Tab text="Calendar" closable="false"/>
+                            <Tab text="Sessions" closable="false"/>
+                            <Tab text="Chat" closable="false"/>
+                            <Tab text="Files" closable="false"/>
                         </TabPane>
                     </HBox>
 
                     <!-- Placeholder content area -->
                     <StackPane style="-fx-background-color: #e8e8e8; -fx-alignment: center;"
                                VBox.vgrow="ALWAYS">
-                        <Label text="CALENDAR" style="-fx-font-size: 24px; -fx-text-fill: #444;"/>
+                        <Label fx:id="tabContentLabel" text="CALENDAR" style="-fx-font-size: 24px; -fx-text-fill: #444;"/>
                     </StackPane>
                 </VBox>
             </center>
