@@ -9,7 +9,7 @@
 <BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.MainMenuController"
             prefHeight="1080"
-            prefWidth="720">
+            prefWidth="920">
 
     <!-- Top Header -->
     <top>
@@ -115,7 +115,8 @@
                             prefWidth="180"
                             onAction="#onEditProfile"/>
                     <Button text="Setting"
-                            prefWidth="180"/>
+                            prefWidth="180"
+                            onAction="#onSetting"/>
                     <Button text="Logout"
                             prefWidth="180"
                             onAction="#onLogout"/>

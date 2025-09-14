@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cab302.peerpractice.Controllers.SettingProfileController"
+      spacing="8"
+      prefWidth="420">
+    <padding>
+        <Insets top="12"
+                right="12"
+                bottom="12"
+                left="12"/>
+    </padding>
+
+    <Label text="Time and date"
+           style="-fx-font-weight:bold;"/>
+    <Separator/>
+
+    <GridPane hgap="12"
+              vgap="12">
+        <!-- Two columns -->
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"
+                               minWidth="260"/>
+            <ColumnConstraints hgrow="ALWAYS"
+                               minWidth="260"/>
+        </columnConstraints>
+        <!-- Date -->
+        <VBox spacing="4"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="0">
+            <Label text="Date format:"/>
+            <ComboBox fx:id="dateFormatBox"
+                      minWidth="260">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="dd/mm/yyyy"/>
+                            <String fx:value="mm/dd/yyyy"/>
+                            <String fx:value="yyyy-mm-dd"/>
+                        </FXCollections>
+                    </items>
+            </ComboBox>
+        </VBox>
+        <!-- Time -->
+        <VBox spacing="4"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="1">
+            <Label text="Time format:"/>
+            <ComboBox fx:id="timeFormatBox"
+                      minWidth="260">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="hh:mm"/>
+                        <String fx:value="hh:mm AM"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </VBox>
+    </GridPane>
+
+        <VBox spacing="4"/>
+        <Label text="Change password"
+               style="-fx-font-weight:bold;"/>
+
+    <Separator/>
+        <VBox spacing="8">
+            <!-- Old password -->
+            <VBox spacing="4">
+                <Label text="Old password:"/>
+                <PasswordField fx:id="oldPasswordField"/>
+            </VBox>
+            <!-- New password -->
+            <VBox spacing="4">
+                <Label text="New password:"/>
+                <PasswordField fx:id="newPasswordField"/>
+            </VBox>
+            <!-- Confirm new password -->
+            <VBox spacing="4">
+                <Label text="Confirm new password:"/>
+                <PasswordField fx:id="confirmPasswordField"/>
+            </VBox>
+        </VBox>
+
+        <!-- Buttons -->
+        <HBox alignment="CENTER_RIGHT"
+              spacing="8">
+            <padding>
+                <Insets top="14"/>
+            </padding>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Close"
+                    onAction="#onClose"
+                    minWidth="110"/>
+            <Button text="Save"
+                    onAction="#onSave"
+                    minWidth="110"/>
+        </HBox>
+</VBox>

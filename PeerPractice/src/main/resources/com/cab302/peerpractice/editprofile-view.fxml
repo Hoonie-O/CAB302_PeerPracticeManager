@@ -28,6 +28,7 @@
                                minWidth="290"/>
         </columnConstraints>
 
+        <Separator/>
         <!-- First name -->
         <VBox spacing="4"
               GridPane.rowIndex="0"
@@ -58,7 +59,8 @@
         </VBox>
 
         <!-- Username -->
-        <VBox spacing="4" GridPane.rowIndex="1"
+        <VBox spacing="4"
+              GridPane.rowIndex="1"
               GridPane.columnIndex="1">
             <Label text="Username:"/>
             <TextField fx:id="usernameField"

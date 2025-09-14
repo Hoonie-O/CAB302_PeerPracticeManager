@@ -8,7 +8,8 @@ public enum View {
     Calendar("calendar-view.fxml", "Calendar"),
     ResetPassword("resetpassword-view.fxml","ResetPassword"),
     Groups("groups-view.fxml","Groups"),
-    EditProfile("editprofile-view.fxml", "Edit Profile");
+    EditProfile("editprofile-view.fxml", "Edit Profile"),
+    SettingProfile("settingprofile-view.fxml", "Setting Profile");
 
     private final String fxml;
     private final String title;

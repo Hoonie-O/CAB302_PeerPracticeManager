@@ -293,6 +293,41 @@ public class MainMenuController extends BaseController{
             exception.printStackTrace();
         }
     }
+    @FXML
+    private void onSetting(ActionEvent event) {
+        try {
+            // Locate FXML file
+            URL fxml = java.util.Objects
+                    .requireNonNull(View.SettingProfile.url());
+            // Create FXMLLoader
+            FXMLLoader loader = new javafx.fxml.FXMLLoader(fxml);
+            loader.setControllerFactory(cls -> {
+                try {
+                    if (cls == SettingProfileController.class) return new SettingProfileController(ctx, nav);
+                    return cls.getDeclaredConstructor().newInstance();
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+            });
+
+            // Load view and get controller
+            Parent root = loader.load();
+            SettingProfileController controller = loader.getController();
+
+            // Create and configure a modal dialog 'Stage'
+            var dialog = new javafx.stage.Stage();
+            dialog.setTitle("Settings");
+            dialog.initOwner(((javafx.scene.Node) event.getSource()).getScene().getWindow());
+            dialog.initModality(javafx.stage.Modality.WINDOW_MODAL);
+            dialog.setResizable(false);
+            dialog.setScene(new javafx.scene.Scene(root));
+            controller.setStage(dialog);
+            dialog.showAndWait();
+        }
+        catch (java.io.IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 
     @FXML
     private void onCreateGroup() {
