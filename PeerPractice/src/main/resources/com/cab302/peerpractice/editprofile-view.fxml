@@ -10,7 +10,8 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.cab302.peerpractice.Controllers.EditProfileController"
       spacing="8"
-      prefWidth="580">
+      prefWidth="1280"
+      prefHeight="720">
     <padding>
         <Insets top="12"
                 right="12"
