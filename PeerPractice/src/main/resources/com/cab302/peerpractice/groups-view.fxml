@@ -8,8 +8,8 @@
 <?import java.lang.String?>
 <BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.GroupController"
-            prefHeight="720"
-            prefWidth="1280">
+            prefWidth="1280"
+            prefHeight="720">
 
     <!-- Top Header -->
     <top>
