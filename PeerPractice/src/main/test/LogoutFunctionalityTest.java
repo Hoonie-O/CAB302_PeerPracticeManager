@@ -19,7 +19,7 @@ public class LogoutFunctionalityTest {
     public void setUp() {
         userSession = new UserSession();
         testUser = new User("John", "Doe", "johndoe", "john@test.com", "hashedpass", "QUT");
-        mockDao = new MockDAO();
+        mockDao = new MockUserDAO();
         passwordHasher = new BcryptHasher();
         userManager = new UserManager(mockDao, passwordHasher);
     }
@@ -88,10 +88,10 @@ public class LogoutFunctionalityTest {
 
     // Integration tests with UserManager
     @Test
-    public void testLogoutIntegration_AfterSuccessfulAuthentication_ShouldClearSession() {
+    public void testLogoutIntegration_AfterSuccessfulAuthentication_ShouldClearSession() throws Exception {
         //Sign up user properly (this handles password hashing)
-        userManager.signUp("John", "Doe", "johndoe", "john@test.com", "password", "QUT");
-        assertTrue(userManager.authenticate("johndoe", "password"));
+        userManager.signUp("John", "Doe", "johndoe", "john@test.com", "Password1!", "QUT");
+        assertTrue(userManager.authenticate("johndoe", "Password1!"));
         // Get the actual user from DAO (with proper hashed password)
         User actualUser = mockDao.getUserByUsername("johndoe").orElseThrow();
         userSession.setCurrentUser(actualUser);
@@ -130,7 +130,7 @@ public class LogoutFunctionalityTest {
     @Test
     public void testLogoutSecurity_ShouldClearSensitiveSessionData() {
         // Arrange: User with sensitive data logged in
-        User sensitiveUser = new User("Admin", "User", "admin", "admin@test.com", "supersecret", "QUT");
+        User sensitiveUser = new User("Admin", "User", "admin123", "admin@test.com", "supersecret", "QUT");
         userSession.setCurrentUser(sensitiveUser);
         
         // Logout

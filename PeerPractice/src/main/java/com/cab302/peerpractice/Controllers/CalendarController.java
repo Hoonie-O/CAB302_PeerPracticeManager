@@ -1,21 +1,19 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.Event;
-import com.cab302.peerpractice.Model.EventManager;
+import com.cab302.peerpractice.Model.*;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
-import javafx.animation.TranslateTransition;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.util.Duration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,126 +27,55 @@ public class CalendarController extends BaseController {
     @FXML private GridPane calendarGrid;
     @FXML private Button prevButton;
     @FXML private Button nextButton;
-
-    @FXML private BorderPane menu;
-    @FXML private BorderPane profile;
-    @FXML private ComboBox<String> availabilityStatus;
-    @FXML private Button menuButton;
-    @FXML private Button profileButton;
-
-    private boolean menuOpen = false;
-    private boolean profileOpen = false;
+    @FXML private Button backToMenuButton;
+    @FXML private ToggleButton sessionViewButton;
+    @FXML private ToggleButton availabilityViewButton;
 
     private YearMonth currentYearMonth;
-    private final EventManager eventManager;
-
-    private static final Duration SLIDE = Duration.millis(180);
-
+    private SessionCalendarManager sessionCalendarManager;
+    private AvailabilityManager availabilityManager;
+    private boolean isSessionView = true; // default to session view
+    
     public CalendarController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
-        this.eventManager = ctx.getEventManager();
+        this.sessionCalendarManager = ctx.getSessionCalendarManager();
+        this.availabilityManager = ctx.getAvailabilityManager();
     }
 
     @FXML
     private void initialize(){
-        if (menu != null) {
-            menu.setVisible(false);
-            menu.setManaged(false);
-        }
-        if (profile != null) {
-            profile.setVisible(false);
-            profile.setManaged(false);
-        }
-
-        if (availabilityStatus != null) {
-            if (availabilityStatus.getItems().isEmpty()) {
-                availabilityStatus.setItems(FXCollections.observableArrayList("Online", "Away", "Busy", "Offline"));
-            }
-            availabilityStatus.getSelectionModel().select("Online");
-            availabilityStatus.getSelectionModel().selectedItemProperty()
-                    .addListener((obs, oldVal, newVal) ->
-                            System.out.println("Status changed to: " + newVal));
-        }
-
         currentYearMonth = YearMonth.now();
+        setupViewToggle();
+        updateCalendarView();
+    }
+    
+    private void setupViewToggle() {
+        // create toggle group so only one can be selected
+        ToggleGroup viewToggle = new ToggleGroup();
+        sessionViewButton.setToggleGroup(viewToggle);
+        availabilityViewButton.setToggleGroup(viewToggle);
+        
+        // default to session view
+        sessionViewButton.setSelected(true);
+        
+        // add listeners
+        sessionViewButton.setOnAction(e -> switchToSessionView());
+        availabilityViewButton.setOnAction(e -> switchToAvailabilityView());
+    }
+    
+    private void switchToSessionView() {
+        isSessionView = true;
+        updateCalendarView();
+    }
+    
+    private void switchToAvailabilityView() {
+        isSessionView = false;
         updateCalendarView();
     }
 
-    private void animate(Region sidebar, double targetX, Runnable onComplete) {
-        TranslateTransition transition = new TranslateTransition(SLIDE, sidebar);
-        transition.setToX(targetX);
-        transition.setOnFinished(e -> {
-            if (onComplete != null) onComplete.run();
-        });
-        transition.play();
-    }
-
     @FXML
-    private void onToggleMenu() {
-        if (!menuOpen) openMenu();
-        else closeMenu();
-    }
-
-    private void openMenu() {
-        menu.setVisible(true);
-        menu.setManaged(true);
-        double width = menu.getPrefWidth();
-        menu.setTranslateX(-width);
-        animate(menu, 0, () -> menuOpen = true);
-    }
-
-    private void closeMenu() {
-        double width = menu.getPrefWidth();
-        animate(menu, -width, () -> {
-            menuOpen = false;
-            menu.setVisible(false);
-            menu.setManaged(false);
-            menu.setTranslateX(0);
-        });
-    }
-
-    @FXML
-    private void onToggleProfile() {
-        if (profileOpen) closeProfile();
-        else openProfile();
-    }
-
-    private void openProfile() {
-        profile.setVisible(true);
-        profile.setManaged(true);
-        double width = profile.getPrefWidth();
-        profile.setTranslateX(width);
-        animate(profile, 0, () -> profileOpen = true);
-    }
-
-    private void closeProfile() {
-        double width = profile.getPrefWidth();
-        animate(profile, width, () -> {
-            profileOpen = false;
-            profile.setVisible(false);
-            profile.setManaged(false);
-            profile.setTranslateX(0);
-        });
-    }
-
-    @FXML
-    private void onOpenGroups() {
-        nav.DisplayMainMenuOrGroup();
-    }
-
-    @FXML
-    private void onOpenCalendar() {
-        nav.Display(View.Calendar);
-    }
-
-    @FXML
-    private void onOpenFriends() {
-        System.out.println("meow!");
-    }
-
-    @FXML
-    private void onBackToLogin() {
-        nav.Display(View.Login);
+    private void onBackToMenu() {
+        nav.Display(View.MainMenu);
     }
 
     @FXML
@@ -220,17 +147,39 @@ public class CalendarController extends BaseController {
 
         dayCell.getChildren().add(dayLabel);
 
-        List<Event> events = eventManager.getEventsForDate(date);
-        for (Event event : events) {
-            Label eventLabel = new Label(event.getTitle());
-            eventLabel.setFont(Font.font("System", 8));
-            eventLabel.setTextFill(getColorForLabel(event.getColorLabel()));
-            eventLabel.setPrefWidth(75);
-            eventLabel.setWrapText(true);
-            dayCell.getChildren().add(eventLabel);
+        // show different items based on view mode
+        if (isSessionView) {
+            List<Session> sessions = sessionCalendarManager.getSessionsForDate(date);
+            for (Session session : sessions) {
+                Label sessionLabel = new Label(session.getTitle());
+                sessionLabel.setFont(Font.font("System", 8));
+                sessionLabel.setTextFill(getColorForLabel(session.getColorLabel()));
+                sessionLabel.setPrefWidth(75);
+                sessionLabel.setWrapText(true);
+                dayCell.getChildren().add(sessionLabel);
+            }
+        } else {
+            // availability view - show current users availability
+            User currentUser = ctx.getUserSession().getCurrentUser();
+            if (currentUser != null) {
+                List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date)
+                    .stream()
+                    .filter(avail -> avail.getUser().equals(currentUser))
+                    .toList();
+                
+                for (Availability availability : availabilities) {
+                    Label availLabel = new Label(availability.getTitle());
+                    availLabel.setFont(Font.font("System", 8));
+                    availLabel.setTextFill(getColorForLabel(availability.getColorLabel()));
+                    availLabel.setPrefWidth(75);
+                    availLabel.setWrapText(true);
+                    dayCell.getChildren().add(availLabel);
+                }
+            }
         }
 
-        dayCell.setOnMouseClicked(e -> showEventDialog(date));
+        dayCell.setOnMouseClicked(e -> showItemDialog(date));
+
         return dayCell;
     }
 
@@ -244,75 +193,295 @@ public class CalendarController extends BaseController {
         };
     }
 
-    private void showEventDialog(LocalDate date) {
-        List<Event> events = eventManager.getEventsForDate(date);
-        if (events.isEmpty()) {
-            showAddEventDialog(date);
+    private void showItemDialog(LocalDate date) {
+        if (isSessionView) {
+            List<Session> sessions = sessionCalendarManager.getSessionsForDate(date);
+            if (sessions.isEmpty()) {
+                showAddSessionDialog(date);
+            } else {
+                showSessionListDialog(date, sessions);
+            }
         } else {
-            showEventListDialog(date, events);
+            User currentUser = ctx.getUserSession().getCurrentUser();
+            if (currentUser != null) {
+                List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date)
+                    .stream()
+                    .filter(avail -> avail.getUser().equals(currentUser))
+                    .toList();
+                
+                if (availabilities.isEmpty()) {
+                    showAddAvailabilityDialog(date);
+                } else {
+                    showAvailabilityListDialog(date, availabilities);
+                }
+            }
         }
     }
 
-    private void showAddEventDialog(LocalDate date) {
-        Dialog<Event> dialog = new Dialog<>();
-        dialog.setTitle("Add Event");
-        dialog.setHeaderText("Add event for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+    private void showAddSessionDialog(LocalDate date) {
+        User currentUser = ctx.getUserSession().getCurrentUser();
+        if (currentUser == null) return;
 
-        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        Dialog<Session> dialog = new Dialog<>();
+        dialog.setTitle("Add Study Session");
+        dialog.setHeaderText("Create study session for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+
+        ButtonType saveButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
-        GridPane grid = buildEventForm(null, date);
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField titleField = new TextField();
+        titleField.setPromptText("Session title");
+        
+        TextArea descriptionField = new TextArea();
+        descriptionField.setPromptText("Description optional");
+        descriptionField.setPrefRowCount(2);
+
+        Spinner<Integer> startHour = new Spinner<>(0, 23, 9);
+        Spinner<Integer> startMinute = new Spinner<>(0, 59, 0, 15);
+        Spinner<Integer> endHour = new Spinner<>(0, 23, 10);
+        Spinner<Integer> endMinute = new Spinner<>(0, 59, 0, 15);
+
+        ComboBox<String> colorCombo = new ComboBox<>();
+        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE");
+        colorCombo.setValue("BLUE");
+
+        grid.add(new Label("Title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descriptionField, 1, 1);
+        grid.add(new Label("Start time:"), 0, 2);
+        grid.add(new HBox(5, 
+            new VBox(5, new Label("Hour"), startHour),
+            new VBox(5, new Label("Minute"), startMinute)), 1, 2);
+        grid.add(new Label("End time:"), 0, 3);
+        grid.add(new HBox(5,
+            new VBox(5, new Label("Hour"), endHour),
+            new VBox(5, new Label("Minute"), endMinute)), 1, 3);
+        grid.add(new Label("Color:"), 0, 4);
+        grid.add(colorCombo, 1, 4);
+
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                return extractEventFromForm(grid, date, null);
+                String title = titleField.getText().trim();
+                if (!title.isEmpty()) {
+                    LocalDateTime startTime = LocalDateTime.of(date, LocalTime.of(startHour.getValue(), startMinute.getValue()));
+                    LocalDateTime endTime = LocalDateTime.of(date, LocalTime.of(endHour.getValue(), endMinute.getValue()));
+
+                    if (endTime.isAfter(startTime)) {
+                        Session session = new Session(title, currentUser, startTime, endTime);
+                        session.setDescription(descriptionField.getText());
+                        session.setColorLabel(colorCombo.getValue());
+                        return session;
+                    }
+                }
             }
             return null;
         });
 
-        dialog.showAndWait().ifPresent(event -> {
-            eventManager.createEvent(
-                    event.getTitle(),
-                    event.getDescription(),
-                    event.getStartTime(),
-                    event.getEndTime(),
-                    event.getColorLabel()
+        dialog.showAndWait().ifPresent(session -> {
+            sessionCalendarManager.addSession(session);
+            updateCalendarView();
+        });
+    }
+
+    private void showAddAvailabilityDialog(LocalDate date) {
+        User currentUser = ctx.getUserSession().getCurrentUser();
+        if (currentUser == null) return;
+
+        Dialog<Availability> dialog = new Dialog<>();
+        dialog.setTitle("Add Availability");
+        dialog.setHeaderText("Set availability for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+
+        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField titleField = new TextField();
+        titleField.setPromptText("Available for");
+        titleField.setText("Available");
+
+        TextArea descriptionField = new TextArea();
+        descriptionField.setPromptText("Description optional");
+        descriptionField.setPrefRowCount(2);
+
+        Spinner<Integer> startHour = new Spinner<>(0, 23, 9);
+        Spinner<Integer> startMinute = new Spinner<>(0, 59, 0, 15);
+        Spinner<Integer> endHour = new Spinner<>(0, 23, 17);
+        Spinner<Integer> endMinute = new Spinner<>(0, 59, 0, 15);
+
+        ComboBox<String> colorCombo = new ComboBox<>();
+        colorCombo.getItems().addAll("GREEN", "BLUE", "ORANGE", "PURPLE", "RED");
+        colorCombo.setValue("GREEN");
+
+        grid.add(new Label("Title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descriptionField, 1, 1);
+        grid.add(new Label("Start time:"), 0, 2);
+        grid.add(new HBox(5,
+            new VBox(5, new Label("Hour"), startHour),
+            new VBox(5, new Label("Minute"), startMinute)), 1, 2);
+        grid.add(new Label("End time:"), 0, 3);
+        grid.add(new HBox(5,
+            new VBox(5, new Label("Hour"), endHour),
+            new VBox(5, new Label("Minute"), endMinute)), 1, 3);
+        grid.add(new Label("Color:"), 0, 4);
+        grid.add(colorCombo, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButtonType) {
+                String title = titleField.getText().trim();
+                if (!title.isEmpty()) {
+                    LocalDateTime startTime = LocalDateTime.of(date, LocalTime.of(startHour.getValue(), startMinute.getValue()));
+                    LocalDateTime endTime = LocalDateTime.of(date, LocalTime.of(endHour.getValue(), endMinute.getValue()));
+
+                    if (endTime.isAfter(startTime)) {
+                        Availability availability = new Availability(title, currentUser, startTime, endTime, colorCombo.getValue());
+                        availability.setDescription(descriptionField.getText());
+                        return availability;
+                    }
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(availability -> {
+            availabilityManager.createAvailability(
+                availability.getTitle(),
+                availability.getUser(),
+                availability.getStartTime(),
+                availability.getEndTime(),
+                availability.getColorLabel()
             );
             updateCalendarView();
         });
     }
 
-    private void showEditEventDialog(Event oldEvent) {
-        LocalDate date = oldEvent.getStartTime().toLocalDate();
+    private void showSessionListDialog(LocalDate date, List<Session> sessions) {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Study Sessions for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 
-        Dialog<Event> dialog = new Dialog<>();
-        dialog.setTitle("Edit Event");
-        dialog.setHeaderText("Edit event for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
 
-        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+        for (Session session : sessions) {
+            VBox sessionBox = new VBox(5);
+            sessionBox.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
 
-        GridPane grid = buildEventForm(oldEvent, date);
-        dialog.getDialogPane().setContent(grid);
+            Label titleLabel = new Label(session.getTitle());
+            titleLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
+            titleLabel.setTextFill(getColorForLabel(session.getColorLabel()));
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButtonType) {
-                return extractEventFromForm(grid, date, oldEvent);
-            }
-            return null;
+            Label timeLabel = new Label(
+                    session.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
+                            " - " +
+                            session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+            );
+
+            Label descriptionLabel = new Label(
+                    session.getDescription().isEmpty() ? "No description" : session.getDescription()
+            );
+            descriptionLabel.setWrapText(true);
+
+            HBox buttons = new HBox(8);
+            Button deleteButton = new Button("Delete");
+            deleteButton.setOnAction(e -> {
+                dialog.close();
+                javafx.application.Platform.runLater(() -> showDeleteSessionDialog(session));
+            });
+
+            buttons.getChildren().add(deleteButton);
+            sessionBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, buttons);
+            content.getChildren().add(sessionBox);
+        }
+
+        Button addNewButton = new Button("Add Another Session");
+        addNewButton.setOnAction(e -> {
+            dialog.close();
+            showAddSessionDialog(date);
         });
+        content.getChildren().add(addNewButton);
 
-        dialog.showAndWait().ifPresent(newEvent -> {
-            eventManager.updateEvent(oldEvent, newEvent);
-            updateCalendarView();
-        });
+        ScrollPane scrollPane = new ScrollPane(content);
+        scrollPane.setPrefSize(500, 400);
+        scrollPane.setFitToWidth(true);
+
+        dialog.getDialogPane().setContent(scrollPane);
+        dialog.showAndWait();
     }
 
-    private void showDeleteEventDialog(Event event) {
+    private void showAvailabilityListDialog(LocalDate date, List<Availability> availabilities) {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Availability for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+
+        for (Availability availability : availabilities) {
+            VBox availBox = new VBox(5);
+            availBox.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f0f8f0;");
+
+            Label titleLabel = new Label(availability.getTitle());
+            titleLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
+            titleLabel.setTextFill(getColorForLabel(availability.getColorLabel()));
+
+            Label timeLabel = new Label(
+                    availability.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
+                            " - " +
+                            availability.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+            );
+
+            Label descriptionLabel = new Label(
+                    availability.getDescription().isEmpty() ? "No description" : availability.getDescription()
+            );
+            descriptionLabel.setWrapText(true);
+
+            HBox buttons = new HBox(8);
+            Button deleteButton = new Button("Delete");
+            deleteButton.setOnAction(e -> {
+                dialog.close();
+                javafx.application.Platform.runLater(() -> showDeleteAvailabilityDialog(availability));
+            });
+
+            buttons.getChildren().add(deleteButton);
+            availBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, buttons);
+            content.getChildren().add(availBox);
+        }
+
+        Button addNewButton = new Button("Add More Availability");
+        addNewButton.setOnAction(e -> {
+            dialog.close();
+            showAddAvailabilityDialog(date);
+        });
+        content.getChildren().add(addNewButton);
+
+        ScrollPane scrollPane = new ScrollPane(content);
+        scrollPane.setPrefSize(450, 350);
+        scrollPane.setFitToWidth(true);
+
+        dialog.getDialogPane().setContent(scrollPane);
+        dialog.showAndWait();
+    }
+
+    private void showDeleteSessionDialog(Session session) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Event");
-        alert.setHeaderText("Are you sure you want to delete \"" + event.getTitle() + "\"?");
+        alert.setTitle("Delete Session");
+        alert.setHeaderText("Are you sure you want to delete \"" + session.getTitle() + "\"?");
         alert.setContentText("This action cannot be undone.");
 
         ButtonType deleteButton = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
@@ -322,131 +491,28 @@ public class CalendarController extends BaseController {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == deleteButton) {
-                eventManager.deleteEvent(event);
+                sessionCalendarManager.deleteSession(session);
                 updateCalendarView();
             }
         });
     }
 
-    private void showEventListDialog(LocalDate date, List<Event> events) {
-        Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Events for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+    private void showDeleteAvailabilityDialog(Availability availability) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Availability");
+        alert.setHeaderText("Are you sure you want to delete \"" + availability.getTitle() + "\"?");
+        alert.setContentText("This action cannot be undone.");
 
-        VBox content = new VBox(10);
-        content.setPadding(new Insets(20));
+        ButtonType deleteButton = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        for (Event event : events) {
-            VBox eventBox = new VBox(5);
-            eventBox.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
+        alert.getButtonTypes().setAll(deleteButton, cancelButton);
 
-            Label titleLabel = new Label(event.getTitle());
-            titleLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
-            titleLabel.setTextFill(getColorForLabel(event.getColorLabel()));
-
-            Label timeLabel = new Label(
-                    event.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
-                            " - " +
-                            event.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
-            );
-
-            Label descriptionLabel = new Label(
-                    event.getDescription().isEmpty() ? "No description" : event.getDescription()
-            );
-            descriptionLabel.setWrapText(true);
-
-            HBox buttons = new HBox(8);
-            Button editButton = new Button("Edit");
-            editButton.setOnAction(e -> {
-                dialog.close();
-                javafx.application.Platform.runLater(() -> showEditEventDialog(event));
-            });
-
-            Button deleteButton = new Button("Delete");
-            deleteButton.setOnAction(e -> {
-                dialog.close();
-                javafx.application.Platform.runLater(() -> showDeleteEventDialog(event));
-            });
-
-            buttons.getChildren().addAll(editButton, deleteButton);
-
-            eventBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, buttons);
-            content.getChildren().add(eventBox);
-        }
-
-        Button addNewButton = new Button("Add Another Event");
-        addNewButton.setOnAction(e -> {
-            dialog.close();
-            showAddEventDialog(date);
-        });
-        content.getChildren().add(addNewButton);
-
-        ScrollPane scrollPane = new ScrollPane(content);
-        scrollPane.setPrefSize(400, 300);
-        scrollPane.setFitToWidth(true);
-
-        dialog.getDialogPane().setContent(scrollPane);
-        dialog.showAndWait();
-    }
-
-    private GridPane buildEventForm(Event existing, LocalDate date) {
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField titleField = new TextField(existing == null ? "" : existing.getTitle());
-        titleField.setPromptText("Event title");
-
-        TextArea descriptionField = new TextArea(existing == null ? "" : existing.getDescription());
-        descriptionField.setPromptText("Description (optional)");
-        descriptionField.setPrefRowCount(3);
-
-        Spinner<Integer> startHour   = new Spinner<>(0, 23, existing == null ? 9 : existing.getStartTime().getHour());
-        Spinner<Integer> startMinute = new Spinner<>(0, 59, existing == null ? 0 : existing.getStartTime().getMinute(), 15);
-        Spinner<Integer> endHour     = new Spinner<>(0, 23, existing == null ? 10 : existing.getEndTime().getHour());
-        Spinner<Integer> endMinute   = new Spinner<>(0, 59, existing == null ? 0 : existing.getEndTime().getMinute(), 15);
-
-        ComboBox<String> colorCombo = new ComboBox<>();
-        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE");
-        colorCombo.setValue(existing == null ? "BLUE" : existing.getColorLabel().toUpperCase());
-
-        grid.add(new Label("Title:"), 0, 0);
-        grid.add(titleField, 1, 0);
-        grid.add(new Label("Description:"), 0, 1);
-        grid.add(descriptionField, 1, 1);
-        grid.add(new Label("Start time:"), 0, 2);
-        grid.add(new VBox(5, new Label("Hour"), startHour), 1, 2);
-        grid.add(new VBox(5, new Label("Minute"), startMinute), 2, 2);
-        grid.add(new Label("End time:"), 0, 3);
-        grid.add(new VBox(5, new Label("Hour"), endHour), 1, 3);
-        grid.add(new VBox(5, new Label("Minute"), endMinute), 2, 3);
-        grid.add(new Label("Color:"), 0, 4);
-        grid.add(colorCombo, 1, 4);
-
-        grid.setUserData(new Object[]{titleField, descriptionField, startHour, startMinute, endHour, endMinute, colorCombo});
-        return grid;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Event extractEventFromForm(GridPane grid, LocalDate date, Event existing) {
-        Object[] data = (Object[]) grid.getUserData();
-        TextField titleField = (TextField) data[0];
-        TextArea descriptionField = (TextArea) data[1];
-        Spinner<Integer> startHour = (Spinner<Integer>) data[2];
-        Spinner<Integer> startMinute = (Spinner<Integer>) data[3];
-        Spinner<Integer> endHour = (Spinner<Integer>) data[4];
-        Spinner<Integer> endMinute = (Spinner<Integer>) data[5];
-        ComboBox<String> colorCombo = (ComboBox<String>) data[6];
-
-        String title = titleField.getText().trim();
-        if (!title.isEmpty()) {
-            LocalDateTime startTime = LocalDateTime.of(date, LocalTime.of(startHour.getValue(), startMinute.getValue()));
-            LocalDateTime endTime   = LocalDateTime.of(date, LocalTime.of(endHour.getValue(), endMinute.getValue()));
-            if (endTime.isAfter(startTime)) {
-                return new Event(title, descriptionField.getText(), startTime, endTime, colorCombo.getValue());
+        alert.showAndWait().ifPresent(response -> {
+            if (response == deleteButton) {
+                availabilityManager.removeAvailability(availability);
+                updateCalendarView();
             }
-        }
-        return null;
+        });
     }
 }
