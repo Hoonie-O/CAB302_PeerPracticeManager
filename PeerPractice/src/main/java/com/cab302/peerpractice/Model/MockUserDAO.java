@@ -56,6 +56,7 @@ public class MockUserDAO implements IUserDAO{
     public boolean createUser(String username, String password, String firstName, String lastName, String email, String institution) throws SQLException, DuplicateUsernameException, DuplicateEmailException {
         User newUser = new User(firstName,lastName,username,email,password,institution);
         users.add(newUser);
+        return true;
     }
 
     @Override
