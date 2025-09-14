@@ -11,8 +11,10 @@ public class User {
     private String email;
     private String passwordHash;
     private String institution;
-    private List<User> friendsList;
     private String bio;
+    private List<User> friendsList;
+    private List<Event> events;
+    private List<Notification> notifications;
 
     public User(String firstName, String lastName, String username, String email, String passwordHash, String institution) {
         setFirstName(firstName);
@@ -58,6 +60,14 @@ public class User {
     public String getInstitution() { return institution; }
     public void setInstitution(String institution) { this.institution = institution; }
 
+    public void setBio(String bio) { 
+        if (bio == null) throw new IllegalArgumentException("Bio cannot be null");
+        if (bio.length() > 200) throw new IllegalArgumentException("Bio cannot exceed 200 characters");
+        this.bio = bio; 
+    }
+    public String getBio() { return bio; }
+
+
     public String getPassword() { return passwordHash; }
     public void setPassword(String passwordHash) { this.passwordHash = passwordHash; }
 
@@ -67,11 +77,9 @@ public class User {
         friendsList.add(user); 
     }
 
-    public void setBio(String bio) { 
-        if (bio == null) throw new IllegalArgumentException("Bio cannot be null");
-        if (bio.length() > 200) throw new IllegalArgumentException("Bio cannot exceed 200 characters");
-        this.bio = bio; 
-    }
-    public String getBio() { return bio; }
+    public List<Event> getEvents() { return events; }
+    public void addEvent(Event ev) { events.add(ev); }
 
+    public List<Notification> getNotifications() { return notifications; }
+    public void addNotification(Notification n) {notifications.add(n); }
 }
