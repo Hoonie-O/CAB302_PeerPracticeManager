@@ -14,6 +14,8 @@ public class AppContext {
     private final MailService mailService = new MailService();
     private final EventManager eventManager = new EventManager();
     private final SessionManager sessionManager = new SessionManager();
+    private boolean menuOpen = false;
+    private boolean profileOpen = false;
 
     public AppContext() {
         try {
@@ -41,5 +43,8 @@ public class AppContext {
     public GroupManager getGroupManager(){return  groupManager;}
     public IGroupDAO getGroupDao() {return groupDao;}
     public SessionManager getSessionManager(){return sessionManager;}
-
+    public boolean isMenuOpen() { return menuOpen; }
+    public void setMenuOpen(boolean value) { this.menuOpen = value; }
+    public boolean isProfileOpen() { return profileOpen; }
+    public void setProfileOpen(boolean value) { this.profileOpen = value; }
 }
