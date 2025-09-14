@@ -16,7 +16,7 @@
             </padding>
             <VBox alignment="CENTER_LEFT" spacing="6">
                 <Label fx:id="userNameLabel" text="John Doe"/>
-                <Label fx:id="userUsernameLabel" text="@johndoe123"/>
+                <Label fx:id="userUsernameLabel" text="@@johndoe123"/>
                 <ComboBox fx:id="availabilityStatus" prefWidth="180"/>
             </VBox>
             <Separator/>
