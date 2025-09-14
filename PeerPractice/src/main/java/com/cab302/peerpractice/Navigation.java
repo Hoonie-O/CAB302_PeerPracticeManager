@@ -2,7 +2,6 @@ package com.cab302.peerpractice;
 
 import com.cab302.peerpractice.Exceptions.ControllerFactoryFailedException;
 import com.cab302.peerpractice.Model.User;
-import com.cab302.peerpractice.Model.UserSession;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -69,7 +68,7 @@ public final class Navigation {
         if (hasGroups) {
             Display(View.Groups);
         } else {
-            Display(View.MainMenu);
+            Display(View.Default);
         }
     }
 

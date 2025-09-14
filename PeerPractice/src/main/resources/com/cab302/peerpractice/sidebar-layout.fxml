@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane fx:id="menu" xmlns:fx="http://javafx.com/fxml"
+            prefWidth="180" visible="false" managed="false">
+    <right>
+        <Separator orientation="VERTICAL"/>
+    </right>
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="10">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+            <Button fx:id="studyGroupButton" text="Study Group" prefWidth="160"/>
+            <Button fx:id="calendarButton" text="Calendar" prefWidth="160"/>
+            <Button fx:id="friendsButton" text="Friends" prefWidth="160"/>
+        </VBox>
+
+    </center>
+</BorderPane>

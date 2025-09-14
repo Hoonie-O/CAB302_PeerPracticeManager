@@ -4,8 +4,6 @@ import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Event;
 import com.cab302.peerpractice.Model.EventManager;
 import com.cab302.peerpractice.Navigation;
-import com.cab302.peerpractice.View;
-import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -15,7 +13,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.util.Duration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,25 +21,14 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class CalendarController extends BaseController {
+public class CalendarController extends SidebarController {
     @FXML private Label monthYearLabel;
     @FXML private GridPane calendarGrid;
     @FXML private Button prevButton;
     @FXML private Button nextButton;
 
-    @FXML private BorderPane menu;
-    @FXML private BorderPane profile;
-    @FXML private ComboBox<String> availabilityStatus;
-    @FXML private Button menuButton;
-    @FXML private Button profileButton;
-
-    private boolean menuOpen = false;
-    private boolean profileOpen = false;
-
     private YearMonth currentYearMonth;
     private final EventManager eventManager;
-
-    private static final Duration SLIDE = Duration.millis(180);
 
     public CalendarController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
@@ -50,105 +36,10 @@ public class CalendarController extends BaseController {
     }
 
     @FXML
-    private void initialize(){
-        if (menu != null) {
-            menu.setVisible(false);
-            menu.setManaged(false);
-        }
-        if (profile != null) {
-            profile.setVisible(false);
-            profile.setManaged(false);
-        }
-
-        if (availabilityStatus != null) {
-            if (availabilityStatus.getItems().isEmpty()) {
-                availabilityStatus.setItems(FXCollections.observableArrayList("Online", "Away", "Busy", "Offline"));
-            }
-            availabilityStatus.getSelectionModel().select("Online");
-            availabilityStatus.getSelectionModel().selectedItemProperty()
-                    .addListener((obs, oldVal, newVal) ->
-                            System.out.println("Status changed to: " + newVal));
-        }
-
+    public void initialize() {
+        super.initialize(); // setup sidebar + header
         currentYearMonth = YearMonth.now();
         updateCalendarView();
-    }
-
-    private void animate(Region sidebar, double targetX, Runnable onComplete) {
-        TranslateTransition transition = new TranslateTransition(SLIDE, sidebar);
-        transition.setToX(targetX);
-        transition.setOnFinished(e -> {
-            if (onComplete != null) onComplete.run();
-        });
-        transition.play();
-    }
-
-    @FXML
-    private void onToggleMenu() {
-        if (!menuOpen) openMenu();
-        else closeMenu();
-    }
-
-    private void openMenu() {
-        menu.setVisible(true);
-        menu.setManaged(true);
-        double width = menu.getPrefWidth();
-        menu.setTranslateX(-width);
-        animate(menu, 0, () -> menuOpen = true);
-    }
-
-    private void closeMenu() {
-        double width = menu.getPrefWidth();
-        animate(menu, -width, () -> {
-            menuOpen = false;
-            menu.setVisible(false);
-            menu.setManaged(false);
-            menu.setTranslateX(0);
-        });
-    }
-
-    @FXML
-    private void onToggleProfile() {
-        if (profileOpen) closeProfile();
-        else openProfile();
-    }
-
-    private void openProfile() {
-        profile.setVisible(true);
-        profile.setManaged(true);
-        double width = profile.getPrefWidth();
-        profile.setTranslateX(width);
-        animate(profile, 0, () -> profileOpen = true);
-    }
-
-    private void closeProfile() {
-        double width = profile.getPrefWidth();
-        animate(profile, width, () -> {
-            profileOpen = false;
-            profile.setVisible(false);
-            profile.setManaged(false);
-            profile.setTranslateX(0);
-        });
-    }
-
-    @FXML
-    private void onOpenGroups() {
-        nav.DisplayMainMenuOrGroup();
-    }
-
-    @FXML
-    private void onOpenCalendar() {
-        nav.Display(View.Calendar);
-    }
-
-    @FXML
-    private void onOpenFriends() {
-        System.out.println("meow!");
-    }
-
-    @FXML
-    private void onBackToLogin() {
-        nav.Display(View.Login);
     }
 
     @FXML
@@ -408,7 +299,7 @@ public class CalendarController extends BaseController {
         Spinner<Integer> endMinute   = new Spinner<>(0, 59, existing == null ? 0 : existing.getEndTime().getMinute(), 15);
 
         ComboBox<String> colorCombo = new ComboBox<>();
-        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE");
+        colorCombo.setItems(FXCollections.observableArrayList("BLUE", "RED", "GREEN", "ORANGE", "PURPLE"));
         colorCombo.setValue(existing == null ? "BLUE" : existing.getColorLabel().toUpperCase());
 
         grid.add(new Label("Title:"), 0, 0);

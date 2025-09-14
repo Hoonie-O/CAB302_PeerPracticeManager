@@ -15,82 +15,17 @@
 
     <!-- Top Header -->
     <top>
-        <VBox>
-            <BorderPane>
-                <padding>
-                    <Insets top="10" right="10" bottom="10" left="10"/>
-                </padding>
-                <left>
-                    <Button fx:id="menuButton" text="Menu" onAction="#onToggleMenu"/>
-                </left>
-                <center>
-                    <Label text="Peer Practice - GROUPTEN"/>
-                </center>
-                <right>
-                    <HBox spacing="8">
-                        <Button fx:id="profileButton" text="Profile" onAction="#onToggleProfile"/>
-                    </HBox>
-                </right>
-            </BorderPane>
-            <Separator/>
-        </VBox>
+        <fx:include source="header-layout.fxml" fx:id="header"/>
     </top>
 
-    <!-- Left Sidebar Menu -->
+    <!-- Left Sidebar -->
     <left>
-        <BorderPane fx:id="menu" prefWidth="180">
-            <right>
-                <Separator orientation="VERTICAL"/>
-            </right>
-            <center>
-                <VBox alignment="TOP_CENTER" spacing="8">
-                    <padding>
-                        <Insets top="12" right="12" bottom="12" left="12"/>
-                    </padding>
-                    <Label text="Menu"/>
-                    <Separator/>
-                    <Button text="Study Group" onAction="#onOpenGroups" prefWidth="180"/>
-                    <Button text="Calendar" onAction="#onOpenCalendar" prefWidth="180"/>
-                    <Button text="Friends" prefWidth="180"/>
-                </VBox>
-            </center>
-        </BorderPane>
+        <fx:include source="sidebar-layout.fxml" fx:id="menu"/>
     </left>
 
-    <!-- Right Sidebar Profile -->
+    <!-- Right Sidebar -->
     <right>
-        <BorderPane fx:id="profile" prefWidth="180">
-            <left>
-                <Separator orientation="VERTICAL"/>
-            </left>
-            <center>
-                <VBox alignment="TOP_CENTER" spacing="12">
-                    <padding>
-                        <Insets top="12" right="12" bottom="12" left="12"/>
-                    </padding>
-                    <Label text="Profile"/>
-                    <Separator/>
-                    <VBox alignment="CENTER_LEFT" spacing="6">
-                        <Label text="John Doe"/>
-                        <Label text="#johndoe123"/>
-                        <ComboBox fx:id="availabilityStatus" prefWidth="180">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Online"/>
-                                    <String fx:value="Away"/>
-                                    <String fx:value="Busy"/>
-                                    <String fx:value="Offline"/>
-                                </FXCollections>
-                            </items>
-                        </ComboBox>
-                    </VBox>
-                    <Separator/>
-                    <Button text="Edit profile" prefWidth="180"/>
-                    <Button text="Settings" prefWidth="180"/>
-                    <Button text="Logout" onAction="#onBackToLogin" prefWidth="180"/>
-                </VBox>
-            </center>
-        </BorderPane>
+        <fx:include source="profile-layout.fxml" fx:id="profile"/>
     </right>
 
     <!-- Center: Calendar -->
