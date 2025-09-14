@@ -21,7 +21,7 @@ public class UserDAO implements IUserDAO{
             Statement stmt = connection.createStatement();
 
             String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
-                    + "user_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,"
+                    + "user_id VARCHAR(36) NOT NULL PRIMARY KEY,"
                     + "username VARCHAR(16) NOT NULL UNIQUE,"
                     + "password VARCHAR(24) NOT NULL,"
                     + "first_name VARCHAR(16) NOT NULL,"
@@ -81,7 +81,7 @@ public class UserDAO implements IUserDAO{
             stmt.execute(clearQuery);
 
             String insertQuery = "INSERT INTO users (username, password, first_name, last_name, email, institution) VALUES "
-                    + "('hollyfloweer', 'mypassword', 'Holly, 'Spain', 'n11618230@qut.edu.au', 'QUT');";
+                    + "('hollyfloweer', 'mypassword', 'Holly', 'Spain', 'n11618230@qut.edu.au', 'QUT');";
             stmt.execute(insertQuery);
         } catch (Exception e) {
             System.err.println("SQLException: " + e);
@@ -91,15 +91,14 @@ public class UserDAO implements IUserDAO{
     // Select single user
     @Override
     public User findUser(String column, String value) throws SQLException {
-        // Declare query statement
-        Statement stmt = connection.createStatement();
-        String searchQuery =
-                "SELECT * FROM users " +
-                "WHERE " + column + " = " + value + ";";
+        // Use parameterized query to prevent SQL injection
+        String searchQuery = "SELECT * FROM users WHERE " + column + " = ?";
+        PreparedStatement pstmt = connection.prepareStatement(searchQuery);
+        pstmt.setString(1, value);
 
         // Execute query statement
         try {
-            ResultSet searchResults = stmt.executeQuery(searchQuery);
+            ResultSet searchResults = pstmt.executeQuery();
             return getUserFromResults(searchResults);
 
         } catch (SQLException e) {
@@ -126,19 +125,28 @@ public class UserDAO implements IUserDAO{
         }
     }
 
+    @Override
+    public User findUserById(String userId) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE user_id = ?");
+        statement.setString(1, userId);
+        ResultSet resultSet = statement.executeQuery();
+        return getUserFromResults(resultSet);
+    }
+
     // Converts a query into user object
     private static User getUserFromResults(ResultSet searchResults) throws SQLException {
         // Create null user
         User user = null;
         // Fill user fields from results
         if (searchResults.next()) {
-            String firstName = (searchResults.getString("FIRST_NAME"));
-            String lastName = (searchResults.getString("LAST_NAME"));
-            String username = (searchResults.getString("USERNAME"));
-            String email = (searchResults.getString("EMAIL"));
-            String passwordHash = (searchResults.getString("PASSWORD"));
-            String institution = (searchResults.getString("INSTITUTION"));
-            user = new User(firstName, lastName, username, email, passwordHash, institution);
+            String userId = searchResults.getString("USER_ID");
+            String firstName = searchResults.getString("FIRST_NAME");
+            String lastName = searchResults.getString("LAST_NAME");
+            String username = searchResults.getString("USERNAME");
+            String email = searchResults.getString("EMAIL");
+            String passwordHash = searchResults.getString("PASSWORD");
+            String institution = searchResults.getString("INSTITUTION");
+            user = new User(userId, firstName, lastName, username, email, passwordHash, institution);
         }
         return user;
     }
@@ -165,15 +173,25 @@ public class UserDAO implements IUserDAO{
     // Creates a new user
     @Override
     public boolean createUser(String username, String password, String firstName, String lastName, String email, String institution) throws SQLException {
-        // Declare statement and update query
-        Statement stmt = connection.createStatement();
-        String updateQuery =
-                "INSERT INTO users (username, password, first_name, last_name, email, institution) " +
-                "VALUES ('" + username + "','" + password + "','" + firstName + "','" + lastName + "','" + email + "','" + institution + "');";
+        // Generate UUID for the new user
+        String userId = java.util.UUID.randomUUID().toString();
+        
+        // Use prepared statement to prevent SQL injection
+        PreparedStatement stmt = connection.prepareStatement(
+                "INSERT INTO users (user_id, username, password, first_name, last_name, email, institution) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)");
+        
+        stmt.setString(1, userId);
+        stmt.setString(2, username);
+        stmt.setString(3, password);
+        stmt.setString(4, firstName);
+        stmt.setString(5, lastName);
+        stmt.setString(6, email);
+        stmt.setString(7, institution);
 
         // Execute update statement, return true if successful, false if not, check for duplicate exception
         try {
-            stmt.executeUpdate(updateQuery);
+            stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
             String errorMsg = e.getMessage();
@@ -242,5 +260,138 @@ public class UserDAO implements IUserDAO{
             System.err.println("Error occurred during update statement" + e);
             return false;
         }
+    }
+
+    @Override
+    public boolean addUser(User user) {
+        try {
+            return createUser(user.getUsername(), user.getPassword(), user.getFirstName(), 
+                            user.getLastName(), user.getEmail(), user.getInstitution());
+        } catch (SQLException | DuplicateUsernameException | DuplicateEmailException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteUser(User user) {
+        try {
+            return deleteUser(user.getUserId());
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUser(User user) {
+        try {
+            return updateValue(user.getUsername(), "first_name", user.getFirstName()) &&
+                   updateValue(user.getUsername(), "last_name", user.getLastName()) &&
+                   updateValue(user.getUsername(), "email", user.getEmail()) &&
+                   updateValue(user.getUsername(), "institution", user.getInstitution());
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void update(User user) {
+        updateUser(user);
+    }
+
+    @Override
+    public User searchByUsername(String username) {
+        try {
+            return findUser("username", username);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public java.util.List<User> searchByInstitution(String institution) {
+        try {
+            ObservableList<User> allUsers = findUsers();
+            return allUsers.stream()
+                    .filter(u -> institution.equals(u.getInstitution()))
+                    .collect(java.util.stream.Collectors.toList());
+        } catch (SQLException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    @Override
+    public java.util.Optional<User> getUserByEmail(String email) {
+        try {
+            User user = findUser("email", email);
+            return java.util.Optional.ofNullable(user);
+        } catch (SQLException e) {
+            return java.util.Optional.empty();
+        }
+    }
+
+    @Override
+    public java.util.Optional<User> getUserByUsername(String username) {
+        try {
+            User user = findUser("username", username);
+            return java.util.Optional.ofNullable(user);
+        } catch (SQLException e) {
+            return java.util.Optional.empty();
+        }
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        try {
+            return findUser("email", email) != null;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        try {
+            return findUser("username", username) != null;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public java.util.List<User> getAllUsers() {
+        try {
+            ObservableList<User> users = findUsers();
+            return new java.util.ArrayList<>(users);
+        } catch (SQLException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    @Override
+    public boolean storePassword(User user, String hash) {
+        try {
+            return updateValue(user.getUsername(), "password", hash);
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public String getPassword(User user) {
+        return user.getPassword();
+    }
+
+    @Override
+    public boolean addNotification(String username, Notification notification) {
+        try {
+            return addNotification(username, username, notification.toString());
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean removeNotification(String username, Notification notification) {
+        return false;
     }
 }

@@ -22,11 +22,11 @@ public class GroupTest {
     }
 
     @Test
-    public void test
-
-
-
-
-
-
+    public void testGroupCreation() {
+        assertNotNull(group);
+        assertEquals("Group1", group.getName());
+        assertEquals("Group for CAB302", group.getDescription());
+        assertFalse(group.getIsPrivate());
+        assertEquals(USERNAME, group.getCreatorUsername());
+    }
 }

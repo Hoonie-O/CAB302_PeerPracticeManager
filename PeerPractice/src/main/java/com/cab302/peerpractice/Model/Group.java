@@ -44,4 +44,13 @@ public class Group {
     public void setRequire_approval(boolean require_approval) { this.require_approval = require_approval; }
 
     public LocalDateTime getCreated_at() { return created_at; }
+
+    
+    public boolean getIsPrivate() { 
+        return require_approval; 
+    }
+    
+    public String getCreatorUsername() { 
+        return owner; 
+    }
 }

@@ -24,14 +24,14 @@ public class EventStorage {
 
     public List<Event> getEventsForDate(LocalDate date) {
         return events.stream()
-                .filter(event -> event.getStartTime().toLocalDate().equals(date))
+                .filter(event -> event.getStartTime().toLocalDateTime().toLocalDate().equals(date))
                 .collect(Collectors.toList());
     }
 
     public List<Event> getEventsForDateRange(LocalDate startDate, LocalDate endDate) {
         return events.stream()
                 .filter(event -> {
-                    LocalDate eventDate = event.getStartTime().toLocalDate();
+                    LocalDate eventDate = event.getStartTime().toLocalDateTime().toLocalDate();
                     return !eventDate.isBefore(startDate) && !eventDate.isAfter(endDate);
                 })
                 .collect(Collectors.toList());

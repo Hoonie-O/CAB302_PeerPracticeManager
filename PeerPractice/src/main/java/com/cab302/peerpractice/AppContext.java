@@ -15,6 +15,8 @@ public class AppContext {
     private final GroupManager groupManager = new GroupManager(groupDao, notifier, userDao);
     private final MailService mailService = new MailService();
     private final SessionManager sessionManager = new SessionManager();
+    private final SessionTaskStorage sessionTaskStorage = new SessionTaskStorage();
+    private final SessionTaskManager sessionTaskManager = new SessionTaskManager(sessionTaskStorage, sessionManager);
     private final SessionCalendarManager sessionCalendarManager = new SessionCalendarManager();
     private final AvailabilityManager availabilityManager = new AvailabilityManager();
     private boolean menuOpen = false;
@@ -44,6 +46,7 @@ public class AppContext {
     public GroupManager getGroupManager(){return  groupManager;}
     public IGroupDAO getGroupDao() {return groupDao;}
     public SessionManager getSessionManager(){return sessionManager;}
+    public SessionTaskManager getSessionTaskManager(){return sessionTaskManager;}
     public SessionCalendarManager getSessionCalendarManager(){return sessionCalendarManager;}
     public AvailabilityManager getAvailabilityManager(){return availabilityManager;}
     public boolean isMenuOpen() { return menuOpen; }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class User {
 
+    private String userId; // unique identifier for the user
     private String firstName;
     private String lastName;
     private String username;
@@ -17,6 +18,7 @@ public class User {
     private List<Notification> notifications;
 
     public User(String firstName, String lastName, String username, String email, String passwordHash, String institution) {
+        this.userId = java.util.UUID.randomUUID().toString(); // generate unique ID
         setFirstName(firstName);
         setLastName(lastName);
         setUsername(username);
@@ -25,6 +27,20 @@ public class User {
         this.institution = institution;
         this.friendsList = new ArrayList<>();
     }
+
+    // constructor for loading users with existing ID (from database)
+    public User(String userId, String firstName, String lastName, String username, String email, String passwordHash, String institution) {
+        this.userId = userId;
+        setFirstName(firstName);
+        setLastName(lastName);
+        setUsername(username);
+        setEmail(email);
+        this.passwordHash = passwordHash;
+        this.institution = institution;
+        this.friendsList = new ArrayList<>();
+    }
+
+    public String getUserId() { return userId; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { 

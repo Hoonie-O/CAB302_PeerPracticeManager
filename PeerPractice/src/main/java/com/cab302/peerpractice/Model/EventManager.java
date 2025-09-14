@@ -1,5 +1,6 @@
 package com.cab302.peerpractice.Model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,12 @@ public class EventManager {
 
     public boolean createEvent(String title, String description, LocalDateTime startTime, LocalDateTime endTime, String colorLabel) {
         try {
-            Event event = new Event(title, description, startTime, endTime, colorLabel);
+            Event event = new Event();
+            event.setTitle(title);
+            event.setDescription(description);
+            event.setStartTime(Timestamp.valueOf(startTime));
+            event.setEndTime(Timestamp.valueOf(endTime));
+            event.setColourLabel(colorLabel);
             storage.addEvent(event);
             return true;
         } catch (Exception e) {

@@ -21,6 +21,7 @@ public class Session {
     private int maxParticipants;
     
     public Session(String title, User organiser, LocalDateTime startTime, LocalDateTime endTime) {
+        this.sessionId = java.util.UUID.randomUUID().toString(); // generate unique session ID
         this.title = Objects.requireNonNull(title, "Session title cant be null");
         this.organiser = Objects.requireNonNull(organiser, "Organiser cant be null");
         this.startTime = Objects.requireNonNull(startTime, "Start time cant be null");

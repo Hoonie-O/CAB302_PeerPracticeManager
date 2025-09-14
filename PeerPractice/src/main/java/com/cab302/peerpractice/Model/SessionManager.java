@@ -58,4 +58,19 @@ public class SessionManager {
         }
         return upcoming;
     }
+
+    
+    /**
+     * Finds a session by its ID. Returns null if not found.
+     */
+    public Session findSessionById(String sessionId) {
+        if (sessionId == null) return null;
+        
+        for (Session session : sessions) {
+            if (sessionId.equals(session.getSessionId())) {
+                return session;
+            }
+        }
+        return null;
+    }
 }
