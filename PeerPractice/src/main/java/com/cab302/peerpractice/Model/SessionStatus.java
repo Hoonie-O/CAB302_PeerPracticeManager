@@ -1,7 +1,7 @@
 package com.cab302.peerpractice.Model;
 
 /**
- * Status for study sessions - I have keept it simple for now.
+ * Status for study sessions - I have keep it simple for now.
  */
 public enum SessionStatus {
     PLANNED,    // Just created, people can join
