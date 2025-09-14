@@ -103,11 +103,6 @@ public class MainMenuController extends BaseController{
         handleLogout();
     }
 
-    @FXML
-    private void onBackToLogin(javafx.event.ActionEvent event) {
-        handleLogout();
-    }
-
     /**
      * This handles the logout process with proper session cleanup and user confirmation.
      * Shows a confirmation dialog before logging out to prevent accidental logouts.

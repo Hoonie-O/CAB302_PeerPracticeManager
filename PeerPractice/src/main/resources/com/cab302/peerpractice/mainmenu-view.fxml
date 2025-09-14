@@ -171,7 +171,6 @@
                                 AnchorPane.leftAnchor="0.0"/>
                 </children>
             </AnchorPane>
-
         </StackPane>
     </center>
 </BorderPane>
