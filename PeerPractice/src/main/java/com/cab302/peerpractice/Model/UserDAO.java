@@ -1,5 +1,7 @@
 package com.cab302.peerpractice.Model;
 
+import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
+import com.cab302.peerpractice.Exceptions.DuplicateEmailException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
@@ -7,7 +9,7 @@ import java.sql.*;
 public class UserDAO implements IUserDAO{
     private final Connection connection;
 
-    public UserDAO() throws SQLException {
+    public UserDAO() throws SQLException, DuplicateUsernameException, DuplicateEmailException {
         connection = SQLiteConnection.getInstance();
         createTables();
         insertSampleData();
@@ -24,7 +26,7 @@ public class UserDAO implements IUserDAO{
                     + "password VARCHAR(24) NOT NULL,"
                     + "first_name VARCHAR(16) NOT NULL,"
                     + "last_name VARCHAR(16) NOT NULL,"
-                    + "email VARCHAR(24) NOT NULL,"
+                    + "email VARCHAR(24) NOT NULL UNIQUE,"
                     + "institution VARCHAR(16) NOT NULL,"
                     + "biography VARCHAR(128) NOT NULL DEFAULT 'No biography given'"
                     + ");";
@@ -60,14 +62,13 @@ public class UserDAO implements IUserDAO{
         // Insert sample data into tables
         try {
             // Clear before inserting
-            Statement clearStatement = connection.createStatement();
+            Statement stmt = connection.createStatement();
             String clearQuery = "DELETE FROM contacts";
-            clearStatement.execute(clearQuery);
+            stmt.execute(clearQuery);
 
-            Statement insertStatement = connection.createStatement();
             String insertQuery = "INSERT INTO users (username, password, first_name, last_name, email, institution) VALUES "
                     + "('hollyfloweer', 'mypassword', 'Holly, 'Spain', 'n11618230@qut.edu.au', 'QUT');";
-            insertStatement.execute(insertQuery);
+            stmt.execute(insertQuery);
         } catch (Exception e) {
             System.err.println("SQLException: " + e);
         }
@@ -75,36 +76,38 @@ public class UserDAO implements IUserDAO{
 
     // Select single user
     @Override
-    public User findUser(String username) throws ClassNotFoundException, SQLException {
+    public User findUser(String column, String value) throws SQLException {
         // Declare query statement
-        String queryStatement =
+        Statement stmt = connection.createStatement();
+        String searchQuery =
                 "SELECT * FROM users " +
-                "WHERE username = " + username + ";";
+                "WHERE " + column + " = " + value + ";";
 
         // Execute query statement
         try {
-            ResultSet searchResults = ConnectionDB.executeQuery(queryStatement);
+            ResultSet searchResults = stmt.executeQuery(searchQuery);
             return getUserFromResults(searchResults);
 
         } catch (SQLException e) {
-            System.out.println("Error occurred when searching user " + username + e);
+            System.out.println("Error occurred when searching user " + value + e);
             throw e;
         }
     }
     // Select all users
     @Override
-    public ObservableList<User> findUsers() throws ClassNotFoundException, SQLException {
+    public ObservableList<User> findUsers() throws SQLException {
         // Declare query statement
-        String queryStatement = "SELECT * FROM users;";
+        Statement stmt = connection.createStatement();
+        String searchQuery = "SELECT * FROM users;";
 
         // Execute query statement
         try {
-            ResultSet searchResults = ConnectionDB.executeQuery(queryStatement);
+            ResultSet searchResults = stmt.executeQuery(searchQuery);
             // Convert the search results into an observable list
             return putUsersIntoList(searchResults);
 
         } catch (SQLException e) {
-            System.out.println("Error occurred when searching user " + e);
+            System.out.println("Error occurred when searching users " + e);
             throw e;
         }
     }
@@ -147,53 +150,65 @@ public class UserDAO implements IUserDAO{
 
     // Creates a new user
     @Override
-    public void createUser(String username, String password, String firstName, String email, String institution) throws ClassNotFoundException, SQLException {
-        // Declare update statement
-        String updateStatement =
-                "INSERT INTO users (username, password, first_name, email, institution) " +
-                "VALUES ('" + username + "','" + password + "','" + firstName + "','" + email + "','" + institution + "');";
+    public boolean createUser(String username, String password, String firstName, String lastName, String email, String institution) throws SQLException {
+        // Declare statement and update query
+        Statement stmt = connection.createStatement();
+        String updateQuery =
+                "INSERT INTO users (username, password, first_name, last_name, email, institution) " +
+                "VALUES ('" + username + "','" + password + "','" + firstName + "','" + lastName + "','" + email + "','" + institution + "');";
 
-        // Execute update statement
+        // Execute update statement, return true if successful, false if not, check for duplicate exception
         try {
-            ConnectionDB.executeUpdate(updateStatement);
+            stmt.executeUpdate(updateQuery);
+            return true;
         } catch (SQLException e) {
-            System.out.println("Error occurred during update statement" + e);
-            throw e;
+            String errorMsg = e.getMessage();
+            if (errorMsg.contains("username")) {
+                throw new DuplicateUsernameException("Username already exists");
+            } else if (errorMsg.contains("email")) {
+                throw new DuplicateEmailException("Email already exists");
+            }
+            System.err.println("Error occurred during update statement" + e);
+            return false;
         }
     }
 
     // Updates the username of a user with userID
     @Override
-    public void updateUsername(String userID, String username) throws ClassNotFoundException, SQLException {
-        // Declare update statement
-        String updateStatement =
+    public boolean updateValue(String username, String column, String value) throws SQLException {
+        // Declare statement and update query
+        Statement stmt = connection.createStatement();
+        String updateQuery =
                 "UPDATE users " +
-                "SET username = '" + username + "' " +
-                "WHERE user_id = " + userID + ";";
+                "SET " + column + " = '" + value + "' " +
+                "WHERE username = " + username + ";";
 
-        // Execute update statement
+        // Execute update statement, return true if successful, false if not
         try {
-            ConnectionDB.executeUpdate(updateStatement);
+            stmt.executeUpdate(updateQuery);
+            return true;
         } catch (SQLException e) {
-            System.out.println("Error occurred during update statement" + e);
-            throw e;
+            System.err.println("Error occurred during update statement" + e);
+            return false;
         }
     }
 
     // Deletes a user from the table
     @Override
-    public void deleteUser(String userID) throws ClassNotFoundException, SQLException {
-        // Declare update statement
-        String updateStatement =
+    public boolean deleteUser(String userID) throws SQLException {
+        // Declare statement and update query
+        Statement stmt = connection.createStatement();
+        String updateQuery =
                 "DELETE FROM users " +
                 "WHERE user_id = " + userID + ";";
 
-        // Execute update statement
+        // Execute update statement, return true if successful, false if not
         try {
-            ConnectionDB.executeUpdate(updateStatement);
+            stmt.executeUpdate(updateQuery);
+            return true;
         } catch (SQLException e) {
-            System.out.println("Error occurred during update statement" + e);
-            throw e;
+            System.err.println("Error occurred during update statement" + e);
+            return false;
         }
     }
 }
