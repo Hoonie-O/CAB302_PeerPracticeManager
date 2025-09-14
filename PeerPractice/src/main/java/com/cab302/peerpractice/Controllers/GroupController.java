@@ -29,9 +29,8 @@ public class GroupController extends SidebarController {
 
     @FXML
     public void initialize() {
-        super.initialize(); // setup sidebar + header
+        super.initialize();
 
-        // Update placeholder text when switching tabs
         if (groupTabs != null && tabContentLabel != null) {
             groupTabs.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
                 if (newTab != null) {
@@ -40,7 +39,6 @@ public class GroupController extends SidebarController {
             });
         }
 
-        // Load groups into the sidebar list
         User currentUser = ctx.getUserSession().getCurrentUser();
         List<Group> userGroups = ctx.getGroupDao().searchByUser(currentUser);
         groupListView.setItems(FXCollections.observableArrayList(userGroups));
@@ -56,7 +54,6 @@ public class GroupController extends SidebarController {
         groupListView.getSelectionModel().selectedItemProperty().addListener((obs, oldGroup, newGroup) -> {
             if (newGroup != null) {
                 groupNameLabel.setText(newGroup.getName());
-                // TODO: load this group's data into the tabs later
             }
         });
     }

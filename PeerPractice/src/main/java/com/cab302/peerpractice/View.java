@@ -9,7 +9,8 @@ public enum View {
     ResetPassword("resetpassword-view.fxml","ResetPassword"),
     Groups("groups-view.fxml","Groups"),
     EditProfile("editprofile-view.fxml", "Edit Profile"),
-    SettingProfile("settingprofile-view.fxml", "Setting Profile");
+    SettingProfile("settingprofile-view.fxml", "Setting Profile"),
+    SessionTasks("session-tasks-view.fxml", "Session Tasks");
 
     private final String fxml;
     private final String title;

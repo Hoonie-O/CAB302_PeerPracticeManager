@@ -23,7 +23,12 @@ public class UserManager {
         validateNames(lastName);
         validateUsername(username);
         validatePassword(rawPassword);
-
+        if (userDAO.existsByEmail(email)) {
+            throw new DuplicateEmailException("Email already exists");
+        }
+        if (userDAO.existsByUsername(username)) {
+            throw new DuplicateUsernameException("Username already exists");
+        }
         String hashed = hasher.hasher(rawPassword);
         return userDAO.createUser(username, hashed, firstName, lastName, email, institution);
     }

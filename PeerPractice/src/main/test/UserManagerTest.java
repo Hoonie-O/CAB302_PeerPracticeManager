@@ -147,21 +147,21 @@ public class UserManagerTest {
     @Test
     void changePassword_passwordNull_throws() {
         assertThrows(InvalidPasswordException.class, () ->
-                manager.changePassword(user, null)
+                manager.changePassword(user.getUsername(), null)
         );
     }
 
     @Test
     void changePassword_passwordEmpty_throws() {
         assertThrows(InvalidPasswordException.class, () ->
-                manager.changePassword(user, "")
+                manager.changePassword(user.getUsername(), "")
         );
     }
 
     @Test
     void changePassword_passwordTooShort_throws() {
         assertThrows(InvalidPasswordException.class, () ->
-                manager.changePassword(user, "Ab1!") // 4 chars < 8
+                manager.changePassword(user.getUsername(), "Ab1!") // 4 chars < 8
         );
     }
 
@@ -169,42 +169,42 @@ public class UserManagerTest {
     void changePassword_passwordTooLong_throws() {
         String tooLong = "A1!" + "a".repeat(100); // > 72 chars
         assertThrows(InvalidPasswordException.class, () ->
-                manager.changePassword(user, tooLong)
+                manager.changePassword(user.getUsername(), tooLong)
         );
     }
 
     @Test
     void changePassword_noUppercase_throws() {
         assertThrows(InvalidPasswordException.class, () ->
-                manager.changePassword(user, "lowercase1!")
+                manager.changePassword(user.getUsername(), "lowercase1!")
         );
     }
 
     @Test
     void changePassword_noLowercase_throws() {
         assertThrows(InvalidPasswordException.class, () ->
-                manager.changePassword(user, "ALLUPPER1!")
+                manager.changePassword(user.getUsername(), "ALLUPPER1!")
         );
     }
 
     @Test
     void changePassword_noDigit_throws() {
         assertThrows(InvalidPasswordException.class, () ->
-                manager.changePassword(user, "NoDigit!")
+                manager.changePassword(user.getUsername(), "NoDigit!")
         );
     }
 
     @Test
     void changePassword_noSpecialCharacter_throws() {
         assertThrows(InvalidPasswordException.class, () ->
-                manager.changePassword(user, "NoSpecial1")
+                manager.changePassword(user.getUsername(), "NoSpecial1")
         );
     }
 
     @Test
     void changePassword_validPassword_doesNotThrow() {
         assertDoesNotThrow(() ->
-                manager.changePassword(user, "ValidPass1!")
+                manager.changePassword(user.getUsername(), "ValidPass1!")
         );
     }
 

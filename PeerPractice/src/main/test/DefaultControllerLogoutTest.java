@@ -19,7 +19,11 @@ public class DefaultControllerLogoutTest {
     @BeforeEach
     public void setUp() {
         // Set up test dependencies
-        appContext = new AppContext();
+        try {
+            appContext = new AppContext();
+        } catch (java.sql.SQLException e) {
+            throw new RuntimeException(e);
+        }
         userSession = appContext.getUserSession();
         mockNavigation = new MockNavigation();
         
