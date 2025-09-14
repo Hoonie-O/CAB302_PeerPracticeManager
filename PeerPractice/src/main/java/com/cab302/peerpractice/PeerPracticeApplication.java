@@ -8,9 +8,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
+
 public class PeerPracticeApplication extends Application {
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws SQLException {
         AppContext ctx = new AppContext();
         Navigation navigate = new Navigation(ctx,stage);
         stage.setUserData(navigate);
