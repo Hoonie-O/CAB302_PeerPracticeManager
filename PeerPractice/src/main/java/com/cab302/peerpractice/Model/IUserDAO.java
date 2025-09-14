@@ -1,6 +1,7 @@
 package com.cab302.peerpractice.Model;
 
 import javafx.collections.ObservableList;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public interface IUserDAO {

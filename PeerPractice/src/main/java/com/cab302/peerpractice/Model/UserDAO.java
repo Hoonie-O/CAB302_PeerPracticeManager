@@ -4,8 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
 
-public abstract class UserDAO implements IUserDAO{
-    private Connection connection;
+public class UserDAO implements IUserDAO{
+    private final Connection connection;
 
     public UserDAO() throws SQLException {
         connection = SQLiteConnection.getInstance();
@@ -18,7 +18,7 @@ public abstract class UserDAO implements IUserDAO{
         try {
             Statement stmt = connection.createStatement();
 
-            String createUsersQuery = "CREATE TABLE IF NOT EXISTS users ("
+            String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
                     + "user_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,"
                     + "username VARCHAR(16) NOT NULL UNIQUE,"
                     + "password VARCHAR(24) NOT NULL,"
@@ -28,9 +28,9 @@ public abstract class UserDAO implements IUserDAO{
                     + "institution VARCHAR(16) NOT NULL,"
                     + "biography VARCHAR(128) NOT NULL DEFAULT 'No biography given'"
                     + ");";
-            stmt.execute(createUsersQuery);
+            stmt.execute(createUsersTable);
 
-            String createFriendsQuery = "CREATE TABLE IF NOT EXISTS friends ("
+            String createFriendsTable = "CREATE TABLE IF NOT EXISTS friends ("
                     + "friendship_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,"
                     + "user VARCHAR(16) NOT NULL,"
                     + "friend VARCHAR(16) NOT NULL,"
@@ -40,9 +40,9 @@ public abstract class UserDAO implements IUserDAO{
                     + "ON UPDATE CASCADE"
                     + "ON DELETE CASCADE"
                     + ");";
-            stmt.execute(createFriendsQuery);
+            stmt.execute(createFriendsTable);
 
-            String createEventsQuery = "CREATE TABLE IF NOT EXISTS events ("
+            String createEventsTable = "CREATE TABLE IF NOT EXISTS events ("
                     + "event_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT"
                     + "title VARCHAR(24) NOT NULL DEFAULT 'Untitled'"
                     + "description VARCHAR(128) NOT NULL DEFAULT 'No description given'"
@@ -50,7 +50,7 @@ public abstract class UserDAO implements IUserDAO{
                     + "start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
                     + "end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
                     + ");";
-            stmt.execute(createEventsQuery);
+            stmt.execute(createEventsTable);
         } catch (SQLException e) {
             System.err.println("SQLException: " + e);
         }
@@ -66,8 +66,7 @@ public abstract class UserDAO implements IUserDAO{
 
             Statement insertStatement = connection.createStatement();
             String insertQuery = "INSERT INTO users (username, password, first_name, last_name, email, institution) VALUES "
-                    + "(),"
-                    + "();";
+                    + "('hollyfloweer', 'mypassword', 'Holly, 'Spain', 'n11618230@qut.edu.au', 'QUT');";
             insertStatement.execute(insertQuery);
         } catch (Exception e) {
             System.err.println("SQLException: " + e);
@@ -75,11 +74,12 @@ public abstract class UserDAO implements IUserDAO{
     }
 
     // Select single user
-    public User findUser(String userID) throws ClassNotFoundException, SQLException {
+    @Override
+    public User findUser(String username) throws ClassNotFoundException, SQLException {
         // Declare query statement
         String queryStatement =
                 "SELECT * FROM users " +
-                "WHERE userID = " + userID + ";";
+                "WHERE username = " + username + ";";
 
         // Execute query statement
         try {
@@ -87,11 +87,12 @@ public abstract class UserDAO implements IUserDAO{
             return getUserFromResults(searchResults);
 
         } catch (SQLException e) {
-            System.out.println("Error occurred when searching user " + userID + e);
+            System.out.println("Error occurred when searching user " + username + e);
             throw e;
         }
     }
     // Select all users
+    @Override
     public ObservableList<User> findUsers() throws ClassNotFoundException, SQLException {
         // Declare query statement
         String queryStatement = "SELECT * FROM users;";
@@ -114,15 +115,13 @@ public abstract class UserDAO implements IUserDAO{
         User user = null;
         // Fill user fields from results
         if (searchResults.next()) {
-            user = new User();
-            user.setUserID(searchResults.getInt("USER_ID"));
-            user.setUsername(searchResults.getString("USERNAME"));
-            user.setPassword(searchResults.getString("PASSWORD"));
-            user.setFirstName(searchResults.getString("FIRST_NAME"));
-            user.setLastName(searchResults.getString("LAST_NAME"));
-            user.setEmail(searchResults.getString("EMAIL"));
-            user.setInstitution(searchResults.getString("INSTITUTION"));
-            user.setBiography(searchResults.getString("BIOGRAPHY"));
+            String firstName = (searchResults.getString("FIRST_NAME"));
+            String lastName = (searchResults.getString("LAST_NAME"));
+            String username = (searchResults.getString("USERNAME"));
+            String email = (searchResults.getString("EMAIL"));
+            String passwordHash = (searchResults.getString("PASSWORD"));
+            String institution = (searchResults.getString("INSTITUTION"));
+            user = new User(firstName, lastName, username, email, passwordHash, institution);
         }
         return user;
     }
@@ -132,15 +131,13 @@ public abstract class UserDAO implements IUserDAO{
         ObservableList<User> userList = FXCollections.observableArrayList();
 
         while (searchResults.next()) {
-            User user = new User();
-            user.setUserID(searchResults.getInt("USER_ID"));
-            user.setUsername(searchResults.getString("USERNAME"));
-            user.setPassword(searchResults.getString("PASSWORD"));
-            user.setFirstName(searchResults.getString("FIRST_NAME"));
-            user.setLastName(searchResults.getString("LAST_NAME"));
-            user.setEmail(searchResults.getString("EMAIL"));
-            user.setInstitution(searchResults.getString("INSTITUTION"));
-            user.setBiography(searchResults.getString("BIOGRAPHY"));
+            String firstName = (searchResults.getString("FIRST_NAME"));
+            String lastName = (searchResults.getString("LAST_NAME"));
+            String username = (searchResults.getString("USERNAME"));
+            String email = (searchResults.getString("EMAIL"));
+            String passwordHash = (searchResults.getString("PASSWORD"));
+            String institution = (searchResults.getString("INSTITUTION"));
+            User user = new User(firstName, lastName, username, email, passwordHash, institution);
 
             // Add user to observable list
             userList.add(user);
@@ -149,6 +146,7 @@ public abstract class UserDAO implements IUserDAO{
     }
 
     // Creates a new user
+    @Override
     public void createUser(String username, String password, String firstName, String email, String institution) throws ClassNotFoundException, SQLException {
         // Declare update statement
         String updateStatement =
@@ -165,6 +163,7 @@ public abstract class UserDAO implements IUserDAO{
     }
 
     // Updates the username of a user with userID
+    @Override
     public void updateUsername(String userID, String username) throws ClassNotFoundException, SQLException {
         // Declare update statement
         String updateStatement =
@@ -182,6 +181,7 @@ public abstract class UserDAO implements IUserDAO{
     }
 
     // Deletes a user from the table
+    @Override
     public void deleteUser(String userID) throws ClassNotFoundException, SQLException {
         // Declare update statement
         String updateStatement =

@@ -1,11 +1,14 @@
 package com.cab302.peerpractice;
 
-import com.cab302.peerpractice.Model.*;import java.time.LocalDateTime;
+import com.cab302.peerpractice.Model.*;
+
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class AppContext {
     private final UserSession userSession = new UserSession();
-    private final IUserDAO userDao = new MockUserDAO();
+    private final IUserDAO userDao = new UserDAO();
     private final IGroupDAO groupDao = new MockGroupDAO();
     private final Notifier notifier = new Notifier(userDao);
     private final PasswordHasher passwordHasher = new BcryptHasher();
@@ -15,10 +18,9 @@ public class AppContext {
     private final EventManager eventManager = new EventManager();
     private final SessionManager sessionManager = new SessionManager();
 
-    public AppContext() {
+    public AppContext() throws SQLException {
         try {
-            userManager.signUp("John", "Doe", "username", "email@email.com", "Password1!", "QUT");
-            User testUser = userDao.getUserByUsername("username").orElse(null);
+            User testUser = userDao.findUser("hollyfloweer");
 
             if (testUser != null) {
                 Group testGroup = new Group("Example Group", "This is a seeded test group", false,
