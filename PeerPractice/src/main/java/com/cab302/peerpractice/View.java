@@ -10,7 +10,8 @@ public enum View {
     Groups("groups-view.fxml","Groups"),
     EditProfile("editprofile-view.fxml", "Edit Profile"),
     SettingProfile("settingprofile-view.fxml", "Setting Profile"),
-    SessionTasks("session-tasks-view.fxml", "Session Tasks");
+    SessionTasks("session-tasks-view.fxml", "Session Tasks"),
+    Friends("friends-view.fxml", "Friends");
 
     private final String fxml;
     private final String title;

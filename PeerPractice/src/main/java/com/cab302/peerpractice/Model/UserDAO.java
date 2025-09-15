@@ -35,6 +35,7 @@ public class UserDAO implements IUserDAO{
                     + "friendship_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                     + "user VARCHAR(16) NOT NULL,"
                     + "friend VARCHAR(16) NOT NULL,"
+                    + "status VARCHAR(16) NOT NULL DEFAULT 'pending' CHECK(status IN('pending, 'accepted', 'denied', 'blocked')),"
                     + "CONSTRAINT fk_user "
                     + "FOREIGN KEY (user) "
                     + "REFERENCES users(username) "
@@ -84,7 +85,11 @@ public class UserDAO implements IUserDAO{
         // Execute query statement
         try {
             ResultSet searchResults = pstmt.executeQuery();
-            return getUserFromResults(searchResults);
+            if (!searchResults.next()) {
+                return null;
+            } else {
+                return getUserFromResults(searchResults);
+            }
 
         } catch (SQLException e) {
             System.out.println("Error occurred when searching user " + value + e);

@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public abstract class SidebarController extends BaseController {
 
@@ -82,10 +83,7 @@ public abstract class SidebarController extends BaseController {
 
             if (studyGroupBtn != null) studyGroupBtn.setOnAction(e -> nav.Display(View.Groups));
             if (calendarBtn   != null) calendarBtn.setOnAction(e -> nav.Display(View.Calendar));
-            if (friendsBtn    != null) {
-                friendsBtn.setOnAction(e ->
-                        new Alert(Alert.AlertType.INFORMATION, "Friends view coming soon!").showAndWait()
-                );
+            if (friendsBtn    != null) {friendsBtn.setOnAction(e -> nav.Display(View.Friends));
             }
         }
 

@@ -9,6 +9,7 @@ public class AppContext {
     private final UserSession userSession = new UserSession();
     private final IUserDAO userDao = new UserDAO();
     private final IGroupDAO groupDao = new MockGroupDAO();
+    private final IFriendDAO friendDao = new FriendDAO();
     private final Notifier notifier = new Notifier(userDao);
     private final PasswordHasher passwordHasher = new BcryptHasher();
     private final UserManager userManager = new UserManager(userDao,passwordHasher);
@@ -49,6 +50,7 @@ public class AppContext {
     public MailService getMailService(){return mailService;}
     public GroupManager getGroupManager(){return  groupManager;}
     public IGroupDAO getGroupDao() {return groupDao;}
+    public IFriendDAO getFriendDao() {return friendDao;}
     public SessionManager getSessionManager(){return sessionManager;}
     public SessionTaskManager getSessionTaskManager(){return sessionTaskManager;}
     public SessionCalendarManager getSessionCalendarManager(){return sessionCalendarManager;}
@@ -57,5 +59,5 @@ public class AppContext {
     public void setMenuOpen(boolean value) { this.menuOpen = value; }
     public boolean isProfileOpen() { return profileOpen; }
     public void setProfileOpen(boolean value) { this.profileOpen = value; }
-    
+
 }
