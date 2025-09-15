@@ -44,6 +44,10 @@ public class GroupManager {
     }
 
     public void addMember(Group group,User user,String toAdd) throws SQLException {
+        if(group == null) throw new IllegalArgumentException("Group can't be null");
+        if(user == null) throw new IllegalArgumentException("User can't be null");
+        if(toAdd == null || toAdd.isEmpty()) throw new IllegalArgumentException("User to add can't be null or empty");
+
         if(!group.getOwner().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
 
         User userToAdd = userDAO.findUser("username", toAdd);
