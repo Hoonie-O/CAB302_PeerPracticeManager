@@ -33,6 +33,7 @@ public class ForgotPasswordController extends BaseController{
                     "If you did not request a new password, please ignore this email.",user.getFirstName(),"null");
             mailService.sendMessage(msg,emailField.getText());
             messageLabel.setText("Password reset link has been sent to your email. The link will expire in 10 minutes.");
+            ctx.getUserSession().setCurrentUser(user);
         }
         else{
             messageLabel.setText("Email does not exist or is not valid.");

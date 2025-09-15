@@ -30,7 +30,6 @@ public class ResetPasswordController extends BaseController {
         try {
             UserManager userManager = ctx.getUserManager();
             String username = ctx.getUserSession().getCurrentUser().getUsername();
-
             if(newPasswordField.getText().isEmpty()) {
                 messageLabel.setText("Password has not been filled");
             }
@@ -39,6 +38,7 @@ public class ResetPasswordController extends BaseController {
             }
             if(userManager.changePassword(username,confirmPassword.getText())) {
                 messageLabel.setText("Password has been changed");
+                ctx.getUserSession().logout();
             }
         }catch(InvalidPasswordException e){
             messageLabel.setText(e.getMessage());
@@ -49,5 +49,6 @@ public class ResetPasswordController extends BaseController {
 
     public void onBackToLogin(ActionEvent actionEvent) {
         nav.Display(View.Login);
+        ctx.getUserSession().logout();
     }
 }

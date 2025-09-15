@@ -174,7 +174,7 @@ public class GroupManagerTest {
     @Test
     void testAddMemberNotOwner(){
         User user1 = new User("Cristiano","Ronaldo","CRistiano7","cr7@email.com","asfsfafa","QUT");
-        assertThrows(InsufficientPermissionsException.class, () -> groupManager.addMember(group,user1,USERNAME))
+        assertThrows(InsufficientPermissionsException.class, () -> groupManager.addMember(group,user1,USERNAME));
     }
 
     @Test
@@ -197,7 +197,9 @@ public class GroupManagerTest {
         assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group,user,""));
     }
 
-    
+    void testJoinGroupNormalNoApproval(){
+
+    }
 
 
 
