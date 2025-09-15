@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface IFriendDAO {
     List<Friend> getFriends(User user) throws SQLException;
-    boolean addFriend(User user, User friend);
-    boolean removeFriend(User user, User friend);
+    boolean addFriend(User user, User friend) throws SQLException;
+    boolean removeFriend(User user, User friend) throws SQLException;
     boolean blockUser(User user, User friend);
-    boolean acceptFriendRequest();
-    boolean denyFriendRequest();
+    boolean acceptFriendRequest(User user, User friend) throws SQLException;
+    boolean denyFriendRequest(User user, User friend) throws SQLException;
 }

@@ -16,8 +16,8 @@ public class FriendDAO implements IFriendDAO{
 
     public FriendDAO() throws SQLException {
         // get database connection and userDAO
-        connection = SQLiteConnection.getInstance();
-        this.userDAO = new UserDAO();
+        userDAO = new UserDAO();
+        connection = userDAO.shareInstance();
     }
 
     @Override
@@ -48,19 +48,43 @@ public class FriendDAO implements IFriendDAO{
             User user2 = userDAO.findUser("username", username2);
 
             Friend friend = new Friend(user1, user2, status);
-            friends.add(friend);
+            // Only return accepted friends
+            if (friend.getStatus() == FriendStatus.ACCEPTED) {
+                friends.add(friend);
+            }
         }
         return friends;
     }
 
     @Override
-    public boolean addFriend(User user, User friend) {
-        return false;
+    public boolean addFriend(User user, User friend) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO friends (user, friend, status) VALUES (?, ?, ?);");
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, friend.getUsername());
+        stmt.setString(3, "pending");
+
+        try {
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error adding friend: " + e);
+            return false;
+        }
     }
 
     @Override
-    public boolean removeFriend(User user, User friend) {
-        return false;
+    public boolean removeFriend(User user, User friend) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM friends WHERE user = ? && friend = ?;");
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, friend.getUsername());
+
+        try {
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error removing friend: " + e);
+            return false;
+        }
     }
 
     @Override
@@ -69,12 +93,32 @@ public class FriendDAO implements IFriendDAO{
     }
 
     @Override
-    public boolean acceptFriendRequest() {
-        return false;
+    public boolean acceptFriendRequest(User user, User friend) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("UPDATE friends SET status = 'accepted' WHERE user = ? && friend = ?;");
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, friend.getUsername());
+
+        try {
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error accepting friend: " + e);
+            return false;
+        }
     }
 
     @Override
-    public boolean denyFriendRequest() {
-        return false;
+    public boolean denyFriendRequest(User user, User friend) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("UPDATE friends SET status = 'denied' WHERE user = ? && friend = ?;");
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, friend.getUsername());
+
+        try {
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error denying friend: " + e);
+            return false;
+        }
     }
 }

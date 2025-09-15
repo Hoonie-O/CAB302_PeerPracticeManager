@@ -14,6 +14,10 @@ public class UserDAO implements IUserDAO{
         createTables();
     }
 
+    public Connection shareInstance() {
+        return connection;
+    }
+
     private void createTables() {
         // Create tables if they don't exist
         try {
@@ -35,7 +39,7 @@ public class UserDAO implements IUserDAO{
                     + "friendship_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                     + "user VARCHAR(16) NOT NULL,"
                     + "friend VARCHAR(16) NOT NULL,"
-                    + "status VARCHAR(16) NOT NULL DEFAULT 'pending' CHECK(status IN('pending, 'accepted', 'denied', 'blocked')),"
+                    + "status VARCHAR(16) NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'accepted', 'denied', 'blocked')),"
                     + "CONSTRAINT fk_user "
                     + "FOREIGN KEY (user) "
                     + "REFERENCES users(username) "
@@ -169,7 +173,7 @@ public class UserDAO implements IUserDAO{
         // Use prepared statement to prevent SQL injection
         PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO users (user_id, username, password, first_name, last_name, email, institution) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)");
+                "VALUES (?, ?, ?, ?, ?, ?, ?);");
         
         stmt.setString(1, userId);
         stmt.setString(2, username);
