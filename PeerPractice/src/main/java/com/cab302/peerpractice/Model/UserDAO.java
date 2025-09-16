@@ -24,7 +24,7 @@ public class UserDAO implements IUserDAO{
             Statement stmt = connection.createStatement();
 
             String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
-                    + "user_id VARCHAR(36) NOT NULL PRIMARY KEY,"
+                    + "user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                     + "username VARCHAR(16) NOT NULL UNIQUE,"
                     + "password VARCHAR(24) NOT NULL,"
                     + "first_name VARCHAR(16) NOT NULL,"
