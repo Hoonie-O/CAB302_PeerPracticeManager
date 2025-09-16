@@ -106,6 +106,48 @@ public class UserManager {
         if (Pattern.compile("\\P{L}").matcher(name).find())
             throw new IllegalArgumentException("Name can't contain non-letter characters");
     }
+    public void updateFirstName(String username, String first) throws SQLException {
+        requireNotBlank(first, "First name");
+        userDAO.updateValue(username, "first_name", first.trim());
+    }
 
+    public void updateLastName(String username, String last) throws SQLException {
+        requireNotBlank(last, "Last name");
+        userDAO.updateValue(username, "last_name", last.trim());
+    }
+
+    public void updateInstitution(String username, String inst) throws SQLException {
+        userDAO.updateValue(username, "institution", inst == null ? "" : inst.trim());
+    }
+
+    public void changeUsername(String currentUsername, String newUsername)
+            throws SQLException, DuplicateUsernameException {
+        requireNotBlank(newUsername, "Username");
+        if (userDAO.existsByUsername(newUsername)) {
+            throw new DuplicateUsernameException("Username already taken.");
+        }
+        userDAO.updateValue(currentUsername, "username", newUsername.trim());
+    }
+
+    public void updatePhone(String username, String phone)
+            throws SQLException {
+        String digits = phone == null ? "" : phone.replaceAll("\\D", "");
+        userDAO.updateValue(username, "phone", digits);
+    }
+
+    public void updateAddress(String username, String address)
+            throws SQLException {
+        userDAO.updateValue(username, "address", address == null ? "" : address.trim());
+    }
+
+    public void updateDateOfBirth(String username, String isoDate)
+            throws SQLException {
+        userDAO.updateValue(username, "date_of_birth", isoDate == null ? "" : isoDate.trim());
+    }
+
+    private static void requireNotBlank(String s, String label) {
+        if (s == null || s.trim().isEmpty())
+            throw new IllegalArgumentException(label + " cannot be empty.");
+    }
 
 }

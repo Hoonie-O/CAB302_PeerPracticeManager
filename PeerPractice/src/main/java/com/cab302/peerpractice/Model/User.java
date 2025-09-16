@@ -11,6 +11,9 @@ public class User {
     private String username;
     private String email;
     private String passwordHash;
+    private String phone;
+    private String address;
+    private String dateOfBirth;
     private String institution;
     private String bio;
     private List<User> friendsList;
@@ -71,6 +74,18 @@ public class User {
         if (!email.contains("@") || !email.contains(".")) throw new IllegalArgumentException("Invalid email format");
         this.email = email.trim();
     }
+    public String getPhone() {return phone;}
+    public void setPhone(String phone) {
+        this.phone = phone == null ? "" : phone.trim();
+    }
+
+    public String getAddress() {return address;}
+    public void setAddress(String address) {
+        this.address = address == null ? "" : address.trim();
+    }
+
+    public String getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth == null ? "" : dateOfBirth.trim(); }
 
     public String getInstitution() { return institution; }
     public void setInstitution(String institution) { this.institution = institution; }
