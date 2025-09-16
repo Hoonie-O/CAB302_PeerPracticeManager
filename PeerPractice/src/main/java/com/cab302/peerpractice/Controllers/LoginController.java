@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class LoginController extends BaseController{
     @FXML private TextField IDField;
@@ -52,11 +53,13 @@ public class LoginController extends BaseController{
 
         try {
             if (userManager.authenticate(ID, password)) {
-                // Fetch user from DAO (since authenticate only returns boolean)
-                ctx.getUserDao().findUsers().stream()
-                        .filter(u -> u.getEmail().equalsIgnoreCase(ID) ||
-                                u.getUsername().equalsIgnoreCase(ID))
-                        .findFirst().ifPresent(loggedIn -> ctx.getUserSession().setCurrentUser(loggedIn));
+                // Fetch user username and if not found then fetch from email then login
+                Optional<User> loggedIn = ctx.getUserDao().getUserByUsername(ID);
+                if (loggedIn.isEmpty()) {
+                    loggedIn = ctx.getUserDao().getUserByEmail(ID);
+                }
+                // If logged in then put user into the session
+                loggedIn.ifPresent(u -> ctx.getUserSession().setCurrentUser(u));
 
                 nav.DisplayMainMenuOrGroup();
             } else {

@@ -5,6 +5,10 @@ import com.cab302.peerpractice.Exceptions.DuplicateEmailException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UserDAO implements IUserDAO{
     private final Connection connection;
@@ -30,6 +34,10 @@ public class UserDAO implements IUserDAO{
                     + "biography VARCHAR(128) NOT NULL DEFAULT 'No biography given'"
                     + ");";
             stmt.execute(createUsersTable);
+
+            addColumnIfMissing("users", "phone", "TEXT NOT NULL DEFAULT ''");
+            addColumnIfMissing("users", "address", "TEXT NOT NULL DEFAULT ''");
+            addColumnIfMissing("users", "date_of_birth", "TEXT DEFAULT ''");
 
             String createFriendsTable = "CREATE TABLE IF NOT EXISTS friends ("
                     + "friendship_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -71,7 +79,53 @@ public class UserDAO implements IUserDAO{
         }
     }
 
-    private void insertSampleData() {}
+    // Check if column exist
+    private boolean columnExists(String table, String column) throws SQLException {
+        String sql = "PRAGMA table_info(" + table + ")";
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                String name = rs.getString("name");
+                if (column.equalsIgnoreCase(name)) return false;
+            }
+            return true;
+        }
+    }
+
+    // Add a column, if column exists, skip
+    private void addColumnIfMissing(String table, String column, String typeAndDefault) throws SQLException {
+        if (columnExists(table, column)) {
+            try (Statement st = connection.createStatement()) {
+                st.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + column + " " + typeAndDefault);
+            }
+        }
+    }
+
+    // Ensures all columns (and new columns) are mapped into the user
+    private User mapUser(ResultSet rs) throws SQLException {
+        // Read the columns
+        String userId = rs.getString("user_id");
+        String username = rs.getString("username");
+        String password = rs.getString("password");
+        String firstName = rs.getString("first_name");
+        String lastName = rs.getString("last_name");
+        String email = rs.getString("email");
+        String institution = rs.getString("institution");
+        String bio = rs.getString("biography");
+
+        // Construct user using constructor signature in User.java
+        User u = new User(userId, firstName, lastName, username, email, password, institution);
+        // Avoid failing if a column is missing
+        try { u.setPhone(rs.getString("PHONE")); }
+            catch (SQLException ignored) {}
+        try { u.setAddress(rs.getString("ADDRESS")); }
+            catch (SQLException ignored) {}
+        try { u.setDateOfBirth(rs.getString("DATE_OF_BIRTH")); }
+            catch (SQLException ignored) {}
+
+        return u;
+    }
+
 
     // Select single user
     @Override
@@ -208,6 +262,20 @@ public class UserDAO implements IUserDAO{
     // Updates the username of a user with userID
     @Override
     public boolean updateValue(String username, String column, String value) throws SQLException {
+        // Whitelist allowed columns to prevent SQL injection via column name
+        switch (column) {
+            case "first_name":
+            case "last_name":
+            case "username":
+            case "password":
+            case "institution":
+            case "phone":
+            case "address":
+            case "date_of_birth":
+                break;
+            default:
+                throw new SQLException("Invalid column: " + column);
+        }
         String sql = "UPDATE users SET " + column + " = ? WHERE username = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, value);
@@ -280,34 +348,44 @@ public class UserDAO implements IUserDAO{
     }
 
     @Override
-    public java.util.List<User> searchByInstitution(String institution) {
+    public List<User> searchByInstitution(String institution) {
         try {
             ObservableList<User> allUsers = findUsers();
             return allUsers.stream()
                     .filter(u -> institution.equals(u.getInstitution()))
-                    .collect(java.util.stream.Collectors.toList());
+                    .collect(Collectors.toList());
         } catch (SQLException e) {
-            return new java.util.ArrayList<>();
+            return new ArrayList<>();
         }
     }
 
     @Override
-    public java.util.Optional<User> getUserByEmail(String email) {
-        try {
-            User user = findUser("email", email);
-            return java.util.Optional.ofNullable(user);
+    public Optional<User> getUserByEmail(String email) {
+        // Parameterized SELECT to prevent SQL injection
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                // Map it to user, else return Optional.empty()
+                return rs.next() ? Optional.of(mapUser(rs)) : Optional.empty();
+            }
         } catch (SQLException e) {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
     }
 
     @Override
-    public java.util.Optional<User> getUserByUsername(String username) {
-        try {
-            User user = findUser("username", username);
-            return java.util.Optional.ofNullable(user);
+    public Optional<User> getUserByUsername(String username) {
+        // Parameterized SELECT to prevent SQL injection
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                // Map it to user, else return Optional.empty()
+                return rs.next() ? Optional.of(mapUser(rs)) : Optional.empty();
+            }
         } catch (SQLException e) {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
     }
 
@@ -330,7 +408,7 @@ public class UserDAO implements IUserDAO{
     }
 
     @Override
-    public java.util.List<User> getAllUsers() {
+    public List<User> getAllUsers() {
         try {
             ObservableList<User> users = findUsers();
             return new java.util.ArrayList<>(users);
