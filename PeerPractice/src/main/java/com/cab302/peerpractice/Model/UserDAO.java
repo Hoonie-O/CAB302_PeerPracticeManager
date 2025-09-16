@@ -89,11 +89,7 @@ public class UserDAO implements IUserDAO{
         // Execute query statement
         try {
             ResultSet searchResults = pstmt.executeQuery();
-            if (!searchResults.next()) {
-                return null;
-            } else {
-                return getUserFromResults(searchResults);
-            }
+            return getUserFromResults(searchResults);
 
         } catch (SQLException e) {
             System.out.println("Error occurred when searching user " + value + e);
