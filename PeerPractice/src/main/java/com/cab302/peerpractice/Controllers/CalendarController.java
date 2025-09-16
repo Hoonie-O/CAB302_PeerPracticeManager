@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -42,7 +43,7 @@ public class CalendarController extends SidebarController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         super.initialize(); // setup sidebar + header
         currentYearMonth = YearMonth.now();
         setupViewToggle();

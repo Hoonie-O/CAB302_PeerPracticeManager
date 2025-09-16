@@ -37,7 +37,7 @@ public abstract class SidebarController extends BaseController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         // Restore menu state
         if (menu != null) {
             if (ctx.isMenuOpen()) {

@@ -23,7 +23,7 @@ public class FriendDAO implements IFriendDAO{
     @Override
     public List<Friend> getFriends(User user) throws SQLException {
         // set up statement to search friends table
-        String searchQuery = "SELECT friend FROM friends WHERE user = ?";
+        String searchQuery = "SELECT * FROM friends WHERE user = ?";
         PreparedStatement pstmt = connection.prepareStatement(searchQuery);
         pstmt.setString(1, user.getUsername());
         ResultSet results;
@@ -41,17 +41,14 @@ public class FriendDAO implements IFriendDAO{
         while (Objects.requireNonNull(results).next()) {
             String username1 = results.getString("user");
             String username2 = results.getString("friend");
-            FriendStatus status = FriendStatus.valueOf(results.getString("status"));
+            FriendStatus status = FriendStatus.valueOf(results.getString("status").toUpperCase());
 
             // Get the user data for associated username for listed friendship
             User user1 = userDAO.findUser("username", username1);
             User user2 = userDAO.findUser("username", username2);
 
             Friend friend = new Friend(user1, user2, status);
-            // Only return accepted friends
-            if (friend.getStatus() == FriendStatus.ACCEPTED) {
-                friends.add(friend);
-            }
+            friends.add(friend);
         }
         return friends;
     }

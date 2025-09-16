@@ -37,7 +37,7 @@
                 <Button fx:id="removeFriend" text="Remove friend" onAction="#removeFriend"/>
             </HBox>
 
-            <ListView fx:id="friendsListView" HBox.hgrow="ALWAYS"/>
+            <TableView fx:id="friendsTable" HBox.hgrow="ALWAYS"/>
         </FlowPane>
     </center>
 

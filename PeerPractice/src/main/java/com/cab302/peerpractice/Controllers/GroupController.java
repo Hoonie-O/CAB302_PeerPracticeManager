@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
  
@@ -30,7 +31,7 @@ public class GroupController extends SidebarController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         super.initialize();
 
         if (groupTabs != null && tabContentLabel != null) {
