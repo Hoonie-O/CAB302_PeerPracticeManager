@@ -80,7 +80,7 @@ public abstract class SidebarController extends BaseController {
             Button calendarBtn   = (Button) menu.lookup("#calendarButton");
             Button friendsBtn    = (Button) menu.lookup("#friendsButton");
 
-            if (studyGroupBtn != null) studyGroupBtn.setOnAction(e -> nav.Display(View.Groups));
+            if (studyGroupBtn != null) studyGroupBtn.setOnAction(e -> nav.DisplayMainMenuOrGroup());
             if (calendarBtn   != null) calendarBtn.setOnAction(e -> nav.Display(View.Calendar));
             if (friendsBtn    != null) {
                 friendsBtn.setOnAction(e ->
