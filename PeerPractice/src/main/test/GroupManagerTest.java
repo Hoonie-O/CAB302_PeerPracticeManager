@@ -1,9 +1,12 @@
 import com.cab302.peerpractice.Exceptions.DuplicateGroupException;
 import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
+import com.cab302.peerpractice.Exceptions.InsufficientPermissionsException;
+import com.cab302.peerpractice.Exceptions.UserNotFoundException;
 import com.cab302.peerpractice.Model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -158,8 +161,50 @@ public class GroupManagerTest {
 
     @Test
     void testAddMemberNormal(){
+        User user1 = new User("Cristiano","Ronaldo","cristiano7","cr7@email.com","asfasfaf","QUT");
+        userDAO.addUser(user1);
+        assertDoesNotThrow(() -> groupManager.addMember(group,user,"cristiano7"));
+    }
+
+    @Test
+    void testAddMemberNonExistent(){
+        assertThrows(UserNotFoundException.class, () -> groupManager.addMember(group,user,"someone"));
+    }
+
+    @Test
+    void testAddMemberNotOwner(){
+        User user1 = new User("Cristiano","Ronaldo","CRistiano7","cr7@email.com","asfsfafa","QUT");
+        assertThrows(InsufficientPermissionsException.class, () -> groupManager.addMember(group,user1,USERNAME));
+    }
+
+    @Test
+    void testAddMemberNullOwner(){
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group,null,"someone"));
+    }
+
+    @Test
+    void testAddMemberNullGroup(){
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(null,user,"someone"));
+    }
+
+    @Test
+    void testAddMemberNullToAdd(){
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group,user,null));
+    }
+
+    @Test
+    void testAddMemberEmptyToAdd(){
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group,user,""));
+    }
+
+    void testJoinGroupNormalNoApproval(){
 
     }
+
+
+
+
+
 
 
 

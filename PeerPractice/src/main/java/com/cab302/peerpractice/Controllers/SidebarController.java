@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public abstract class SidebarController extends BaseController {
 
@@ -29,6 +28,8 @@ public abstract class SidebarController extends BaseController {
     @FXML private BorderPane menu;
     @FXML private BorderPane profile;
     @FXML private VBox header;
+    @FXML private Label userNameLabel;
+    @FXML private Label userUsernameLabel;
 
     private static final Duration SLIDE = Duration.millis(180);
 
@@ -37,7 +38,7 @@ public abstract class SidebarController extends BaseController {
     }
 
     @FXML
-    public void initialize() throws SQLException {
+    public void initialize() {
         // Restore menu state
         if (menu != null) {
             if (ctx.isMenuOpen()) {
@@ -78,31 +79,36 @@ public abstract class SidebarController extends BaseController {
         // Sidebar menu buttons
         if (menu != null) {
             Button studyGroupBtn = (Button) menu.lookup("#studyGroupButton");
-            Button calendarBtn   = (Button) menu.lookup("#calendarButton");
-            Button friendsBtn    = (Button) menu.lookup("#friendsButton");
+            Button calendarBtn = (Button) menu.lookup("#calendarButton");
+            Button friendsBtn = (Button) menu.lookup("#friendsButton");
 
-            if (studyGroupBtn != null) studyGroupBtn.setOnAction(e -> nav.Display(View.Groups));
-            if (calendarBtn   != null) calendarBtn.setOnAction(e -> nav.Display(View.Calendar));
-            if (friendsBtn    != null) {friendsBtn.setOnAction(e -> nav.Display(View.Friends));
+            if (studyGroupBtn != null) studyGroupBtn.setOnAction(e -> nav.DisplayMainMenuOrGroup());
+            if (calendarBtn != null) calendarBtn.setOnAction(e -> nav.Display(View.Calendar));
+            if (friendsBtn != null) {
+                friendsBtn.setOnAction(e ->
+                        new Alert(Alert.AlertType.INFORMATION, "Friends view coming soon!").showAndWait()
+                );
             }
         }
 
         // Profile panel controls
         if (profile != null) {
-            Label userNameLbl     = (Label) profile.lookup("#userNameLabel");
+            Label userNameLbl = (Label) profile.lookup("#userNameLabel");
+            this.userNameLabel = userNameLbl;
             Label userUsernameLbl = (Label) profile.lookup("#userUsernameLabel");
+            this.userUsernameLabel = userUsernameLbl;
             ComboBox<String> status = (ComboBox<String>) profile.lookup("#availabilityStatus");
-            Button editBtn        = (Button) profile.lookup("#editProfileButton");
-            Button settingsBtn    = (Button) profile.lookup("#settingsButton");
-            Button logoutBtn      = (Button) profile.lookup("#logoutButton");
+            Button editBtn = (Button) profile.lookup("#editProfileButton");
+            Button settingsBtn = (Button) profile.lookup("#settingsButton");
+            Button logoutBtn = (Button) profile.lookup("#logoutButton");
 
             // User info
             var currentUser = ctx.getUserSession().getCurrentUser();
             if (currentUser != null) {
-                if (userNameLbl != null)     userNameLbl.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+                if (userNameLbl != null) userNameLbl.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
                 if (userUsernameLbl != null) userUsernameLbl.setText("@" + currentUser.getUsername());
             } else {
-                if (userNameLbl != null)     userNameLbl.setText("Not logged in");
+                if (userNameLbl != null) userNameLbl.setText("Not logged in");
                 if (userUsernameLbl != null) userUsernameLbl.setText("@unknown");
             }
 
@@ -113,9 +119,9 @@ public abstract class SidebarController extends BaseController {
             }
 
             // Profile buttons
-            if (editBtn    != null) editBtn.setOnAction(this::onEditProfile);
+            if (editBtn != null) editBtn.setOnAction(this::onEditProfile);
             if (settingsBtn!= null) settingsBtn.setOnAction(this::onSetting);
-            if (logoutBtn  != null) logoutBtn.setOnAction(e -> handleLogout());
+            if (logoutBtn != null) logoutBtn.setOnAction(e -> handleLogout());
         }
     }
 
@@ -282,6 +288,8 @@ public abstract class SidebarController extends BaseController {
 
             controller.setStage(dialog);
             dialog.showAndWait();
+            renderProfile();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -318,4 +326,23 @@ public abstract class SidebarController extends BaseController {
             e.printStackTrace();
         }
     }
+
+    // Updates profile firstname, lastname, and username on sidebar
+    private void renderProfile() {
+        if (userNameLabel == null || userUsernameLabel == null) {
+            // included profile pane not resolved yet
+            return;
+        }
+        var s = ctx.getUserSession();
+        if (s == null || !s.isLoggedIn()) return;
+        var u = s.getCurrentUser();
+        if (u == null) return;
+
+        String first = u.getFirstName() == null ? "" : u.getFirstName().trim();
+        String last  = u.getLastName()  == null ? "" : u.getLastName().trim();
+        userNameLabel.setText((first + " " + last).trim().replaceAll("\\s+", " "));
+        userUsernameLabel.setText(u.getUsername() == null || u.getUsername().isBlank()
+                ? "" : "@" + u.getUsername().trim());
+    }
+
 }

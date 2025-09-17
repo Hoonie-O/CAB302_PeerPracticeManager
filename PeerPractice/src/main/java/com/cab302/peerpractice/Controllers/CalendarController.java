@@ -397,7 +397,7 @@ public class CalendarController extends SidebarController {
             Button createTaskButton = new Button("Create Task");
             createTaskButton.setOnAction(e -> {
                 dialog.close();
-                openCreateTaskDialog(session);
+                javafx.application.Platform.runLater(() -> openCreateTaskDialog(session));
             });
             Button deleteButton = new Button("Delete");
             deleteButton.setOnAction(e -> {
@@ -413,7 +413,7 @@ public class CalendarController extends SidebarController {
         Button addNewButton = new Button("Add Another Session");
         addNewButton.setOnAction(e -> {
             dialog.close();
-            showAddSessionDialog(date);
+            javafx.application.Platform.runLater(() -> showAddSessionDialog(date));
         });
         content.getChildren().add(addNewButton);
 
