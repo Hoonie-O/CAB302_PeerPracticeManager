@@ -1,5 +1,6 @@
 package com.cab302.peerpractice.Model;
 
+import com.cab302.peerpractice.Exceptions.DuplicateFriendException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -53,8 +54,14 @@ public class FriendDAO implements IFriendDAO{
         return friends;
     }
 
+    // returns false if operation failed
     @Override
-    public boolean addFriend(User user, User friend) throws SQLException {
+    public boolean addFriend(User user, User friend) throws SQLException, DuplicateFriendException {
+        if (checkFriendExists(user, friend)) {
+            System.err.println("DuplicateFriendException: " + new DuplicateFriendException("Friend already exists"));
+            return false;
+        }
+
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO friends (user, friend, status) VALUES (?, ?, ?);");
         stmt.setString(1, user.getUsername());
         stmt.setString(2, friend.getUsername());
@@ -70,17 +77,33 @@ public class FriendDAO implements IFriendDAO{
     }
 
     @Override
-    public boolean removeFriend(User user, User friend) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM friends WHERE user = ? && friend = ?;");
+    public boolean checkFriendExists(User user, User friend) throws SQLException {
+        String searchQuery = "SELECT * FROM friends WHERE user = ? AND friend = ?";
+        PreparedStatement pstmt = connection.prepareStatement(searchQuery);
+        pstmt.setString(1, user.getUsername());
+        pstmt.setString(2, friend.getUsername());
+        ResultSet results = null;
+
+        // Execute query statement
+        try {
+            results = pstmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return (results != null);
+    }
+
+    @Override
+    public void removeFriend(User user, User friend) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM friends WHERE user = ? AND friend = ?;");
         stmt.setString(1, user.getUsername());
         stmt.setString(2, friend.getUsername());
 
         try {
             stmt.executeUpdate();
-            return true;
         } catch (SQLException e) {
             System.err.println("Error removing friend: " + e);
-            return false;
         }
     }
 
