@@ -4,6 +4,7 @@ import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.Model.User;
 import com.cab302.peerpractice.Model.UserManager;
+import com.cab302.peerpractice.Model.ProfileUpdateService;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -38,7 +39,10 @@ public class EditProfileController extends BaseController {
     private void initialize() {
         // Ensure someone is logged in and close the dialog if not
         User u = ensureLoggedIn();
-        if (u == null) return;
+        if (u == null) {
+            onClose();
+            return;
+        }
 
         // Prefill existing fields
         // safeSet is used to handle nulls
@@ -99,18 +103,18 @@ public class EditProfileController extends BaseController {
     @FXML
     private void onSave() {
         User u = ensureLoggedIn();
-        if (u == null) return;
+        if (u == null) {
+            onClose();
+            return;
+        }
 
         // Read trimmed values from UI
         String newFirstname = trimOrEmpty(firstNameField);
         String newLastname = trimOrEmpty(lastNameField);
         String newUsername = trimOrEmpty(usernameField);
         String newInstitute = trimOrEmpty(instituteField);
-
-        // New fields
         String newPhoneNumber = trimOrEmpty(phoneField);
         LocalDate newDateOfBirth = dateOfBirthField == null ? null : dateOfBirthField.getValue();
-        String dobIso = newDateOfBirth == null ? "" : ISO.format(newDateOfBirth);
         String newAddress = trimOrEmpty(addressField);
 
         // Validate required fields
@@ -128,46 +132,13 @@ public class EditProfileController extends BaseController {
         }
 
         try {
-            UserManager um = ctx.getUserManager();
-            boolean changed = false;
+            ProfileUpdateService updateService = new ProfileUpdateService(ctx.getUserManager());
+            ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
+                newFirstname, newLastname, newUsername, newInstitute, newPhoneNumber, newAddress, newDateOfBirth
+            );
 
-            if (!Objects.equals(newFirstname, u.getFirstName())) {
-                um.updateFirstName(u.getUsername(), newFirstname);
-                u.setFirstName(newFirstname);
-                changed = true;
-            }
-            if (!Objects.equals(newLastname, u.getLastName())) {
-                um.updateLastName(u.getUsername(), newLastname);
-                u.setLastName(newLastname);
-                changed = true;
-            }
-            if (!Objects.equals(newUsername, u.getUsername())) {
-                um.changeUsername(u.getUsername(), newUsername);
-                u.setUsername(newUsername);
-                changed = true;
-            }
-            if (!Objects.equals(newInstitute, u.getInstitution())) {
-                um.updateInstitution(u.getUsername(), newInstitute);
-                u.setInstitution(newInstitute);
-                changed = true;
-            }
+            boolean changed = updateService.updateProfile(u, request);
 
-            // New columns
-            if (!Objects.equals(newPhoneNumber, u.getPhone())) {
-                um.updatePhone(u.getUsername(), newPhoneNumber);
-                u.setPhone(newPhoneNumber);
-                changed = true;
-            }
-            if (!Objects.equals(newAddress, u.getAddress())) {
-                um.updateAddress(u.getUsername(), newAddress);
-                u.setAddress(newAddress);
-                changed = true;
-            }
-            if (!Objects.equals(dobIso, u.getDateOfBirth())) {
-                um.updateDateOfBirth(u.getUsername(), dobIso);
-                u.setDateOfBirth(dobIso);
-                changed = true;
-            }
             if (changed) {
                 showAlert(Alert.AlertType.INFORMATION,
                         "Profile updated",
@@ -187,32 +158,8 @@ public class EditProfileController extends BaseController {
         }
     }
 
-    // Ensures there is a logged-in user
-    private User ensureLoggedIn() {
-        if (ctx.getUserSession() == null || !ctx.getUserSession().isLoggedIn()) {
-            onClose();
-            return null;
-        }
-        return ctx.getUserSession().getCurrentUser();
-    }
-
-    // Null sage setter for text fields
-    private static void safeSet(TextField field, String value) {
-        if (field != null) field.setText(value == null ? "" : value);
-    }
-
-    // Return trimmed empty text field text for nulls
-    private static String trimOrEmpty(TextField tf) {
-        return tf == null ? "" : (tf.getText() == null ? "" : tf.getText().trim());
-    }
-
-    // Alert creation
+    // Override showAlert to provide default title for this controller
     private void showAlert(Alert.AlertType type, String header, String content) {
-        Alert a = new Alert(type);
-        a.setTitle("Edit Profile");
-        a.setHeaderText(header);
-        a.setContentText(content);
-        if (root != null && root.getScene() != null) a.initOwner(root.getScene().getWindow());
-        a.showAndWait();
+        showAlert(type, header, content, "Edit Profile", root);
     }
 }

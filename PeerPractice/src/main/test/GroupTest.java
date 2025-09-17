@@ -98,7 +98,104 @@ public class GroupTest {
     }
 
 
+    @Test
+    public void testGroupConstructorAllParameters(){
+        Group newGroup = new Group("TestGroup", "Description", true, "owner123", localDateTime);
+        assertEquals("TestGroup", newGroup.getName());
+        assertEquals("Description", newGroup.getDescription());
+        assertTrue(newGroup.isRequire_approval());
+        assertEquals("owner123", newGroup.getOwner());
+        assertEquals(localDateTime, newGroup.getCreated_at());
+    }
 
+
+
+    @Test
+    public void testSetNameLong(){
+        String longName = "a".repeat(100);
+        assertDoesNotThrow(() -> group.setName(longName));
+        assertEquals(longName, group.getName());
+    }
+
+    @Test
+    public void testSetNameSpecialCharacters(){
+        String specialName = "Group-1_Test@2024!";
+        assertDoesNotThrow(() -> group.setName(specialName));
+        assertEquals(specialName, group.getName());
+    }
+
+    @Test
+    public void testSetDescriptionNull(){
+        assertDoesNotThrow(() -> group.setDescription(null));
+        assertNull(group.getDescription());
+    }
+
+    @Test
+    public void testSetDescriptionEmpty(){
+        assertDoesNotThrow(() -> group.setDescription(""));
+        assertEquals("", group.getDescription());
+    }
+
+    @Test
+    public void testSetDescriptionLong(){
+        String longDescription = "This is a very long description that contains multiple sentences and should be handled properly by the group class. ".repeat(10);
+        assertDoesNotThrow(() -> group.setDescription(longDescription));
+        assertEquals(longDescription, group.getDescription());
+    }
+
+
+
+    @Test
+    public void testAddMemberSameUserMultipleTimes(){
+        group.addMember(user);
+        group.addMember(user);
+        assertEquals(2, group.getMembers().size());
+    }
+
+
+    @Test
+    public void testGetMembersInitiallyEmpty(){
+        assertNotNull(group.getMembers());
+        assertEquals(0, group.getMembers().size());
+    }
+
+
+    @Test
+    public void testSetMembersEmpty(){
+        List<User> emptyList = new ArrayList<>();
+        assertDoesNotThrow(() -> group.setMembers(emptyList));
+        assertEquals(0, group.getMembers().size());
+    }
+
+    @Test
+    public void testSetMembersLargeList(){
+        List<User> largeList = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            largeList.add(new User("User" + i, "Last" + i, "user" + i, "user" + i + "@email.com", "pass", "Uni"));
+        }
+        assertDoesNotThrow(() -> group.setMembers(largeList));
+        assertEquals(100, group.getMembers().size());
+    }
+
+
+
+
+
+
+    @Test
+    public void testGroupIdNotNull(){
+        assertNotNull(group.getID());
+    }
+
+
+
+
+
+
+    @Test
+    public void testCreatedAtNotNull(){
+        assertNotNull(group.getCreated_at());
+    }
 
 
 
