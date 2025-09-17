@@ -35,9 +35,9 @@ public class UserDAO implements IUserDAO{
                     + ");";
             stmt.execute(createUsersTable);
 
-            addColumnIfMissing("users", "phone", "TEXT NOT NULL DEFAULT ''");
-            addColumnIfMissing("users", "address", "TEXT NOT NULL DEFAULT ''");
-            addColumnIfMissing("users", "date_of_birth", "TEXT DEFAULT ''");
+            addColumnIfNotExist("users", "phone", "TEXT NOT NULL DEFAULT ''");
+            addColumnIfNotExist("users", "address", "TEXT NOT NULL DEFAULT ''");
+            addColumnIfNotExist("users", "date_of_birth", "TEXT DEFAULT ''");
 
             String createFriendsTable = "CREATE TABLE IF NOT EXISTS friends ("
                     + "friendship_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -79,22 +79,24 @@ public class UserDAO implements IUserDAO{
         }
     }
 
-    // Check if column exist
-    private boolean columnExists(String table, String column) throws SQLException {
-        String sql = "PRAGMA table_info(" + table + ")";
+    // Checks if a column exists in the specified table, return true if column exists, false otherwise
+    private boolean doesColumnExist(String table, String column) throws SQLException {
+        String sql = "PRAGMA table_info(" + table + ");";
         try (Statement st = connection.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 String name = rs.getString("name");
-                if (column.equalsIgnoreCase(name)) return false;
+                if (column.equalsIgnoreCase(name)) {
+                    return true;
+                }
             }
-            return true;
+            return false;
         }
     }
 
-    // Add a column, if column exists, skip
-    private void addColumnIfMissing(String table, String column, String typeAndDefault) throws SQLException {
-        if (columnExists(table, column)) {
+    // Adds a column to the table if it doesn't already exist
+    private void addColumnIfNotExist(String table, String column, String typeAndDefault) throws SQLException {
+        if (!doesColumnExist(table, column)) {
             try (Statement st = connection.createStatement()) {
                 st.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + column + " " + typeAndDefault);
             }

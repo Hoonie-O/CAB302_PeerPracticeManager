@@ -155,17 +155,17 @@ public class EditProfileController extends BaseController {
             // New columns
             if (!Objects.equals(newPhoneNumber, u.getPhone())) {
                 um.updatePhone(u.getUsername(), newPhoneNumber);
-                u.setPhone(newPhoneNumber);                        // <-- keep session in sync
+                u.setPhone(newPhoneNumber);
                 changed = true;
             }
             if (!Objects.equals(newAddress, u.getAddress())) {
                 um.updateAddress(u.getUsername(), newAddress);
-                u.setAddress(newAddress);                       // <-- keep session in sync
+                u.setAddress(newAddress);
                 changed = true;
             }
             if (!Objects.equals(dobIso, u.getDateOfBirth())) {
                 um.updateDateOfBirth(u.getUsername(), dobIso);
-                u.setDateOfBirth(dobIso);                    // <-- keep session in sync
+                u.setDateOfBirth(dobIso);
                 changed = true;
             }
             if (changed) {
