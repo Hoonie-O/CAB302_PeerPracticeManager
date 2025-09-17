@@ -41,13 +41,18 @@ public class FriendDAO implements IFriendDAO{
     // returns false if operation failed
     @Override
     public boolean addFriend(User user, User friend) throws SQLException, DuplicateFriendException {
-        // checks if friend already on list, and if request not accepted, accept it
-        if (checkFriendExists(user, friend)) {
-            if (acceptFriendRequest(user, friend)) {
-                return true;
-            } else {
-                System.err.println("DuplicateFriendException: " + new DuplicateFriendException("Friend already exists"));
-                return false;
+        // checks: user not adding themselves, friends exists as a user,
+        // and friend request not already pending (which accepts if it is)
+        if (user == friend) {
+            return false;
+        } else {
+            if (checkFriendExists(user, friend)) {
+                if (acceptFriendRequest(user, friend)) {
+                    return true;
+                } else {
+                    System.err.println("DuplicateFriendException: " + new DuplicateFriendException("Friend already exists"));
+                    return false;
+                }
             }
         }
 
