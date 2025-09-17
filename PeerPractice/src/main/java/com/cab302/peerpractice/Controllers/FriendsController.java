@@ -40,9 +40,13 @@ public class FriendsController extends SidebarController{
     }
 
     @FXML
-    public void initialize() throws SQLException {
+    public void initialize() {
         super.initialize();
-        refreshFriendsList();
+        try {
+            refreshFriendsList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         // setup feedback label to fade-out
         ft.setNode(feedbackMsg);

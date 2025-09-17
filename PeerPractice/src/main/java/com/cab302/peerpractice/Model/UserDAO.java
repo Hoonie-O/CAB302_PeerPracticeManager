@@ -26,6 +26,7 @@ public class UserDAO implements IUserDAO{
         // Create tables if they don't exist
         try {
             Statement stmt = connection.createStatement();
+            stmt.execute("DROP TABLE friends;");
 
             String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
                     + "user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"

@@ -43,7 +43,7 @@ public class CalendarController extends SidebarController {
     }
 
     @FXML
-    public void initialize() throws SQLException {
+    public void initialize() {
         super.initialize(); // setup sidebar + header
         currentYearMonth = YearMonth.now();
         setupViewToggle();

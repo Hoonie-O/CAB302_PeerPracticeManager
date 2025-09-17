@@ -31,7 +31,7 @@ public class GroupController extends SidebarController {
     }
 
     @FXML
-    public void initialize() throws SQLException {
+    public void initialize() {
         super.initialize();
 
         if (groupTabs != null && tabContentLabel != null) {
