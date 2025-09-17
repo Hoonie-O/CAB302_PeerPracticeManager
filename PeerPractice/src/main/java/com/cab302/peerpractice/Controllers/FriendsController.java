@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -49,6 +50,18 @@ public class FriendsController extends SidebarController{
         ft.setToValue(0.0);
         ft.setCycleCount(1);
         ft.setAutoReverse(false);
+
+        // configure searchbox to listen for enter key presses
+        friendsSearchBox.setOnKeyReleased(keyPress -> {
+            if (keyPress.getCode() == KeyCode.ENTER) {
+                searchFriends();
+            }
+        });
+    }
+
+    @FXML
+    public void searchFriends() {
+        feedbackMsg.setText("TO-DO: Search friends"); ft.playFromStart();
     }
 
     @FXML
@@ -121,7 +134,7 @@ public class FriendsController extends SidebarController{
 
     @FXML
     public void viewRequests() {
-        feedbackMsg.setText("TO-DO"); ft.playFromStart();
+        feedbackMsg.setText("TO-DO: View requests"); ft.playFromStart();
     }
 
     private void refreshFriendsList() throws SQLException {
@@ -137,14 +150,15 @@ public class FriendsController extends SidebarController{
         friendsTable.setItems(FXCollections.observableArrayList(friendsList));
 
         // setup table columns
-        TableColumn<Friend,String> friendUsernameCol = new TableColumn<Friend,String>("Name");
+        TableColumn<Friend,String> friendUsernameCol = new TableColumn<Friend,String>("Username");
         friendUsernameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser1().getUsername()));
-        TableColumn<Friend,String> friendFirstnameCol = new TableColumn<Friend,String>("Name");
+        TableColumn<Friend,String> friendFirstnameCol = new TableColumn<Friend,String>("First name");
         friendFirstnameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser1().getFirstName()));
-        TableColumn<Friend,String> friendLastnameCol = new TableColumn<Friend,String>("Name");
+        TableColumn<Friend,String> friendLastnameCol = new TableColumn<Friend,String>("Last name");
         friendLastnameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser1().getLastName()));
         TableColumn<Friend,String> friendStatusCol = new TableColumn<Friend,String>("Status");
         friendStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        //TODO Add column to display friend's online/offline status
 
         // setup placeholder and fill values
         friendsTable.setPlaceholder(new Label("No friends to display"));
