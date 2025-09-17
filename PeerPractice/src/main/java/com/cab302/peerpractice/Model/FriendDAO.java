@@ -23,7 +23,7 @@ public class FriendDAO implements IFriendDAO{
     @Override
     public ObservableList<Friend> getFriends(User user) throws SQLException {
         // set up statement to search friends table
-        String searchQuery = "SELECT * FROM friends WHERE user = ?;";
+        String searchQuery = "SELECT * FROM friends WHERE user = ? ORDER BY status;";
         PreparedStatement pstmt = connection.prepareStatement(searchQuery);
         pstmt.setString(1, user.getUsername());
         ResultSet results;
@@ -43,7 +43,9 @@ public class FriendDAO implements IFriendDAO{
     public boolean addFriend(User user, User friend) throws SQLException, DuplicateFriendException {
         // checks if friend already on list, and if request not accepted, accept it
         if (checkFriendExists(user, friend)) {
-            if (!acceptFriendRequest(user, friend)) {
+            if (acceptFriendRequest(user, friend)) {
+                return true;
+            } else {
                 System.err.println("DuplicateFriendException: " + new DuplicateFriendException("Friend already exists"));
                 return false;
             }
@@ -66,7 +68,7 @@ public class FriendDAO implements IFriendDAO{
 
     @Override
     public void removeFriend(User user, User friend) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM friends WHERE user = ? AND friend = ?;");
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM friends WHERE (user = ? AND friend = ?);");
         stmt.setString(1, user.getUsername());
         stmt.setString(2, friend.getUsername());
 
@@ -84,7 +86,7 @@ public class FriendDAO implements IFriendDAO{
 
     @Override
     public boolean acceptFriendRequest(User user, User friend) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("UPDATE friends SET status = 'accepted' WHERE user = ? AND friend = ?;");
+        PreparedStatement stmt = connection.prepareStatement("UPDATE friends SET status = 'accepted' WHERE (user = ? AND friend = ?);");
         stmt.setString(1, user.getUsername());
         stmt.setString(2, friend.getUsername());
 
@@ -99,7 +101,7 @@ public class FriendDAO implements IFriendDAO{
 
     @Override
     public boolean denyFriendRequest(User user, User friend) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("UPDATE friends SET status = 'denied' WHERE user = ? && friend = ?;");
+        PreparedStatement stmt = connection.prepareStatement("UPDATE friends SET status = 'denied' WHERE (user = ? AND friend = ?);");
         stmt.setString(1, user.getUsername());
         stmt.setString(2, friend.getUsername());
 
@@ -134,7 +136,7 @@ public class FriendDAO implements IFriendDAO{
     }
 
     private boolean checkFriendExists(User user, User friend) throws SQLException {
-        String searchQuery = "SELECT * FROM friends WHERE user = ? AND friend = ?;";
+        String searchQuery = "SELECT * FROM friends WHERE (user = ? AND friend = ?);";
         PreparedStatement pstmt = connection.prepareStatement(searchQuery);
         pstmt.setString(1, user.getUsername());
         pstmt.setString(2, friend.getUsername());
@@ -147,7 +149,6 @@ public class FriendDAO implements IFriendDAO{
             throw new RuntimeException(e);
         }
 
-        ObservableList<Friend> friends = resultsToList(results);
-        return (!friends.isEmpty());
+        return (results == null);
     }
 }

@@ -33,7 +33,7 @@ public class FriendsController extends SidebarController{
     IUserDAO userDAO = ctx.getUserDao();
     IFriendDAO friendDAO = ctx.getFriendDao();
 
-    private final FadeTransition ft = new FadeTransition(Duration.millis(6000));
+    private final FadeTransition ft = new FadeTransition(Duration.millis(4000));
 
     public FriendsController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
@@ -85,7 +85,9 @@ public class FriendsController extends SidebarController{
                 try {
                     // check if target user exists, if so, send friend request
                     User friend = userDAO.findUser("username", identifier.getText());
-                    if (Objects.nonNull(friend)) {
+                    // if username returned no users, search using email
+                    if (friend == null) { friend = userDAO.findUser("email", identifier.getText());}
+                    if (friend != null) {
                         boolean success = friendDAO.addFriend(currentUser, friend);
 
                         // (un)successful message
@@ -111,7 +113,7 @@ public class FriendsController extends SidebarController{
     public void removeFriend() throws SQLException {
         // exit if nothing selected
         if (getSelection() == null) {
-            feedbackMsg.setText("No friend selected!"); ft.playFromStart();
+            feedbackMsg.setText("No row selected"); ft.playFromStart();
             return;
         }
 
@@ -126,7 +128,7 @@ public class FriendsController extends SidebarController{
             // (un)successful message
             feedbackMsg.setText("Couldn't remove friend"); ft.playFromStart();
         } else {
-            feedbackMsg.setText("Friend remove"); ft.playFromStart();
+            feedbackMsg.setText("Friend removed!"); ft.playFromStart();
         }
 
         refreshFriendsList();
@@ -162,7 +164,7 @@ public class FriendsController extends SidebarController{
 
         // setup placeholder and fill values
         friendsTable.setPlaceholder(new Label("No friends to display"));
-        friendsTable.getColumns().setAll(friendLastnameCol, friendStatusCol);
+        friendsTable.getColumns().setAll(friendUsernameCol, friendFirstnameCol, friendLastnameCol, friendStatusCol);
     }
 
     // get current selected row
