@@ -22,20 +22,9 @@ public class FriendDAO implements IFriendDAO{
 
     @Override
     public ObservableList<Friend> getFriends(User user) throws SQLException {
-        // set up statement to search friends table
-        String searchQuery = "SELECT * FROM friends WHERE user = ? ORDER BY status;";
-        PreparedStatement pstmt = connection.prepareStatement(searchQuery);
-        pstmt.setString(1, user.getUsername());
-        ResultSet results;
-
-        // Execute query statement
-        try {
-            results = pstmt.executeQuery();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return resultsToList(results);
+        String searchQuery = String.format("SELECT * FROM friends WHERE user = %s ORDER BY status;", user.getUsername());
+        // return list of friends of user
+        return resultsToList(SQLQuery(searchQuery));
     }
 
     // returns false if operation failed
@@ -56,67 +45,53 @@ public class FriendDAO implements IFriendDAO{
             }
         }
 
-        String searchQuery = "INSERT INTO friends (user, friend, status) VALUES (?, ?, ?);";
-        PreparedStatement stmt = connection.prepareStatement(searchQuery);
-        stmt.setString(1, user.getUsername());
-        stmt.setString(2, friend.getUsername());
-        stmt.setString(3, "pending");
-
-        try {
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("Error adding friend: " + e);
-            return false;
-        }
+        String searchQuery = String.format("INSERT INTO friends (user, friend, status) VALUES (%s, %s, %s);", user.getUsername(), friend.getUsername(), "pending");
+        return !resultsToList(SQLQuery(searchQuery)).isEmpty();
     }
 
     @Override
-    public void removeFriend(User user, User friend) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM friends WHERE (user = ? AND friend = ?);");
-        stmt.setString(1, user.getUsername());
-        stmt.setString(2, friend.getUsername());
-
-        try {
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Error removing friend: " + e);
-        }
-    }
-
-    @Override
-    public boolean blockUser(User user, User friend) {
-        return false;
+    public boolean removeFriend(User user, User friend) throws SQLException {
+        String searchQuery = String.format("DELETE FROM friends WHERE (user = %s AND friend = %s);", user.getUsername(), friend.getUsername());
+        return !resultsToList(SQLQuery(searchQuery)).isEmpty();
     }
 
     @Override
     public boolean acceptFriendRequest(User user, User friend) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("UPDATE friends SET status = 'accepted' WHERE (user = ? AND friend = ?);");
-        stmt.setString(1, user.getUsername());
-        stmt.setString(2, friend.getUsername());
-
-        try {
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("Error accepting friend: " + e);
-            return false;
-        }
+        String searchQuery = String.format("UPDATE friends SET status = 'accepted' WHERE (user = ? AND friend = ?);", user.getUsername(), friend.getUsername());
+        return !resultsToList(SQLQuery(searchQuery)).isEmpty();
     }
 
     @Override
     public boolean denyFriendRequest(User user, User friend) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("UPDATE friends SET status = 'denied' WHERE (user = ? AND friend = ?);");
-        stmt.setString(1, user.getUsername());
-        stmt.setString(2, friend.getUsername());
+        String searchQuery = String.format("UPDATE friends SET status = 'denied' WHERE (user = ? AND friend = ?);", user.getUsername(), friend.getUsername());
+        return !resultsToList(SQLQuery(searchQuery)).isEmpty();
+    }
 
+    @Override
+    public boolean blockUser(User user, User friend) throws SQLException{
+        String searchQuery = String.format("UPDATE friends SET status = 'blocked' WHERE (user = ? AND friend = ?);", user.getUsername(), friend.getUsername());
+        return !resultsToList(SQLQuery(searchQuery)).isEmpty();
+    }
+
+    private boolean checkFriendExists(User user, User friend) throws SQLException {
+        String searchQuery = String.format("SELECT * FROM friends WHERE (user = %s AND friend = %s);", user.getUsername(), friend.getUsername());
+        // return true if no matching results, false otherwise
+        return resultsToList(SQLQuery(searchQuery)).isEmpty();
+    }
+
+    private ResultSet SQLQuery(String searchQuery) throws SQLException {
+        // create statement and resultset
+        PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
+        ResultSet resultSet;
+
+        // execute query statement
         try {
-            stmt.executeUpdate();
-            return true;
+            resultSet = preparedStatement.executeQuery();
         } catch (SQLException e) {
-            System.err.println("Error denying friend: " + e);
-            return false;
+            throw new RuntimeException(e);
         }
+
+        return resultSet;
     }
 
     private ObservableList<Friend> resultsToList(ResultSet results) throws SQLException {
@@ -138,22 +113,5 @@ public class FriendDAO implements IFriendDAO{
         }
 
         return friends;
-    }
-
-    private boolean checkFriendExists(User user, User friend) throws SQLException {
-        String searchQuery = "SELECT * FROM friends WHERE (user = ? AND friend = ?);";
-        PreparedStatement pstmt = connection.prepareStatement(searchQuery);
-        pstmt.setString(1, user.getUsername());
-        pstmt.setString(2, friend.getUsername());
-        ResultSet results;
-
-        // Execute query statement
-        try {
-            results = pstmt.executeQuery();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return (results == null);
     }
 }
