@@ -157,11 +157,11 @@ public class FriendsController extends SidebarController{
 
         // setup table columns
         TableColumn<Friend,String> friendUsernameCol = new TableColumn<Friend,String>("Username");
-        friendUsernameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser1().getUsername()));
+        friendUsernameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser2().getUsername()));
         TableColumn<Friend,String> friendFirstnameCol = new TableColumn<Friend,String>("First name");
-        friendFirstnameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser1().getFirstName()));
+        friendFirstnameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser2().getFirstName()));
         TableColumn<Friend,String> friendLastnameCol = new TableColumn<Friend,String>("Last name");
-        friendLastnameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser1().getLastName()));
+        friendLastnameCol.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getUser2().getLastName()));
         TableColumn<Friend,String> friendStatusCol = new TableColumn<Friend,String>("Status");
         friendStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         //TODO Add column to display friend's online/offline status
