@@ -64,9 +64,268 @@ public class SessionTest {
     @Test
     public void testInvalidTimeThrowsException() {
         LocalDateTime badEndTime = startTime.minusHours(1);
-        
+
         assertThrows(IllegalArgumentException.class, () -> {
             new Session("Bad Session", organiser, startTime, badEndTime);
         });
     }
+
+    @Test
+    public void testSessionConstructorNullTitle() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Session(null, organiser, startTime, endTime);
+        });
+    }
+
+    @Test
+    public void testSessionConstructorEmptyTitle() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Session("", organiser, startTime, endTime);
+        });
+    }
+
+    @Test
+    public void testSessionConstructorBlankTitle() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Session("   ", organiser, startTime, endTime);
+        });
+    }
+
+    @Test
+    public void testSessionConstructorNullOrganiser() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Session("Valid Title", null, startTime, endTime);
+        });
+    }
+
+    @Test
+    public void testSessionConstructorNullStartTime() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Session("Valid Title", organiser, null, endTime);
+        });
+    }
+
+    @Test
+    public void testSessionConstructorNullEndTime() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Session("Valid Title", organiser, startTime, null);
+        });
+    }
+
+    @Test
+    public void testSessionConstructorSameStartEndTime() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Session("Same Time Session", organiser, startTime, startTime);
+        });
+    }
+
+    @Test
+    public void testSetTitle() {
+        Session session = new Session("Original Title", organiser, startTime, endTime);
+        session.setTitle("New Title");
+        assertEquals("New Title", session.getTitle());
+    }
+
+    @Test
+    public void testSetTitleNull() {
+        Session session = new Session("Original Title", organiser, startTime, endTime);
+        assertThrows(IllegalArgumentException.class, () -> session.setTitle(null));
+    }
+
+    @Test
+    public void testSetTitleEmpty() {
+        Session session = new Session("Original Title", organiser, startTime, endTime);
+        assertThrows(IllegalArgumentException.class, () -> session.setTitle(""));
+    }
+
+    @Test
+    public void testSetTitleWithSpaces() {
+        Session session = new Session("Original Title", organiser, startTime, endTime);
+        session.setTitle("Title With Spaces");
+        assertEquals("Title With Spaces", session.getTitle());
+    }
+
+    @Test
+    public void testSetStartTime() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        LocalDateTime newStart = startTime.plusHours(1);
+        session.setStartTime(newStart);
+        assertEquals(newStart, session.getStartTime());
+    }
+
+    @Test
+    public void testSetStartTimeNull() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        assertThrows(IllegalArgumentException.class, () -> session.setStartTime(null));
+    }
+
+    @Test
+    public void testSetStartTimeAfterEndTime() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        LocalDateTime invalidStart = endTime.plusHours(1);
+        assertThrows(IllegalArgumentException.class, () -> session.setStartTime(invalidStart));
+    }
+
+    @Test
+    public void testSetEndTime() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        LocalDateTime newEnd = endTime.plusHours(1);
+        session.setEndTime(newEnd);
+        assertEquals(newEnd, session.getEndTime());
+    }
+
+    @Test
+    public void testSetEndTimeNull() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        assertThrows(IllegalArgumentException.class, () -> session.setEndTime(null));
+    }
+
+    @Test
+    public void testSetEndTimeBeforeStartTime() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        LocalDateTime invalidEnd = startTime.minusHours(1);
+        assertThrows(IllegalArgumentException.class, () -> session.setEndTime(invalidEnd));
+    }
+
+    @Test
+    public void testAddParticipantNull() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        assertThrows(IllegalArgumentException.class, () -> session.addParticipant(null));
+    }
+
+    @Test
+    public void testAddParticipantDuplicate() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        session.addParticipant(participant);
+        session.addParticipant(participant);
+        assertEquals(2, session.getParticipants().size());
+    }
+
+    @Test
+    public void testRemoveParticipant() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        session.addParticipant(participant);
+        session.removeParticipant(participant);
+        assertFalse(session.getParticipants().contains(participant));
+        assertEquals(1, session.getParticipants().size());
+    }
+
+    @Test
+    public void testRemoveParticipantNull() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        assertThrows(IllegalArgumentException.class, () -> session.removeParticipant(null));
+    }
+
+    @Test
+    public void testRemoveParticipantNotInSession() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        User outsideUser = new User("Outside", "User", "outside", "outside@test.com", "pass", "Uni");
+        assertDoesNotThrow(() -> session.removeParticipant(outsideUser));
+    }
+
+    @Test
+    public void testSetStatus() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        session.setStatus(SessionStatus.ACTIVE);
+        assertEquals(SessionStatus.ACTIVE, session.getStatus());
+    }
+
+    @Test
+    public void testSetStatusNull() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        assertThrows(IllegalArgumentException.class, () -> session.setStatus(null));
+    }
+
+    @Test
+    public void testAllSessionStatuses() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+
+        for (SessionStatus status : SessionStatus.values()) {
+            assertDoesNotThrow(() -> session.setStatus(status));
+            assertEquals(status, session.getStatus());
+        }
+    }
+
+    @Test
+    public void testGetParticipantCount() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        assertEquals(1, session.getParticipantCount());
+
+        session.addParticipant(participant);
+        assertEquals(2, session.getParticipantCount());
+    }
+
+    @Test
+    public void testIsParticipant() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        assertTrue(session.isParticipant(organiser));
+        assertFalse(session.isParticipant(participant));
+
+        session.addParticipant(participant);
+        assertTrue(session.isParticipant(participant));
+    }
+
+    @Test
+    public void testIsParticipantNull() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        assertThrows(IllegalArgumentException.class, () -> session.isParticipant(null));
+    }
+
+
+
+
+
+
+    @Test
+    public void testSessionToString() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        String sessionString = session.toString();
+        assertNotNull(sessionString);
+        assertTrue(sessionString.contains("Test Session"));
+    }
+
+    @Test
+    public void testSessionEquals() {
+        Session session1 = new Session("Test Session", organiser, startTime, endTime);
+        Session session2 = new Session("Test Session", organiser, startTime, endTime);
+        assertNotEquals(session1, session2);
+    }
+
+    @Test
+    public void testSessionHashCode() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+        int hashCode = session.hashCode();
+        assertTrue(hashCode != 0);
+    }
+
+    @Test
+    public void testMaxParticipantLimit() {
+        Session session = new Session("Test Session", organiser, startTime, endTime);
+
+        for (int i = 0; i < 100; i++) {
+            User user = new User("User" + i, "Last" + i, "user" + i, "user" + i + "@test.com", "pass", "Uni");
+            assertDoesNotThrow(() -> session.addParticipant(user));
+        }
+
+        assertEquals(101, session.getParticipantCount());
+    }
+
+    @Test
+    public void testSessionWithLongTitle() {
+        String longTitle = "This is a very long session title that contains many words and should be handled properly".repeat(5);
+        assertDoesNotThrow(() -> new Session(longTitle, organiser, startTime, endTime));
+    }
+
+    @Test
+    public void testSessionMinimalDuration() {
+        LocalDateTime minimalEnd = startTime.plusMinutes(1);
+        assertDoesNotThrow(() -> new Session("Minimal Session", organiser, startTime, minimalEnd));
+    }
+
+    @Test
+    public void testSessionMaximalDuration() {
+        LocalDateTime maximalEnd = startTime.plusDays(7);
+        assertDoesNotThrow(() -> new Session("Week Long Session", organiser, startTime, maximalEnd));
+    }
+
 }
