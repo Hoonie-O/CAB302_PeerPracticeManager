@@ -94,9 +94,9 @@ public abstract class SidebarController extends BaseController {
         // Profile panel controls
         if (profile != null) {
             Label userNameLbl = (Label) profile.lookup("#userNameLabel");
-            this.userNameLabel = userNameLbl;
+                this.userNameLabel = userNameLbl;
             Label userUsernameLbl = (Label) profile.lookup("#userUsernameLabel");
-            this.userUsernameLabel = userUsernameLbl;
+                this.userUsernameLabel = userUsernameLbl;
             ComboBox<String> status = (ComboBox<String>) profile.lookup("#availabilityStatus");
             Button editBtn = (Button) profile.lookup("#editProfileButton");
             Button settingsBtn = (Button) profile.lookup("#settingsButton");
@@ -288,6 +288,7 @@ public abstract class SidebarController extends BaseController {
 
             controller.setStage(dialog);
             dialog.showAndWait();
+
             renderProfile();
 
         } catch (IOException e) {
@@ -339,10 +340,10 @@ public abstract class SidebarController extends BaseController {
         if (u == null) return;
 
         String first = u.getFirstName() == null ? "" : u.getFirstName().trim();
-        String last  = u.getLastName()  == null ? "" : u.getLastName().trim();
+        String last = u.getLastName()  == null ? "" : u.getLastName().trim();
         userNameLabel.setText((first + " " + last).trim().replaceAll("\\s+", " "));
-        userUsernameLabel.setText(u.getUsername() == null || u.getUsername().isBlank()
-                ? "" : "@" + u.getUsername().trim());
+        userUsernameLabel.setText(u.getUsername() == null ||
+                u.getUsername().isBlank() ? "" : "@" + u.getUsername().trim());
     }
 
 }

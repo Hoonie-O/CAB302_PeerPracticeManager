@@ -4,26 +4,55 @@ import java.sql.SQLException;
 
 public class Notifier {
 
-    private IUserDAO userDAO;
+    private final IUserDAO userDAO;
 
     public Notifier(IUserDAO userDAO){
         this.userDAO = userDAO;
     }
 
-    public void groupApprovalRequest(User user, Group group) throws SQLException {
+    /**
+     * Sends a group approval request notification to the group owner.
+     */
+    public void groupApprovalRequest(User requester, Group group) throws SQLException {
+        // Build the notification via a factory hook for easy overriding.
+        GroupApprovalNotification notification = buildGroupApprovalNotification(requester, group);
+
+        userDAO.addNotification(notification.getTo(), requester.getUsername(), notification.getMessage());
+    }
+
+    /**
+     * Factory method that builds the notification for a group-approval request.
+     */
+    protected GroupApprovalNotification buildGroupApprovalNotification(User requester, Group group) {
         String ownerUsername = group.getOwner();
-        GroupApprovalNotification notification = new GroupApprovalNotification(user,ownerUsername,group);
-        userDAO.addNotification(ownerUsername, notification.getTo(), notification.getMessage());
+        return new GroupApprovalNotification(requester, ownerUsername, group);
     }
 
-    //Method for approving a notification (should check if the user has permission to accept)
+    /**
+     * Approve pending notification
+     */
     public void approveNotification(User user, Notification notification){
-
+        onApprove(user, notification);
     }
 
-    //Method for denying a notification (should check if the user has permission to deny)
+    /**
+     * Deny pending notification.
+     */
     public void denyNotification(User user, Notification notification){
+        onDeny(user, notification);
+    }
+
+    /**
+     * Implement onApprove requirement when approval is performed.
+     */
+    protected void onApprove(User actor, Notification notification) {
 
     }
 
+    /**
+     * Implement onDeny requirement when denial is performed.
+     */
+    protected void onDeny(User actor, Notification notification) {
+
+    }
 }
