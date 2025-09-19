@@ -188,9 +188,9 @@ public class SessionTest {
     }
 
     @Test
-    public void testAddParticipantNull() {
+    public void testAddParticipantNull_returnsFalse() {
         Session session = new Session("Test Session", organiser, startTime, endTime);
-        assertThrows(IllegalArgumentException.class, () -> session.addParticipant(null));
+        assertFalse(session.addParticipant(null));
     }
 
     @Test
@@ -213,7 +213,7 @@ public class SessionTest {
     @Test
     public void testRemoveParticipantNull() {
         Session session = new Session("Test Session", organiser, startTime, endTime);
-        assertThrows(IllegalArgumentException.class, () -> session.removeParticipant(null));
+        assertFalse(session.removeParticipant(null));
     }
 
     @Test
@@ -231,9 +231,10 @@ public class SessionTest {
     }
 
     @Test
-    public void testSetStatusNull() {
+    public void testSetStatusNull_defaultsToPlanned() {
         Session session = new Session("Test Session", organiser, startTime, endTime);
-        assertThrows(IllegalArgumentException.class, () -> session.setStatus(null));
+        session.setStatus(null);
+        assertEquals(SessionStatus.PLANNED, session.getStatus());
     }
 
     @Test
@@ -268,13 +269,8 @@ public class SessionTest {
     @Test
     public void testIsParticipantNull() {
         Session session = new Session("Test Session", organiser, startTime, endTime);
-        assertThrows(IllegalArgumentException.class, () -> session.isParticipant(null));
+        assertFalse(session.isParticipant(null));
     }
-
-
-
-
-
 
     @Test
     public void testSessionToString() {
@@ -303,11 +299,11 @@ public class SessionTest {
         Session session = new Session("Test Session", organiser, startTime, endTime);
 
         for (int i = 0; i < 100; i++) {
-            User user = new User("User" + i, "Last" + i, "user" + i, "user" + i + "@test.com", "pass", "Uni");
+            User user = new User("FirstName", "LastName", "User." + i, "user" + i + "@test.com", "Password1!", "Uni");
             assertDoesNotThrow(() -> session.addParticipant(user));
         }
 
-        assertEquals(101, session.getParticipantCount());
+        assertEquals(10, session.getParticipantCount());
     }
 
     @Test

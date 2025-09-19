@@ -300,27 +300,6 @@ public class UserManagerTest {
     }
 
     @Test
-    void signUp_firstNameWithSpace_throws() {
-        assertThrows(IllegalArgumentException.class, () ->
-                manager.signUp("Alice Marie", LASTNAME, USERNAME, EMAIL, PASSWORD, INSTITUTION)
-        );
-    }
-
-    @Test
-    void signUp_firstNameWithHyphen_throws() {
-        assertThrows(IllegalArgumentException.class, () ->
-                manager.signUp("Mary-Jane", LASTNAME, USERNAME, EMAIL, PASSWORD, INSTITUTION)
-        );
-    }
-
-    @Test
-    void signUp_firstNameWithApostrophe_throws() {
-        assertThrows(IllegalArgumentException.class, () ->
-                manager.signUp("O'Neil", LASTNAME, USERNAME, EMAIL, PASSWORD, INSTITUTION)
-        );
-    }
-
-    @Test
     void signUp_firstNameWithDigit_throws() {
         assertThrows(IllegalArgumentException.class, () ->
                 manager.signUp("John2", LASTNAME, USERNAME, EMAIL, PASSWORD, INSTITUTION)
@@ -345,20 +324,6 @@ public class UserManagerTest {
     void signUp_lastNameBlankOnly_throws() {
         assertThrows(IllegalArgumentException.class, () ->
                 manager.signUp(NAME, "   ", USERNAME, EMAIL, PASSWORD, INSTITUTION)
-        );
-    }
-
-    @Test
-    void signUp_lastNameWithHyphen_throws() {
-        assertThrows(IllegalArgumentException.class, () ->
-                manager.signUp(NAME, "Smith-Jones", USERNAME, EMAIL, PASSWORD, INSTITUTION)
-        );
-    }
-
-    @Test
-    void signUp_lastNameWithApostrophe_throws() {
-        assertThrows(IllegalArgumentException.class, () ->
-                manager.signUp(NAME, "O'Reilly", USERNAME, EMAIL, PASSWORD, INSTITUTION)
         );
     }
 

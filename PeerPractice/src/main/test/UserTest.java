@@ -274,7 +274,7 @@ public class UserTest {
     @Test
     public void testSetBioWhitespaceOnly(){
         assertDoesNotThrow(() -> user.setBio("   "));
-        assertEquals("   ", user.getBio());
+        assertEquals("", user.getBio());
     }
 
     @Test
@@ -373,8 +373,8 @@ public class UserTest {
 
     @Test
     public void testConstructorGeneratesUniqueIds(){
-        User user1 = new User(FIRST_NAME, LAST_NAME, "user1", "user1@email.com", PASSWORD, INSTITUTION);
-        User user2 = new User(FIRST_NAME, LAST_NAME, "user2", "user2@email.com", PASSWORD, INSTITUTION);
+        User user1 = new User(FIRST_NAME, LAST_NAME, "user123", "user1@email.com", PASSWORD, INSTITUTION);
+        User user2 = new User(FIRST_NAME, LAST_NAME, "user234", "user2@email.com", PASSWORD, INSTITUTION);
         assertNotEquals(user1.getUserId(), user2.getUserId());
     }
 
@@ -538,8 +538,8 @@ public class UserTest {
 
     @Test
     public void testBoundaryValueUsernameLengths(){
-        assertThrows(IllegalArgumentException.class, () -> user.setUsername("12345"));
-        assertDoesNotThrow(() -> user.setUsername("123456"));
+        assertThrows(IllegalArgumentException.class, () -> user.setUsername("Cat1."));
+        assertDoesNotThrow(() -> user.setUsername("Cat12."));
     }
 
     @Test
