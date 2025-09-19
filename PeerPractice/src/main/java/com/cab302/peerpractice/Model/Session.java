@@ -19,18 +19,38 @@ public class Session {
     private String colorLabel;
     private String subject; // what subject this session is for
     private int maxParticipants;
-    
+
     public Session(String title, User organiser, LocalDateTime startTime, LocalDateTime endTime) {
         this.sessionId = java.util.UUID.randomUUID().toString(); // generate unique session ID
-        this.title = Objects.requireNonNull(title, "Session title cant be null");
-        this.organiser = Objects.requireNonNull(organiser, "Organiser cant be null");
-        this.startTime = Objects.requireNonNull(startTime, "Start time cant be null");
-        this.endTime = Objects.requireNonNull(endTime, "End time cant be null");
-        
+
+        if (title == null) {
+            throw new IllegalArgumentException("Session title cannot be null");
+        }
+        if (title.isBlank()) {
+            throw new IllegalArgumentException("Session title cannot be blank");
+        }
+        if (organiser == null) {
+            throw new IllegalArgumentException("Organiser cannot be null");
+        }
+        if (startTime == null) {
+            throw new IllegalArgumentException("Start time cannot be null");
+        }
+        if (endTime == null) {
+            throw new IllegalArgumentException("End time cannot be null");
+        }
+        if (endTime == startTime) {
+            throw new IllegalArgumentException("Start and End time cannot be the same");
+        }
+
+        this.title = title;
+        this.organiser = organiser;
+        this.startTime = startTime;
+        this.endTime = endTime;
+
         if (endTime.isBefore(startTime)) {
             throw new IllegalArgumentException("Session cant end before it starts mate");
         }
-        
+
         this.participants = new ArrayList<>();
         this.status = SessionStatus.PLANNED;
         this.description = "";
@@ -38,7 +58,7 @@ public class Session {
         this.colorLabel = "BLUE";
         this.subject = "";
         this.maxParticipants = 10; // reasonable default
-        
+
         // organiser is always a participant
         this.participants.add(organiser);
     }
@@ -59,18 +79,27 @@ public class Session {
     
     // setters for calendar integration
     public void setTitle(String title) {
-        this.title = Objects.requireNonNull(title, "title cannot be null");
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Invalid Title (null or empty)");
+        }
+        this.title = title;
     }
-    
+
     public void setStartTime(LocalDateTime startTime) {
-        this.startTime = Objects.requireNonNull(startTime, "startTime");
+        if (startTime == null) {
+            throw new IllegalArgumentException("startTime cannot be null");
+        }
+        this.startTime = startTime;
         if (endTime != null && endTime.isBefore(startTime)) {
             throw new IllegalArgumentException("Start time cannot be after end time");
         }
     }
     
     public void setEndTime(LocalDateTime endTime) {
-        this.endTime = Objects.requireNonNull(endTime, "endTime");
+        if (endTime == null) {
+            throw new IllegalArgumentException("endTime cannot be null");
+        }
+        this.endTime = endTime;
         if (endTime.isBefore(startTime)) {
             throw new IllegalArgumentException("End time cannot be before start time");
         }
@@ -136,21 +165,18 @@ public class Session {
     public boolean isParticipant(User user) {
         return user != null && participants.contains(user);
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Session session = (Session) o;
-        return Objects.equals(sessionId, session.sessionId) ||
-               (Objects.equals(title, session.title) &&
-                Objects.equals(startTime, session.startTime) &&
-                Objects.equals(organiser, session.organiser));
+        return Objects.equals(sessionId, session.sessionId);
     }
-    
+
     @Override
     public int hashCode() {
-        return Objects.hash(title, startTime, organiser);
+        return Objects.hash(sessionId);
     }
     
     @Override
