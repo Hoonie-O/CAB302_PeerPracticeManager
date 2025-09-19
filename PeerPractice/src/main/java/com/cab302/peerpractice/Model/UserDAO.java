@@ -128,7 +128,6 @@ public class UserDAO implements IUserDAO{
         return u;
     }
 
-
     // Select single user
     @Override
     public User findUser(String column, String value) throws SQLException {
