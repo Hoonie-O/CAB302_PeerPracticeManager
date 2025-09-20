@@ -20,7 +20,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(message, validEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(null, validEmail);
 
-        assertTrue(result || !result);
+        assertFalse(result);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(emptyMessage, validEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(longMessage, validEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(specialMessage, validEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(unicodeMessage, validEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(messageWithNewlines, validEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(htmlMessage, validEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class MailServiceTest {
 
         for (String email : validEmails) {
             boolean result = mailService.sendMessage(message, email);
-            assertTrue(result || !result);
+            assertTrue(result);
         }
     }
 
@@ -167,7 +167,7 @@ public class MailServiceTest {
         for (String email : whitespaceEmails) {
             boolean result = mailService.sendMessage(message, email);
             if (email.trim().contains("@")) {
-                assertTrue(result || !result);
+                assertTrue(result);
             } else {
                 assertFalse(result);
             }
@@ -183,8 +183,7 @@ public class MailServiceTest {
         boolean result2 = mailService.sendMessage(message, validEmail);
         boolean result3 = mailService.sendMessage(message, validEmail);
 
-        assertTrue((result1 && result2 && result3) || (!result1 && !result2 && !result3) ||
-                  (result1 || result2 || result3));
+        assertTrue((result1 && result2 && result3));
     }
 
     @Test
@@ -194,7 +193,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(message, longEmail);
 
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test
@@ -204,7 +203,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(message, internationalEmail);
 
-        assertTrue(result || !result);
+        assertFalse(result);
     }
 
     @Test
@@ -214,7 +213,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(message, numericEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -224,7 +223,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(message, subdomainEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -234,7 +233,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(message, plusEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -244,7 +243,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(message, dashEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -254,7 +253,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(message, numericEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -270,7 +269,7 @@ public class MailServiceTest {
 
         for (String email : edgeCaseEmails) {
             boolean result = mailService.sendMessage(message, email);
-            assertTrue(result || !result);
+            assertTrue(result);
         }
     }
 
@@ -281,7 +280,7 @@ public class MailServiceTest {
 
         boolean result = mailService.sendMessage(messageWithWhitespace, validEmail);
 
-        assertTrue(result || !result);
+        assertTrue(result);
     }
 
     @Test
@@ -329,7 +328,7 @@ public class MailServiceTest {
         String message = "Instantiation test";
 
         boolean result = newMailService.sendMessage(message, validEmail);
-        assertTrue(result || !result);
+        assertTrue(result );
     }
 
     @Test
@@ -345,6 +344,6 @@ public class MailServiceTest {
         boolean result2 = service2.sendMessage(message, validEmail);
         boolean result3 = service3.sendMessage(message, validEmail);
 
-        assertTrue((result1 || result2 || result3) || (!result1 && !result2 && !result3));
+        assertTrue(result1 || result2 || result3);
     }
 }
