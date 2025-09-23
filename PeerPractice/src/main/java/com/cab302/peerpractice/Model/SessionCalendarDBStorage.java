@@ -29,7 +29,8 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
                     "location TEXT DEFAULT 'TBD', " +
                     "color_label TEXT DEFAULT 'BLUE', " +
                     "subject TEXT DEFAULT '', " +
-                    "max_participants INTEGER DEFAULT 10" +
+                    "max_participants INTEGER DEFAULT 10, " +
+                    "group_id INTEGER" +
                     ")");
 
             st.execute("CREATE TABLE IF NOT EXISTS session_participants (" +
@@ -56,17 +57,26 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
             organiser = new User(organiserId, "Unknown", "User", "unknown_user", "unknown@example.com", "", "");
         }
         Session s = new Session(title, organiser, start, end);
+
         try {
             var field = Session.class.getDeclaredField("sessionId");
             field.setAccessible(true);
             field.set(s, id);
         } catch (Exception ignored) {}
+
         s.setDescription(rs.getString("description"));
         s.setColorLabel(rs.getString("color_label"));
         s.setLocation(rs.getString("location"));
         s.setSubject(rs.getString("subject"));
         s.setStatus(SessionStatus.valueOf(rs.getString("status")));
         s.setMaxParticipants(rs.getInt("max_participants"));
+
+        int groupId = rs.getInt("group_id");
+        if (!rs.wasNull()) {
+            Group g = new Group("Unknown", "", false, "unknown", LocalDateTime.now());
+            g.setID(groupId);
+            s.setGroup(g);
+        }
 
         List<User> participants = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement("SELECT user_id FROM session_participants WHERE session_id = ?")) {
@@ -87,9 +97,11 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
 
     @Override
     public boolean addSession(Session session) {
+        System.out.println("[DEBUG] DBStorage.addSession -> Preparing to insert " + session.getTitle() +
+                " (Group " + (session.getGroup() != null ? session.getGroup().getID() : "null") + ")");
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT OR REPLACE INTO sessions (session_id, title, description, start_time, end_time, organiser_user_id, status, location, color_label, subject, max_participants) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                "INSERT OR REPLACE INTO sessions (session_id, title, description, start_time, end_time, organiser_user_id, status, location, color_label, subject, max_participants, group_id) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             ps.setString(1, session.getSessionId());
             ps.setString(2, session.getTitle());
             ps.setString(3, session.getDescription());
@@ -101,22 +113,12 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
             ps.setString(9, session.getColorLabel());
             ps.setString(10, session.getSubject());
             ps.setInt(11, session.getMaxParticipants());
-            ps.executeUpdate();
-
-            try (PreparedStatement del = connection.prepareStatement("DELETE FROM session_participants WHERE session_id = ?")) {
-                del.setString(1, session.getSessionId());
-                del.executeUpdate();
-            }
-            try (PreparedStatement ins = connection.prepareStatement("INSERT INTO session_participants (session_id, user_id) VALUES (?, ?)")) {
-                for (User u : session.getParticipants()) {
-                    ins.setString(1, session.getSessionId());
-                    ins.setString(2, u.getUserId());
-                    ins.addBatch();
-                }
-                ins.executeBatch();
-            }
+            ps.setObject(12, session.getGroup() != null ? session.getGroup().getID() : null);
+            int rows = ps.executeUpdate();
+            System.out.println("[DEBUG] Insert result: " + rows + " row(s) affected");
             return true;
         } catch (SQLException e) {
+            System.err.println("[DEBUG] DBStorage.addSession FAILED: " + e.getMessage());
             return false;
         }
     }
@@ -229,5 +231,28 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
         } catch (SQLException e) {
             return false;
         }
+    }
+
+    public List<Session> getSessionsForGroup(Group group) {
+        List<Session> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM sessions WHERE group_id=?")) {
+            ps.setInt(1, group.getID());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRowToSession(rs));
+            }
+        } catch (SQLException ignored) {}
+        return list;
+    }
+
+    public List<Session> getSessionsForDateAndGroup(LocalDate date, Group group) {
+        List<Session> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM sessions WHERE substr(start_time,1,10)=? AND group_id=?")) {
+            ps.setString(1, date.toString());
+            ps.setInt(2, group.getID());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRowToSession(rs));
+            }
+        } catch (SQLException ignored) {}
+        return list;
     }
 }

@@ -18,7 +18,7 @@ public class AppContext {
     private final SessionTaskStorage sessionTaskStorage = new SessionTaskStorage();
     private final SessionTaskManager sessionTaskManager;
     private final SessionCalendarManager sessionCalendarManager;
-    private final AvailabilityManager availabilityManager = new AvailabilityManager();
+    private final AvailabilityManager availabilityManager;
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
@@ -28,7 +28,11 @@ public class AppContext {
             this.sessionCalendarManager = new SessionCalendarManager(sessionStorage);
             this.sessionManager = new SessionManager(this.sessionCalendarManager);
             this.sessionTaskManager = new SessionTaskManager(sessionTaskStorage, this.sessionManager);
-            User testUser = userDao.findUser("username", "hollyfloweer");
+
+            var availabilityStorage = new AvailabilityDBStorage(userDao);
+            this.availabilityManager = new AvailabilityManager(availabilityStorage);
+
+            User testUser = userDao.findUser("username", "Testuser17");
 
             if (testUser != null) {
                 Group testGroup = new Group("Example Group", "This is a seeded test group", false,
