@@ -14,6 +14,17 @@ public class Availability {
     private String recurringPattern; // DAILY WEEKLY MONTHLY
 
     public Availability(String title, User user, LocalDateTime startTime, LocalDateTime endTime, String colorLabel) {
+
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Session title cannot be null or blank");
+        }
+        if (startTime == null || endTime == null) {
+            throw new IllegalArgumentException("Start and End times cannot be null");
+        }
+        if (endTime.isBefore(startTime) || endTime.equals(startTime)) {
+            throw new IllegalArgumentException("End time must be after start time");
+        }
+
         this.title = Objects.requireNonNull(title, "title");
         this.user = Objects.requireNonNull(user, "user cannot be null");
         this.startTime = Objects.requireNonNull(startTime, "startTime");
@@ -33,6 +44,9 @@ public class Availability {
     }
 
     public void setTitle(String title) {
+        if (title.isBlank()) {
+            throw new IllegalArgumentException("Title cannot be null or blank");
+        }
         this.title = Objects.requireNonNull(title, "title");
     }
 
@@ -94,10 +108,27 @@ public class Availability {
         return recurringPattern;
     }
 
-    // sets recurring pattern and automatically enables recurring if pattern is set
     public void setRecurringPattern(String recurringPattern) {
-        this.recurringPattern = recurringPattern != null ? recurringPattern : "NONE";
-        this.isRecurring = !this.recurringPattern.equals("NONE");
+        if (recurringPattern == null || recurringPattern.trim().isEmpty()) {
+            this.recurringPattern = "NONE";
+            this.isRecurring = false;
+            return;
+        }
+
+        switch (recurringPattern.toUpperCase()) {
+            case "DAILY":
+            case "WEEKLY":
+            case "FORTNIGHTLY":
+            case "MONTHLY":
+            case "YEARLY":
+                this.recurringPattern = recurringPattern.toUpperCase();
+                this.isRecurring = true;
+                break;
+            default:
+                this.recurringPattern = "NONE";
+                this.isRecurring = false;
+                break;
+        }
     }
 
     @Override

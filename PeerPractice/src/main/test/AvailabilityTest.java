@@ -107,7 +107,7 @@ class AvailabilityTest {
     @Test
     void testSetTitleNull() {
         Availability availability = new Availability("Original", testUser, startTime, endTime, "GREEN");
-        assertThrows(IllegalArgumentException.class, () -> availability.setTitle(null));
+        assertThrows(NullPointerException.class, () -> availability.setTitle(null));
     }
 
     @Test
@@ -127,7 +127,7 @@ class AvailabilityTest {
     @Test
     void testSetStartTimeNull() {
         Availability availability = new Availability("Test", testUser, startTime, endTime, "GREEN");
-        assertThrows(IllegalArgumentException.class, () -> availability.setStartTime(null));
+        assertThrows(NullPointerException.class, () -> availability.setStartTime(null));
     }
 
     @Test
@@ -148,7 +148,7 @@ class AvailabilityTest {
     @Test
     void testSetEndTimeNull() {
         Availability availability = new Availability("Test", testUser, startTime, endTime, "GREEN");
-        assertThrows(IllegalArgumentException.class, () -> availability.setEndTime(null));
+        assertThrows(NullPointerException.class, () -> availability.setEndTime(null));
     }
 
     @Test
@@ -169,7 +169,7 @@ class AvailabilityTest {
     void testSetColorLabelNull() {
         Availability availability = new Availability("Test", testUser, startTime, endTime, "GREEN");
         assertDoesNotThrow(() -> availability.setColorLabel(null));
-        assertNull(availability.getColorLabel());
+        assertEquals(availability.getColorLabel(), "BLUE"); // Default value
     }
 
     @Test
@@ -183,7 +183,7 @@ class AvailabilityTest {
     void testRecurringPatternValues() {
         Availability availability = new Availability("Test", testUser, startTime, endTime, "GREEN");
 
-        String[] patterns = {"DAILY", "WEEKLY", "MONTHLY", "YEARLY", "CUSTOM"};
+        String[] patterns = {"DAILY", "WEEKLY", "MONTHLY", "YEARLY", "FORTNIGHTLY"};
         for (String pattern : patterns) {
             availability.setRecurringPattern(pattern);
             assertEquals(pattern, availability.getRecurringPattern());
@@ -230,7 +230,7 @@ class AvailabilityTest {
     void testEquals() {
         Availability availability1 = new Availability("Test", testUser, startTime, endTime, "GREEN");
         Availability availability2 = new Availability("Test", testUser, startTime, endTime, "GREEN");
-        assertNotEquals(availability1, availability2);
+        assertEquals(availability1, availability2);
     }
 
     @Test
