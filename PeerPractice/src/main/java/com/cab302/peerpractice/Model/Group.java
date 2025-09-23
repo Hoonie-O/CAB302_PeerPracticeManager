@@ -53,4 +53,17 @@ public class Group {
     public String getCreatorUsername() { 
         return owner; 
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return ID == group.ID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(ID);
+    }
 }
