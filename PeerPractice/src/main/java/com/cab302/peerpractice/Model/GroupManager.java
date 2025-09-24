@@ -99,8 +99,8 @@ public class GroupManager {
         name = name.trim();
         if (name.isEmpty()) throw new IllegalArgumentException("Group name can't be blank");
         if (name.length() > 20) throw new IllegalArgumentException("Group name can't be longer than 20 characters");
-        if (!Pattern.compile("^[A-Za-z0-9 _.-]+$").matcher(name).matches()) {
-            throw new IllegalArgumentException("Group name can only contain letters, numbers, spaces, dots, hyphens, or underscores");
+        if (!Pattern.compile("^[A-Za-z0-9 '_.-]+$").matcher(name).matches()) {
+            throw new IllegalArgumentException("Group name can only contain letters, numbers, spaces, dots, hyphens,underscores, or apostrophes");
         }
     }
 
