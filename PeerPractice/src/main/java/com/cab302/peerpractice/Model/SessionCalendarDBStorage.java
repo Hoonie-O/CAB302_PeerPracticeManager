@@ -25,7 +25,7 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
                     "start_time TEXT NOT NULL, " +
                     "end_time TEXT NOT NULL, " +
                     "organiser_user_id TEXT NOT NULL, " +
-                    "status TEXT DEFAULT 'PLANNED', " +
+                    "priority TEXT DEFAULT 'optional', " +
                     "location TEXT DEFAULT 'TBD', " +
                     "color_label TEXT DEFAULT 'BLUE', " +
                     "subject TEXT DEFAULT '', " +
@@ -33,11 +33,61 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
                     "group_id INTEGER" +
                     ")");
 
+            // Migration: Check if old 'status' column exists and migrate to 'priority'
+            migrateSessions(st);
+
             st.execute("CREATE TABLE IF NOT EXISTS session_participants (" +
                     "session_id TEXT NOT NULL, " +
                     "user_id TEXT NOT NULL, " +
                     "PRIMARY KEY(session_id, user_id)" +
                     ")");
+        }
+    }
+
+    private void migrateSessions(Statement st) throws SQLException {
+        try {
+            // Check if the sessions table has a 'status' column
+            ResultSet tableInfo = st.executeQuery("PRAGMA table_info(sessions)");
+            boolean hasStatusColumn = false;
+            boolean hasPriorityColumn = false;
+
+            while (tableInfo.next()) {
+                String columnName = tableInfo.getString("name");
+                if ("status".equals(columnName)) {
+                    hasStatusColumn = true;
+                } else if ("priority".equals(columnName)) {
+                    hasPriorityColumn = true;
+                }
+            }
+            tableInfo.close();
+
+            // If we have status but not priority, we need to migrate
+            if (hasStatusColumn && !hasPriorityColumn) {
+                System.out.println("[DEBUG] Migrating sessions table: status -> priority");
+
+                // Add the priority column with default value
+                st.execute("ALTER TABLE sessions ADD COLUMN priority TEXT DEFAULT 'optional'");
+
+                // Map old status values to new priority values
+                st.execute("UPDATE sessions SET priority = " +
+                          "CASE " +
+                          "WHEN status = 'PLANNED' THEN 'optional' " +
+                          "WHEN status = 'ACTIVE' THEN 'important' " +
+                          "WHEN status = 'COMPLETED' THEN 'optional' " +
+                          "WHEN status = 'CANCELLED' THEN 'optional' " +
+                          "ELSE 'optional' END");
+
+                System.out.println("[DEBUG] Migration completed successfully");
+            } else if (hasStatusColumn && hasPriorityColumn) {
+                // Both columns exist, we can drop the old status column after ensuring data is migrated
+                System.out.println("[DEBUG] Both status and priority columns exist - keeping both for now");
+            } else if (!hasStatusColumn && !hasPriorityColumn) {
+                // This is a fresh table, add priority column
+                st.execute("ALTER TABLE sessions ADD COLUMN priority TEXT DEFAULT 'optional'");
+            }
+        } catch (SQLException e) {
+            System.err.println("[DEBUG] Migration error (this may be normal for fresh installs): " + e.getMessage());
+            // Don't throw the exception - the table creation will handle fresh installations
         }
     }
 
@@ -68,7 +118,7 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
         s.setColorLabel(rs.getString("color_label"));
         s.setLocation(rs.getString("location"));
         s.setSubject(rs.getString("subject"));
-        s.setStatus(SessionStatus.valueOf(rs.getString("status")));
+        s.setPriority(rs.getString("priority"));
         s.setMaxParticipants(rs.getInt("max_participants"));
 
         int groupId = rs.getInt("group_id");
@@ -100,7 +150,7 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
         System.out.println("[DEBUG] DBStorage.addSession -> Preparing to insert " + session.getTitle() +
                 " (Group " + (session.getGroup() != null ? session.getGroup().getID() : "null") + ")");
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT OR REPLACE INTO sessions (session_id, title, description, start_time, end_time, organiser_user_id, status, location, color_label, subject, max_participants, group_id) " +
+                "INSERT OR REPLACE INTO sessions (session_id, title, description, start_time, end_time, organiser_user_id, priority, location, color_label, subject, max_participants, group_id) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             ps.setString(1, session.getSessionId());
             ps.setString(2, session.getTitle());
@@ -108,7 +158,7 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
             ps.setString(4, session.getStartTime().toString());
             ps.setString(5, session.getEndTime().toString());
             ps.setString(6, session.getOrganiser() != null ? session.getOrganiser().getUserId() : null);
-            ps.setString(7, session.getStatus().name());
+            ps.setString(7, session.getPriority());
             ps.setString(8, session.getLocation());
             ps.setString(9, session.getColorLabel());
             ps.setString(10, session.getSubject());

@@ -53,8 +53,9 @@ public class SessionManager {
     public List<Session> getUpcomingSessions() {
         List<Session> upcoming = new ArrayList<>();
         for (Session session : getAllSessions()) {
-            if (session.getStatus() == SessionStatus.PLANNED ||
-                    session.getStatus() == SessionStatus.ACTIVE) {
+            if ("optional".equals(session.getPriority()) ||
+                    "important".equals(session.getPriority()) ||
+                    "urgent".equals(session.getPriority())) {
                 upcoming.add(session);
             }
         }

@@ -226,6 +226,8 @@ public abstract class SidebarController extends BaseController {
                     : "User";
 
             ctx.getUserSession().logout();
+            // clear saved session
+            com.cab302.peerpractice.Model.SessionPersistence.clearSession();
 
             if (ctx.isMenuOpen()) closeMenu();
             if (ctx.isProfileOpen()) closeProfile();

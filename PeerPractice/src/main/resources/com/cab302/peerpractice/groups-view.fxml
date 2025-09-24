@@ -56,7 +56,33 @@
                         <Tab text="Calendar" closable="false">
                             <fx:include source="group-calendar.fxml" fx:id="groupCalendar"/>
                         </Tab>
-                        <Tab text="Sessions" closable="false"/>
+                        <Tab text="Sessions" closable="false">
+                            <VBox spacing="10" style="-fx-padding: 10;">
+                                <Label text="Group Sessions" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                                <ListView fx:id="sessionsListView" VBox.vgrow="ALWAYS"/>
+                            </VBox>
+                        </Tab>
+                        <Tab text="Members" closable="false">
+                            <TableView fx:id="membersTable">
+                                <columns>
+                                    <TableColumn text="Name" prefWidth="200">
+                                        <cellValueFactory>
+                                            <javafx.scene.control.cell.PropertyValueFactory property="name"/>
+                                        </cellValueFactory>
+                                    </TableColumn>
+                                    <TableColumn text="Role" prefWidth="100">
+                                        <cellValueFactory>
+                                            <javafx.scene.control.cell.PropertyValueFactory property="role"/>
+                                        </cellValueFactory>
+                                    </TableColumn>
+                                    <TableColumn text="Availability" prefWidth="150">
+                                        <cellValueFactory>
+                                            <javafx.scene.control.cell.PropertyValueFactory property="availability"/>
+                                        </cellValueFactory>
+                                    </TableColumn>
+                                </columns>
+                            </TableView>
+                        </Tab>
                         <Tab text="Chat" closable="false"/>
                         <Tab text="Files" closable="false"/>
                     </TabPane>
