@@ -171,7 +171,7 @@ public class GroupTest {
     public void testSetMembersLargeList(){
         List<User> largeList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            largeList.add(new User("User" + i, "Last" + i, "user" + i, "user" + i + "@email.com", "pass", "Uni"));
+            largeList.add(new User("User", "Last", "username." + i, "user" + i + "@email.com", "Password1!", "Uni"));
         }
         assertDoesNotThrow(() -> group.setMembers(largeList));
         assertEquals(100, group.getMembers().size());
