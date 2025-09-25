@@ -57,6 +57,9 @@
                             <fx:include source="group-calendar.fxml" fx:id="groupCalendar"/>
                         </Tab>
                         <Tab text="Sessions" closable="false"/>
+                        <Tab text="Notes" closable="false">
+                            <fx:include source="group-notes.fxml" fx:id="groupNotes"/>
+                        </Tab>
                         <Tab text="Chat" closable="false"/>
                         <Tab text="Files" closable="false"/>
                     </TabPane>

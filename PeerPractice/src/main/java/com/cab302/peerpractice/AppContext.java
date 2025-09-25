@@ -19,6 +19,8 @@ public class AppContext {
     private final SessionTaskManager sessionTaskManager;
     private final SessionCalendarManager sessionCalendarManager;
     private final AvailabilityManager availabilityManager;
+    private final INotesDAO notesDAO = new MockNotesDao();
+    private final NotesManager notesManager  = new NotesManager(notesDAO,groupDao);
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
