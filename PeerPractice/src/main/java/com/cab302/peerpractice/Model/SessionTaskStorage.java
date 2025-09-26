@@ -76,6 +76,15 @@ public class SessionTaskStorage {
     }
     
     /**
+     * Removes all tasks for a specific session
+     */
+    public boolean removeAllTasksForSession(String sessionId) {
+        if (sessionId == null) return false;
+        
+        return tasks.removeIf(task -> sessionId.equals(task.getSessionId()));
+    }
+    
+    /**
      * Gets all tasks assigned to a specific user
      */
     public List<SessionTask> getTasksForUser(String assigneeId) {

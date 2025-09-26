@@ -3,9 +3,11 @@ package com.cab302.peerpractice.Model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SessionCalendarManager {
     private final SessionCalendarStorage storage;
+    private SessionTaskManager sessionTaskManager;
 
     public SessionCalendarManager() {
         this.storage = new SessionCalendarStorage();
@@ -14,9 +16,13 @@ public class SessionCalendarManager {
     public SessionCalendarManager(SessionCalendarStorage storage) {
         this.storage = storage;
     }
+    
+    public void setSessionTaskManager(SessionTaskManager sessionTaskManager) {
+        this.sessionTaskManager = sessionTaskManager;
+    }
 
-    public boolean createSession(String title, User organiser, LocalDateTime startTime, 
-                               LocalDateTime endTime, String colorLabel) {
+    public boolean createSession(String title, User organiser, LocalDateTime startTime,
+                                 LocalDateTime endTime, String colorLabel) {
         try {
             Session session = new Session(title, organiser, startTime, endTime);
             session.setColorLabel(colorLabel);
@@ -26,7 +32,6 @@ public class SessionCalendarManager {
         }
     }
 
-    // add a complete session that was already created
     public boolean addSession(Session session) {
         return storage.addSession(session);
     }
@@ -54,6 +59,10 @@ public class SessionCalendarManager {
     }
 
     public boolean removeSession(Session session) {
+        if (session != null && session.getSessionId() != null && sessionTaskManager != null) {
+            sessionTaskManager.deleteAllTasksForSession(session.getSessionId());
+            System.out.println("[DEBUG] SessionCalendarManager.removeSession -> Deleted tasks for session " + session.getSessionId());
+        }
         return storage.removeSession(session);
     }
 
@@ -73,8 +82,35 @@ public class SessionCalendarManager {
         return storage.hasSessionsOnDate(date);
     }
 
-    // convenience method for calendar controller
     public void deleteSession(Session session) {
+        if (session != null && session.getSessionId() != null) {
+            if (sessionTaskManager != null) {
+                sessionTaskManager.deleteAllTasksForSession(session.getSessionId());
+                System.out.println("[DEBUG] SessionCalendarManager.deleteSession -> Deleted tasks for session " + session.getSessionId());
+            }
+        }
         storage.removeSession(session);
+    }
+
+    public List<Session> getSessionsForGroup(Group group) {
+        return storage.getAllSessions().stream()
+                .filter(s -> s.getGroup() != null && s.getGroup().equals(group))
+                .collect(Collectors.toList());
+    }
+
+    public List<Session> getSessionsForDateAndGroup(LocalDate date, Group group) {
+        return storage.getSessionsForDate(date).stream()
+                .filter(s -> s.getGroup() != null && s.getGroup().equals(group))
+                .collect(Collectors.toList());
+    }
+
+    public boolean addSession(Session session, Group group) {
+        if (session != null) {
+            session.setGroup(group);
+            System.out.println("[DEBUG] SessionCalendarManager.addSession -> " +
+                    "Session " + session.getTitle() + " (" + session.getSessionId() + ") " +
+                    "Group " + (group != null ? group.getID() : "null"));
+        }
+        return storage.addSession(session);
     }
 }

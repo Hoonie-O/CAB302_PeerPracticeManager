@@ -79,20 +79,24 @@ public abstract class SidebarController extends BaseController {
         // Sidebar menu buttons
         if (menu != null) {
             Button studyGroupBtn = (Button) menu.lookup("#studyGroupButton");
-            Button calendarBtn = (Button) menu.lookup("#calendarButton");
+            Button availabilityBtn = (Button) menu.lookup("#availabilityButton");
             Button friendsBtn = (Button) menu.lookup("#friendsButton");
 
             if (studyGroupBtn != null) studyGroupBtn.setOnAction(e -> nav.DisplayMainMenuOrGroup());
-            if (calendarBtn != null) calendarBtn.setOnAction(e -> nav.Display(View.Calendar));
-            if (friendsBtn != null) friendsBtn.setOnAction(e -> nav.Display(View.Friends));
+            if (availabilityBtn != null) availabilityBtn.setOnAction(e -> nav.Display(View.Availability));
+            if (friendsBtn != null) {
+                friendsBtn.setOnAction(e ->
+                        new Alert(Alert.AlertType.INFORMATION, "Friends view coming soon!").showAndWait()
+                );
+            }
         }
 
         // Profile panel controls
         if (profile != null) {
             Label userNameLbl = (Label) profile.lookup("#userNameLabel");
-            this.userNameLabel = userNameLbl;
+                this.userNameLabel = userNameLbl;
             Label userUsernameLbl = (Label) profile.lookup("#userUsernameLabel");
-            this.userUsernameLabel = userUsernameLbl;
+                this.userUsernameLabel = userUsernameLbl;
             ComboBox<String> status = (ComboBox<String>) profile.lookup("#availabilityStatus");
             Button editBtn = (Button) profile.lookup("#editProfileButton");
             Button settingsBtn = (Button) profile.lookup("#settingsButton");
@@ -222,6 +226,8 @@ public abstract class SidebarController extends BaseController {
                     : "User";
 
             ctx.getUserSession().logout();
+            // clear saved session
+            com.cab302.peerpractice.Model.SessionPersistence.clearSession();
 
             if (ctx.isMenuOpen()) closeMenu();
             if (ctx.isProfileOpen()) closeProfile();
@@ -284,6 +290,7 @@ public abstract class SidebarController extends BaseController {
 
             controller.setStage(dialog);
             dialog.showAndWait();
+
             renderProfile();
 
         } catch (IOException e) {
@@ -335,10 +342,10 @@ public abstract class SidebarController extends BaseController {
         if (u == null) return;
 
         String first = u.getFirstName() == null ? "" : u.getFirstName().trim();
-        String last  = u.getLastName()  == null ? "" : u.getLastName().trim();
+        String last = u.getLastName()  == null ? "" : u.getLastName().trim();
         userNameLabel.setText((first + " " + last).trim().replaceAll("\\s+", " "));
-        userUsernameLabel.setText(u.getUsername() == null || u.getUsername().isBlank()
-                ? "" : "@" + u.getUsername().trim());
+        userUsernameLabel.setText(u.getUsername() == null ||
+                u.getUsername().isBlank() ? "" : "@" + u.getUsername().trim());
     }
 
 }

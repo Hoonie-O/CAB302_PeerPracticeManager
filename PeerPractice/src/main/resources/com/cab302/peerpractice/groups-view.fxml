@@ -43,23 +43,49 @@
             </left>
 
             <center>
-                <VBox spacing="10">
-                    <HBox spacing="15" alignment="CENTER_LEFT">
+                <!-- Top bar with group name -->
+                <VBox spacing="6" BorderPane.alignment="TOP_LEFT">
+                    <HBox alignment="CENTER_LEFT" style="-fx-padding: 6 12 0 12;">
                         <Label fx:id="groupNameLabel"
                                text="Select Group"
                                style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                        <TabPane fx:id="groupTabs" HBox.hgrow="ALWAYS">
-                            <Tab text="Calendar" closable="false"/>
-                            <Tab text="Sessions" closable="false"/>
-                            <Tab text="Chat" closable="false"/>
-                            <Tab text="Files" closable="false"/>
-                        </TabPane>
                     </HBox>
 
-                    <StackPane style="-fx-background-color: #e8e8e8; -fx-alignment: center;"
-                               VBox.vgrow="ALWAYS">
-                        <Label fx:id="tabContentLabel" text="CALENDAR" style="-fx-font-size: 24px; -fx-text-fill: #444;"/>
-                    </StackPane>
+                    <!-- Tabs under the group name -->
+                    <TabPane fx:id="groupTabs" VBox.vgrow="ALWAYS">
+                        <Tab text="Calendar" closable="false">
+                            <fx:include source="group-calendar.fxml" fx:id="groupCalendar"/>
+                        </Tab>
+                        <Tab text="Sessions" closable="false">
+                            <VBox spacing="10" style="-fx-padding: 10;">
+                                <Label text="Group Sessions" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                                <ListView fx:id="sessionsListView" VBox.vgrow="ALWAYS"/>
+                            </VBox>
+                        </Tab>
+                        <Tab text="Members" closable="false">
+                            <TableView fx:id="membersTable">
+                                <columns>
+                                    <TableColumn text="Name" prefWidth="200">
+                                        <cellValueFactory>
+                                            <javafx.scene.control.cell.PropertyValueFactory property="name"/>
+                                        </cellValueFactory>
+                                    </TableColumn>
+                                    <TableColumn text="Role" prefWidth="100">
+                                        <cellValueFactory>
+                                            <javafx.scene.control.cell.PropertyValueFactory property="role"/>
+                                        </cellValueFactory>
+                                    </TableColumn>
+                                    <TableColumn text="Availability" prefWidth="150">
+                                        <cellValueFactory>
+                                            <javafx.scene.control.cell.PropertyValueFactory property="availability"/>
+                                        </cellValueFactory>
+                                    </TableColumn>
+                                </columns>
+                            </TableView>
+                        </Tab>
+                        <Tab text="Chat" closable="false"/>
+                        <Tab text="Files" closable="false"/>
+                    </TabPane>
                 </VBox>
             </center>
         </BorderPane>

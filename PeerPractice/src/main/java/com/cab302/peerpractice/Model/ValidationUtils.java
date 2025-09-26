@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
  */
 public final class ValidationUtils {
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^(?!.*\\.\\.)"+ "[A-Za-z0-9._%+-]+"+ "@"+ "(?![.-])[A-Za-z0-9.-]+"+ "(?<![.-])"+ "\\.[A-Za-z]{2,}$");
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^(?!\\d+$)[A-Za-z0-9._]{6,}$");
-    private static final Pattern NAME_PATTERN = Pattern.compile("^[\\p{L}\\s]+$");
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[\\p{L}\\s'-]+$");
     private static final Pattern SPECIAL_CHARS = Pattern.compile("[!@#$%^&*()\\-_=+\\[\\]{};:'\",.<>/?\\\\|`~]");
 
     private ValidationUtils() {
@@ -133,7 +133,14 @@ public final class ValidationUtils {
      * Validates that a string is not null or blank after trimming.
      */
     public static void requireNotBlank(String value, String fieldName) {
-        if (value == null || value.trim().isEmpty()) {
+        if (value == null) {
+            throw new IllegalArgumentException(fieldName + " cannot be null.");
+        }
+        boolean allBlank = value.codePoints()
+                .allMatch(cp -> Character.isWhitespace(cp)
+                        || Character.getType(cp) == Character.SPACE_SEPARATOR); // catches NBSP, thin space, etc.
+
+        if (allBlank) {
             throw new IllegalArgumentException(fieldName + " cannot be empty.");
         }
     }

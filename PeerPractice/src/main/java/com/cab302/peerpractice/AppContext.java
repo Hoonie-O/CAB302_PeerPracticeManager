@@ -8,28 +8,38 @@ import java.util.ArrayList;
 public class AppContext {
     private final UserSession userSession = new UserSession();
     private final IUserDAO userDao = new UserDAO();
-    private final IGroupDAO groupDao = new MockGroupDAO();
     private final IFriendDAO friendDao = new FriendDAO();
+    private final IGroupDAO groupDao;
     private final Notifier notifier = new Notifier(userDao);
     private final PasswordHasher passwordHasher = new BcryptHasher();
     private final UserManager userManager = new UserManager(userDao,passwordHasher);
-    private final GroupManager groupManager = new GroupManager(groupDao, notifier, userDao);
+    private final GroupManager groupManager;
     private final MailService mailService = new MailService();
     private final SessionManager sessionManager;
-    private final SessionTaskStorage sessionTaskStorage = new SessionTaskStorage();
+    private final SessionTaskStorage sessionTaskStorage;
     private final SessionTaskManager sessionTaskManager;
     private final SessionCalendarManager sessionCalendarManager;
-    private final AvailabilityManager availabilityManager = new AvailabilityManager();
+    private final AvailabilityManager availabilityManager;
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
     public AppContext() throws SQLException {
         try {
+            this.groupDao = new GroupDBDAO(userDao);
+            this.groupManager = new GroupManager(groupDao, notifier, userDao);
+
             var sessionStorage = new SessionCalendarDBStorage(userDao);
             this.sessionCalendarManager = new SessionCalendarManager(sessionStorage);
             this.sessionManager = new SessionManager(this.sessionCalendarManager);
+            this.sessionTaskStorage = new SessionTaskDBStorage(userDao);
             this.sessionTaskManager = new SessionTaskManager(sessionTaskStorage, this.sessionManager);
-            User testUser = userDao.findUser("username", "hollyfloweer");
+
+            this.sessionCalendarManager.setSessionTaskManager(this.sessionTaskManager);
+
+            var availabilityStorage = new AvailabilityDBStorage(userDao);
+            this.availabilityManager = new AvailabilityManager(availabilityStorage);
+
+            User testUser = userDao.findUser("username", "Testuser17");
 
             if (testUser != null) {
                 Group testGroup = new Group("Example Group", "This is a seeded test group", false,
@@ -59,5 +69,5 @@ public class AppContext {
     public void setMenuOpen(boolean value) { this.menuOpen = value; }
     public boolean isProfileOpen() { return profileOpen; }
     public void setProfileOpen(boolean value) { this.profileOpen = value; }
-
+    
 }

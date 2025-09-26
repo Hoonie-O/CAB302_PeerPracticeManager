@@ -72,4 +72,41 @@ public final class Navigation {
         }
     }
 
+    public void openSessionTasks(String sessionId) {
+        try {
+            URL url = getClass().getResource(path + View.SessionTasks.fxml());
+            if (url == null) {
+                throw new IllegalStateException("Missing FXML: " + View.SessionTasks.fxml());
+            }
+
+            FXMLLoader fx = new FXMLLoader(url);
+            fx.setControllerFactory(type -> {
+                try {
+                    return type.getDeclaredConstructor(AppContext.class, Navigation.class).newInstance(ctx, this);
+                } catch (Exception e) {
+                    throw new ControllerFactoryFailedException("Controller " + type.getName() +
+                            " failed, constructor must be declared as (AppContext ctx, Navigation nav) and be declared as public");
+                }
+            });
+
+            Parent root = fx.load();
+
+            // Pass session ID to the controller after loading
+            if (fx.getController() instanceof com.cab302.peerpractice.Controllers.SessionTaskController) {
+                ((com.cab302.peerpractice.Controllers.SessionTaskController) fx.getController()).setSession(sessionId);
+            }
+
+            Scene scene = new Scene(root);
+            stage.setTitle(View.SessionTasks.title());
+            stage.setScene(scene);
+            stage.sizeToScene();
+
+            root.setFocusTraversable(true);
+            Platform.runLater(() -> Platform.runLater(root::requestFocus));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Failed to load session tasks view", e);
+        }
+    }
+
 }

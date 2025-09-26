@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Session {
-    
+
     private String sessionId;
     private String title;
     private String description;
@@ -14,145 +14,166 @@ public class Session {
     private LocalDateTime endTime;
     private User organiser;
     private List<User> participants;
-    private SessionStatus status;
+    private String priority;
     private String location;
     private String colorLabel;
-    private String subject; // what subject this session is for
+    private String subject;
     private int maxParticipants;
-    
+    private Group group;
+
     public Session(String title, User organiser, LocalDateTime startTime, LocalDateTime endTime) {
-        this.sessionId = java.util.UUID.randomUUID().toString(); // generate unique session ID
-        this.title = Objects.requireNonNull(title, "Session title cant be null");
-        this.organiser = Objects.requireNonNull(organiser, "Organiser cant be null");
-        this.startTime = Objects.requireNonNull(startTime, "Start time cant be null");
-        this.endTime = Objects.requireNonNull(endTime, "End time cant be null");
-        
-        if (endTime.isBefore(startTime)) {
-            throw new IllegalArgumentException("Session cant end before it starts mate");
+        this.sessionId = java.util.UUID.randomUUID().toString();
+
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Session title cannot be null or blank");
         }
-        
+        if (organiser == null) {
+            throw new IllegalArgumentException("Organiser cannot be null");
+        }
+        if (startTime == null || endTime == null) {
+            throw new IllegalArgumentException("Start and End times cannot be null");
+        }
+        if (endTime.isBefore(startTime) || endTime.equals(startTime)) {
+            throw new IllegalArgumentException("End time must be after start time");
+        }
+
+        this.title = title;
+        this.organiser = organiser;
+        this.startTime = startTime;
+        this.endTime = endTime;
+
         this.participants = new ArrayList<>();
-        this.status = SessionStatus.PLANNED;
+        this.priority = "optional";
         this.description = "";
         this.location = "TBD";
         this.colorLabel = "BLUE";
         this.subject = "";
-        this.maxParticipants = 10; // reasonable default
-        
+        this.maxParticipants = 10;
+
         // organiser is always a participant
         this.participants.add(organiser);
+
+        this.group = null; // default: not tied to a group
     }
-    
-    // getters
+
+    // Convenience constructor to set group immediately
+    public Session(String title, User organiser, LocalDateTime startTime, LocalDateTime endTime, Group group) {
+        this(title, organiser, startTime, endTime);
+        this.group = group;
+    }
+
+    // === Getters ===
     public String getSessionId() { return sessionId; }
     public String getTitle() { return title; }
     public User getOrganiser() { return organiser; }
     public LocalDateTime getStartTime() { return startTime; }
     public LocalDateTime getEndTime() { return endTime; }
     public List<User> getParticipants() { return new ArrayList<>(participants); }
-    public SessionStatus getStatus() { return status; }
+    public String getPriority() { return priority; }
     public String getDescription() { return description; }
     public String getLocation() { return location; }
     public String getColorLabel() { return colorLabel; }
     public String getSubject() { return subject; }
     public int getMaxParticipants() { return maxParticipants; }
-    
-    // setters for calendar integration
+    public Group getGroup() { return group; }
+
+    // === Setters ===
     public void setTitle(String title) {
-        this.title = Objects.requireNonNull(title, "title cannot be null");
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Invalid title");
+        }
+        this.title = title;
     }
-    
+
     public void setStartTime(LocalDateTime startTime) {
-        this.startTime = Objects.requireNonNull(startTime, "startTime");
+        if (startTime == null) throw new IllegalArgumentException("startTime cannot be null");
         if (endTime != null && endTime.isBefore(startTime)) {
             throw new IllegalArgumentException("Start time cannot be after end time");
         }
+        this.startTime = startTime;
     }
-    
+
     public void setEndTime(LocalDateTime endTime) {
-        this.endTime = Objects.requireNonNull(endTime, "endTime");
+        if (endTime == null) throw new IllegalArgumentException("endTime cannot be null");
         if (endTime.isBefore(startTime)) {
             throw new IllegalArgumentException("End time cannot be before start time");
         }
+        this.endTime = endTime;
     }
-    
+
     public void setDescription(String description) {
         this.description = description != null ? description : "";
     }
-    
+
     public void setLocation(String location) {
         this.location = location != null ? location : "TBD";
     }
-    
+
     public void setColorLabel(String colorLabel) {
         this.colorLabel = colorLabel != null ? colorLabel : "BLUE";
     }
-    
+
     public void setSubject(String subject) {
         this.subject = subject != null ? subject : "";
     }
-    
+
     public void setMaxParticipants(int maxParticipants) {
-        // cant be less than current participant count
         this.maxParticipants = Math.max(maxParticipants, participants.size());
     }
-    
-    // participant management
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority != null ? priority : "optional";
+    }
+
+    // === Participant management ===
     public boolean addParticipant(User user) {
         if (user == null || participants.contains(user)) {
             return false;
         }
-        
-        // check if we have space
         if (participants.size() >= maxParticipants) {
             return false;
         }
-        
         participants.add(user);
         return true;
     }
-    
+
     public boolean removeParticipant(User user) {
-        // cant remove the organiser
         if (user == null || user.equals(organiser)) {
             return false;
         }
-        
         return participants.remove(user);
     }
-    
-    public void setStatus(SessionStatus status) {
-        this.status = status != null ? status : SessionStatus.PLANNED;
-    }
-    
+
     public int getParticipantCount() {
         return participants.size();
     }
-    
+
     public boolean hasSpace() {
         return participants.size() < maxParticipants;
     }
-    
+
     public boolean isParticipant(User user) {
         return user != null && participants.contains(user);
     }
-    
+
+    // === Equality ===
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Session)) return false;
         Session session = (Session) o;
-        return Objects.equals(sessionId, session.sessionId) ||
-               (Objects.equals(title, session.title) &&
-                Objects.equals(startTime, session.startTime) &&
-                Objects.equals(organiser, session.organiser));
+        return Objects.equals(sessionId, session.sessionId);
     }
-    
+
     @Override
     public int hashCode() {
-        return Objects.hash(title, startTime, organiser);
+        return Objects.hash(sessionId);
     }
-    
+
     @Override
     public String toString() {
         return "Session{" +
@@ -161,7 +182,8 @@ public class Session {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", participants=" + participants.size() +
-                ", status=" + status +
+                ", priority=" + priority +
+                ", group=" + (group != null ? group.getName() : "null") +
                 '}';
     }
 }
