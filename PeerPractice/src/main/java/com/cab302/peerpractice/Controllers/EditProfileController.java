@@ -3,7 +3,6 @@ package com.cab302.peerpractice.Controllers;
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.Model.User;
-import com.cab302.peerpractice.Model.UserManager;
 import com.cab302.peerpractice.Model.ProfileUpdateService;
 
 import javafx.fxml.FXML;
@@ -14,7 +13,6 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 public class EditProfileController extends BaseController {
@@ -33,7 +31,9 @@ public class EditProfileController extends BaseController {
     // Formatter used to parse the DatePicker value consistently.
     private static final DateTimeFormatter ISO = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    public EditProfileController(AppContext ctx, Navigation nav) { super(ctx, nav); }
+    public EditProfileController(AppContext ctx, Navigation nav) {
+        super(ctx, nav);
+    }
 
     @FXML
     private void initialize() {

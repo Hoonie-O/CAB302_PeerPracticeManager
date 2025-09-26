@@ -18,6 +18,7 @@ module com.cab302.peerpractice {
     requires jbcrypt;
     requires java.management;
 
+
     opens com.cab302.peerpractice to javafx.fxml;
     exports com.cab302.peerpractice;
     exports com.cab302.peerpractice.Controllers;

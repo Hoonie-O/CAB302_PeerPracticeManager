@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.peerpractice.Controllers.ManageGroupController"
+            prefWidth="500"
+            prefHeight="400">
+
+    <VBox spacing="10"
+          minWidth="500"
+          fillWidth="true">
+        <padding>
+            <Insets top="10"
+                    right="10"
+                    bottom="10"
+                    left="10"/>
+        </padding>
+
+        <!-- Tab Navigation -->
+        <TabPane fx:id="manageTabs"
+                 VBox.vgrow="ALWAYS"
+                 tabClosingPolicy="UNAVAILABLE"
+                 tabMinWidth="120"
+                 tabMaxWidth="Infinity">
+            <VBox.margin>
+                <Insets top="0"
+                        right="-10"
+                        bottom="0"
+                        left="-10"/>
+
+            </VBox.margin>
+
+            <!-- Members Tab -->
+            <Tab text="Members"
+                 closable="false">
+                <VBox spacing="10"
+                      fillWidth="true">
+                    <padding>
+                        <Insets top="10"
+                                right="10"
+                                bottom="10"
+                                left="10"/>
+                    </padding>
+
+                    <!-- Members Table -->
+                    <TableView fx:id="membersTable"
+                               VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="nameMemberColumn"
+                                         text="Name"
+                                         minWidth="100"/>
+                            <TableColumn fx:id="roleColumn"
+                                         text="Role"
+                                         minWidth="100"
+                                         maxWidth="100"
+                                         resizable="false"/>
+                            <TableColumn fx:id="removeColumn"
+                                         minWidth="100"
+                                         maxWidth="100"
+                                         resizable="false"/>
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Member Request Tab -->
+            <Tab text="Member Requests"
+                 closable="false">
+                <VBox spacing="10"
+                      fillWidth="true">
+                    <padding>
+                        <Insets top="10"
+                                right="10"
+                                bottom="10"
+                                left="10"/>
+                    </padding>
+
+                    <!-- Member Requests Table -->
+                    <TableView fx:id="memberRequestsTable"
+                               VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="nameRequestColumn"
+                                         text="Name"
+                                         minWidth="100"/>
+                            <TableColumn fx:id="approveColumn"
+                                         minWidth="120"
+                                         maxWidth="120"
+                                         resizable="false"/>
+                            <TableColumn fx:id="declineColumn"
+                                         minWidth="120"
+                                         maxWidth="120"
+                                         resizable="false"/>
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Block User Tab -->
+            <Tab text="Blocked Users"
+                 closable="false">
+                <VBox spacing="10"
+                      fillWidth="true">
+                    <padding>
+                        <Insets top="10"
+                                right="10"
+                                bottom="10"
+                                left="10"/>
+                    </padding>
+
+                    <!-- Block User -->
+                    <VBox spacing="10"
+                          fillWidth="true">
+                        <Label text="Block User"
+                               style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+                        <Label text="Enter username to block from this group"/>
+
+                        <HBox spacing="12"
+                              alignment="CENTER_LEFT"
+                              maxWidth="Infinity">
+                            <TextField fx:id="blockUserField"
+                                       promptText="Enter username"
+                                       HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="blockButton"
+                                    text="Block"
+                                    prefWidth="80"
+                                    onAction="#onBlockUser"/>
+                        </HBox>
+                        <Separator/>
+                    </VBox>
+
+                    <!-- Blocked Users Table -->
+                    <VBox spacing="10"
+                          fillWidth="true">
+                        <Label text="Currently Blocked Users"
+                               style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+
+                        <TableView fx:id="blockedUsersTable"
+                                   VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="nameBlockColumn"
+                                             text="Username"
+                                             minWidth="100"/>
+                                <TableColumn fx:id="unblockColumn"
+                                             minWidth="140"
+                                             maxWidth="140"
+                                             resizable="false"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                    </VBox>
+                </VBox>
+            </Tab>
+        </TabPane>
+
+        <!-- Save Button -->
+        <HBox alignment="CENTER_RIGHT"
+              maxWidth="Infinity">
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="saveButton"
+                    text="Save"
+                    prefWidth="80"
+                    onAction="#onSave"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

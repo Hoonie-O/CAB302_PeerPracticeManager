@@ -4,15 +4,26 @@ import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Group;
 import com.cab302.peerpractice.Model.User;
 import com.cab302.peerpractice.Navigation;
+import com.cab302.peerpractice.View;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
- 
+
+import static javax.swing.JColorChooser.showDialog;
+
 
 public class GroupController extends SidebarController {
     @FXML private TabPane groupTabs;
@@ -21,7 +32,6 @@ public class GroupController extends SidebarController {
     @FXML private Label groupNameLabel;
     @FXML private Button addGroupButton;
     @FXML private Button sortGroupsButton;
-    
 
     private boolean sortAlphabetical = false;
 
@@ -60,7 +70,6 @@ public class GroupController extends SidebarController {
         });
         
     }
-    
 
     private void openCreateGroupDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -200,5 +209,118 @@ public class GroupController extends SidebarController {
         } else {
             sortGroupsButton.setText("Date");
         }
+    }
+
+    @FXML
+    public void onInviteMembers(ActionEvent event) {
+        try {
+            // Load FXML
+            FXMLLoader loader = new FXMLLoader(View.InviteMember.url());
+            loader.setControllerFactory(cls -> {
+                try {
+                    return cls.getDeclaredConstructor(AppContext.class, Navigation.class)
+                            .newInstance(ctx, nav);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            Parent root = loader.load();
+            InviteMemberController controller = loader.getController();
+
+            // Open modal
+            Stage dialog = new Stage();
+            dialog.setTitle("Invite Members");
+            dialog.initOwner(groupTabs.getScene().getWindow());
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setResizable(false);
+            dialog.setScene(new Scene(root));
+
+            controller.setStage(dialog);
+            dialog.showAndWait();
+
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onShareGroupID(ActionEvent event) {
+        try {
+            // Load FXML
+            FXMLLoader loader = new FXMLLoader(View.ShareGroupID.url());
+            loader.setControllerFactory(cls -> {
+                try {
+                    return cls.getDeclaredConstructor(AppContext.class, Navigation.class)
+                            .newInstance(ctx, nav);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            Parent root = loader.load();
+            ShareGroupIDController controller = loader.getController();
+
+            // Open modal
+            Stage dialog = new Stage();
+            dialog.setTitle("Share Group ID");
+            dialog.initOwner(groupTabs.getScene().getWindow());
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setResizable(false);
+            dialog.setScene(new Scene(root));
+
+            controller.setStage(dialog);
+            dialog.showAndWait();
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onManageGroup(ActionEvent event) {
+        try {
+            // Load FXML
+            FXMLLoader loader = new FXMLLoader(View.ManageGroup.url());
+            loader.setControllerFactory(cls -> {
+                try {
+                    return cls.getDeclaredConstructor(AppContext.class, Navigation.class)
+                            .newInstance(ctx, nav);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            Parent root = loader.load();
+            ManageGroupController controller = loader.getController();
+
+            // Open modal
+            Stage dialog = new Stage();
+            dialog.setTitle("Manage Group");
+            dialog.initOwner(groupTabs.getScene().getWindow());
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setResizable(false);
+            dialog.setScene(new Scene(root));
+
+            controller.setStage(dialog);
+            dialog.showAndWait();
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onLeaveGroup(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void onDeleteGroup(ActionEvent event) {
+
     }
 }
