@@ -44,11 +44,11 @@ public class FriendDAO implements IFriendDAO{
                     System.err.println("DuplicateFriendException: " + new DuplicateFriendException("Friend already exists"));
                     return false;
                 }
+            } else {
+                String searchQuery = String.format("INSERT INTO friends (user, friend, status) VALUES ('%s', '%s', 'pending');", user.getUsername(), friend.getUsername());
+                //System.out.println(searchQuery);
+                return resultsToList(SQLQuery(searchQuery)) != null;
             }
-
-            String searchQuery = String.format("INSERT INTO friends (user, friend, status) VALUES ('%s', '%s', 'pending');", user.getUsername(), friend.getUsername());
-            //System.out.println(searchQuery);
-            return resultsToList(SQLQuery(searchQuery)) != null;
         }
     }
 
