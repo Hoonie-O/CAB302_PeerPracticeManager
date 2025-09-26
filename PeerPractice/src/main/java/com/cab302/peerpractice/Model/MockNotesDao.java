@@ -54,13 +54,15 @@ public class MockNotesDao implements INotesDAO {
 
     @Override
     public String addChapter(String noteID, Chapter chapter) {
+        String id = UUID.randomUUID().toString();
         Note note = notes.stream()
                 .filter(n -> n.getID().equals(noteID))
                 .findFirst()
                 .orElse(null);
-        note.addChapter(chapter);
+        note.addChapter(id);
+        chapter.setID(id);
         chapters.add(chapter);
-        return UUID.randomUUID().toString();
+        return id;
     }
 
     @Override

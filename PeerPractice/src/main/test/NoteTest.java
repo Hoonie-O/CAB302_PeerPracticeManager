@@ -58,7 +58,7 @@ public class NoteTest {
     public void TestAddChapter(){
         Note note = new Note("name",1);
         Chapter chapter = new Chapter("name","1");
-        note.addChapter(chapter);
+        note.addChapter("1");
         assertEquals(1, note.getChapters());
         assertSame(chapter, note.getChapters().getFirst());
     }
@@ -67,8 +67,8 @@ public class NoteTest {
     public void TestChaptersUnmodifiableList(){
         Note note = new Note("name",1);
         Chapter chapter = new Chapter("name","1");
-        note.addChapter(chapter);
-        assertThrows(UnsupportedOperationException.class, () -> note.getChapters().add(new Chapter("name","1")));
+        note.addChapter("1");
+        assertThrows(UnsupportedOperationException.class, () -> note.getChapters().add("s"));
     }
 
 

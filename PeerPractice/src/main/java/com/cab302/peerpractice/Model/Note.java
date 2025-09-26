@@ -9,7 +9,7 @@ public class Note {
     private final int groupID;
     private String ID;
     private String name;
-    private ArrayList<Chapter> chapters;
+    private ArrayList<String> chapters;
 
     public Note(String name, int groupID) {
         this.name = name;
@@ -20,7 +20,7 @@ public class Note {
     public String getName(){return name;}
     public int getGroup(){return groupID;}
     public String getID(){return ID;}
-    public List<Chapter> getChapters(){return Collections.unmodifiableList(chapters);}
+    public List<String> getChapters(){return Collections.unmodifiableList(chapters);}
 
     //Setters
     public void setName(String name){
@@ -29,8 +29,8 @@ public class Note {
     public void setID(String ID){
         this.ID = ID;
     }
-    public void addChapter(Chapter chapter){
-        chapters.add(chapter);
+    public void addChapter(String chapterID){
+        chapters.add(chapterID);
     }
 
 
