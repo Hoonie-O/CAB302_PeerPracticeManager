@@ -112,11 +112,17 @@ public class GroupDBDAO implements IGroupDAO {
 
                         // Add owner as admin member
                         try {
+                            System.out.println("[DEBUG] GroupDBDAO.addGroup -> Looking for owner: " + group.getOwner());
                             User owner = userDao.findUser("username", group.getOwner());
                             if (owner != null) {
+                                System.out.println("[DEBUG] GroupDBDAO.addGroup -> Found owner: " + owner.getUserId() + " (" + owner.getUsername() + ")");
                                 addMemberWithRole(groupId, owner.getUserId(), "admin");
+                            } else {
+                                System.out.println("[DEBUG] GroupDBDAO.addGroup -> Owner not found for username: " + group.getOwner());
                             }
-                        } catch (SQLException ignored) {}
+                        } catch (SQLException e) {
+                            System.err.println("[DEBUG] GroupDBDAO.addGroup -> SQLException adding owner as admin: " + e.getMessage());
+                        }
 
                         return groupId;
                     }
@@ -178,8 +184,37 @@ public class GroupDBDAO implements IGroupDAO {
 
     @Override
     public List<Group> searchByMembers(List<User> users) {
-        // Implementation left for future enhancement
-        return new ArrayList<>();
+        if (users == null || users.isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        List<Group> groups = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT DISTINCT g.* FROM groups g " +
+            "JOIN group_members gm ON g.group_id = gm.group_id " +
+            "WHERE gm.user_id IN (");
+        
+        for (int i = 0; i < users.size(); i++) {
+            if (i > 0) sql.append(",");
+            sql.append("?");
+        }
+        sql.append(")");
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < users.size(); i++) {
+                ps.setString(i + 1, users.get(i).getUserId());
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    groups.add(mapRowToGroup(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return groups;
     }
 
     @Override
@@ -345,5 +380,189 @@ public class GroupDBDAO implements IGroupDAO {
             System.err.println("Error removing member from group: " + e.getMessage());
             return false;
         }
+    }
+
+    public int createJoinRequest(int groupId, String userId) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "INSERT INTO group_join_requests (group_id, user_id, status, requested_at) VALUES (?, ?, 'pending', ?)",
+                Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, groupId);
+            ps.setString(2, userId);
+            ps.setString(3, LocalDateTime.now().toString());
+            
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
+            }
+            return -1;
+        } catch (SQLException e) {
+            System.err.println("Error creating join request: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    public List<GroupJoinRequest> getPendingJoinRequests(int groupId) {
+        List<GroupJoinRequest> requests = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT r.*, u.first_name, u.last_name, u.username, u.email " +
+                "FROM group_join_requests r " +
+                "JOIN users u ON r.user_id = u.user_id " +
+                "WHERE r.group_id = ? AND r.status = 'pending' " +
+                "ORDER BY r.requested_at ASC")) {
+            ps.setInt(1, groupId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    GroupJoinRequest request = new GroupJoinRequest(
+                        rs.getInt("request_id"),
+                        rs.getInt("group_id"),
+                        rs.getString("user_id"),
+                        rs.getString("status"),
+                        LocalDateTime.parse(rs.getString("requested_at")),
+                        rs.getString("processed_at") != null ? LocalDateTime.parse(rs.getString("processed_at")) : null,
+                        rs.getString("processed_by")
+                    );
+                    
+                    User user = new User(
+                        rs.getString("user_id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        "",
+                        ""
+                    );
+                    request.setUser(user);
+                    requests.add(request);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting pending join requests: " + e.getMessage());
+        }
+        return requests;
+    }
+
+    public boolean processJoinRequest(int requestId, String status, String processedBy) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE group_join_requests SET status = ?, processed_at = ?, processed_by = ? WHERE request_id = ?")) {
+            ps.setString(1, status);
+            ps.setString(2, LocalDateTime.now().toString());
+            ps.setString(3, processedBy);
+            ps.setInt(4, requestId);
+            
+            int rowsAffected = ps.executeUpdate();
+            
+            if (rowsAffected > 0 && "approved".equals(status)) {
+                try (PreparedStatement getRequestPs = connection.prepareStatement(
+                        "SELECT group_id, user_id FROM group_join_requests WHERE request_id = ?")) {
+                    getRequestPs.setInt(1, requestId);
+                    try (ResultSet rs = getRequestPs.executeQuery()) {
+                        if (rs.next()) {
+                            int groupId = rs.getInt("group_id");
+                            String userId = rs.getString("user_id");
+                            
+                            try (PreparedStatement addMemberPs = connection.prepareStatement(
+                                    "INSERT OR IGNORE INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, 'member', ?)")) {
+                                addMemberPs.setInt(1, groupId);
+                                addMemberPs.setString(2, userId);
+                                addMemberPs.setString(3, LocalDateTime.now().toString());
+                                addMemberPs.executeUpdate();
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Error processing join request: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean hasUserRequestedToJoin(int groupId, String userId) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT 1 FROM group_join_requests WHERE group_id = ? AND user_id = ? AND status = 'pending'")) {
+            ps.setInt(1, groupId);
+            ps.setString(2, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking if user requested to join: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean isUserMemberOfGroup(int groupId, String userId) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT 1 FROM group_members WHERE group_id = ? AND user_id = ?")) {
+            ps.setInt(1, groupId);
+            ps.setString(2, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking if user is member: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public String getUserRoleInGroup(int groupId, String userId) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT role FROM group_members WHERE group_id = ? AND user_id = ?")) {
+            ps.setInt(1, groupId);
+            ps.setString(2, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("role");
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting user role: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<GroupMemberEntity> getGroupMembers(int groupId) {
+        List<GroupMemberEntity> members = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT gm.*, u.first_name, u.last_name, u.username, u.email " +
+                "FROM group_members gm " +
+                "JOIN users u ON gm.user_id = u.user_id " +
+                "WHERE gm.group_id = ? " +
+                "ORDER BY gm.role DESC, gm.joined_at ASC")) {
+            ps.setInt(1, groupId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    GroupMemberEntity member = new GroupMemberEntity();
+                    member.setGroupId(rs.getInt("group_id"));
+                    member.setUserId(rs.getString("user_id"));
+                    member.setRole(rs.getString("role"));
+                    member.setJoinedAt(LocalDateTime.parse(rs.getString("joined_at")));
+                    
+                    User user = new User(
+                        rs.getString("user_id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        "",
+                        ""
+                    );
+                    member.setUser(user);
+                    members.add(member);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting group members: " + e.getMessage());
+        }
+        return members;
     }
 }

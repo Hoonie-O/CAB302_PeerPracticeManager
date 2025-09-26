@@ -32,6 +32,8 @@ public class AppContext {
             this.sessionManager = new SessionManager(this.sessionCalendarManager);
             this.sessionTaskStorage = new SessionTaskDBStorage(userDao);
             this.sessionTaskManager = new SessionTaskManager(sessionTaskStorage, this.sessionManager);
+            
+            this.sessionCalendarManager.setSessionTaskManager(this.sessionTaskManager);
 
             var availabilityStorage = new AvailabilityDBStorage(userDao);
             this.availabilityManager = new AvailabilityManager(availabilityStorage);

@@ -166,6 +166,24 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
             ps.setObject(12, session.getGroup() != null ? session.getGroup().getID() : null);
             int rows = ps.executeUpdate();
             System.out.println("[DEBUG] Insert result: " + rows + " row(s) affected");
+            
+            // Save participants to session_participants table
+            try (PreparedStatement participantPs = connection.prepareStatement("DELETE FROM session_participants WHERE session_id = ?")) {
+                participantPs.setString(1, session.getSessionId());
+                participantPs.executeUpdate();
+            }
+            
+            for (User participant : session.getParticipants()) {
+                try (PreparedStatement participantPs = connection.prepareStatement("INSERT INTO session_participants (session_id, user_id) VALUES (?, ?)")) {
+                    participantPs.setString(1, session.getSessionId());
+                    participantPs.setString(2, participant.getUserId());
+                    participantPs.executeUpdate();
+                    System.out.println("[DEBUG] Added participant " + participant.getUsername() + " (" + participant.getUserId() + ") to session " + session.getSessionId());
+                } catch (SQLException participantError) {
+                    System.err.println("[DEBUG] Failed to add participant " + participant.getUsername() + ": " + participantError.getMessage());
+                }
+            }
+            
             return true;
         } catch (SQLException e) {
             System.err.println("[DEBUG] DBStorage.addSession FAILED: " + e.getMessage());

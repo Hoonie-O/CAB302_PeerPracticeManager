@@ -3,17 +3,17 @@ package com.cab302.peerpractice.Controllers;
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.*;
 import com.cab302.peerpractice.Navigation;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -216,24 +216,49 @@ public class GroupController extends SidebarController {
         // Get group members from database
         if (ctx.getGroupDao() instanceof GroupDBDAO) {
             GroupDBDAO groupDBDAO = (GroupDBDAO) ctx.getGroupDao();
-
-            for (User member : group.getMembers()) {
-                String role = groupDBDAO.getMemberRole(group.getID(), member.getUserId());
-                // Capitalize first letter for display
+            List<GroupMemberEntity> dbMembers = groupDBDAO.getGroupMembers(group.getID());
+            
+            for (GroupMemberEntity dbMember : dbMembers) {
+                String role = dbMember.getRole();
                 role = role.substring(0, 1).toUpperCase() + role.substring(1).toLowerCase();
-                String availability = getUserAvailabilityStatus(member);
+                String availability = getUserAvailabilityStatus(dbMember.getUser());
 
-                GroupMember groupMember = new GroupMember(
-                    member.getFirstName() + " " + member.getLastName(),
+                GroupMember displayMember = new GroupMember(
+                    dbMember.getUser().getFirstName() + " " + dbMember.getUser().getLastName(),
                     role,
                     availability,
-                    member.getUserId()
+                    dbMember.getUserId()
                 );
-                membersList.add(groupMember);
+                membersList.add(displayMember);
             }
         }
 
         membersTable.setItems(FXCollections.observableArrayList(membersList));
+        
+        // Add admin functionality
+        User currentUser = ctx.getUserSession().getCurrentUser();
+        if (ctx.getGroupDao() instanceof GroupDBDAO) {
+            GroupDBDAO groupDBDAO = (GroupDBDAO) ctx.getGroupDao();
+            if (groupDBDAO.isAdmin(group.getID(), currentUser.getUserId()) || 
+                group.getOwner().equals(currentUser.getUsername())) {
+                showJoinRequestsIfAny(group);
+            }
+        }
+    }
+    
+    private void showJoinRequestsIfAny(Group group) {
+        if (ctx.getGroupDao() instanceof GroupDBDAO) {
+            GroupDBDAO groupDBDAO = (GroupDBDAO) ctx.getGroupDao();
+            List<GroupJoinRequest> pendingRequests = groupDBDAO.getPendingJoinRequests(group.getID());
+            
+            if (!pendingRequests.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Pending Join Requests");
+                alert.setHeaderText(group.getName() + " has " + pendingRequests.size() + " pending join request(s)");
+                alert.setContentText("Check the group management interface to approve or reject requests.");
+                alert.showAndWait();
+            }
+        }
     }
 
     // Update sessions list for selected group

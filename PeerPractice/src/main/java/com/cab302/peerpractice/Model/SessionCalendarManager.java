@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class SessionCalendarManager {
     private final SessionCalendarStorage storage;
+    private SessionTaskManager sessionTaskManager;
 
     public SessionCalendarManager() {
         this.storage = new SessionCalendarStorage();
@@ -14,6 +15,10 @@ public class SessionCalendarManager {
 
     public SessionCalendarManager(SessionCalendarStorage storage) {
         this.storage = storage;
+    }
+    
+    public void setSessionTaskManager(SessionTaskManager sessionTaskManager) {
+        this.sessionTaskManager = sessionTaskManager;
     }
 
     public boolean createSession(String title, User organiser, LocalDateTime startTime,
@@ -54,6 +59,10 @@ public class SessionCalendarManager {
     }
 
     public boolean removeSession(Session session) {
+        if (session != null && session.getSessionId() != null && sessionTaskManager != null) {
+            sessionTaskManager.deleteAllTasksForSession(session.getSessionId());
+            System.out.println("[DEBUG] SessionCalendarManager.removeSession -> Deleted tasks for session " + session.getSessionId());
+        }
         return storage.removeSession(session);
     }
 
@@ -74,6 +83,12 @@ public class SessionCalendarManager {
     }
 
     public void deleteSession(Session session) {
+        if (session != null && session.getSessionId() != null) {
+            if (sessionTaskManager != null) {
+                sessionTaskManager.deleteAllTasksForSession(session.getSessionId());
+                System.out.println("[DEBUG] SessionCalendarManager.deleteSession -> Deleted tasks for session " + session.getSessionId());
+            }
+        }
         storage.removeSession(session);
     }
 

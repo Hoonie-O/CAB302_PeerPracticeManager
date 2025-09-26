@@ -246,6 +246,21 @@ public class SessionTaskDBStorage extends SessionTaskStorage {
             return false;
         }
     }
+    
+    @Override
+    public boolean removeAllTasksForSession(String sessionId) {
+        if (sessionId == null) return false;
+
+        try (PreparedStatement ps = connection.prepareStatement("DELETE FROM session_tasks WHERE session_id = ?")) {
+            ps.setString(1, sessionId);
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("[DEBUG] Deleted " + rowsAffected + " tasks for session " + sessionId);
+            return rowsAffected >= 0;
+        } catch (SQLException e) {
+            System.err.println("Error removing tasks for session: " + e.getMessage());
+            return false;
+        }
+    }
 
     @Override
     public List<SessionTask> getTasksForUser(String assigneeId) {

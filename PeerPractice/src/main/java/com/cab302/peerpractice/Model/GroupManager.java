@@ -54,16 +54,24 @@ public class GroupManager {
         if(userToAdd == null) throw new UserNotFoundException("User to add couldn't be found");
 
         group.addMember(userToAdd);
+        groupDAO.addToGroup(group.getID(), userToAdd);
     }
 
     public void joinGroup(Group group, User user) throws SQLException {
         if(user == null) throw new IllegalArgumentException("User can't be null");
         if(group == null) throw new IllegalArgumentException("Group can't be null");
         if(group.isRequire_approval()){
-            notifier.groupApprovalRequest(user,group);
+            if (groupDAO instanceof GroupDBDAO) {
+                GroupDBDAO dbDAO = (GroupDBDAO) groupDAO;
+                if (!dbDAO.hasUserRequestedToJoin(group.getID(), user.getUserId()) && 
+                    !dbDAO.isUserMemberOfGroup(group.getID(), user.getUserId())) {
+                    dbDAO.createJoinRequest(group.getID(), user.getUserId());
+                }
+            }
         }
         else{
             group.addMember(user);
+            groupDAO.addToGroup(group.getID(), user);
         }
     }
 

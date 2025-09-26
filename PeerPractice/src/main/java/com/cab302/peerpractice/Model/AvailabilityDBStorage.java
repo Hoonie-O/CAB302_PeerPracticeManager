@@ -116,4 +116,126 @@ public class AvailabilityDBStorage extends AvailabilityStorage {
         }
         return list;
     }
+
+    @Override
+    public List<Availability> getAvailabilitiesForUser(User user) {
+        List<Availability> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM availabilities WHERE user_id = ?")) {
+            ps.setString(1, user.getUserId());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRowToAvailability(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List<Availability> getAvailabilitiesForWeek(LocalDate startOfWeek) {
+        List<Availability> list = new ArrayList<>();
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM availabilities WHERE start_time >= ? AND start_time <= ?")) {
+            ps.setString(1, startOfWeek.atStartOfDay().toString());
+            ps.setString(2, endOfWeek.atTime(23, 59, 59).toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRowToAvailability(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List<Availability> getAvailabilitiesForUsers(List<User> users, LocalDate startOfWeek) {
+        if (users.isEmpty()) return new ArrayList<>();
+        
+        List<Availability> list = new ArrayList<>();
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+        
+        StringBuilder sql = new StringBuilder("SELECT * FROM availabilities WHERE user_id IN (");
+        for (int i = 0; i < users.size(); i++) {
+            if (i > 0) sql.append(",");
+            sql.append("?");
+        }
+        sql.append(") AND start_time >= ? AND start_time <= ?");
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < users.size(); i++) {
+                ps.setString(i + 1, users.get(i).getUserId());
+            }
+            ps.setString(users.size() + 1, startOfWeek.atStartOfDay().toString());
+            ps.setString(users.size() + 2, endOfWeek.atTime(23, 59, 59).toString());
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRowToAvailability(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public boolean updateAvailability(Availability oldAvailability, Availability newAvailability) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE availabilities SET title = ?, description = ?, start_time = ?, end_time = ?, color_label = ? " +
+                "WHERE availability_id = ?")) {
+            ps.setString(1, newAvailability.getTitle());
+            ps.setString(2, newAvailability.getDescription());
+            ps.setString(3, newAvailability.getStartTime().toString());
+            ps.setString(4, newAvailability.getEndTime().toString());
+            ps.setString(5, newAvailability.getColorLabel());
+            ps.setString(6, oldAvailability.toString());
+            
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public void clearAllAvailabilities() {
+        try (Statement st = connection.createStatement()) {
+            st.executeUpdate("DELETE FROM availabilities");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public int getAvailabilityCount() {
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM availabilities")) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean hasAvailabilityOnDate(User user, LocalDate date) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT COUNT(*) FROM availabilities WHERE user_id = ? AND substr(start_time,1,10) = ?")) {
+            ps.setString(1, user.getUserId());
+            ps.setString(2, date.toString());
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
