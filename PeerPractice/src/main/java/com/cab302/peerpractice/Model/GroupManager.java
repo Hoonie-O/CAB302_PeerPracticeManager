@@ -25,8 +25,8 @@ public class GroupManager {
 
         if(user == null) throw new IllegalArgumentException("Creating user can't be null");
 
-        validateName(name);
-        validateDescription(description);
+        name = ValidationUtils.validateAndCleanOthersName(name);
+        description = ValidationUtils.validateAndCleanGroupDescription(description);
 
         Group group = new Group(name,description,require_approval,user.getUsername(), LocalDateTime.now());
         group.addMember(user);
@@ -91,24 +91,6 @@ public class GroupManager {
         if(!group.getOwner().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
 
         notifier.denyNotification(user,notification);
-    }
-
-    //Validators
-    private static void validateName(String name) {
-        if (name == null) throw new IllegalArgumentException("Group name can't be null");
-        name = name.trim();
-        if (name.isEmpty()) throw new IllegalArgumentException("Group name can't be blank");
-        if (name.length() > 20) throw new IllegalArgumentException("Group name can't be longer than 20 characters");
-        if (!Pattern.compile("^[A-Za-z0-9 '_.-]+$").matcher(name).matches()) {
-            throw new IllegalArgumentException("Group name can only contain letters, numbers, spaces, dots, hyphens,underscores, or apostrophes");
-        }
-    }
-
-    private static void validateDescription(String description) {
-        if (description == null) throw new IllegalArgumentException("Description can't be null");
-        description = description.trim();
-        if (description.isEmpty()) throw new IllegalArgumentException("Description can't be blank");
-        if (description.length() > 200) throw new IllegalArgumentException("Description can't be longer than 200 characters");
     }
 
 }

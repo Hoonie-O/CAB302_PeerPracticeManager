@@ -177,27 +177,12 @@ public class GroupTest {
         assertEquals(100, group.getMembers().size());
     }
 
-    @Test
-    public void TestGetNullNotesWhenNoNote(){
-        assertNull(group.getNotes());
-    }
-
-    @Test
-    public void TestAddNote(){
-        Note note = new Note("note",group);
-        group.addNote(note);
-        assertEquals(1,group.getNotes().size());
-        assertEquals(note,group.getNotes().getFirst());
-    }
-
 
 
     @Test
     public void testGroupIdNotNull(){
         assertNotNull(group.getID());
     }
-
-
 
 
 

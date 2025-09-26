@@ -14,7 +14,6 @@ public class Group {
     private String owner;
     private boolean require_approval;
     LocalDateTime created_at;
-    private List<Note> notes;
 
     public Group(String name, String description,boolean require_approval,String owner,LocalDateTime created_at){
         this.name = name;
@@ -45,9 +44,6 @@ public class Group {
     public void setRequire_approval(boolean require_approval) { this.require_approval = require_approval; }
 
     public LocalDateTime getCreated_at() { return created_at; }
-
-    public List<Note> getNotes(){return Collections.unmodifiableList(notes);}
-    public void addNote(Note note){notes.add(note);}
 
     
     public boolean getIsPrivate() { 

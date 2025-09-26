@@ -8,15 +8,22 @@ public class NotesManager {
     IGroupDAO groupDAO;
 
     public NotesManager(INotesDAO notesDAO, IGroupDAO groupDAO){
-        this.groupDAO = groupDAO;
         this.notesDAO = notesDAO;
+        this.groupDAO = groupDAO;
     }
 
-    public void addNote(String name, int groupID){
-        Group group = groupDAO.searchByID(groupID);
-        Note note = new Note(name,group);
+    public String addNote(String name, int groupID){
+        name = ValidationUtils.validateAndCleanOthersName(name);
 
+        Note note = new Note(name,groupID);
+        return notesDAO.addNote(note);
     }
+
+    public void changeName(String noteID, String name){
+        name = ValidationUtils.validateAndCleanOthersName(name);
+        notesDAO.changeName(noteID,name);
+    }
+
 
 
 
