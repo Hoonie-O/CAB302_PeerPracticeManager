@@ -58,6 +58,10 @@ public class NotesManager {
         notesDAO.updateChapter(chapterID,"content",content);
     }
 
+    public List<Chapter> getChapters(String noteID){
+        if(notesDAO.getNote(noteID) == null) throw new IllegalArgumentException("Note " + noteID + " Cannot be null");
+        return notesDAO.getChapters(noteID);
+    }
 
 
 

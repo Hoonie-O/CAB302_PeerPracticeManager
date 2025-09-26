@@ -20,6 +20,7 @@ public class GroupController extends SidebarController {
     @FXML private Button addGroupButton;
     @FXML private Button sortGroupsButton;
     @FXML private GroupCalendarController groupCalendarController;
+    @FXML private NotesController notesController;
 
     private boolean sortAlphabetical = false;
 
@@ -45,8 +46,9 @@ public class GroupController extends SidebarController {
         groupListView.getSelectionModel().selectedItemProperty().addListener((obs, oldGroup, newGroup) -> {
             if (newGroup != null) {
                 groupNameLabel.setText(newGroup.getName());
-                if (groupCalendarController != null) {
+                if (groupCalendarController != null || notesController != null) {
                     groupCalendarController.setGroup(newGroup);
+                    notesController.setGroup(newGroup);
                 }
             }
         });

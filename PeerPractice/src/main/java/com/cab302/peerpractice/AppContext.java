@@ -59,9 +59,11 @@ public class AppContext {
     public SessionTaskManager getSessionTaskManager(){return sessionTaskManager;}
     public SessionCalendarManager getSessionCalendarManager(){return sessionCalendarManager;}
     public AvailabilityManager getAvailabilityManager(){return availabilityManager;}
+    public NotesManager getNotesManager(){return notesManager;}
+    public INotesDAO getNotesDAO(){return notesDAO;}
     public boolean isMenuOpen() { return menuOpen; }
     public void setMenuOpen(boolean value) { this.menuOpen = value; }
     public boolean isProfileOpen() { return profileOpen; }
     public void setProfileOpen(boolean value) { this.profileOpen = value; }
-    
+
 }

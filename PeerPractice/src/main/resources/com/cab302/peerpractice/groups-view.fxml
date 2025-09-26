@@ -58,7 +58,7 @@
                         </Tab>
                         <Tab text="Sessions" closable="false"/>
                         <Tab text="Notes" closable="false">
-                            <fx:include source="group-notes.fxml" fx:id="groupNotes"/>
+                            <fx:include source="group-notes.fxml" fx:id="notes"/>
                         </Tab>
                         <Tab text="Chat" closable="false"/>
                         <Tab text="Files" closable="false"/>

@@ -7,14 +7,27 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.WebView?>
 
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.StackedFontIcon?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.NotesController">
     <center>
         <SplitPane fx:id="rootSplit" orientation="HORIZONTAL">
             <items>
-                <ListView fx:id="notesList" />
+                <ListView fx:id="notesList"/>
                 <ListView fx:id="chaptersList" />
-                <WebView fx:id="contentView" />
+                <StackPane fx:id="contentStack" xmlns:fx="http://javafx.com/fxml">
+                    <WebView fx:id="contentWebView"/>
+                    <Button fx:id="editButton" text="Edit" minWidth="32" minHeight="32" prefWidth="36" prefHeight="36"
+                        style="-fx-background-radius: 18; -fx-font-size: 14;">
+                        <StackPane.margin>
+                            <Insets bottom="12" right="12"/>
+                        </StackPane.margin>
+                        <StackPane.alignment>
+                            BOTTOM_RIGHT
+                        </StackPane.alignment>
+                    </Button>
+                </StackPane>
             </items>
         </SplitPane>
     </center>

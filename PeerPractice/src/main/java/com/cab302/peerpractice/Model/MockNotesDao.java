@@ -18,8 +18,10 @@ public class MockNotesDao implements INotesDAO {
 
     @Override
     public String addNote(Note note) {
+        String noteID = UUID.randomUUID().toString();
+        note.setID(noteID);
         notes.add(note);
-        return UUID.randomUUID().toString();
+        return noteID;
     }
 
     @Override
@@ -44,8 +46,11 @@ public class MockNotesDao implements INotesDAO {
 
     @Override
     public Note getNote(String noteID) {
+        System.out.println("inside of the shit " + noteID);
         return notes.stream().filter(n -> n.getID().equals(noteID)).findFirst().orElse(null);
     }
+
+
 
     @Override
     public List<Note> getAllNotes() {

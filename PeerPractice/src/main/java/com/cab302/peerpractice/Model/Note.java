@@ -14,6 +14,7 @@ public class Note {
     public Note(String name, int groupID) {
         this.name = name;
         this.groupID = groupID;
+        chapters = new ArrayList<String>();
     }
 
     //Getters
