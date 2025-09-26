@@ -56,13 +56,15 @@
                 </GridPane>
 
                 <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Button fx:id="createTaskButton" text="Create Task" 
+                    <Button fx:id="backButton" text="← Back"
+                           style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+                    <Button fx:id="createTaskButton" text="Create Task"
                            style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-                    <Button fx:id="updateTaskButton" text="Update Task" 
+                    <Button fx:id="updateTaskButton" text="Update Task"
                            style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
-                    <Button fx:id="deleteTaskButton" text="Delete Task" 
+                    <Button fx:id="deleteTaskButton" text="Delete Task"
                            style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
-                    <Button fx:id="markCompleteButton" text="Mark Complete" 
+                    <Button fx:id="markCompleteButton" text="Mark Complete"
                            style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
                 </HBox>
 

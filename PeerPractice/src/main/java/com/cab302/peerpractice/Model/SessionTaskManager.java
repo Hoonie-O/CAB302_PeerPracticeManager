@@ -149,6 +149,16 @@ public class SessionTaskManager {
     }
     
     /**
+     * Deletes all tasks associated with a session. Used when a session is deleted.
+     */
+    public boolean deleteAllTasksForSession(String sessionId) {
+        if (sessionId == null) {
+            return false;
+        }
+        return storage.removeAllTasksForSession(sessionId);
+    }
+    
+    /**
      * Helper method to find a session by ID from session manager
      */
     private Session findSessionById(String sessionId) {

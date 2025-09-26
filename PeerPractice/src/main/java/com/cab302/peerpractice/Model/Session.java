@@ -14,7 +14,7 @@ public class Session {
     private LocalDateTime endTime;
     private User organiser;
     private List<User> participants;
-    private SessionStatus status;
+    private String priority;
     private String location;
     private String colorLabel;
     private String subject;
@@ -43,7 +43,7 @@ public class Session {
         this.endTime = endTime;
 
         this.participants = new ArrayList<>();
-        this.status = SessionStatus.PLANNED;
+        this.priority = "optional";
         this.description = "";
         this.location = "TBD";
         this.colorLabel = "BLUE";
@@ -69,7 +69,7 @@ public class Session {
     public LocalDateTime getStartTime() { return startTime; }
     public LocalDateTime getEndTime() { return endTime; }
     public List<User> getParticipants() { return new ArrayList<>(participants); }
-    public SessionStatus getStatus() { return status; }
+    public String getPriority() { return priority; }
     public String getDescription() { return description; }
     public String getLocation() { return location; }
     public String getColorLabel() { return colorLabel; }
@@ -125,8 +125,8 @@ public class Session {
         this.group = group;
     }
 
-    public void setStatus(SessionStatus status) {
-        this.status = status != null ? status : SessionStatus.PLANNED;
+    public void setPriority(String priority) {
+        this.priority = priority != null ? priority : "optional";
     }
 
     // === Participant management ===
@@ -182,7 +182,7 @@ public class Session {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", participants=" + participants.size() +
-                ", status=" + status +
+                ", priority=" + priority +
                 ", group=" + (group != null ? group.getName() : "null") +
                 '}';
     }
