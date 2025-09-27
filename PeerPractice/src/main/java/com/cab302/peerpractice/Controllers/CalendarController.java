@@ -148,7 +148,6 @@ public class CalendarController extends SidebarController {
         // show different items based on view mode
         if (isSessionView) {
             List<Session> sessions = getUserSessionsForDate(date);
-            List<Session> sessions = getUserSessionsForDate(date);
             for (Session session : sessions) {
                 Label sessionLabel = new Label(session.getTitle());
                 sessionLabel.setFont(Font.font("System", 8));
@@ -195,7 +194,6 @@ public class CalendarController extends SidebarController {
     private void showItemDialog(LocalDate date) {
         if (isSessionView) {
             List<Session> sessions = getUserSessionsForDate(date);
-            List<Session> sessions = getUserSessionsForDate(date);
             if (sessions.isEmpty()) {
                 showAddSessionDialog(date);
             } else {
@@ -219,12 +217,6 @@ public class CalendarController extends SidebarController {
     }
 
     private void showAddSessionDialog(LocalDate date) {
-        // Users can't create sessions from personal calendar - only in groups
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Session Creation Restricted");
-        alert.setHeaderText("Sessions must be created within a group");
-        alert.setContentText("Please navigate to a group calendar to create study sessions. Sessions can only be organized within groups to ensure proper collaboration.");
-        alert.showAndWait();
         // Users can't create sessions from personal calendar - only in groups
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Session Creation Restricted");
@@ -345,17 +337,10 @@ public class CalendarController extends SidebarController {
 
             Button viewTasksButton = new Button("View Tasks");
             viewTasksButton.setOnAction(e -> {
-
-            Button viewTasksButton = new Button("View Tasks");
-            viewTasksButton.setOnAction(e -> {
                 dialog.close();
                 nav.openSessionTasks(session.getSessionId());
                 nav.openSessionTasks(session.getSessionId());
             });
-
-            Label groupLabel = new Label("Group: " + (session.getGroup() != null ? session.getGroup().getName() : "Unknown"));
-            groupLabel.setFont(Font.font("System", 10));
-            groupLabel.setTextFill(Color.GRAY);
 
             Label groupLabel = new Label("Group: " + (session.getGroup() != null ? session.getGroup().getName() : "Unknown"));
             groupLabel.setFont(Font.font("System", 10));
@@ -368,11 +353,6 @@ public class CalendarController extends SidebarController {
             content.getChildren().add(sessionBox);
         }
 
-        // Personal calendar doesn't allow creating sessions
-        Label infoLabel = new Label("Sessions must be created from group calendars.");
-        infoLabel.setFont(Font.font("System", 10));
-        infoLabel.setTextFill(Color.GRAY);
-        content.getChildren().add(infoLabel);
         // Personal calendar doesn't allow creating sessions
         Label infoLabel = new Label("Sessions must be created from group calendars.");
         infoLabel.setFont(Font.font("System", 10));
@@ -519,22 +499,6 @@ public class CalendarController extends SidebarController {
                 updateCalendarView();
             }
         });
-    }
-
-    // Get sessions from all groups user belongs to for a specific date
-    private List<Session> getUserSessionsForDate(LocalDate date) {
-        User currentUser = ctx.getUserSession().getCurrentUser();
-        if (currentUser == null) return new ArrayList<>();
-
-        List<Session> userSessions = new ArrayList<>();
-        List<Group> userGroups = ctx.getGroupDao().searchByUser(currentUser);
-
-        for (Group group : userGroups) {
-            List<Session> groupSessions = sessionCalendarManager.getSessionsForDateAndGroup(date, group);
-            userSessions.addAll(groupSessions);
-        }
-
-        return userSessions;
     }
 
     // Get sessions from all groups user belongs to for a specific date

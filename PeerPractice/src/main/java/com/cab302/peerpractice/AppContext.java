@@ -1,6 +1,8 @@
 package com.cab302.peerpractice;
 
 import com.cab302.peerpractice.Model.*;
+
+import java.lang.module.FindException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.ArrayList;
 public class AppContext {
     private final UserSession userSession = new UserSession();
     private final IUserDAO userDao = new UserDAO();
-    private final IFriendDAO friendDao = new FriendDAO();
+    private final IFriendDAO friendDao;
     private final IGroupDAO groupDao;
     private final Notifier notifier = new Notifier(userDao);
     private final PasswordHasher passwordHasher = new BcryptHasher();
@@ -27,6 +29,7 @@ public class AppContext {
         try {
             this.groupDao = new GroupDBDAO(userDao);
             this.groupManager = new GroupManager(groupDao, notifier, userDao);
+            this.friendDao = new FriendDAO(userDao);
 
             var sessionStorage = new SessionCalendarDBStorage(userDao);
             this.sessionCalendarManager = new SessionCalendarManager(sessionStorage);

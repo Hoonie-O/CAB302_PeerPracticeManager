@@ -191,14 +191,6 @@ public class GroupCalendarController extends BaseController {
         subjectCombo.getItems().addAll("Science", "Technology", "Engineering", "Maths", "Humanities and Social Sciences");
         subjectCombo.setValue("Science");
 
-        ComboBox<String> priorityCombo = new ComboBox<>();
-        priorityCombo.getItems().addAll("optional", "urgent", "important");
-        priorityCombo.setValue("optional");
-
-        ComboBox<String> subjectCombo = new ComboBox<>();
-        subjectCombo.getItems().addAll("Science", "Technology", "Engineering", "Maths", "Humanities and Social Sciences");
-        subjectCombo.setValue("Science");
-
         grid.add(new Label("Title:"), 0, 0);
         grid.add(titleField, 1, 0);
         grid.add(new Label("Description:"), 0, 1);
@@ -261,8 +253,6 @@ public class GroupCalendarController extends BaseController {
 
         User currentUser = ctx.getUserSession().getCurrentUser();
 
-        User currentUser = ctx.getUserSession().getCurrentUser();
-
         for (Session session : sessions) {
             VBox sessionBox = new VBox(5);
             sessionBox.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
@@ -280,36 +270,6 @@ public class GroupCalendarController extends BaseController {
             Label descriptionLabel = new Label(session.getDescription().isEmpty() ? "No description" : session.getDescription());
             descriptionLabel.setWrapText(true);
 
-            HBox buttonBox = new HBox(8);
-
-            // Edit button - admins can edit all, members can edit own
-            boolean canEdit = canUserEditSession(currentUser, session);
-            if (canEdit) {
-                Button editButton = new Button("Edit");
-                editButton.setOnAction(e -> {
-                    dialog.close();
-                    javafx.application.Platform.runLater(() -> showEditSessionDialog(session));
-                });
-                buttonBox.getChildren().add(editButton);
-            }
-
-            // View Tasks button
-            Button viewTasksButton = new Button("View Tasks");
-            viewTasksButton.setOnAction(e -> {
-                dialog.close();
-                nav.openSessionTasks(session.getSessionId());
-            });
-            buttonBox.getChildren().add(viewTasksButton);
-
-            // Delete button - same permissions as edit
-            if (canEdit) {
-                Button deleteButton = new Button("Delete");
-                deleteButton.setOnAction(e -> {
-                    dialog.close();
-                    javafx.application.Platform.runLater(() -> showDeleteSessionDialog(session));
-                });
-                buttonBox.getChildren().add(deleteButton);
-            }
             HBox buttonBox = new HBox(8);
 
             // Edit button - admins can edit all, members can edit own
@@ -379,19 +339,6 @@ public class GroupCalendarController extends BaseController {
         });
     }
 
-    // Check if user can edit session - admins can edit all, members only own
-    private boolean canUserEditSession(User user, Session session) {
-        if (user == null || currentGroup == null) return false;
-
-        // Admin check - admins can edit all sessions in the group
-        if (ctx.getGroupManager().isAdmin(currentGroup, user)) {
-            return true;
-        }
-
-        // Members can only edit their own sessions
-        return session.getOrganiser().getUserId().equals(user.getUserId());
-    }
-
     private void showEditSessionDialog(Session session) {
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (currentUser == null || currentGroup == null) return;
@@ -475,77 +422,5 @@ public class GroupCalendarController extends BaseController {
 
         // Members can only edit their own sessions
         return session.getOrganiser().getUserId().equals(user.getUserId());
-    }
-
-    private void showEditSessionDialog(Session session) {
-        User currentUser = ctx.getUserSession().getCurrentUser();
-        if (currentUser == null || currentGroup == null) return;
-
-        Dialog<Session> dialog = new Dialog<>();
-        dialog.setTitle("Edit Study Session");
-        dialog.setHeaderText("Edit session: " + session.getTitle());
-
-        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField titleField = new TextField(session.getTitle());
-        TextArea descriptionField = new TextArea(session.getDescription());
-        descriptionField.setPrefRowCount(2);
-
-        LocalDateTime startTime = session.getStartTime();
-        LocalDateTime endTime = session.getEndTime();
-
-        Spinner<Integer> startHour = new Spinner<>(0, 23, startTime.getHour());
-        Spinner<Integer> startMinute = new Spinner<>(0, 59, startTime.getMinute(), 15);
-        Spinner<Integer> endHour = new Spinner<>(0, 23, endTime.getHour());
-        Spinner<Integer> endMinute = new Spinner<>(0, 59, endTime.getMinute(), 15);
-
-        ComboBox<String> colorCombo = new ComboBox<>();
-        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE");
-        colorCombo.setValue(session.getColorLabel());
-
-        grid.add(new Label("Title:"), 0, 0);
-        grid.add(titleField, 1, 0);
-        grid.add(new Label("Description:"), 0, 1);
-        grid.add(descriptionField, 1, 1);
-        grid.add(new Label("Start time:"), 0, 2);
-        grid.add(new HBox(5, new VBox(5, new Label("Hour"), startHour), new VBox(5, new Label("Minute"), startMinute)), 1, 2);
-        grid.add(new Label("End time:"), 0, 3);
-        grid.add(new HBox(5, new VBox(5, new Label("Hour"), endHour), new VBox(5, new Label("Minute"), endMinute)), 1, 3);
-        grid.add(new Label("Color:"), 0, 4);
-        grid.add(colorCombo, 1, 4);
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButtonType) {
-                String title = titleField.getText().trim();
-                if (!title.isEmpty()) {
-                    LocalDate sessionDate = startTime.toLocalDate();
-                    LocalDateTime newStartTime = LocalDateTime.of(sessionDate,
-                        java.time.LocalTime.of(startHour.getValue(), startMinute.getValue()));
-                    LocalDateTime newEndTime = LocalDateTime.of(sessionDate,
-                        java.time.LocalTime.of(endHour.getValue(), endMinute.getValue()));
-
-                    if (newEndTime.isAfter(newStartTime)) {
-                        Session editedSession = new Session(title, session.getOrganiser(), newStartTime, newEndTime, currentGroup);
-                        editedSession.setDescription(descriptionField.getText());
-                        editedSession.setColorLabel(colorCombo.getValue());
-                        return editedSession;
-                    }
-                }
-            }
-            return null;
-        });
-
-        dialog.showAndWait().ifPresent(editedSession -> {
-            sessionCalendarManager.updateSession(session, editedSession);
-            updateCalendarView();
-        });
     }
 }

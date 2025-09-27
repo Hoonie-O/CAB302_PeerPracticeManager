@@ -84,11 +84,7 @@ public abstract class SidebarController extends BaseController {
 
             if (studyGroupBtn != null) studyGroupBtn.setOnAction(e -> nav.DisplayMainMenuOrGroup());
             if (availabilityBtn != null) availabilityBtn.setOnAction(e -> nav.Display(View.Availability));
-            if (friendsBtn != null) {
-                friendsBtn.setOnAction(e ->
-                        new Alert(Alert.AlertType.INFORMATION, "Friends view coming soon!").showAndWait()
-                );
-            }
+            if (friendsBtn != null) friendsBtn.setOnAction(e -> nav.Display(View.Friends));
         }
 
         // Profile panel controls

@@ -13,12 +13,12 @@ import java.util.Objects;
 
 public class FriendDAO implements IFriendDAO{
     private final Connection connection;
-    private final UserDAO userDAO;
+    private final IUserDAO userDAO;
 
-    public FriendDAO() throws SQLException {
+    public FriendDAO(IUserDAO userDAO) throws SQLException {
         // get database connection and userDAO
-        userDAO = new UserDAO();
-        connection = userDAO.shareInstance();
+        this.userDAO = userDAO;
+        connection = SQLiteConnection.getInstance();
     }
 
     @Override
@@ -89,17 +89,22 @@ public class FriendDAO implements IFriendDAO{
         String searchQuery = String.format("SELECT * FROM friends WHERE user = '%s' AND friend = '%s';", user.getUsername(), friend.getUsername());
         //System.out.println(searchQuery);
         // return true if no matching results, false otherwise
-        return SQLQuery(searchQuery) != null;
+        return SQLQuery(searchQuery) == null;
     }
 
     private ResultSet SQLQuery(String searchQuery) throws SQLException {
         // create statement and resultset
         PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
         ResultSet resultSet = null;
+        boolean isInsert = searchQuery.contains("INSERT");
 
         // execute query statement
         try {
-            resultSet = preparedStatement.executeQuery();
+            if (!isInsert) {
+                resultSet = preparedStatement.executeQuery();
+            } else {
+                preparedStatement.executeQuery();
+            }
         } catch (SQLException e) {
             System.err.println("Query could not be executed: " + searchQuery + e);
         }
