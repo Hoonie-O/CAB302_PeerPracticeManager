@@ -54,6 +54,10 @@ public class AvailabilityDAO implements IAvailabilityDAO {
     }
 
     public boolean addAvailability(Availability availability) {
+        if (availability == null || availability.getUser() == null) {
+            return false;
+        }
+
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT OR REPLACE INTO availabilities " +
                         "(availability_id, title, description, start_time, end_time, user_id, color_label) " +
@@ -73,15 +77,20 @@ public class AvailabilityDAO implements IAvailabilityDAO {
         }
     }
 
-    
+
     public boolean removeAvailability(Availability availability) {
+        if (availability == null || availability.getUser() == null) {
+            return false;
+        }
+
         try (PreparedStatement ps = connection.prepareStatement(
                 "DELETE FROM availabilities WHERE title = ? AND start_time = ? AND user_id = ?")) {
             ps.setString(1, availability.getTitle());
             ps.setString(2, availability.getStartTime().toString());
             ps.setString(3, availability.getUser().getUserId());
-            ps.executeUpdate();
-            return true;
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -177,18 +186,22 @@ public class AvailabilityDAO implements IAvailabilityDAO {
         return list;
     }
 
-    
+
     public boolean updateAvailability(Availability oldAvailability, Availability newAvailability) {
+        if (oldAvailability == null || newAvailability == null) {
+            return false;
+        }
+
         try (PreparedStatement ps = connection.prepareStatement(
                 "UPDATE availabilities SET title = ?, description = ?, start_time = ?, end_time = ?, color_label = ? " +
-                "WHERE availability_id = ?")) {
+                        "WHERE availability_id = ?")) {
             ps.setString(1, newAvailability.getTitle());
             ps.setString(2, newAvailability.getDescription());
             ps.setString(3, newAvailability.getStartTime().toString());
             ps.setString(4, newAvailability.getEndTime().toString());
             ps.setString(5, newAvailability.getColorLabel());
-            ps.setString(6, oldAvailability.toString());
-            
+            ps.setString(6, oldAvailability.getAvailabilityId()); // probably should use ID, not toString()
+
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -197,7 +210,7 @@ public class AvailabilityDAO implements IAvailabilityDAO {
         }
     }
 
-    
+
     public void clearAllAvailabilities() {
         try (Statement st = connection.createStatement()) {
             st.executeUpdate("DELETE FROM availabilities");
@@ -219,13 +232,16 @@ public class AvailabilityDAO implements IAvailabilityDAO {
         return 0;
     }
 
-    
     public boolean hasAvailabilityOnDate(User user, LocalDate date) {
+        if (user == null || date == null) {
+            return false; // or throw IllegalArgumentException if that's preferred
+        }
+
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT COUNT(*) FROM availabilities WHERE user_id = ? AND substr(start_time,1,10) = ?")) {
             ps.setString(1, user.getUserId());
             ps.setString(2, date.toString());
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1) > 0;
@@ -236,4 +252,5 @@ public class AvailabilityDAO implements IAvailabilityDAO {
         }
         return false;
     }
+
 }
