@@ -11,7 +11,7 @@ public enum View {
     ResetPassword("resetpassword-view.fxml","ResetPassword"),
     Groups("groups-view.fxml","Groups"),
     EditProfile("editprofile-dialog.fxml", "Edit Profile"),
-    SettingProfile("setting-diaglog.fxml", "Setting Profile"),
+    SettingProfile("setting-dialog.fxml", "Setting Profile"),
     SessionTasks("session-tasks-view.fxml", "Session Tasks"),
     InviteMember("invitemember-dialog.fxml", "Invite Members"),
     ShareGroupID("sharegroupID-dialog.fxml", "Share Group ID"),
