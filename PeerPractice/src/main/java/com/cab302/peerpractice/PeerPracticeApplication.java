@@ -1,10 +1,6 @@
 package com.cab302.peerpractice;
 
-import com.cab302.peerpractice.Exceptions.ControllerFactoryFailedException;
-import com.cab302.peerpractice.Model.IUserDAO;
-import com.cab302.peerpractice.Model.UserSession;
 import javafx.application.Application;
-
 import javafx.stage.Stage;
 
 public class PeerPracticeApplication extends Application {

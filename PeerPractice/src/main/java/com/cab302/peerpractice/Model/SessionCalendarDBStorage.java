@@ -63,7 +63,6 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
 
             // If we have status but not priority, we need to migrate
             if (hasStatusColumn && !hasPriorityColumn) {
-                System.out.println("[DEBUG] Migrating sessions table: status -> priority");
 
                 // Add the priority column with default value
                 st.execute("ALTER TABLE sessions ADD COLUMN priority TEXT DEFAULT 'optional'");
@@ -77,10 +76,8 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
                           "WHEN status = 'CANCELLED' THEN 'optional' " +
                           "ELSE 'optional' END");
 
-                System.out.println("[DEBUG] Migration completed successfully");
             } else if (hasStatusColumn && hasPriorityColumn) {
                 // Both columns exist, we can drop the old status column after ensuring data is migrated
-                System.out.println("[DEBUG] Both status and priority columns exist - keeping both for now");
             } else if (!hasStatusColumn && !hasPriorityColumn) {
                 // This is a fresh table, add priority column
                 st.execute("ALTER TABLE sessions ADD COLUMN priority TEXT DEFAULT 'optional'");
@@ -147,8 +144,6 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
 
     @Override
     public boolean addSession(Session session) {
-        System.out.println("[DEBUG] DBStorage.addSession -> Preparing to insert " + session.getTitle() +
-                " (Group " + (session.getGroup() != null ? session.getGroup().getID() : "null") + ")");
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT OR REPLACE INTO sessions (session_id, title, description, start_time, end_time, organiser_user_id, priority, location, color_label, subject, max_participants, group_id) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
@@ -165,7 +160,6 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
             ps.setInt(11, session.getMaxParticipants());
             ps.setObject(12, session.getGroup() != null ? session.getGroup().getID() : null);
             int rows = ps.executeUpdate();
-            System.out.println("[DEBUG] Insert result: " + rows + " row(s) affected");
             
             // Save participants to session_participants table
             try (PreparedStatement participantPs = connection.prepareStatement("DELETE FROM session_participants WHERE session_id = ?")) {
@@ -178,7 +172,6 @@ public class SessionCalendarDBStorage extends SessionCalendarStorage {
                     participantPs.setString(1, session.getSessionId());
                     participantPs.setString(2, participant.getUserId());
                     participantPs.executeUpdate();
-                    System.out.println("[DEBUG] Added participant " + participant.getUsername() + " (" + participant.getUserId() + ") to session " + session.getSessionId());
                 } catch (SQLException participantError) {
                     System.err.println("[DEBUG] Failed to add participant " + participant.getUsername() + ": " + participantError.getMessage());
                 }

@@ -3,6 +3,7 @@ package com.cab302.peerpractice.Model;
 import com.cab302.peerpractice.Exceptions.DuplicateGroupException;
 import com.cab302.peerpractice.Exceptions.InsufficientPermissionsException;
 import com.cab302.peerpractice.Exceptions.UserNotFoundException;
+import com.cab302.peerpractice.Utilities.ValidationUtils;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -25,8 +26,8 @@ public class GroupManager {
 
         if(user == null) throw new IllegalArgumentException("Creating user can't be null");
 
-        validateName(name);
-        validateDescription(description);
+        name = ValidationUtils.validateAndCleanOthersName(name);
+        description = ValidationUtils.validateAndCleanGroupDescription(description);
 
         Group group = new Group(name,description,require_approval,user.getUsername(), LocalDateTime.now());
         group.addMember(user);
@@ -63,7 +64,7 @@ public class GroupManager {
         if(group.isRequire_approval()){
             if (groupDAO instanceof GroupDBDAO) {
                 GroupDBDAO dbDAO = (GroupDBDAO) groupDAO;
-                if (!dbDAO.hasUserRequestedToJoin(group.getID(), user.getUserId()) && 
+                if (!dbDAO.hasUserRequestedToJoin(group.getID(), user.getUserId()) &&
                     !dbDAO.isUserMemberOfGroup(group.getID(), user.getUserId())) {
                     dbDAO.createJoinRequest(group.getID(), user.getUserId());
                 }

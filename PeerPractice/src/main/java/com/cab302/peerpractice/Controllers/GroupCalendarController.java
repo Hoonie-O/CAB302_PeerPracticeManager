@@ -205,12 +205,6 @@ public class GroupCalendarController extends BaseController {
         grid.add(subjectCombo, 1, 5);
         grid.add(new Label("Color:"), 0, 6);
         grid.add(colorCombo, 1, 6);
-        grid.add(new Label("Priority:"), 0, 4);
-        grid.add(priorityCombo, 1, 4);
-        grid.add(new Label("Subject:"), 0, 5);
-        grid.add(subjectCombo, 1, 5);
-        grid.add(new Label("Color:"), 0, 6);
-        grid.add(colorCombo, 1, 6);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -221,12 +215,9 @@ public class GroupCalendarController extends BaseController {
                     LocalDateTime startTime = LocalDateTime.of(date, LocalTime.of(startHour.getValue(), startMinute.getValue()));
                     LocalDateTime endTime = LocalDateTime.of(date, LocalTime.of(endHour.getValue(), endMinute.getValue()));
                     if (endTime.isAfter(startTime)) {
-                        System.out.println("[DEBUG] Creating session object: " + title + " for group " + currentGroup.getID());
                         Session session = new Session(title, currentUser, startTime, endTime, currentGroup);
                         session.setDescription(descriptionField.getText());
                         session.setColorLabel(colorCombo.getValue());
-                        session.setSubject(subjectCombo.getValue());
-                        session.setPriority(priorityCombo.getValue());
                         session.setSubject(subjectCombo.getValue());
                         session.setPriority(priorityCombo.getValue());
                         return session;
@@ -237,7 +228,6 @@ public class GroupCalendarController extends BaseController {
         });
 
         dialog.showAndWait().ifPresent(session -> {
-            System.out.println("[DEBUG] Adding session to calendar manager: " + session.getSessionId());
             sessionCalendarManager.addSession(session, currentGroup);
             updateCalendarView();
         });
@@ -339,6 +329,19 @@ public class GroupCalendarController extends BaseController {
         });
     }
 
+    // Check if user can edit session - admins can edit all, members only own
+    private boolean canUserEditSession(User user, Session session) {
+        if (user == null || currentGroup == null) return false;
+
+        // Admin check - admins can edit all sessions in the group
+        if (ctx.getGroupManager().isAdmin(currentGroup, user)) {
+            return true;
+        }
+
+        // Members can only edit their own sessions
+        return session.getOrganiser().getUserId().equals(user.getUserId());
+    }
+
     private void showEditSessionDialog(Session session) {
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (currentUser == null || currentGroup == null) return;
@@ -409,18 +412,5 @@ public class GroupCalendarController extends BaseController {
             sessionCalendarManager.updateSession(session, editedSession);
             updateCalendarView();
         });
-    }
-
-    // Check if user can edit session - admins can edit all, members only own
-    private boolean canUserEditSession(User user, Session session) {
-        if (user == null || currentGroup == null) return false;
-
-        // Admin check - admins can edit all sessions in the group
-        if (ctx.getGroupManager().isAdmin(currentGroup, user)) {
-            return true;
-        }
-
-        // Members can only edit their own sessions
-        return session.getOrganiser().getUserId().equals(user.getUserId());
     }
 }

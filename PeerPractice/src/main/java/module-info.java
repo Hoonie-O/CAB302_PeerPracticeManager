@@ -17,6 +17,8 @@ module com.cab302.peerpractice {
     requires jakarta.mail;
     requires jbcrypt;
     requires java.management;
+    requires org.commonmark;
+
     requires org.slf4j;
 
     opens com.cab302.peerpractice to javafx.fxml;
@@ -26,4 +28,6 @@ module com.cab302.peerpractice {
     exports com.cab302.peerpractice.Exceptions;
     opens com.cab302.peerpractice.Controllers to javafx.fxml;
     opens com.cab302.peerpractice.Model to javafx.fxml;
+    exports com.cab302.peerpractice.Utilities;
+    opens com.cab302.peerpractice.Utilities to javafx.fxml;
 }

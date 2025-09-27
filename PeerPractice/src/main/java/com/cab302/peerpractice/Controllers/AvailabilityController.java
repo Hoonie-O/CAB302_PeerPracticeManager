@@ -114,16 +114,9 @@ public class AvailabilityController extends SidebarController {
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (currentUser != null) {
             List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date);
-            System.out.println("[DEBUG] Controller dayCell for " + date + ": " + availabilities.size() + " total from DB");
 
             availabilities = availabilities.stream()
-                    .filter(avail -> {
-                        boolean matches = avail.getUser().equals(currentUser);
-                        System.out.println("[DEBUG] Filtering availability " + avail.getTitle()
-                                + " user=" + avail.getUser().getUsername()
-                                + " equals currentUser? " + matches);
-                        return matches;
-                    })
+                    .filter(avail -> avail.getUser().equals(currentUser))
                     .toList();
 
             for (Availability availability : availabilities) {
@@ -227,10 +220,6 @@ public class AvailabilityController extends SidebarController {
         });
 
         dialog.showAndWait().ifPresent(availability -> {
-            System.out.println("[DEBUG] Controller creating availability: "
-                    + availability.getTitle() + " for user "
-                    + availability.getUser().getUsername()
-                    + " from " + availability.getStartTime() + " to " + availability.getEndTime());
 
             availabilityManager.createAvailability(
                     availability.getTitle(),
