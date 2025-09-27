@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
@@ -31,6 +32,10 @@ public class NotesController extends BaseController{
     @FXML private WebView contentWebView;
     @FXML private WebEngine webEngine;
     @FXML private Button editButton;
+    @FXML private StackPane notes;
+    @FXML private StackPane chapters;
+    @FXML private Button addNoteButton;
+    @FXML private Button addChapterButton;
 
     private NotesManager notesManager;
     private Group group;
@@ -51,10 +56,10 @@ public class NotesController extends BaseController{
     public void initialize(){
 
         Platform.runLater(() -> {
-            notesList.maxWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
-            notesList.minWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
-            chaptersList.maxWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
-            chaptersList.minWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
+            notes.maxWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
+            notes.minWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
+            chapters.maxWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
+            chapters.minWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
         });
 
         webEngine = contentWebView.getEngine();
@@ -64,27 +69,6 @@ public class NotesController extends BaseController{
          */
         notesList.setCellFactory(listView -> new ListCell<>() {
 
-            //Button to add a Note
-            private final Button addButton = new Button("+");
-            {
-                addButton.setOnAction(e -> {
-                    TextInputDialog dialog = new TextInputDialog();
-                    dialog.setTitle("New Note");
-                    dialog.setHeaderText("Create a new note");
-                    dialog.setContentText("Enter note name:");
-
-                    dialog.showAndWait().ifPresent(name -> {
-                        String noteID = notesManager.addNote(name, group.getID());
-                        Note newNote = ctx.getNotesDAO().getNote(noteID);
-                        var items = notesList.getItems();
-                        int insertIndex  = items.isEmpty() ? 0 : items.size() -1;
-                        items.add(insertIndex,newNote);
-                        notesList.getSelectionModel().select(newNote);
-                        currentNote = newNote;
-                    });
-                });
-            }
-
             @Override
             protected void updateItem(Note note, boolean empty) {
                 super.updateItem(note, empty);
@@ -92,11 +76,9 @@ public class NotesController extends BaseController{
                     setText(null);
                     setGraphic(null);
                 } else if (note == null) {
-                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    setAlignment(Pos.CENTER);
                     setText(null);
-                    addButton.setDisable(group == null);
-                    setGraphic(addButton);
+                    setGraphic(null);
+                    addNoteButton.setDisable(group == null);
                 } else {
                     setGraphic(null);
                     setContentDisplay(ContentDisplay.TEXT_ONLY);
@@ -120,26 +102,6 @@ public class NotesController extends BaseController{
          */
         chaptersList.setCellFactory(listView -> new ListCell<>(){
 
-            private final Button addButton = new Button("+");
-            {
-                addButton.setOnAction(e -> {
-                    if(currentNote == null) return;
-                    TextInputDialog dialog = new TextInputDialog();
-                    dialog.setTitle("New Chapter");
-                    dialog.setHeaderText("Create a new chapter");
-                    dialog.setContentText("Enter chapter name:");
-
-                    dialog.showAndWait().ifPresent(name -> {
-                        String chapterID = notesManager.addChapter(currentNote.getID(),name);
-                        Chapter newChapter = ctx.getNotesDAO().getChapter(chapterID);
-                        var items = chaptersList.getItems();
-                        int insertIndex = items.isEmpty() ? 0 : items.size() - 1;
-                        items.add(insertIndex,newChapter);
-                        chaptersList.getSelectionModel().select(newChapter);
-                    });
-                });
-            }
-
             @Override
             protected void updateItem(Chapter ch, boolean empty) {
                 super.updateItem(ch, empty);
@@ -149,10 +111,7 @@ public class NotesController extends BaseController{
                 }
                 else if (ch == null) {
                     setText(null);
-                    addButton.setDisable(currentNote == null);
-                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    setAlignment(Pos.CENTER);
-                    setGraphic(addButton);
+                    addChapterButton.setDisable(currentNote == null);
                 } else {
                     setGraphic(null);
                     setContentDisplay(ContentDisplay.TEXT_ONLY);
@@ -173,7 +132,6 @@ public class NotesController extends BaseController{
     }
 
     private void updateContentView(Chapter chapter){
-
         if(chapter == null || chapter.getContent() == null || chapter.getContent().isBlank()){
             webEngine.loadContent("","text/html");
             return;
@@ -187,7 +145,6 @@ public class NotesController extends BaseController{
     private void updateChaptersView(Note note) {
         var items = FXCollections.<Chapter>observableArrayList();
         items.addAll(notesManager.getChapters(note.getID()));
-        items.add(null);
         chaptersList.setItems(items);
     }
 
@@ -196,11 +153,8 @@ public class NotesController extends BaseController{
             notesList.setItems(FXCollections.observableArrayList());
             return;
         }
-        var items = FXCollections.<Note>observableArrayList();
         List<Note> notes = notesManager.getNotes(group.getID());
-        items.addAll(notes);
-        items.add(null);
-        notesList.setItems(items);
+        notesList.setItems(FXCollections.observableArrayList(notes));
         if(!notes.isEmpty()){
             notesList.getSelectionModel().selectFirst();
         }
@@ -236,5 +190,54 @@ public class NotesController extends BaseController{
             updateContentView(currentChapter);
         });
 
+    }
+
+    public void addNote() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("New Note");
+        dialog.setHeaderText("Create a new note");
+        dialog.setContentText("Enter note name:");
+
+        dialog.showAndWait().ifPresent(name -> {
+            String noteID = notesManager.addNote(name, group.getID());
+            Note newNote = ctx.getNotesDAO().getNote(noteID);
+            var items = notesList.getItems();
+            items.add(newNote);
+            notesList.getSelectionModel().select(newNote);
+            currentNote = newNote;
+        });
+    }
+
+    public void removeNote() {
+        if(currentNote == null) return;
+        notesManager.deleteNote(currentNote.getID());
+        currentNote = null;
+        updateNotesView();
+        updateContentView(null);
+    }
+
+    public void addChapter() {
+        if(currentNote == null) return;
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("New Chapter");
+        dialog.setHeaderText("Create a new chapter");
+        dialog.setContentText("Enter chapter name:");
+
+        dialog.showAndWait().ifPresent(name -> {
+            String chapterID = notesManager.addChapter(currentNote.getID(), name);
+            Chapter newChapter = ctx.getNotesDAO().getChapter(chapterID);
+            var items = chaptersList.getItems();
+            items.add(newChapter);
+            chaptersList.getSelectionModel().select(newChapter);
+            currentChapter = newChapter;
+        });
+    }
+
+    public void removeChapter() {
+        if(currentChapter == null) return;
+        notesManager.deleteChapter(currentChapter.getID());
+        currentChapter = null;
+        updateNotesView();
+        updateContentView(null);
     }
 }

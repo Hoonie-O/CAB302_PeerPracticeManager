@@ -63,7 +63,10 @@ public class NotesManager {
         return notesDAO.getChapters(noteID);
     }
 
-
+    public void deleteChapter(String chapterID){
+        if(notesDAO.getNote(chapterID) == null) throw new IllegalArgumentException("Note " + chapterID + " Does not exist");
+        notesDAO.deleteNote(chapterID);
+    }
 
 
 
