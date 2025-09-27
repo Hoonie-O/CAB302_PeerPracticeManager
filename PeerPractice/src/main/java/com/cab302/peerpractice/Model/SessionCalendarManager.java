@@ -61,7 +61,6 @@ public class SessionCalendarManager {
     public boolean removeSession(Session session) {
         if (session != null && session.getSessionId() != null && sessionTaskManager != null) {
             sessionTaskManager.deleteAllTasksForSession(session.getSessionId());
-            System.out.println("[DEBUG] SessionCalendarManager.removeSession -> Deleted tasks for session " + session.getSessionId());
         }
         return storage.removeSession(session);
     }
@@ -86,7 +85,6 @@ public class SessionCalendarManager {
         if (session != null && session.getSessionId() != null) {
             if (sessionTaskManager != null) {
                 sessionTaskManager.deleteAllTasksForSession(session.getSessionId());
-                System.out.println("[DEBUG] SessionCalendarManager.deleteSession -> Deleted tasks for session " + session.getSessionId());
             }
         }
         storage.removeSession(session);
@@ -107,9 +105,6 @@ public class SessionCalendarManager {
     public boolean addSession(Session session, Group group) {
         if (session != null) {
             session.setGroup(group);
-            System.out.println("[DEBUG] SessionCalendarManager.addSession -> " +
-                    "Session " + session.getTitle() + " (" + session.getSessionId() + ") " +
-                    "Group " + (group != null ? group.getID() : "null"));
         }
         return storage.addSession(session);
     }

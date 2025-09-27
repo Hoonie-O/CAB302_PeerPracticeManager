@@ -4,90 +4,155 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
+<BorderPane fx:id="rootPane"
+            xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.GroupController"
             prefWidth="1280"
             prefHeight="720">
 
     <top>
-        <fx:include source="header-layout.fxml" fx:id="header"/>
+        <fx:include source="header-layout.fxml"
+                    fx:id="header"/>
     </top>
 
-    <left>
-        <fx:include source="sidebar-layout.fxml" fx:id="menu"/>
-    </left>
 
     <right>
-        <fx:include source="profile-layout.fxml" fx:id="profile"/>
+        <fx:include source="profile-layout.fxml"
+                    fx:id="profile"/>
     </right>
 
+
+    <!-- Left Side Panel with Sidebar and Groups -->
+    <left>
+        <HBox>
+        <!-- Include the sidebar/menu -->
+        <fx:include source="sidebar-layout.fxml"
+                    fx:id="menu"/>
+
+            <!-- Groups Panel -->
+            <VBox spacing="10">
+                <padding>
+                    <Insets top="10"
+                            left="10"
+                            right="10"
+                            bottom="10"/>
+                </padding>
+
+                <!-- Groups Header and Buttons -->
+                <HBox alignment="CENTER_LEFT"
+                      spacing="10">
+                    <Label text="My Groups"/>
+                    <Button fx:id="addGroupButton"
+                            text="New Group"
+                            onAction="#onAddGroup"
+                            prefWidth="80"/>
+                    <Button fx:id="sortGroupsButton"
+                            text="Sort"
+                            onAction="#onSortGroups"
+                            prefWidth="80"/>
+                </HBox>
+
+                <!-- Search Field -->
+                <TextField fx:id="searchField"
+                           promptText="Search groups..."/>
+
+                <!-- Groups List -->
+                <ListView fx:id="groupListView"
+                          VBox.vgrow="ALWAYS"/>
+
+                <!-- Join Request -->
+                <Button text="Join Request"
+                        maxWidth="Infinity"/>
+            </VBox>
+        </HBox>
+    </left>
+
+    <!-- Center Area with aligned tabs -->
     <center>
-        <BorderPane>
-            <left>
-                <VBox spacing="8" prefWidth="300" style="-fx-background-color: #f5f5f5;">
+        <HBox HBox.hgrow="ALWAYS">
+
+            <Separator orientation="VERTICAL"/>
+
+            <VBox HBox.hgrow="ALWAYS">
+
+                <!-- Header -->
+                <VBox>
                     <padding>
-                        <Insets top="10" left="12" right="10" bottom="10"/>
+                        <Insets top="5"
+                                left="5"
+                                right="5"
+                                bottom="5"/>
                     </padding>
-                    <Label text="Groups" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                    <HBox spacing="8">
-                        <HBox spacing="5">
-                            <Button fx:id="addGroupButton" text="+" onAction="#onAddGroup"/>
-                            <Button fx:id="sortGroupsButton" text="A-Z" onAction="#onSortGroups"/>
-                        </HBox>
-                        <TextField promptText="Search..." HBox.hgrow="ALWAYS"/>
-                    </HBox>
-                    <ListView fx:id="groupListView" VBox.vgrow="ALWAYS"/>
-                </VBox>
-            </left>
-
-            <center>
-                <!-- Top bar with group name -->
-                <VBox spacing="6" BorderPane.alignment="TOP_LEFT">
-                    <HBox alignment="CENTER_LEFT" style="-fx-padding: 6 12 0 12;">
+                    <HBox alignment="CENTER_LEFT">
                         <Label fx:id="groupNameLabel"
-                               text="Select Group"
-                               style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                    </HBox>
+                               text="Example Group"
+                               style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
-                    <!-- Tabs under the group name -->
-                    <TabPane fx:id="groupTabs" VBox.vgrow="ALWAYS">
-                        <Tab text="Calendar" closable="false">
-                            <fx:include source="group-calendar.fxml" fx:id="groupCalendar"/>
-                        </Tab>
-                        <Tab text="Sessions" closable="false">
-                            <VBox spacing="10" style="-fx-padding: 10;">
-                                <Label text="Group Sessions" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                                <ListView fx:id="sessionsListView" VBox.vgrow="ALWAYS"/>
-                            </VBox>
-                        </Tab>
-                        <Tab text="Members" closable="false">
-                            <TableView fx:id="membersTable">
-                                <columns>
-                                    <TableColumn text="Name" prefWidth="200">
-                                        <cellValueFactory>
-                                            <javafx.scene.control.cell.PropertyValueFactory property="name"/>
-                                        </cellValueFactory>
-                                    </TableColumn>
-                                    <TableColumn text="Role" prefWidth="100">
-                                        <cellValueFactory>
-                                            <javafx.scene.control.cell.PropertyValueFactory property="role"/>
-                                        </cellValueFactory>
-                                    </TableColumn>
-                                    <TableColumn text="Availability" prefWidth="150">
-                                        <cellValueFactory>
-                                            <javafx.scene.control.cell.PropertyValueFactory property="availability"/>
-                                        </cellValueFactory>
-                                    </TableColumn>
-                                </columns>
-                            </TableView>
-                        </Tab>
-                        <Tab text="Chat" closable="false"/>
-                        <Tab text="Files" closable="false"/>
-                    </TabPane>
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <!-- More Button -->
+                        <MenuButton fx:id="moreMenu"
+                                    text="More"
+                                    prefWidth="80">
+                            <items>
+                                <MenuItem text="Invite Members"
+                                          onAction="#onInviteMembers"/>
+                                <MenuItem text="Share Group ID"
+                                          onAction="#onShareGroupID"/>
+                                <SeparatorMenuItem/>
+                                <MenuItem text="Manage Group"
+                                          onAction="#onManageGroup"/>
+                                <SeparatorMenuItem/>
+                                <MenuItem text="Leave Group"
+                                          onAction="#onLeaveGroup"/>
+                                <MenuItem text="Delete Group"
+                                          onAction="#onDeleteGroup"/>
+                            </items>
+                        </MenuButton>
+                    </HBox>
                 </VBox>
-            </center>
-        </BorderPane>
+
+                <Separator/>
+
+                <!-- Tabs -->
+                <TabPane fx:id="groupTabs"
+                         tabClosingPolicy="UNAVAILABLE"
+                         tabMinWidth="90"
+                         tabMaxWidth="90">
+                    <VBox.margin>
+                        <Insets top="0"
+                                right="0"
+                                bottom="0"
+                                left="-4"/>
+                    </VBox.margin>
+                    <tabs>
+                        <Tab text="Calendar"
+                             closable="false"/>
+                        <Tab text="Sessions"
+                             closable="false"/>
+                        <Tab text="Notes"
+                             closable="false"/>
+                        <Tab text="Chat"
+                             closable="false"/>
+                        <Tab text="Files"
+                             closable="false"/>
+                    </tabs>
+                </TabPane>
+
+                <!-- Content Area - placeholder that will be replaced by tab content -->
+                <VBox alignment="CENTER"
+                      VBox.vgrow="ALWAYS"
+                      spacing="10">
+                    <padding>
+                        <Insets top="10"
+                                left="10"
+                                right="10"
+                                bottom="10"/>
+                    </padding>
+                    <Label fx:id="tabContentLabel"
+                           text="Select a tab to view content"/>
+                </VBox>
+            </VBox>
+        </HBox>
     </center>
 </BorderPane>

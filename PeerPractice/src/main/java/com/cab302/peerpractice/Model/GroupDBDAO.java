@@ -112,13 +112,10 @@ public class GroupDBDAO implements IGroupDAO {
 
                         // Add owner as admin member
                         try {
-                            System.out.println("[DEBUG] GroupDBDAO.addGroup -> Looking for owner: " + group.getOwner());
                             User owner = userDao.findUser("username", group.getOwner());
                             if (owner != null) {
-                                System.out.println("[DEBUG] GroupDBDAO.addGroup -> Found owner: " + owner.getUserId() + " (" + owner.getUsername() + ")");
                                 addMemberWithRole(groupId, owner.getUserId(), "admin");
                             } else {
-                                System.out.println("[DEBUG] GroupDBDAO.addGroup -> Owner not found for username: " + group.getOwner());
                             }
                         } catch (SQLException e) {
                             System.err.println("[DEBUG] GroupDBDAO.addGroup -> SQLException adding owner as admin: " + e.getMessage());
@@ -231,6 +228,21 @@ public class GroupDBDAO implements IGroupDAO {
             System.err.println("Error searching groups by name: " + e.getMessage());
         }
         return groups;
+    }
+
+    @Override
+    public Group searchByID(int id) {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM groups WHERE group_id = ?")) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowToGroup(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error searching group by ID: " + e.getMessage());
+        }
+        return null;
     }
 
     @Override

@@ -8,9 +8,13 @@ public class BcryptHasher implements PasswordHasher {
     }
 
     public boolean matches(String raw, String hash) {
-        if(hash == null || !hash.startsWith("$2")){
+        if(raw == null || hash == null || hash.isEmpty() || !hash.startsWith("$2") || hash.length() < 60){
             return false;
         }
-        return BCrypt.checkpw(raw,hash);
+        try {
+            return BCrypt.checkpw(raw, hash);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

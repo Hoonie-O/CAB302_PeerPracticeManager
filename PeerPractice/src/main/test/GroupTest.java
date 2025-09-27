@@ -179,15 +179,10 @@ public class GroupTest {
 
 
 
-
-
-
     @Test
     public void testGroupIdNotNull(){
         assertNotNull(group.getID());
     }
-
-
 
 
 

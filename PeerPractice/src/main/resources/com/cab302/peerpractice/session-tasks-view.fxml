@@ -4,19 +4,22 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.SessionTaskController"
             prefWidth="1280"
             prefHeight="720">
 
+    <!-- Top Header -->
     <top>
         <fx:include source="header-layout.fxml" fx:id="header"/>
     </top>
 
+    <!-- Left Sidebar -->
     <left>
         <fx:include source="sidebar-layout.fxml" fx:id="menu"/>
     </left>
 
+    <!-- Right Sidebar -->
     <right>
         <fx:include source="profile-layout.fxml" fx:id="profile"/>
     </right>
@@ -56,8 +59,6 @@
                 </GridPane>
 
                 <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Button fx:id="backButton" text="← Back"
-                           style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
                     <Button fx:id="createTaskButton" text="Create Task"
                            style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
                     <Button fx:id="updateTaskButton" text="Update Task"
@@ -86,7 +87,6 @@
                     </columnResizePolicy>
                 </TableView>
             </VBox>
-
         </VBox>
     </center>
 </BorderPane>
