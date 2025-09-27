@@ -94,12 +94,4 @@ public class UserManager {
             throws SQLException {
         userDAO.updateValue(username, "date_of_birth", isoDate == null ? "" : isoDate.trim());
     }
-
-//    public void updateDateFormat(String username, String dateFormat) throws SQLException {
-//        userDAO.updateValue(username, "date_format", dateFormat);
-//    }
-//
-//    public void updateTimeFormat(String username, String timeFormat) throws SQLException {
-//        userDAO.updateValue(username, "time_format", timeFormat);
-//    }
 }

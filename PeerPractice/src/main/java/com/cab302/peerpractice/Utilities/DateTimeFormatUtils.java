@@ -3,7 +3,7 @@ package com.cab302.peerpractice.Utilities;
 import com.cab302.peerpractice.Model.User;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+
 
 public class DateTimeFormatUtils {
 
@@ -11,14 +11,14 @@ public class DateTimeFormatUtils {
         if (dateTime == null) return "";
 
         String pattern = (user != null && user.getDateFormat() != null)
-                ? user.getDateFormat() : "dd/MM/yyyy";
+                ? user.getDateFormat() : "MMMM d, yyyy"; // Updated default
 
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             return dateTime.format(formatter);
         } catch (IllegalArgumentException e) {
             // Fallback to default format if pattern is invalid
-            return dateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            return dateTime.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"));
         }
     }
 
@@ -26,14 +26,14 @@ public class DateTimeFormatUtils {
         if (dateTime == null) return "";
 
         String pattern = (user != null && user.getTimeFormat() != null)
-                ? user.getTimeFormat() : "HH:mm";
+                ? user.getTimeFormat() : "h:mm a"; // Updated default
 
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             return dateTime.format(formatter);
         } catch (IllegalArgumentException e) {
             // Fallback to default format
-            return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+            return dateTime.format(DateTimeFormatter.ofPattern("h:mm a"));
         }
     }
 
@@ -41,21 +41,35 @@ public class DateTimeFormatUtils {
         return formatDate(user, dateTime) + " " + formatTime(user, dateTime);
     }
 
-    // Optional: Parse methods if you need to convert strings back to LocalDateTime
-    public static LocalDateTime parseDateTime(User user, String dateTimeString) {
-        if (dateTimeString == null || dateTimeString.trim().isEmpty()) return null;
+    // New method for previewing formats without a User object
+    public static String formatWithPattern(String pattern, LocalDateTime dateTime, String defaultPattern) {
+        if (dateTime == null) return "";
+        if (pattern == null || pattern.trim().isEmpty()) {
+            pattern = defaultPattern;
+        }
 
         try {
-            String datePattern = (user != null && user.getDateFormat() != null)
-                    ? user.getDateFormat() : "dd/MM/yyyy";
-            String timePattern = (user != null && user.getTimeFormat() != null)
-                    ? user.getTimeFormat() : "HH:mm";
-
-            String fullPattern = datePattern + " " + timePattern;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(fullPattern);
-            return LocalDateTime.parse(dateTimeString, formatter);
-        } catch (DateTimeParseException e) {
-            return null;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            return dateTime.format(formatter);
+        } catch (IllegalArgumentException e) {
+            // Fallback to default format
+            return dateTime.format(DateTimeFormatter.ofPattern(defaultPattern));
         }
+    }
+
+    // Validation methods
+    public static boolean isValidDateFormat(String pattern) {
+        if (pattern == null || pattern.trim().isEmpty()) return false;
+
+        try {
+            DateTimeFormatter.ofPattern(pattern);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidTimeFormat(String pattern) {
+        return isValidDateFormat(pattern); // Same validation logic
     }
 }
