@@ -21,6 +21,8 @@ public class User {
     private String bio;
     private List<User> friendsList;
     private List<Notification> notifications;
+    private String dateFormat;
+    private String timeFormat;
 
     public User(String firstName, String lastName, String username, String email, String passwordHash, String institution) {
         this.userId = java.util.UUID.randomUUID().toString(); // generate unique ID
@@ -31,6 +33,8 @@ public class User {
         this.passwordHash = passwordHash;
         this.institution = institution;
         this.friendsList = new ArrayList<>();
+        this.dateFormat = "dd/MM/yyyy"; // Default format
+        this.timeFormat = "HH:mm";     // Default format
     }
 
     // constructor for loading users with existing ID (from database)
@@ -43,6 +47,8 @@ public class User {
         this.passwordHash = passwordHash;
         this.institution = institution;
         this.friendsList = new ArrayList<>();
+        this.dateFormat = "dd/MM/yyyy"; // Default format
+        this.timeFormat = "HH:mm";     // Default format
     }
 
     public String getUserId() { return userId; }
@@ -113,5 +119,21 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(userId);
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat != null ? dateFormat : "dd/MM/yyyy";
+    }
+
+    public String getTimeFormat() {
+        return timeFormat;
+    }
+
+    public void setTimeFormat(String timeFormat) {
+        this.timeFormat = timeFormat != null ? timeFormat : "HH:mm";
     }
 }

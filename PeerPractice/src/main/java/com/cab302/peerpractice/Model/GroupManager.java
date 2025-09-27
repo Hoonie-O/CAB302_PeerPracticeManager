@@ -3,6 +3,7 @@ package com.cab302.peerpractice.Model;
 import com.cab302.peerpractice.Exceptions.DuplicateGroupException;
 import com.cab302.peerpractice.Exceptions.InsufficientPermissionsException;
 import com.cab302.peerpractice.Exceptions.UserNotFoundException;
+import com.cab302.peerpractice.Utilities.ValidationUtils;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;

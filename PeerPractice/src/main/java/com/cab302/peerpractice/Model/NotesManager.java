@@ -1,5 +1,7 @@
 package com.cab302.peerpractice.Model;
 
+import com.cab302.peerpractice.Utilities.ValidationUtils;
+
 import java.util.List;
 
 public class NotesManager {
