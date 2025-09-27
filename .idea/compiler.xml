@@ -9,13 +9,5 @@
         <module name="PeerPractice" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="address-book" target="21" />
-    </bytecodeTargetLevel>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="PeerPractice" options="" />
-    </option>
   </component>
 </project>

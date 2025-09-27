@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/CAB302_PeerPracticeManager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CAB302_PeerPracticeManager.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/xerial_sqlite_jdbc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/markdown.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/.github/workflows/ci.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/scripts/ci-build.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/scripts/ci-build.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/UserDAO.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Hoonie-O&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Hoonie-O/CAB302_PeerPracticeManager.git&quot;,
+    &quot;accountId&quot;: &quot;30adaad7-4d7b-4504-a4fc-fea2d6d7e105&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="33HlCcEy3uoFcscbqiGzYkfQoTV" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.PeerPracticeApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Database__Issue&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/HoonieG15/IdeaProjects/CAB302_PeerPracticeManager/PeerPractice/src/main/resources/com/cab302/peerpractice&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.3038529&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\HoonieG15\IdeaProjects\CAB302_PeerPracticeManager\PeerPractice\src\main\resources\com\cab302\peerpractice" />
+      <recent name="C:\Users\HoonieG15\IdeaProjects\CAB302_PeerPracticeManager\PeerPractice\target\classes\com\cab302\peerpractice" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\HoonieG15\IdeaProjects\CAB302_PeerPracticeManager\PeerPractice\target\classes\com\cab302\peerpractice" />
+      <recent name="C:\Users\HoonieG15\IdeaProjects\CAB302_PeerPracticeManager\PeerPractice\target\classes\com\cab302\peerpractice\resources" />
+    </key>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="" />
+      <created>1758981752414</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1758981752414</updated>
+    </task>
+    <servers />
+  </component>
+</project>

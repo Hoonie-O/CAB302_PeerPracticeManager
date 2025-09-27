@@ -26,10 +26,13 @@ public class UserDAO implements IUserDAO{
         // Create tables if they don't exist
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("DROP TABLE friends;");
+//            stmt.execute("DROP TABLE IF EXISTS notifications;");
+//            stmt.execute("DROP TABLE IF EXISTS events;");
+//            stmt.execute("DROP TABLE IF EXISTS friends;");
+//            stmt.execute("DROP TABLE IF EXISTS users;");
 
             String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
-                    + "user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+                    + "user_id TEXT NOT NULL PRIMARY KEY AUTOINCREMENT," // Changed from INTEGER to TEXT
                     + "username VARCHAR(16) NOT NULL UNIQUE,"
                     + "password VARCHAR(24) NOT NULL,"
                     + "first_name VARCHAR(16) NOT NULL,"
@@ -231,7 +234,15 @@ public class UserDAO implements IUserDAO{
 
     // Creates a new user with a specific ID
     public boolean createUserWithId(String userId, String username, String password, String firstName, String lastName, String email, String institution) throws SQLException {
-        // Use the provided user ID
+        // For Debuggin Purpose
+//        System.out.println("=== DEBUG SIGNUP ===");
+//        System.out.println("UserID: " + userId + " (type: " + (userId != null ? userId.getClass().getSimpleName() : "null") + ")");
+//        System.out.println("Username: " + username);
+//        System.out.println("Password: " + password);
+//        System.out.println("First Name: " + firstName);
+//        System.out.println("Last Name: " + lastName);
+//        System.out.println("Email: " + email);
+//        System.out.println("Institution: " + institution);
         
         // Use prepared statement to prevent SQL injection
         PreparedStatement stmt = connection.prepareStatement(
@@ -250,16 +261,19 @@ public class UserDAO implements IUserDAO{
         try {
             stmt.executeUpdate();
             return true;
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             String errorMsg = e.getMessage();
             if (errorMsg.contains("username")) {
                 throw new DuplicateUsernameException("Username already exists");
-            } else if (errorMsg.contains("email")) {
+            }
+            else if (errorMsg.contains("email")) {
                 throw new DuplicateEmailException("Email already exists");
             }
             System.err.println("Error occurred during update statement" + e);
             return false;
         }
+
     }
 
     // Creates a new user with auto-generated ID
