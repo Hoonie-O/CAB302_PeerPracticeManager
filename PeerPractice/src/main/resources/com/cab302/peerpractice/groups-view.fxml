@@ -130,6 +130,8 @@
                              closable="false"/>
                         <Tab text="Sessions"
                              closable="false"/>
+                        <Tab text="Notes"
+                             closable="false"/>
                         <Tab text="Chat"
                              closable="false"/>
                         <Tab text="Files"

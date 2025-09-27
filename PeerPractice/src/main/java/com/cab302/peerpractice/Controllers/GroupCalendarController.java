@@ -205,12 +205,6 @@ public class GroupCalendarController extends BaseController {
         grid.add(subjectCombo, 1, 5);
         grid.add(new Label("Color:"), 0, 6);
         grid.add(colorCombo, 1, 6);
-        grid.add(new Label("Priority:"), 0, 4);
-        grid.add(priorityCombo, 1, 4);
-        grid.add(new Label("Subject:"), 0, 5);
-        grid.add(subjectCombo, 1, 5);
-        grid.add(new Label("Color:"), 0, 6);
-        grid.add(colorCombo, 1, 6);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -224,8 +218,6 @@ public class GroupCalendarController extends BaseController {
                         Session session = new Session(title, currentUser, startTime, endTime, currentGroup);
                         session.setDescription(descriptionField.getText());
                         session.setColorLabel(colorCombo.getValue());
-                        session.setSubject(subjectCombo.getValue());
-                        session.setPriority(priorityCombo.getValue());
                         session.setSubject(subjectCombo.getValue());
                         session.setPriority(priorityCombo.getValue());
                         return session;

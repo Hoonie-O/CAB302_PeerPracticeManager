@@ -15,6 +15,8 @@ public class Chapter {
     public Chapter(String name,String noteID){
         this.noteID = noteID;
         this.name = name;
+        this.attachments = new java.util.ArrayList<>();
+        this.content = "";
     }
 
     //Getters

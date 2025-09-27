@@ -42,8 +42,8 @@ public class GroupController extends SidebarController {
   
     @FXML private TableView<GroupMember> membersTable;
     @FXML private ListView<Session> sessionsListView;
-    @FXML private GroupCalendarController groupCalendarController;
-    @FXML private NotesController notesController;
+    private GroupCalendarController groupCalendarController;
+    private NotesController notesController;
 
 
     private boolean sortAlphabetical = false;
@@ -70,12 +70,11 @@ public class GroupController extends SidebarController {
         groupListView.getSelectionModel().selectedItemProperty().addListener((obs, oldGroup, newGroup) -> {
             if (newGroup != null) {
                 groupNameLabel.setText(newGroup.getName());
-                if (groupCalendarController != null || notesController != null) {
-                    groupCalendarController.setGroup(newGroup);
-                    notesController.setGroup(newGroup);
+                // Reload current tab content with new group
+                Tab selectedTab = groupTabs.getSelectionModel().getSelectedItem();
+                if (selectedTab != null) {
+                    loadTabContent(selectedTab.getText(), newGroup);
                 }
-                updateMembersTable(newGroup);
-                updateSessionsList(newGroup);
             }
         });
 
@@ -83,16 +82,170 @@ public class GroupController extends SidebarController {
             groupListView.getSelectionModel().select(0);
         }
 
-        // Add listener for tab selection to refresh data when needed
+        // Add listener for tab selection to load appropriate content
         groupTabs.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
-            if (newTab != null && "Members".equals(newTab.getText())) {
-                // Refresh members table when Members tab is selected
+            if (newTab != null) {
                 Group selectedGroup = groupListView.getSelectionModel().getSelectedItem();
                 if (selectedGroup != null) {
-                    updateMembersTable(selectedGroup);
+                    loadTabContent(newTab.getText(), selectedGroup);
                 }
             }
         });
+
+        // Load initial calendar content if there are groups
+        if (!userGroups.isEmpty()) {
+            Platform.runLater(() -> {
+                Tab selectedTab = groupTabs.getSelectionModel().getSelectedItem();
+                if (selectedTab != null && selectedTab.getText().equals("Calendar")) {
+                    loadTabContent("Calendar", userGroups.get(0));
+                }
+            });
+        }
+    }
+
+    private void loadTabContent(String tabName, Group group) {
+        try {
+            Tab selectedTab = groupTabs.getSelectionModel().getSelectedItem();
+            if (selectedTab == null) return;
+
+            switch (tabName) {
+                case "Calendar":
+                    loadCalendarContent(selectedTab, group);
+                    break;
+                case "Sessions":
+                    loadSessionsContent(selectedTab, group);
+                    break;
+                case "Notes":
+                    loadNotesContent(selectedTab, group);
+                    break;
+                case "Chat":
+                    loadChatContent(selectedTab, group);
+                    break;
+                case "Files":
+                    loadFilesContent(selectedTab, group);
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading tab content: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCalendarContent(Tab tab, Group group) {
+        try {
+            if (groupCalendarController == null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/peerpractice/group-calendar.fxml"));
+                loader.setControllerFactory(cls -> new GroupCalendarController(ctx, nav));
+                Parent calendarView = loader.load();
+                groupCalendarController = loader.getController();
+                tab.setContent(calendarView);
+            }
+            groupCalendarController.setGroup(group);
+        } catch (Exception e) {
+            System.err.println("Failed to load calendar: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void loadNotesContent(Tab tab, Group group) {
+        try {
+            if (notesController == null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/peerpractice/group-notes.fxml"));
+                loader.setControllerFactory(cls -> new NotesController(ctx, nav));
+                Parent notesView = loader.load();
+                notesController = loader.getController();
+                tab.setContent(notesView);
+            }
+            notesController.setGroup(group);
+        } catch (Exception e) {
+            System.err.println("Failed to load notes: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void loadSessionsContent(Tab tab, Group group) {
+        VBox sessionsContent = new VBox(10);
+        sessionsContent.setPadding(new Insets(20));
+
+        Label header = new Label("Study Sessions");
+        header.setFont(Font.font("System", FontWeight.BOLD, 16));
+
+        ListView<Session> sessionsList = new ListView<>();
+        updateSessionsListView(sessionsList, group);
+
+        Button addSessionButton = new Button("Add Session");
+        addSessionButton.setOnAction(e -> {
+            // Navigate to calendar tab to add session
+            groupTabs.getSelectionModel().select(0); // Calendar is first tab
+        });
+
+        sessionsContent.getChildren().addAll(header, sessionsList, addSessionButton);
+        tab.setContent(sessionsContent);
+    }
+
+    private void loadChatContent(Tab tab, Group group) {
+        VBox chatContent = new VBox(10);
+        chatContent.setPadding(new Insets(20));
+
+        Label comingSoon = new Label("Chat functionality coming soon!");
+        comingSoon.setFont(Font.font("System", FontWeight.BOLD, 14));
+
+        chatContent.getChildren().add(comingSoon);
+        tab.setContent(chatContent);
+    }
+
+    private void loadFilesContent(Tab tab, Group group) {
+        VBox filesContent = new VBox(10);
+        filesContent.setPadding(new Insets(20));
+
+        Label comingSoon = new Label("File sharing functionality coming soon!");
+        comingSoon.setFont(Font.font("System", FontWeight.BOLD, 14));
+
+        filesContent.getChildren().add(comingSoon);
+        tab.setContent(filesContent);
+    }
+
+    private void updateSessionsListView(ListView<Session> sessionsList, Group group) {
+        List<Session> groupSessions = ctx.getSessionCalendarManager().getSessionsForGroup(group);
+
+        sessionsList.setCellFactory(listView -> new ListCell<Session>() {
+            @Override
+            protected void updateItem(Session session, boolean empty) {
+                super.updateItem(session, empty);
+                if (empty || session == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    VBox sessionItem = new VBox(5);
+                    sessionItem.setPadding(new Insets(8));
+                    sessionItem.setStyle("-fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;");
+
+                    Label titleLabel = new Label(session.getTitle());
+                    titleLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
+
+                    Label timeLabel = new Label(
+                        session.getStartTime().format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")) +
+                        " - " + session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                    );
+                    timeLabel.setFont(Font.font("System", 10));
+
+                    HBox buttonBox = new HBox(8);
+                    Button viewTasksButton = new Button("View Tasks");
+                    viewTasksButton.setOnAction(e -> nav.openSessionTasks(session.getSessionId()));
+
+                    Button addTaskButton = new Button("Add Task");
+                    addTaskButton.setOnAction(e -> showAddTaskDialog(session));
+
+                    buttonBox.getChildren().addAll(viewTasksButton, addTaskButton);
+                    sessionItem.getChildren().addAll(titleLabel, timeLabel, buttonBox);
+
+                    setGraphic(sessionItem);
+                    setText(null);
+                }
+            }
+        });
+
+        sessionsList.setItems(FXCollections.observableArrayList(groupSessions));
     }
 
     private void openCreateGroupDialog() {
@@ -206,9 +359,6 @@ public class GroupController extends SidebarController {
         if (!userGroups.isEmpty()) {
             groupListView.getSelectionModel().select(0);
             groupNameLabel.setText(userGroups.getFirst().getName());
-            if (groupCalendarController != null) {
-                groupCalendarController.setGroup(userGroups.getFirst());
-            }
         }
     }
 
