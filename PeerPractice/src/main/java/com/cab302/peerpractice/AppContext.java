@@ -1,8 +1,6 @@
 package com.cab302.peerpractice;
 
 import com.cab302.peerpractice.Model.*;
-
-import java.lang.module.FindException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,7 +8,6 @@ import java.util.ArrayList;
 public class AppContext {
     private final UserSession userSession = new UserSession();
     private final IUserDAO userDao = new UserDAO();
-    private final IFriendDAO friendDao;
     private final IGroupDAO groupDao;
     private final Notifier notifier = new Notifier(userDao);
     private final PasswordHasher passwordHasher = new BcryptHasher();
@@ -31,7 +28,6 @@ public class AppContext {
         try {
             this.groupDao = new GroupDBDAO(userDao);
             this.groupManager = new GroupManager(groupDao, notifier, userDao);
-            this.friendDao = new FriendDAO(userDao);
             this.notesDAO = new NotesDBDAO();
             this.notesManager = new NotesManager(notesDAO, groupDao);
 
@@ -40,7 +36,7 @@ public class AppContext {
             this.sessionManager = new SessionManager(this.sessionCalendarManager);
             this.sessionTaskStorage = new SessionTaskDBStorage(userDao);
             this.sessionTaskManager = new SessionTaskManager(sessionTaskStorage, this.sessionManager);
-
+            
             this.sessionCalendarManager.setSessionTaskManager(this.sessionTaskManager);
 
             var availabilityStorage = new AvailabilityDBStorage(userDao);
@@ -67,7 +63,6 @@ public class AppContext {
     public MailService getMailService(){return mailService;}
     public GroupManager getGroupManager(){return  groupManager;}
     public IGroupDAO getGroupDao() {return groupDao;}
-    public IFriendDAO getFriendDao() {return friendDao;}
     public SessionManager getSessionManager(){return sessionManager;}
     public SessionTaskManager getSessionTaskManager(){return sessionTaskManager;}
     public SessionCalendarManager getSessionCalendarManager(){return sessionCalendarManager;}
