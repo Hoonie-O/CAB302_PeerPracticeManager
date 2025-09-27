@@ -15,12 +15,17 @@ public class AvailabilityManager {
         this.storage = storage;
     }
 
-    public boolean createAvailability(String title, User user, LocalDateTime startTime, 
-                                    LocalDateTime endTime, String colorLabel) {
+    public boolean createAvailability(String title, User user, LocalDateTime startTime,
+                                      LocalDateTime endTime, String colorLabel) {
         try {
+            System.out.println("[DEBUG] Manager creating Availability: " + title
+                    + " for " + user.getUsername());
             Availability availability = new Availability(title, user, startTime, endTime, colorLabel);
-            return storage.addAvailability(availability);
+            boolean result = storage.addAvailability(availability);
+            System.out.println("[DEBUG] Manager -> storage.addAvailability returned " + result);
+            return result;
         } catch (Exception e) {
+            System.out.println("[DEBUG] Manager ERROR: " + e.getMessage());
             return false;
         }
     }

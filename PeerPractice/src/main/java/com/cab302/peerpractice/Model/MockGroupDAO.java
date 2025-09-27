@@ -1,6 +1,7 @@
 package com.cab302.peerpractice.Model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +55,16 @@ public class MockGroupDAO implements IGroupDAO {
         return groups.stream()
                 .filter(g -> g.getName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Group searchByID(int id) {
+        for(Group g : groups){
+            if(g.getID() == id){
+                return g;
+            }
+        }
+        return null;
     }
 
     @Override

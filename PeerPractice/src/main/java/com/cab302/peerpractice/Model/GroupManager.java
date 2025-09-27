@@ -25,8 +25,8 @@ public class GroupManager {
 
         if(user == null) throw new IllegalArgumentException("Creating user can't be null");
 
-        validateName(name);
-        validateDescription(description);
+        name = ValidationUtils.validateAndCleanOthersName(name);
+        description = ValidationUtils.validateAndCleanGroupDescription(description);
 
         Group group = new Group(name,description,require_approval,user.getUsername(), LocalDateTime.now());
         group.addMember(user);
@@ -54,16 +54,24 @@ public class GroupManager {
         if(userToAdd == null) throw new UserNotFoundException("User to add couldn't be found");
 
         group.addMember(userToAdd);
+        groupDAO.addToGroup(group.getID(), userToAdd);
     }
 
     public void joinGroup(Group group, User user) throws SQLException {
         if(user == null) throw new IllegalArgumentException("User can't be null");
         if(group == null) throw new IllegalArgumentException("Group can't be null");
         if(group.isRequire_approval()){
-            notifier.groupApprovalRequest(user,group);
+            if (groupDAO instanceof GroupDBDAO) {
+                GroupDBDAO dbDAO = (GroupDBDAO) groupDAO;
+                if (!dbDAO.hasUserRequestedToJoin(group.getID(), user.getUserId()) &&
+                    !dbDAO.isUserMemberOfGroup(group.getID(), user.getUserId())) {
+                    dbDAO.createJoinRequest(group.getID(), user.getUserId());
+                }
+            }
         }
         else{
             group.addMember(user);
+            groupDAO.addToGroup(group.getID(), user);
         }
     }
 
@@ -99,8 +107,8 @@ public class GroupManager {
         name = name.trim();
         if (name.isEmpty()) throw new IllegalArgumentException("Group name can't be blank");
         if (name.length() > 20) throw new IllegalArgumentException("Group name can't be longer than 20 characters");
-        if (!Pattern.compile("^[A-Za-z0-9 _.-]+$").matcher(name).matches()) {
-            throw new IllegalArgumentException("Group name can only contain letters, numbers, spaces, dots, hyphens, or underscores");
+        if (!Pattern.compile("^[A-Za-z0-9 '_.-]+$").matcher(name).matches()) {
+            throw new IllegalArgumentException("Group name can only contain letters, numbers, spaces, dots, hyphens,underscores, or apostrophes");
         }
     }
 
@@ -109,6 +117,105 @@ public class GroupManager {
         description = description.trim();
         if (description.isEmpty()) throw new IllegalArgumentException("Description can't be blank");
         if (description.length() > 200) throw new IllegalArgumentException("Description can't be longer than 200 characters");
+    }
+
+    // Admin role management methods
+    public boolean isAdmin(Group group, User user) {
+        if (group == null || user == null) return false;
+
+        // Check if user is the original owner
+        if (group.getOwner().equals(user.getUsername())) {
+            return true;
+        }
+
+        // Check if user has admin role in database
+        if (groupDAO instanceof GroupDBDAO) {
+            return ((GroupDBDAO) groupDAO).isAdmin(group.getID(), user.getUserId());
+        }
+
+        return false;
+    }
+
+    public void promoteToAdmin(Group group, User promoter, User userToPromote) throws SQLException {
+        if (group == null || promoter == null || userToPromote == null) {
+            throw new IllegalArgumentException("Group, promoter, and user to promote cannot be null");
+        }
+
+        if (!isAdmin(group, promoter)) {
+            throw new InsufficientPermissionsException("Only admins can promote members to admin");
+        }
+
+        if (groupDAO instanceof GroupDBDAO) {
+            boolean success = ((GroupDBDAO) groupDAO).promoteToAdmin(
+                group.getID(), userToPromote.getUserId(), promoter.getUserId()
+            );
+            if (!success) {
+                throw new IllegalStateException("Failed to promote user to admin");
+            }
+            // Update local group object
+            group.setMemberRole(userToPromote.getUserId(), "admin");
+        }
+    }
+
+    public void kickMember(Group group, User admin, User memberToKick) throws SQLException {
+        if (group == null || admin == null || memberToKick == null) {
+            throw new IllegalArgumentException("Group, admin, and member to kick cannot be null");
+        }
+
+        if (!isAdmin(group, admin)) {
+            throw new InsufficientPermissionsException("Only admins can kick members");
+        }
+
+        // Can't kick the original owner
+        if (group.getOwner().equals(memberToKick.getUsername())) {
+            throw new InsufficientPermissionsException("Cannot kick the group owner");
+        }
+
+        if (groupDAO instanceof GroupDBDAO) {
+            boolean success = ((GroupDBDAO) groupDAO).removeMember(
+                group.getID(), memberToKick.getUserId(), admin.getUserId()
+            );
+            if (!success) {
+                throw new IllegalStateException("Failed to remove member from group");
+            }
+            // Update local group object
+            group.getMembers().remove(memberToKick);
+        }
+    }
+
+    public void deleteGroup(Group group, User user) throws SQLException {
+        if (group == null || user == null) {
+            throw new IllegalArgumentException("Group and user cannot be null");
+        }
+
+        // Only the original owner can delete the group
+        if (!group.getOwner().equals(user.getUsername())) {
+            throw new InsufficientPermissionsException("Only the group owner can delete the group");
+        }
+
+        boolean success = groupDAO.deleteGroup(group);
+        if (!success) {
+            throw new IllegalStateException("Failed to delete group");
+        }
+    }
+
+    public void processJoinRequest(Group group, User admin, User requestingUser, boolean approve) throws SQLException {
+        if (group == null || admin == null || requestingUser == null) {
+            throw new IllegalArgumentException("Group, admin, and requesting user cannot be null");
+        }
+
+        if (!isAdmin(group, admin)) {
+            throw new InsufficientPermissionsException("Only admins can process join requests");
+        }
+
+        if (approve) {
+            // Add user to group
+            groupDAO.addToGroup(group.getID(), requestingUser);
+            group.addMember(requestingUser);
+        }
+
+        // TODO: Update join request status in database
+        // This would require extending the database schema to track join requests
     }
 
 }

@@ -3,11 +3,14 @@ package com.cab302.peerpractice.Model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Group {
 
     private List<User> members;
+    private Map<String, String> memberRoles; // userId -> role mapping
     private String name;
     private int ID;
     private String description;
@@ -22,6 +25,7 @@ public class Group {
         this.owner = owner;
         this.created_at = created_at;
         this.members = new ArrayList<>();
+        this.memberRoles = new HashMap<>();
     }
 
     public List<User> getMembers() { return Collections.unmodifiableList(members); }
@@ -52,5 +56,45 @@ public class Group {
     
     public String getCreatorUsername() { 
         return owner; 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return ID == group.ID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(ID);
+    }
+
+    // Admin role management methods
+    public void setMemberRole(String userId, String role) {
+        memberRoles.put(userId, role);
+    }
+
+    public String getMemberRole(String userId) {
+        return memberRoles.getOrDefault(userId, "member");
+    }
+
+    public boolean isAdmin(String userId) {
+        return "admin".equals(getMemberRole(userId));
+    }
+
+    public List<User> getAdmins() {
+        List<User> admins = new ArrayList<>();
+        for (User member : members) {
+            if (isAdmin(member.getUserId())) {
+                admins.add(member);
+            }
+        }
+        return admins;
+    }
+
+    public boolean hasAdminRights(String userId) {
+        return owner.equals(userId) || isAdmin(userId);
     }
 }

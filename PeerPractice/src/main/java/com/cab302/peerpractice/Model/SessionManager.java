@@ -4,10 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Manages study sessions. Just did basic operations to get things going.
- * Will need expanding when we add groups and persistence.
- */
 public class SessionManager {
     private List<Session> sessions;
     private final SessionCalendarManager calendarManager;
@@ -21,10 +17,7 @@ public class SessionManager {
         this.sessions = new ArrayList<>();
         this.calendarManager = calendarManager;
     }
-    
-    /**
-     * Creates a new study session and adds it to the list.
-     */
+
     public Session createSession(String title, User organiser, LocalDateTime startTime, LocalDateTime endTime) {
         Session session = new Session(title, organiser, startTime, endTime);
         if (calendarManager != null) {
@@ -34,51 +27,55 @@ public class SessionManager {
         }
         return session;
     }
-    
-    /**
-     * Gets all sessions, will probably want to filter this later.
-     */
+
+    public Session createSession(String title, User organiser, LocalDateTime startTime, LocalDateTime endTime, Group group) {
+        Session session = new Session(title, organiser, startTime, endTime, group);
+        if (calendarManager != null) {
+            calendarManager.addSession(session, group);
+        } else {
+            sessions.add(session);
+        }
+        return session;
+    }
+
     public List<Session> getAllSessions() {
         if (calendarManager != null) return calendarManager.getAllSessions();
         return new ArrayList<>(sessions);
     }
-    
-    /**
-     * Gets sessions for a specific user (as organiser or participant).
-     */
+
     public List<Session> getSessionsForUser(User user) {
         if (calendarManager != null) return calendarManager.getSessionsForUser(user);
         List<Session> userSessions = new ArrayList<>();
         for (Session session : sessions) if (session.getParticipants().contains(user)) userSessions.add(session);
         return userSessions;
     }
-    
-    /**
-     * Gets upcoming sessions (not completed or cancelled).
-     */
+
     public List<Session> getUpcomingSessions() {
         List<Session> upcoming = new ArrayList<>();
         for (Session session : getAllSessions()) {
-            if (session.getStatus() == SessionStatus.PLANNED || 
-                session.getStatus() == SessionStatus.ACTIVE) {
+            if ("optional".equals(session.getPriority()) ||
+                    "important".equals(session.getPriority()) ||
+                    "urgent".equals(session.getPriority())) {
                 upcoming.add(session);
             }
         }
         return upcoming;
     }
 
-    
-    /**
-     * Finds a session by its ID. Returns null if not found.
-     */
     public Session findSessionById(String sessionId) {
         if (sessionId == null) return null;
-        
         for (Session session : getAllSessions()) {
             if (sessionId.equals(session.getSessionId())) {
                 return session;
             }
         }
         return null;
+    }
+
+    public List<Session> getSessionsForGroup(Group group) {
+        if (calendarManager != null) return calendarManager.getSessionsForGroup(group);
+        List<Session> groupSessions = new ArrayList<>();
+        for (Session session : sessions) if (session.getGroup() != null && session.getGroup().equals(group)) groupSessions.add(session);
+        return groupSessions;
     }
 }

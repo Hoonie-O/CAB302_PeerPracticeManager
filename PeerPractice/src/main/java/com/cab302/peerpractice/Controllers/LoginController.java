@@ -59,7 +59,11 @@ public class LoginController extends BaseController{
                     loggedIn = ctx.getUserDao().getUserByEmail(ID);
                 }
                 // If logged in then put user into the session
-                loggedIn.ifPresent(u -> ctx.getUserSession().setCurrentUser(u));
+                loggedIn.ifPresent(u -> {
+                    ctx.getUserSession().setCurrentUser(u);
+                    // save persistent session if remember me checked
+                    SessionPersistence.saveSession(u, rememberMe.isSelected());
+                });
 
                 nav.DisplayMainMenuOrGroup();
             } else {

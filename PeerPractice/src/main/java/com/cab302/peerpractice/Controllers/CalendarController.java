@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CalendarController extends SidebarController {
@@ -144,7 +146,8 @@ public class CalendarController extends SidebarController {
 
         // show different items based on view mode
         if (isSessionView) {
-            List<Session> sessions = sessionCalendarManager.getSessionsForDate(date);
+            List<Session> sessions = getUserSessionsForDate(date);
+            List<Session> sessions = getUserSessionsForDate(date);
             for (Session session : sessions) {
                 Label sessionLabel = new Label(session.getTitle());
                 sessionLabel.setFont(Font.font("System", 8));
@@ -190,7 +193,8 @@ public class CalendarController extends SidebarController {
 
     private void showItemDialog(LocalDate date) {
         if (isSessionView) {
-            List<Session> sessions = sessionCalendarManager.getSessionsForDate(date);
+            List<Session> sessions = getUserSessionsForDate(date);
+            List<Session> sessions = getUserSessionsForDate(date);
             if (sessions.isEmpty()) {
                 showAddSessionDialog(date);
             } else {
@@ -214,76 +218,18 @@ public class CalendarController extends SidebarController {
     }
 
     private void showAddSessionDialog(LocalDate date) {
-        User currentUser = ctx.getUserSession().getCurrentUser();
-        if (currentUser == null) return;
-
-        Dialog<Session> dialog = new Dialog<>();
-        dialog.setTitle("Add Study Session");
-        dialog.setHeaderText("Create study session for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
-
-        ButtonType saveButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField titleField = new TextField();
-        titleField.setPromptText("Session title");
-
-        TextArea descriptionField = new TextArea();
-        descriptionField.setPromptText("Description optional");
-        descriptionField.setPrefRowCount(2);
-
-        Spinner<Integer> startHour = new Spinner<>(0, 23, 9);
-        Spinner<Integer> startMinute = new Spinner<>(0, 59, 0, 15);
-        Spinner<Integer> endHour = new Spinner<>(0, 23, 10);
-        Spinner<Integer> endMinute = new Spinner<>(0, 59, 0, 15);
-
-        ComboBox<String> colorCombo = new ComboBox<>();
-        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE");
-        colorCombo.setValue("BLUE");
-
-        grid.add(new Label("Title:"), 0, 0);
-        grid.add(titleField, 1, 0);
-        grid.add(new Label("Description:"), 0, 1);
-        grid.add(descriptionField, 1, 1);
-        grid.add(new Label("Start time:"), 0, 2);
-        grid.add(new HBox(5,
-                new VBox(5, new Label("Hour"), startHour),
-                new VBox(5, new Label("Minute"), startMinute)), 1, 2);
-        grid.add(new Label("End time:"), 0, 3);
-        grid.add(new HBox(5,
-                new VBox(5, new Label("Hour"), endHour),
-                new VBox(5, new Label("Minute"), endMinute)), 1, 3);
-        grid.add(new Label("Color:"), 0, 4);
-        grid.add(colorCombo, 1, 4);
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButtonType) {
-                String title = titleField.getText().trim();
-                if (!title.isEmpty()) {
-                    LocalDateTime startTime = LocalDateTime.of(date, LocalTime.of(startHour.getValue(), startMinute.getValue()));
-                    LocalDateTime endTime = LocalDateTime.of(date, LocalTime.of(endHour.getValue(), endMinute.getValue()));
-
-                    if (endTime.isAfter(startTime)) {
-                        Session session = new Session(title, currentUser, startTime, endTime);
-                        session.setDescription(descriptionField.getText());
-                        session.setColorLabel(colorCombo.getValue());
-                        return session;
-                    }
-                }
-            }
-            return null;
-        });
-
-        dialog.showAndWait().ifPresent(session -> {
-            sessionCalendarManager.addSession(session);
-            updateCalendarView();
-        });
+        // Users can't create sessions from personal calendar - only in groups
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Session Creation Restricted");
+        alert.setHeaderText("Sessions must be created within a group");
+        alert.setContentText("Please navigate to a group calendar to create study sessions. Sessions can only be organized within groups to ensure proper collaboration.");
+        alert.showAndWait();
+        // Users can't create sessions from personal calendar - only in groups
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Session Creation Restricted");
+        alert.setHeaderText("Sessions must be created within a group");
+        alert.setContentText("Please navigate to a group calendar to create study sessions. Sessions can only be organized within groups to ensure proper collaboration.");
+        alert.showAndWait();
     }
 
     private void showAddAvailabilityDialog(LocalDate date) {
@@ -392,29 +338,45 @@ public class CalendarController extends SidebarController {
             );
             descriptionLabel.setWrapText(true);
 
+            // Personal calendar is read-only - only show view tasks button
+            // Personal calendar is read-only - only show view tasks button
             HBox buttons = new HBox(8);
-            Button createTaskButton = new Button("Create Task");
-            createTaskButton.setOnAction(e -> {
+
+            Button viewTasksButton = new Button("View Tasks");
+            viewTasksButton.setOnAction(e -> {
+
+            Button viewTasksButton = new Button("View Tasks");
+            viewTasksButton.setOnAction(e -> {
                 dialog.close();
-                javafx.application.Platform.runLater(() -> openCreateTaskDialog(session));
-            });
-            Button deleteButton = new Button("Delete");
-            deleteButton.setOnAction(e -> {
-                dialog.close();
-                javafx.application.Platform.runLater(() -> showDeleteSessionDialog(session));
+                nav.openSessionTasks(session.getSessionId());
+                nav.openSessionTasks(session.getSessionId());
             });
 
-            buttons.getChildren().addAll(createTaskButton, deleteButton);
-            sessionBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, buttons);
+            Label groupLabel = new Label("Group: " + (session.getGroup() != null ? session.getGroup().getName() : "Unknown"));
+            groupLabel.setFont(Font.font("System", 10));
+            groupLabel.setTextFill(Color.GRAY);
+
+            Label groupLabel = new Label("Group: " + (session.getGroup() != null ? session.getGroup().getName() : "Unknown"));
+            groupLabel.setFont(Font.font("System", 10));
+            groupLabel.setTextFill(Color.GRAY);
+
+            buttons.getChildren().add(viewTasksButton);
+            sessionBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, groupLabel, buttons);
+            buttons.getChildren().add(viewTasksButton);
+            sessionBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, groupLabel, buttons);
             content.getChildren().add(sessionBox);
         }
 
-        Button addNewButton = new Button("Add Another Session");
-        addNewButton.setOnAction(e -> {
-            dialog.close();
-            javafx.application.Platform.runLater(() -> showAddSessionDialog(date));
-        });
-        content.getChildren().add(addNewButton);
+        // Personal calendar doesn't allow creating sessions
+        Label infoLabel = new Label("Sessions must be created from group calendars.");
+        infoLabel.setFont(Font.font("System", 10));
+        infoLabel.setTextFill(Color.GRAY);
+        content.getChildren().add(infoLabel);
+        // Personal calendar doesn't allow creating sessions
+        Label infoLabel = new Label("Sessions must be created from group calendars.");
+        infoLabel.setFont(Font.font("System", 10));
+        infoLabel.setTextFill(Color.GRAY);
+        content.getChildren().add(infoLabel);
 
         ScrollPane scrollPane = new ScrollPane(content);
         scrollPane.setPrefSize(500, 400);
@@ -556,5 +518,37 @@ public class CalendarController extends SidebarController {
                 updateCalendarView();
             }
         });
+    }
+
+    // Get sessions from all groups user belongs to for a specific date
+    private List<Session> getUserSessionsForDate(LocalDate date) {
+        User currentUser = ctx.getUserSession().getCurrentUser();
+        if (currentUser == null) return new ArrayList<>();
+
+        List<Session> userSessions = new ArrayList<>();
+        List<Group> userGroups = ctx.getGroupDao().searchByUser(currentUser);
+
+        for (Group group : userGroups) {
+            List<Session> groupSessions = sessionCalendarManager.getSessionsForDateAndGroup(date, group);
+            userSessions.addAll(groupSessions);
+        }
+
+        return userSessions;
+    }
+
+    // Get sessions from all groups user belongs to for a specific date
+    private List<Session> getUserSessionsForDate(LocalDate date) {
+        User currentUser = ctx.getUserSession().getCurrentUser();
+        if (currentUser == null) return new ArrayList<>();
+
+        List<Session> userSessions = new ArrayList<>();
+        List<Group> userGroups = ctx.getGroupDao().searchByUser(currentUser);
+
+        for (Group group : userGroups) {
+            List<Session> groupSessions = sessionCalendarManager.getSessionsForDateAndGroup(date, group);
+            userSessions.addAll(groupSessions);
+        }
+
+        return userSessions;
     }
 }
