@@ -22,6 +22,8 @@ public class AppContext {
     private final SessionTaskManager sessionTaskManager;
     private final SessionCalendarManager sessionCalendarManager;
     private final AvailabilityManager availabilityManager;
+    private final INotesDAO notesDAO;
+    private final NotesManager notesManager;
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
@@ -30,6 +32,8 @@ public class AppContext {
             this.groupDao = new GroupDBDAO(userDao);
             this.groupManager = new GroupManager(groupDao, notifier, userDao);
             this.friendDao = new FriendDAO(userDao);
+            this.notesDAO = new NotesDBDAO();
+            this.notesManager = new NotesManager(notesDAO, groupDao);
 
             var sessionStorage = new SessionCalendarDBStorage(userDao);
             this.sessionCalendarManager = new SessionCalendarManager(sessionStorage);
@@ -68,9 +72,11 @@ public class AppContext {
     public SessionTaskManager getSessionTaskManager(){return sessionTaskManager;}
     public SessionCalendarManager getSessionCalendarManager(){return sessionCalendarManager;}
     public AvailabilityManager getAvailabilityManager(){return availabilityManager;}
+    public NotesManager getNotesManager(){return notesManager;}
+    public INotesDAO getNotesDAO(){return notesDAO;}
     public boolean isMenuOpen() { return menuOpen; }
     public void setMenuOpen(boolean value) { this.menuOpen = value; }
     public boolean isProfileOpen() { return profileOpen; }
     public void setProfileOpen(boolean value) { this.profileOpen = value; }
-    
+
 }

@@ -50,10 +50,6 @@ public class AvailabilityDBStorage extends AvailabilityStorage {
 
     @Override
     public boolean addAvailability(Availability availability) {
-        System.out.println("[DEBUG] Storage adding availability: "
-                + availability.getTitle()
-                + " user=" + availability.getUser().getUsername()
-                + " start=" + availability.getStartTime());
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT OR REPLACE INTO availabilities " +
                         "(availability_id, title, description, start_time, end_time, user_id, color_label) " +
@@ -66,11 +62,9 @@ public class AvailabilityDBStorage extends AvailabilityStorage {
             ps.setString(6, availability.getUser().getUserId());
             ps.setString(7, availability.getColorLabel());
             ps.executeUpdate();
-            System.out.println("[DEBUG] Storage SUCCESS inserting " + availability.getTitle());
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("[DEBUG] Storage ERROR inserting: " + e.getMessage());
             return false;
         }
     }

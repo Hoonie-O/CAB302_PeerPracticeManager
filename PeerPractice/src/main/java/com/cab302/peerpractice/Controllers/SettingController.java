@@ -2,12 +2,11 @@ package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Navigation;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class SettingProfileController extends BaseController {
+public class SettingController extends BaseController {
 
     @FXML private ComboBox<String> dateFormatBox;
     @FXML private ComboBox<String> timeFormatBox;
@@ -17,7 +16,7 @@ public class SettingProfileController extends BaseController {
 
     private Stage stage;
 
-    public SettingProfileController(AppContext ctx, Navigation nav) {
+    public SettingController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 

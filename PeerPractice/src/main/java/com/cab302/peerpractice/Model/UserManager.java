@@ -50,7 +50,6 @@ public class UserManager {
     public boolean changePassword(String username, String rawPassword) throws InvalidPasswordException, SQLException {
         ValidationUtils.validatePassword(rawPassword);
         String hashed = hasher.hasher(rawPassword);
-
         return userDAO.updateValue(username, "password", hashed);
     }
 

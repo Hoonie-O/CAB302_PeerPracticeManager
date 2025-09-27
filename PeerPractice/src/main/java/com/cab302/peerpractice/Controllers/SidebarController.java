@@ -289,7 +289,8 @@ public abstract class SidebarController extends BaseController {
 
             renderProfile();
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -309,7 +310,7 @@ public abstract class SidebarController extends BaseController {
             });
 
             Parent root = loader.load();
-            SettingProfileController controller = loader.getController();
+            SettingController controller = loader.getController();
 
             // Open modal
             Stage dialog = new Stage();

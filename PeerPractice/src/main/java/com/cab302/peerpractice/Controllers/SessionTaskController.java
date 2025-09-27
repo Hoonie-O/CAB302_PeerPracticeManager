@@ -18,7 +18,7 @@ import java.util.List;
  * Controller for managing session tasks. Handles creating, editing, and deleting
  * tasks within study sessions with proper validation.
  */
-public class SessionTaskController extends BaseController {
+public class SessionTaskController extends SidebarController {
     
     @FXML private TableView<SessionTask> taskTable;
     @FXML private TableColumn<SessionTask, String> titleColumn;
@@ -44,10 +44,10 @@ public class SessionTaskController extends BaseController {
     public SessionTaskController(AppContext ctx, Navigation nav) { super(ctx, nav); }
     
     @FXML
-    private void initialize() {
+    public void initialize() {
+        super.initialize();
         setupTableColumns();
         setupEventHandlers();
-        setupKeyboardHandlers();
         taskList = FXCollections.observableArrayList();
         taskTable.setItems(taskList);
     }
@@ -114,7 +114,6 @@ public class SessionTaskController extends BaseController {
         });
         
         // button handlers
-        backButton.setOnAction(e -> handleBack());
         createTaskButton.setOnAction(e -> createTask());
         updateTaskButton.setOnAction(e -> updateTask());
         deleteTaskButton.setOnAction(e -> deleteTask());
@@ -122,18 +121,6 @@ public class SessionTaskController extends BaseController {
         
         // enable/disable buttons based on selection
         updateButtonStates();
-    }
-
-    /**
-     * Sets up keyboard event handlers
-     */
-    private void setupKeyboardHandlers() {
-        // handle Escape key for back navigation
-        taskTable.setOnKeyPressed(event -> {
-            if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
-                handleBack();
-            }
-        });
     }
 
     /**
@@ -526,13 +513,6 @@ public class SessionTaskController extends BaseController {
     private String getCurrentUserId() {
         User currentUser = ctx.getUserSession().getCurrentUser();
         return currentUser != null ? currentUser.getUserId() : null;
-    }
-    
-    /**
-     * Handle back button - navigate to groups view
-     */
-    private void handleBack() {
-        nav.Display(com.cab302.peerpractice.View.Groups);
     }
 
     /**

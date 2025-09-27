@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.peerpractice.Controllers.ShareGroupIDController"
+            prefWidth="460"
+            prefHeight="90">
+
+    <VBox AnchorPane.topAnchor="10"
+          AnchorPane.rightAnchor="10"
+          AnchorPane.bottomAnchor="10"
+          AnchorPane.leftAnchor="10"
+          spacing="10">
+
+        <Label fx:id="titleLabel"
+               text='Share this Group ID to invite members'/>
+
+        <HBox spacing="10"
+              alignment="CENTER_LEFT">
+            <TextField fx:id="groupIDField"
+                       editable="false"
+                       HBox.hgrow="ALWAYS"
+                       maxWidth="Infinity"/>
+            <Button fx:id="copyButton"
+                    text="Copy"
+                    onAction="#onCopyGroupID"
+                    prefWidth="80"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

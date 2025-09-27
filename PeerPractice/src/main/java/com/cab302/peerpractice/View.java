@@ -1,5 +1,7 @@
 package com.cab302.peerpractice;
 
+import java.net.URL;
+
 public enum View {
     Login("login-view.fxml", "Login"),
     Signup("signup-view.fxml", "Sign up"),
@@ -12,6 +14,12 @@ public enum View {
     SettingProfile("settingprofile-view.fxml", "Setting Profile"),
     SessionTasks("session-tasks-view.fxml", "Session Tasks"),
     Friends("friends-view.fxml", "Friends");
+    EditProfile("editprofile-dialog.fxml", "Edit Profile"),
+    SettingProfile("setting-diaglog.fxml", "Setting Profile"),
+    SessionTasks("session-tasks-view.fxml", "Session Tasks"),
+    InviteMember("invitemember-dialog.fxml", "Invite Members"),
+    ShareGroupID("sharegroupID-dialog.fxml", "Share Group ID"),
+    ManageGroup("managegroup-dialog.fxml", "Mange Group");
 
     private final String fxml;
     private final String title;
@@ -29,7 +37,7 @@ public enum View {
         return title;
     }
 
-    public java.net.URL url() {
+    public URL url() {
         return View.class.getResource("/com/cab302/peerpractice/" + fxml);
     }
 }

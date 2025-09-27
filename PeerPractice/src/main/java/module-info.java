@@ -18,6 +18,8 @@ module com.cab302.peerpractice {
     requires jbcrypt;
     requires java.management;
     requires org.slf4j;
+    requires org.commonmark;
+
 
     opens com.cab302.peerpractice to javafx.fxml;
     exports com.cab302.peerpractice;

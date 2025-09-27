@@ -13,6 +13,7 @@ public final class ValidationUtils {
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^(?!\\d+$)[A-Za-z0-9._]{6,}$");
     private static final Pattern NAME_PATTERN = Pattern.compile("^[\\p{L}\\s'-]+$");
     private static final Pattern SPECIAL_CHARS = Pattern.compile("[!@#$%^&*()\\-_=+\\[\\]{};:'\",.<>/?\\\\|`~]");
+    private static final Pattern GROUP_NAME_PATTERN = Pattern.compile("^[A-Za-z0-9 '_.-]+$");
 
     private ValidationUtils() {
         // Prevent instantiation of utility class
@@ -37,6 +38,32 @@ public final class ValidationUtils {
 
         return trimmed;
     }
+
+    /**
+     * Validates and cleans group name
+     */
+    public static String validateAndCleanOthersName(String name){
+        if (name == null) throw new IllegalArgumentException("Group name can't be null");
+        name = name.trim();
+        if (name.isEmpty()) throw new IllegalArgumentException("Group name can't be blank");
+        if (name.length() > 20) throw new IllegalArgumentException("Group name can't be longer than 20 characters");
+        if (!GROUP_NAME_PATTERN.matcher(name).matches()) {
+            throw new IllegalArgumentException("Group name can only contain letters, numbers, spaces, dots, hyphens,underscores, or apostrophes");
+        }
+        return name;
+    }
+
+    /**
+     * Validates and cleans group description
+     */
+    public static String validateAndCleanGroupDescription(String description){
+        if (description == null) throw new IllegalArgumentException("Description can't be null");
+        description = description.trim();
+        if (description.isEmpty()) throw new IllegalArgumentException("Description can't be blank");
+        if (description.length() > 200) throw new IllegalArgumentException("Description can't be longer than 200 characters");
+        return description;
+    }
+
 
     /**
      * Validates and cleans a username.

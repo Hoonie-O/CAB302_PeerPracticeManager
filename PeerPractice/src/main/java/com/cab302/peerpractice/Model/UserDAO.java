@@ -223,7 +223,6 @@ public class UserDAO implements IUserDAO{
     // Creates a new user with a specific ID
     public boolean createUserWithId(String userId, String username, String password, String firstName, String lastName, String email, String institution) throws SQLException {
         // Use the provided user ID
-        System.out.println("[DEBUG] UserDAO.createUserWithId -> Adding user " + username + " with ID: " + userId);
         
         // Use prepared statement to prevent SQL injection
         PreparedStatement stmt = connection.prepareStatement(

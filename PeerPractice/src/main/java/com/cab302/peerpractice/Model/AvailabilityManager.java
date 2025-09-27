@@ -18,14 +18,9 @@ public class AvailabilityManager {
     public boolean createAvailability(String title, User user, LocalDateTime startTime,
                                       LocalDateTime endTime, String colorLabel) {
         try {
-            System.out.println("[DEBUG] Manager creating Availability: " + title
-                    + " for " + user.getUsername());
             Availability availability = new Availability(title, user, startTime, endTime, colorLabel);
-            boolean result = storage.addAvailability(availability);
-            System.out.println("[DEBUG] Manager -> storage.addAvailability returned " + result);
-            return result;
+            return storage.addAvailability(availability);
         } catch (Exception e) {
-            System.out.println("[DEBUG] Manager ERROR: " + e.getMessage());
             return false;
         }
     }
