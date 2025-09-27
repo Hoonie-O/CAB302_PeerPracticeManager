@@ -2,8 +2,8 @@ package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Navigation;
-import com.cab302.peerpractice.Model.User;
-import com.cab302.peerpractice.Model.ProfileUpdateService;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.ProfileUpdateService;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

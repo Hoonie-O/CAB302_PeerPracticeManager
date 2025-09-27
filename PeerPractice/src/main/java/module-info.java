@@ -1,33 +1,55 @@
 module com.cab302.peerpractice {
+    // --- JavaFX ---
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires javafx.graphics;
 
+    // --- External UI libs ---
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+
+    // --- Java platform ---
     requires java.prefs;
     requires java.desktop;
-    requires javafx.graphics;
     requires java.sql;
     requires java.sql.rowset;
+    requires java.management;
+
+    // --- External dependencies ---
     requires jakarta.mail;
     requires jbcrypt;
-    requires java.management;
     requires org.commonmark;
-
     requires org.slf4j;
 
-    opens com.cab302.peerpractice to javafx.fxml;
+    // --- Core application ---
     exports com.cab302.peerpractice;
+    opens com.cab302.peerpractice to javafx.fxml;
+
+    // --- Controllers ---
     exports com.cab302.peerpractice.Controllers;
-    exports com.cab302.peerpractice.Model;
-    exports com.cab302.peerpractice.Exceptions;
     opens com.cab302.peerpractice.Controllers to javafx.fxml;
-    opens com.cab302.peerpractice.Model to javafx.fxml;
-    exports com.cab302.peerpractice.Utilities;
-    opens com.cab302.peerpractice.Utilities to javafx.fxml;
+
+    // --- Exceptions ---
+    exports com.cab302.peerpractice.Exceptions;
+
+    // --- Utilities ---
+    exports com.cab302.peerpractice.Model.utils;
+    opens com.cab302.peerpractice.Model.utils to javafx.fxml;
+
+    // --- DAOs ---
+    exports com.cab302.peerpractice.Model.daos;
+    opens com.cab302.peerpractice.Model.daos to javafx.fxml;
+
+    // --- Managers ---
+    exports com.cab302.peerpractice.Model.managers;
+    opens com.cab302.peerpractice.Model.managers to javafx.fxml;
+
+    // --- Entities ---
+    exports com.cab302.peerpractice.Model.entities;
+    opens com.cab302.peerpractice.Model.entities to javafx.fxml;
 }

@@ -1,4 +1,4 @@
-import com.cab302.peerpractice.Model.User;
+import com.cab302.peerpractice.Model.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

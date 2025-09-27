@@ -1,6 +1,9 @@
-package com.cab302.peerpractice.test;
-
-import com.cab302.peerpractice.Model.*;
+import com.cab302.peerpractice.Model.daos.GroupDAO;
+import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;
+import com.cab302.peerpractice.Model.daos.SessionTaskDAO;
+import com.cab302.peerpractice.Model.daos.UserDAO;
+import com.cab302.peerpractice.Model.entities.*;
+import com.cab302.peerpractice.Model.managers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
@@ -12,11 +15,11 @@ import java.util.List;
 public class GroupJoinIntegrationTest {
 
     private UserDAO userDao;
-    private GroupDBDAO groupDao;
+    private GroupDAO groupDao;
     private GroupManager groupManager;
     private SessionCalendarManager sessionCalendarManager;
     private SessionTaskManager sessionTaskManager;
-    private SessionTaskDBStorage sessionTaskStorage;
+    private SessionTaskDAO sessionTaskStorage;
     
     private User alice;
     private User bob;
@@ -25,15 +28,15 @@ public class GroupJoinIntegrationTest {
     @BeforeEach
     void setUp() throws SQLException {
         userDao = new UserDAO();
-        groupDao = new GroupDBDAO(userDao);
+        groupDao = new GroupDAO(userDao);
         
         Notifier notifier = new Notifier(userDao);
         groupManager = new GroupManager(groupDao, notifier, userDao);
         
-        var sessionStorage = new SessionCalendarDBStorage(userDao);
+        var sessionStorage = new SessionCalendarDAO(userDao);
         sessionCalendarManager = new SessionCalendarManager(sessionStorage);
         var sessionManager = new SessionManager(sessionCalendarManager);
-        sessionTaskStorage = new SessionTaskDBStorage(userDao);
+        sessionTaskStorage = new SessionTaskDAO(userDao);
         sessionTaskManager = new SessionTaskManager(sessionTaskStorage, sessionManager);
         sessionCalendarManager.setSessionTaskManager(sessionTaskManager);
         

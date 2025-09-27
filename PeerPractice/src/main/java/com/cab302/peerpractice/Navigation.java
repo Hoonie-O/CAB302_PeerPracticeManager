@@ -1,7 +1,7 @@
 package com.cab302.peerpractice;
 
 import com.cab302.peerpractice.Exceptions.ControllerFactoryFailedException;
-import com.cab302.peerpractice.Model.User;
+import com.cab302.peerpractice.Model.entities.User;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -63,7 +63,7 @@ public final class Navigation {
 
     public void DisplayMainMenuOrGroup() {
         User currentUser = ctx.getUserSession().getCurrentUser();
-        boolean hasGroups = !ctx.getGroupDao().searchByUser(currentUser).isEmpty();
+        boolean hasGroups = !ctx.getGroupDAO().searchByUser(currentUser).isEmpty();
 
         if (hasGroups) {
             Display(View.Groups);

@@ -49,10 +49,10 @@ Binary files a/PeerPractice/PeerPracticeManager.db and b/PeerPractice/PeerPracti
 [32m+[m[32mpackage com.cab302.peerpractice.Controllers;[m
 [32m+[m
 [32m+[m[32mimport com.cab302.peerpractice.AppContext;[m
-[32m+[m[32mimport com.cab302.peerpractice.Model.Friend;[m
-[32m+[m[32mimport com.cab302.peerpractice.Model.IFriendDAO;[m
-[32m+[m[32mimport com.cab302.peerpractice.Model.IUserDAO;[m
-[32m+[m[32mimport com.cab302.peerpractice.Model.User;[m
+[32m+[m[32mimport com.cab302.peerpractice.Model.entities.Friend;[m
+[32m+[m[32mimport com.cab302.peerpractice.Model.daos.IFriendDAO;[m
+[32m+[m[32mimport com.cab302.peerpractice.Model.daos.IUserDAO;[m
+[32m+[m[32mimport com.cab302.peerpractice.Model.entities.User;[m
 [32m+[m[32mimport com.cab302.peerpractice.Navigation;[m
 [32m+[m[32mimport javafx.animation.FadeTransition;[m
 [32m+[m[32mimport javafx.beans.property.SimpleStringProperty;[m

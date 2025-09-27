@@ -1,8 +1,8 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.Group;
-import com.cab302.peerpractice.Model.User;
+import com.cab302.peerpractice.Model.entities.Group;
+import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;
@@ -74,7 +74,7 @@ public class DefaultController extends SidebarController {
 
             String code = result.get();
             try {
-                Group group = ctx.getGroupDao().getAllGroups().stream()
+                Group group = ctx.getGroupDAO().getAllGroups().stream()
                         .filter(g -> String.valueOf(g.getID()).equals(code))
                         .findFirst()
                         .orElse(null);

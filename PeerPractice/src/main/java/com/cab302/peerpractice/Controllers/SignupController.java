@@ -1,7 +1,7 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.UserManager;
+import com.cab302.peerpractice.Model.managers.UserManager;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;

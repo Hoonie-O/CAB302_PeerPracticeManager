@@ -1,8 +1,8 @@
 
-import com.cab302.peerpractice.Model.*;
-import org.junit.jupiter.api.BeforeEach;
+import com.cab302.peerpractice.Model.entities.Chapter;
+import com.cab302.peerpractice.Model.entities.Note;
 import org.junit.jupiter.api.Test;
-import java.time.LocalDateTime;
+
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;

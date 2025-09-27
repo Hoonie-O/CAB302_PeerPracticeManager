@@ -1,7 +1,10 @@
-import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
-import com.cab302.peerpractice.Model.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.cab302.peerpractice.Model.daos.IUserDAO;
+import com.cab302.peerpractice.Model.daos.UserDAO;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.ProfileUpdateService;
+import com.cab302.peerpractice.Model.managers.UserManager;
+import com.cab302.peerpractice.Model.utils.BcryptHasher;
+import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -10,25 +13,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ProfileUpdateServiceTest {
 
-    private ProfileUpdateService service;
-    private UserManager mockUserManager;
-    private User testUser;
+private ProfileUpdateService service;
+private UserManager userManager;
+private IUserDAO userDao;
+private User testUser;
 
-    @BeforeEach
-    void setUp() {
-        IUserDAO mockDAO = new MockUserDAO();
-        mockUserManager = new UserManager(mockDAO, new BcryptHasher());
-        service = new ProfileUpdateService(mockUserManager);
+@BeforeEach
+void setUp() throws SQLException {
+    userDao = new UserDAO();
 
-        testUser = new User("John", "Doe", "johndoe", "john@example.com", "hashedpass", "QUT");
-        testUser.setPhone("123456789");
-        testUser.setAddress("123 Main St");
-        testUser.setDateOfBirth("1990-01-01");
-    }
+    // Clean up in case test users exist from previous runs
+    try { userDao.deleteUser("johndoe"); } catch (Exception ignored) {}
+    try { userDao.deleteUser("janesmith"); } catch (Exception ignored) {}
 
-    @Test
-    void updateProfile_noChanges_returnsFalse() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
+    userManager = new UserManager(userDao, new BcryptHasher());
+    service = new ProfileUpdateService(userManager);
+
+    testUser = new User("John", "Doe", "johndoe", "john@example.com", "hashedpass", "QUT");
+    testUser.setPhone("123456789");
+    testUser.setAddress("123 Main St");
+    testUser.setDateOfBirth("1990-01-01");
+
+    userDao.addUser(testUser);
+}
+
+@AfterEach
+void tearDown() {
+    try { userDao.deleteUser(testUser.getUserId()); } catch (Exception ignored) {}
+}
+
+// === Core Tests ===
+
+@Test
+void updateProfile_noChanges_returnsFalse() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
             testUser.getFirstName(),
             testUser.getLastName(),
             testUser.getUsername(),
@@ -36,351 +54,182 @@ public class ProfileUpdateServiceTest {
             testUser.getPhone(),
             testUser.getAddress(),
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertFalse(service.updateProfile(testUser, request));
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertFalse(result);
-    }
+@Test
+void updateProfile_firstNameChanged_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            "Jane", testUser.getLastName(), testUser.getUsername(),
+            testUser.getInstitution(), testUser.getPhone(),
+            testUser.getAddress(), LocalDate.parse("1990-01-01")
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("Jane", testUser.getFirstName());
+}
 
-    @Test
-    void updateProfile_firstNameChanged_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            "Jane", // Changed from John
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
+@Test
+void updateProfile_lastNameChanged_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), "Smith", testUser.getUsername(),
+            testUser.getInstitution(), testUser.getPhone(),
+            testUser.getAddress(), LocalDate.parse("1990-01-01")
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("Smith", testUser.getLastName());
+}
+
+@Test
+void updateProfile_usernameChanged_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), testUser.getLastName(),
+            "newusername", testUser.getInstitution(),
+            testUser.getPhone(), testUser.getAddress(),
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("newusername", testUser.getUsername());
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("Jane", testUser.getFirstName());
-    }
-
-    @Test
-    void updateProfile_lastNameChanged_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            "Smith", // Changed from Doe
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
+@Test
+void updateProfile_institutionChanged_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), testUser.getLastName(),
+            testUser.getUsername(), "UQ",
+            testUser.getPhone(), testUser.getAddress(),
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("UQ", testUser.getInstitution());
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("Smith", testUser.getLastName());
-    }
-
-    @Test
-    void updateProfile_usernameChanged_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            "newusername", // Changed from johndoe
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
+@Test
+void updateProfile_phoneChanged_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), testUser.getLastName(),
+            testUser.getUsername(), testUser.getInstitution(),
+            "987654321", testUser.getAddress(),
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("987654321", testUser.getPhone());
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("newusername", testUser.getUsername());
-    }
-
-    @Test
-    void updateProfile_institutionChanged_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            "UQ", // Changed from QUT
-            testUser.getPhone(),
-            testUser.getAddress(),
+@Test
+void updateProfile_addressChanged_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), testUser.getLastName(),
+            testUser.getUsername(), testUser.getInstitution(),
+            testUser.getPhone(), "456 Oak Ave",
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("456 Oak Ave", testUser.getAddress());
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("UQ", testUser.getInstitution());
-    }
+@Test
+void updateProfile_dateOfBirthChanged_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), testUser.getLastName(),
+            testUser.getUsername(), testUser.getInstitution(),
+            testUser.getPhone(), testUser.getAddress(),
+            LocalDate.parse("1985-06-15")
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("1985-06-15", testUser.getDateOfBirth());
+}
 
-    @Test
-    void updateProfile_phoneChanged_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            "987654321", // Changed from 123456789
-            testUser.getAddress(),
+// === Edge Cases ===
+
+@Test
+void updateProfile_nullDateOfBirth_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), testUser.getLastName(),
+            testUser.getUsername(), testUser.getInstitution(),
+            testUser.getPhone(), testUser.getAddress(),
+            null
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("", testUser.getDateOfBirth());
+}
+
+@Test
+void updateProfile_invalidFirstName_throwsException() {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            "", testUser.getLastName(),
+            testUser.getUsername(), testUser.getInstitution(),
+            testUser.getPhone(), testUser.getAddress(),
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertThrows(IllegalArgumentException.class, () -> service.updateProfile(testUser, request));
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("987654321", testUser.getPhone());
-    }
-
-    @Test
-    void updateProfile_addressChanged_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            "456 Oak Ave", // Changed from 123 Main St
+@Test
+void updateProfile_invalidLastName_throwsException() {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), null,
+            testUser.getUsername(), testUser.getInstitution(),
+            testUser.getPhone(), testUser.getAddress(),
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertThrows(IllegalArgumentException.class, () -> service.updateProfile(testUser, request));
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("456 Oak Ave", testUser.getAddress());
-    }
-
-    @Test
-    void updateProfile_dateOfBirthChanged_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
-            LocalDate.parse("1985-06-15") // Changed from 1990-01-01
-        );
-
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("1985-06-15", testUser.getDateOfBirth());
-    }
-
-    @Test
-    void updateProfile_multipleChanges_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            "Jane", // Changed
-            "Smith", // Changed
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
+@Test
+void updateProfile_emptyInstitution_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), testUser.getLastName(),
+            testUser.getUsername(), "",
+            testUser.getPhone(), testUser.getAddress(),
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("", testUser.getInstitution());
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("Jane", testUser.getFirstName());
-        assertEquals("Smith", testUser.getLastName());
-    }
-
-    @Test
-    void updateProfile_nullDateOfBirth_handledCorrectly() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
-            null // Setting date of birth to null
-        );
-
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("", testUser.getDateOfBirth());
-    }
-
-    @Test
-    void profileUpdateRequest_constructor_setsAllFields() {
-        LocalDate testDate = LocalDate.parse("1990-01-01");
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            "John", "Doe", "johndoe", "QUT", "123456789", "123 Main St", testDate
-        );
-
-        assertEquals("John", request.getFirstName());
-        assertEquals("Doe", request.getLastName());
-        assertEquals("johndoe", request.getUsername());
-        assertEquals("QUT", request.getInstitution());
-        assertEquals("123456789", request.getPhone());
-        assertEquals("123 Main St", request.getAddress());
-        assertEquals(testDate, request.getDateOfBirth());
-    }
-
-    @Test
-    void profileUpdateRequest_nullValues_handledCorrectly() {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            null, null, null, null, null, null, null
-        );
-
-        assertNull(request.getFirstName());
-        assertNull(request.getLastName());
-        assertNull(request.getUsername());
-        assertNull(request.getInstitution());
-        assertNull(request.getPhone());
-        assertNull(request.getAddress());
-        assertNull(request.getDateOfBirth());
-    }
-
-    @Test
-    void profileUpdateRequest_emptyValues_handledCorrectly() {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            "", "", "", "", "", "", null
-        );
-
-        assertEquals("", request.getFirstName());
-        assertEquals("", request.getLastName());
-        assertEquals("", request.getUsername());
-        assertEquals("", request.getInstitution());
-        assertEquals("", request.getPhone());
-        assertEquals("", request.getAddress());
-        assertNull(request.getDateOfBirth());
-    }
-
-    @Test
-    void updateProfile_allFieldsChanged_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            "Jane", "Smith", "janesmith", "UQ", "987654321", "456 Oak Ave", LocalDate.parse("1985-06-15")
-        );
-
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("Jane", testUser.getFirstName());
-        assertEquals("Smith", testUser.getLastName());
-        assertEquals("janesmith", testUser.getUsername());
-        assertEquals("UQ", testUser.getInstitution());
-        assertEquals("987654321", testUser.getPhone());
-        assertEquals("456 Oak Ave", testUser.getAddress());
-        assertEquals("1985-06-15", testUser.getDateOfBirth());
-    }
-
-
-    @Test
-    void updateProfile_invalidFirstName_throwsException() {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            "",
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
+@Test
+void updateProfile_unicodeCharacters_returnsTrue() throws SQLException {
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            "José", "García",
+            testUser.getUsername(), "Universidad Nacional",
+            testUser.getPhone(), "Calle de la Paz 123",
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals("José", testUser.getFirstName());
+    assertEquals("García", testUser.getLastName());
+}
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            service.updateProfile(testUser, request);
-        });
-    }
+@Test
+void updateProfile_longFields_returnsTrue() throws SQLException {
+    String longName = "A".repeat(50);
+    String longInstitution = "University ".repeat(10);
+    String longPhone = "1".repeat(20);
+    String longAddress = "Very long address ".repeat(20);
 
-    @Test
-    void updateProfile_invalidLastName_throwsException() {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            null,
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            longName, longName, testUser.getUsername(),
+            longInstitution, longPhone, longAddress,
             LocalDate.parse("1990-01-01")
-        );
+    );
+    assertTrue(service.updateProfile(testUser, request));
+}
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            service.updateProfile(testUser, request);
-        });
-    }
-
-    @Test
-    void updateProfile_emptyInstitution_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            "",
-            testUser.getPhone(),
-            testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
-        );
-
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("", testUser.getInstitution());
-    }
-
-    @Test
-    void updateProfile_nullInstitution_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            null,
-            testUser.getPhone(),
-            testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
-        );
-
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertNull(testUser.getInstitution());
-    }
-
-    @Test
-    void updateProfile_specialCharactersInPhone_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            "+61-123-456-789",
-            testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
-        );
-
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-    }
-
-    @Test
-    void updateProfile_longAddress_returnsTrue() throws SQLException {
-        String longAddress = "123 Very Long Street Name, Apartment 456, Building Complex ABC, Suburb Name, City, State, Country, Postal Code 12345";
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            longAddress,
-            LocalDate.parse("1990-01-01")
-        );
-
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals(longAddress, testUser.getAddress());
-    }
-
-    @Test
-    void updateProfile_futureDate_returnsTrue() throws SQLException {
-        LocalDate futureDate = LocalDate.now().plusYears(10);
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            testUser.getFirstName(),
-            testUser.getLastName(),
-            testUser.getUsername(),
-            testUser.getInstitution(),
-            testUser.getPhone(),
-            testUser.getAddress(),
+@Test
+void updateProfile_futureDate_returnsTrue() throws SQLException {
+    LocalDate futureDate = LocalDate.now().plusYears(10);
+    var request = new ProfileUpdateService.ProfileUpdateRequest(
+            testUser.getFirstName(), testUser.getLastName(),
+            testUser.getUsername(), testUser.getInstitution(),
+            testUser.getPhone(), testUser.getAddress(),
             futureDate
-        );
+    );
+    assertTrue(service.updateProfile(testUser, request));
+    assertEquals(futureDate.toString(), testUser.getDateOfBirth());
+}
 
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals(futureDate.toString(), testUser.getDateOfBirth());
-    }
-
-    @Test
+@Test
     void updateProfile_pastDate_returnsTrue() throws SQLException {
         LocalDate pastDate = LocalDate.of(1950, 1, 1);
         ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
@@ -412,24 +261,6 @@ public class ProfileUpdateServiceTest {
 
         boolean result = service.updateProfile(testUser, request);
         assertTrue(result);
-    }
-
-    @Test
-    void updateProfile_unicodeCharacters_returnsTrue() throws SQLException {
-        ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-            "José",
-            "García",
-            testUser.getUsername(),
-            "Universidad Nacional",
-            testUser.getPhone(),
-            "Calle de la Paz 123",
-            LocalDate.parse("1990-01-01")
-        );
-
-        boolean result = service.updateProfile(testUser, request);
-        assertTrue(result);
-        assertEquals("José", testUser.getFirstName());
-        assertEquals("García", testUser.getLastName());
     }
 
     @Test

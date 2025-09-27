@@ -1,8 +1,10 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
+import com.cab302.peerpractice.Model.entities.Session;
+import com.cab302.peerpractice.Model.entities.SessionTask;
+import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Navigation;
-import com.cab302.peerpractice.Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -521,7 +523,7 @@ public class SessionTaskController extends SidebarController {
     private User findUserById(String userId) {
         if (userId == null) return null;
         try {
-            return ctx.getUserDao().findUserById(userId);
+            return ctx.getUserDAO().findUserById(userId);
         } catch (Exception e) {
             return null;
         }

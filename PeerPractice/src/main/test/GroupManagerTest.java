@@ -1,8 +1,15 @@
 import com.cab302.peerpractice.Exceptions.DuplicateGroupException;
-import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
 import com.cab302.peerpractice.Exceptions.InsufficientPermissionsException;
 import com.cab302.peerpractice.Exceptions.UserNotFoundException;
-import com.cab302.peerpractice.Model.*;
+import com.cab302.peerpractice.Model.daos.GroupDAO;
+import com.cab302.peerpractice.Model.daos.IGroupDAO;
+import com.cab302.peerpractice.Model.daos.IUserDAO;
+import com.cab302.peerpractice.Model.daos.UserDAO;
+import com.cab302.peerpractice.Model.entities.Group;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.GroupManager;
+import com.cab302.peerpractice.Model.managers.Notifier;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,19 +26,38 @@ public class GroupManagerTest {
     private Notifier notifier;
     private IUserDAO userDAO;
     private User user;
-    private String NAME = "Group1";
+    private String NAME;
     private String DESCRIPTION = "This is the description of a group";
-    private String USERNAME = "sati2030";
+    private String USERNAME;
     private Group group;
 
     @BeforeEach
-    public void setUp(){
-        groupDAO = new MockGroupDAO();
-        userDAO = new MockUserDAO();
+    public void setUp() throws SQLException {
+        userDAO = new UserDAO();
+        groupDAO = new GroupDAO(userDAO);
         notifier = new Notifier(userDAO);
-        groupManager = new GroupManager(groupDAO,notifier,userDAO);
-        user = new User("Seiji","Sato",USERNAME,"email@email.com","masfsa","qut");
-        group = new Group(NAME,DESCRIPTION,false,user.getUsername(),LocalDateTime.now());
+        groupManager = new GroupManager(groupDAO, notifier, userDAO);
+
+        // Use unique values to avoid clashes across runs
+        String ts = String.valueOf(System.currentTimeMillis());
+        USERNAME = "sati2030_" + ts;
+        NAME = "Group1_" + ts;
+
+        user = new User("Seiji", "Sato", USERNAME, "email" + ts + "@email.com", "masfsa", "qut");
+        userDAO.addUser(user);
+
+        group = new Group(NAME, DESCRIPTION, false, user.getUsername(), LocalDateTime.now());
+        groupDAO.addGroup(group);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        try {
+            if (group != null) groupDAO.deleteGroup(group);
+        } catch (Exception ignored) {}
+        try {
+            if (user != null) userDAO.deleteUser(user.getUserId());
+        } catch (Exception ignored) {}
     }
 
     @Test

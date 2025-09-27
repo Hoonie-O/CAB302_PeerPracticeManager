@@ -1,5 +1,7 @@
 package com.cab302.peerpractice;
 
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.SessionPersistence;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -12,8 +14,8 @@ public class PeerPracticeApplication extends Application {
             stage.setUserData(navigate);
 
             // check for saved session
-            com.cab302.peerpractice.Model.User savedUser =
-                com.cab302.peerpractice.Model.SessionPersistence.loadSavedSession(ctx.getUserDao());
+            User savedUser =
+                SessionPersistence.loadSavedSession(ctx.getUserDAO());
 
             if (savedUser != null) {
                 ctx.getUserSession().setCurrentUser(savedUser);

@@ -1,10 +1,10 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.Friend;
-import com.cab302.peerpractice.Model.IFriendDAO;
-import com.cab302.peerpractice.Model.IUserDAO;
-import com.cab302.peerpractice.Model.User;
+import com.cab302.peerpractice.Model.entities.Friend;
+import com.cab302.peerpractice.Model.daos.IFriendDAO;
+import com.cab302.peerpractice.Model.daos.IUserDAO;
+import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Navigation;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,7 +18,6 @@ import javafx.util.Duration;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 
 public class FriendsController extends SidebarController{
     @FXML private Label feedbackMsg;
@@ -30,8 +29,8 @@ public class FriendsController extends SidebarController{
     @FXML private TableView<Friend> friendsTable;
 
     User currentUser = ctx.getUserSession().getCurrentUser();
-    IUserDAO userDAO = ctx.getUserDao();
-    IFriendDAO friendDAO = ctx.getFriendDao();
+    IUserDAO userDAO = ctx.getUserDAO();
+    IFriendDAO friendDAO = ctx.getFriendDAO();
 
     private final FadeTransition ft = new FadeTransition(Duration.millis(4000));
 
@@ -124,7 +123,7 @@ public class FriendsController extends SidebarController{
         User user = getSelection().getUser1();
         User friend = getSelection().getUser2();
 
-        ctx.getFriendDao().removeFriend(user, friend);
+        ctx.getFriendDAO().removeFriend(user, friend);
 
         // check if friend successfully removed
         boolean friendExists = friendDAO.getFriends(user).contains(getSelection());
@@ -145,7 +144,7 @@ public class FriendsController extends SidebarController{
 
     private void refreshFriendsList() throws SQLException {
         User currentUser = ctx.getUserSession().getCurrentUser();
-        List<Friend> friendsList = ctx.getFriendDao().getFriends(currentUser);
+        List<Friend> friendsList = ctx.getFriendDAO().getFriends(currentUser);
         buildTableView(friendsList);
 
         // select last row

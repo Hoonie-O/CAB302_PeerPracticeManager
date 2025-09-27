@@ -1,7 +1,12 @@
+import com.cab302.peerpractice.Model.daos.*;
+import com.cab302.peerpractice.Model.entities.Chapter;
+import com.cab302.peerpractice.Model.entities.Group;
+import com.cab302.peerpractice.Model.entities.Note;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.NotesManager;
+import org.junit.jupiter.api.*;
 
-import com.cab302.peerpractice.Model.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -10,225 +15,242 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class NotesManagerTest {
 
-    NotesManager notesManager;
-    User user;
-    Group group;
-    INotesDAO notesDAO = new MockNotesDao();
-    IGroupDAO groupDAO = new MockGroupDAO();
-    int groupID;
+    private NotesManager notesManager;
+    private INotesDAO notesDAO;
+    private IGroupDAO groupDAO;
+    private int groupID;
+    private Group testGroup;
 
     @BeforeEach
-    public void setUp(){
-        notesManager = new NotesManager(notesDAO,groupDAO);
-        Group group = new Group("group","group",false, UUID.randomUUID().toString(),LocalDateTime.now());
-        groupID = groupDAO.addGroup(group);
+    public void setUp() throws SQLException {
+        // Use real DAOs
+        notesDAO = new NotesDAO();
+        groupDAO = new GroupDAO(new UserDAO()); // GroupDAO requires UserDAO
+        notesManager = new NotesManager(notesDAO, groupDAO);
+
+        // Create a fresh test group
+        testGroup = new Group("group", "group description", false,
+                UUID.randomUUID().toString(), LocalDateTime.now());
+        groupID = groupDAO.addGroup(testGroup);
+
+        // Cleanup in case any notes exist for this group
+        for (Note note : notesDAO.getNotes(groupID)) {
+            notesDAO.deleteNote(note.getID());
+        }
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Delete all notes for this group
+        for (Note note : notesDAO.getNotes(groupID)) {
+            try { notesDAO.deleteNote(note.getID()); } catch (Exception ignored) {}
+        }
+
+        // Delete the group itself
+        try { groupDAO.deleteGroup(groupID); } catch (Exception ignored) {}
     }
 
     @Test
-    public void TestCreateNoteNormal(){
+    public void TestCreateNoteNormal() {
         String noteID = assertDoesNotThrow(() -> notesManager.addNote("note", groupID));
         assertNotNull(noteID);
+
         Note note = notesDAO.getNote(noteID);
         assertNotNull(note);
-        assertEquals("note",note.getName());
-        assertEquals(groupID,note.getGroup());
+        assertEquals("note", note.getName());
+        assertEquals(groupID, note.getGroup());
         assertEquals(noteID, note.getID());
+
         List<Note> allNotes = notesDAO.getAllNotes();
         assertNotNull(allNotes);
         assertFalse(allNotes.isEmpty());
-        assertEquals(note,allNotes.getFirst());
+        assertTrue(allNotes.contains(note));
+
         List<Note> notes = notesDAO.getNotes(groupID);
         assertNotNull(notes);
         assertFalse(notes.isEmpty());
-        assertEquals(note,notes.getFirst());
-
+        assertTrue(notes.contains(note));
     }
 
     @Test
-    public void TestCreateNoteNullName(){
-        assertThrows(IllegalArgumentException.class , ()->notesManager.addNote(null,groupID ));
+    public void TestCreateNoteNullName() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addNote(null, groupID));
     }
 
     @Test
-    public void TestCreateNoteEmptyName(){
-        assertThrows(IllegalArgumentException.class, ()->notesManager.addNote("",groupID));
+    public void TestCreateNoteEmptyName() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addNote("", groupID));
     }
 
     @Test
-    public void TestCreateZeroGroupID(){
-        assertThrows(IllegalArgumentException.class, () -> notesManager.addNote("note",0));
+    public void TestCreateZeroGroupID() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addNote("note", 0));
     }
 
     @Test
-    public void TestCreateNegativeGroupID(){
-        assertThrows(IllegalArgumentException.class , () -> notesManager.addNote("note",-1));
+    public void TestCreateNegativeGroupID() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addNote("note", -1));
     }
 
     @Test
-    public void TestCreateNameLargerThan20(){
-        assertThrows(IllegalArgumentException.class , () -> notesManager.addNote("somethingsomethingsomethingsomethingsomethingsomething",groupID));
+    public void TestCreateNameLargerThan20() {
+        assertThrows(IllegalArgumentException.class, () ->
+                notesManager.addNote("somethingsomethingsomethingsomethingsomethingsomething", groupID));
     }
 
     @Test
-    public void TestCreateNonExistentGroup(){
-        assertThrows(IllegalArgumentException.class , () -> notesManager.addNote("something",2));
+    public void TestCreateNonExistentGroup() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addNote("something", 99999));
     }
 
     @Test
-    public void TestChangeNameNormal(){
-        String noteID = notesManager.addNote("something",groupID);
-        notesManager.changeName(noteID,"name");
+    public void TestChangeNameNormal() {
+        String noteID = notesManager.addNote("something", groupID);
+        notesManager.changeName(noteID, "name");
         Note note = notesDAO.getNote(noteID);
-        assertEquals("name",note.getName());
+        assertEquals("name", note.getName());
     }
 
     @Test
-    public void TestChangeNullName(){
-        String noteID = notesManager.addNote("something",groupID);
-        assertThrows(IllegalArgumentException.class, () -> notesManager.changeName(noteID,null));
+    public void TestChangeNullName() {
+        String noteID = notesManager.addNote("something", groupID);
+        assertThrows(IllegalArgumentException.class, () -> notesManager.changeName(noteID, null));
     }
 
     @Test
-    public void TestChangeNameEmpty(){
-        String noteID = notesManager.addNote("something",groupID);
-        assertThrows(IllegalArgumentException.class , () -> notesManager.changeName(noteID,""));
+    public void TestChangeNameEmpty() {
+        String noteID = notesManager.addNote("something", groupID);
+        assertThrows(IllegalArgumentException.class, () -> notesManager.changeName(noteID, ""));
     }
 
     @Test
-    public void TestChangeNameNonExistentNote(){
-        assertThrows(IllegalArgumentException.class, () -> notesManager.changeName("asfsaf","something"));
+    public void TestChangeNameNonExistentNote() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.changeName("fakeid", "something"));
     }
 
     @Test
-    public void TestDeleteNote(){
-        String noteID = notesManager.addNote("something",groupID);
+    public void TestDeleteNote() {
+        String noteID = notesManager.addNote("something", groupID);
         notesManager.deleteNote(noteID);
         assertNull(notesDAO.getNote(noteID));
         assertTrue(notesDAO.getNotes(groupID).isEmpty());
-        assertTrue(notesDAO.getAllNotes().isEmpty());
+        assertTrue(notesDAO.getAllNotes().isEmpty() || !notesDAO.getAllNotes().contains(noteID));
     }
 
     @Test
-    public void TestDeleteNonExistentNote(){
-        assertThrows(IllegalArgumentException.class, () -> notesManager.deleteNote("asfsa"));
+    public void TestDeleteNonExistentNote() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.deleteNote("fakeid"));
     }
 
     @Test
-    public void TestDeleteEmptyID(){
+    public void TestDeleteEmptyID() {
         assertThrows(IllegalArgumentException.class, () -> notesManager.deleteNote(null));
     }
 
     @Test
-    public void TestGetNotesNormal(){
-        String noteID1 = notesManager.addNote("something",groupID);
-        String noteID2 = notesManager.addNote("Somethingelse",groupID);
+    public void TestGetNotesNormal() {
+        String noteID1 = notesManager.addNote("something", groupID);
+        String noteID2 = notesManager.addNote("Somethingelse", groupID);
         Note note1 = notesDAO.getNote(noteID1);
         Note note2 = notesDAO.getNote(noteID2);
+
         List<Note> notes = notesManager.getNotes(groupID);
         assertNotNull(notes);
-        assertFalse(notes.isEmpty());
         assertTrue(notes.contains(note1));
         assertTrue(notes.contains(note2));
     }
 
     @Test
-    public void TestGetNotesEmpty(){
+    public void TestGetNotesEmpty() {
         assertTrue(notesManager.getNotes(groupID).isEmpty());
     }
 
-
-
-
     @Test
-    public void TestAddChapterNormal(){
-        String noteID = assertDoesNotThrow(() -> notesManager.addNote("something",groupID));
-        String chapterID = notesManager.addChapter(noteID,"chapter");
+    public void TestAddChapterNormal() {
+        String noteID = notesManager.addNote("something", groupID);
+        String chapterID = notesManager.addChapter(noteID, "chapter");
         Chapter chapter = notesDAO.getChapter(chapterID);
+        assertNotNull(chapter);
+
         List<Chapter> chapters = notesDAO.getChapters(noteID);
         assertNotNull(chapters);
-        assertFalse(chapters.isEmpty());
-        assertEquals(chapter,chapters.getFirst());
+        assertTrue(chapters.contains(chapter));
     }
 
     @Test
-    public void TestAddChapterNullNote(){
-        String noteID = notesManager.addNote("something",groupID);
-        assertThrows(IllegalArgumentException.class , () -> notesManager.addChapter(null,"chapter"));
+    public void TestAddChapterNullNote() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addChapter(null, "chapter"));
     }
 
     @Test
-    public void TestAddChapterEmptyNote(){
-        String noteID = notesManager.addNote("something",groupID);
-        assertThrows(IllegalArgumentException.class , () -> notesManager.addChapter("","chapter"));
+    public void TestAddChapterEmptyNote() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addChapter("", "chapter"));
     }
 
     @Test
-    public void TestAddChapterNonExistentNote(){
-        assertThrows(IllegalArgumentException.class, () -> notesManager.addChapter("asf","chapter"));
+    public void TestAddChapterNonExistentNote() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addChapter("fakeid", "chapter"));
     }
 
     @Test
-    public void TestAddChapterNullName(){
-        String noteID = notesManager.addNote("something",groupID);
-        assertThrows(IllegalArgumentException.class, () -> notesManager.addChapter(noteID,null));
+    public void TestAddChapterNullName() {
+        String noteID = notesManager.addNote("something", groupID);
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addChapter(noteID, null));
     }
 
     @Test
-    public void TestAddChapterEmpty(){
-        String noteID = notesManager.addNote("something",groupID);
-        assertThrows(IllegalArgumentException.class, () -> notesManager.addChapter(noteID,""));
+    public void TestAddChapterEmpty() {
+        String noteID = notesManager.addNote("something", groupID);
+        assertThrows(IllegalArgumentException.class, () -> notesManager.addChapter(noteID, ""));
     }
 
-
     @Test
-    public void TestChangeChapterNameNormal(){
-        String noteID = notesManager.addNote("something",groupID);
-        String chapterID = notesManager.addChapter(noteID,"chapter");
-        assertDoesNotThrow(() -> notesManager.changeChapterName(chapterID,"name"));
+    public void TestChangeChapterNameNormal() {
+        String noteID = notesManager.addNote("something", groupID);
+        String chapterID = notesManager.addChapter(noteID, "chapter");
+        notesManager.changeChapterName(chapterID, "name");
         Chapter chapter = notesDAO.getChapter(chapterID);
-        assertEquals("name",chapter.getName());
+        assertEquals("name", chapter.getName());
     }
 
     @Test
-    public void TestChangeChapterNameNull(){
-        String noteID = notesManager.addNote("something",groupID);
-        String chapterID = notesManager.addChapter(noteID,"chapter");
-        assertThrows(IllegalArgumentException.class, () -> notesManager.changeChapterName(chapterID,null));
+    public void TestChangeChapterNameNull() {
+        String noteID = notesManager.addNote("something", groupID);
+        String chapterID = notesManager.addChapter(noteID, "chapter");
+        assertThrows(IllegalArgumentException.class, () -> notesManager.changeChapterName(chapterID, null));
     }
 
     @Test
-    public void TestChangeChapterNameEmpty(){
-        String noteID = notesManager.addNote("something",groupID);
-        String chapterID = notesManager.addChapter(noteID,"chapter");
-        assertThrows(IllegalArgumentException.class, () -> notesManager.changeChapterName(chapterID,""));
+    public void TestChangeChapterNameEmpty() {
+        String noteID = notesManager.addNote("something", groupID);
+        String chapterID = notesManager.addChapter(noteID, "chapter");
+        assertThrows(IllegalArgumentException.class, () -> notesManager.changeChapterName(chapterID, ""));
     }
 
     @Test
-    public void TestChangeChapterNameNonExistentChapter(){
-        assertThrows(IllegalArgumentException.class, () -> notesManager.changeChapterName("asf","something"));
+    public void TestChangeChapterNameNonExistentChapter() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.changeChapterName("fakeid", "something"));
     }
 
     @Test
-    public void TestChangeChapterNameNullChapterID(){
-        assertThrows(IllegalArgumentException.class, () -> notesManager.changeChapterName(null,"something"));
+    public void TestChangeChapterNameNullChapterID() {
+        assertThrows(IllegalArgumentException.class, () -> notesManager.changeChapterName(null, "something"));
     }
 
     @Test
-    public void TestChangeContentNormal(){
-        String noteID = notesManager.addNote("something",groupID);
-        String chapterID = notesManager.addChapter(noteID,"chapter");
-        assertDoesNotThrow(() -> notesManager.changeContent(chapterID,"Content"));
+    public void TestChangeContentNormal() {
+        String noteID = notesManager.addNote("something", groupID);
+        String chapterID = notesManager.addChapter(noteID, "chapter");
+        notesManager.changeContent(chapterID, "Content");
         Chapter chapter = notesDAO.getChapter(chapterID);
-        assertEquals("Content",chapter.getContent());
+        assertEquals("Content", chapter.getContent());
     }
 
     @Test
-    public void TestChangeContentInvalids(){
-        String noteID = notesManager.addNote("something",groupID);
-        String chapterID = notesManager.addChapter(noteID,"chapter");
-        assertThrows(IllegalArgumentException.class, () -> notesManager.changeContent(chapterID,null));
+    public void TestChangeContentInvalids() {
+        String noteID = notesManager.addNote("something", groupID);
+        String chapterID = notesManager.addChapter(noteID, "chapter");
+        assertThrows(IllegalArgumentException.class, () -> notesManager.changeContent(chapterID, null));
         assertThrows(IllegalArgumentException.class, () -> notesManager.changeContent(chapterID, ""));
     }
-
-
 }

@@ -1,7 +1,8 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.*;
+import com.cab302.peerpractice.Model.daos.GroupDAO;
+import com.cab302.peerpractice.Model.entities.*;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 
@@ -11,7 +12,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -22,8 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -56,7 +54,7 @@ public class GroupController extends SidebarController {
     public void initialize() {
         super.initialize();
         User currentUser = ctx.getUserSession().getCurrentUser();
-        List<Group> userGroups = ctx.getGroupDao().searchByUser(currentUser);
+        List<Group> userGroups = ctx.getGroupDAO().searchByUser(currentUser);
         groupListView.setItems(FXCollections.observableArrayList(userGroups));
 
         groupListView.setCellFactory(listView -> new ListCell<>() {
@@ -280,7 +278,7 @@ public class GroupController extends SidebarController {
                             approvalCheck.isSelected(),
                             currentUser
                     );
-                    Group newGroup = ctx.getGroupDao()
+                    Group newGroup = ctx.getGroupDAO()
                             .searchByName(nameField.getText())
                             .stream()
                             .findFirst()
@@ -308,7 +306,7 @@ public class GroupController extends SidebarController {
 
         dialog.showAndWait().ifPresent(code -> {
             try {
-                Group group = ctx.getGroupDao().getAllGroups().stream()
+                Group group = ctx.getGroupDAO().getAllGroups().stream()
                         .filter(g -> String.valueOf(g.getID()).equals(code))
                         .findFirst()
                         .orElse(null);
@@ -349,7 +347,7 @@ public class GroupController extends SidebarController {
 
     private void refreshGroupList() {
         User currentUser = ctx.getUserSession().getCurrentUser();
-        List<Group> userGroups = ctx.getGroupDao().searchByUser(currentUser);
+        List<Group> userGroups = ctx.getGroupDAO().searchByUser(currentUser);
         if (sortAlphabetical) {
             userGroups.sort(Comparator.comparing(Group::getName, String.CASE_INSENSITIVE_ORDER));
         } else {
@@ -494,9 +492,9 @@ public class GroupController extends SidebarController {
         List<GroupMember> membersList = new ArrayList<>();
 
         // Get group members from database
-        if (ctx.getGroupDao() instanceof GroupDBDAO) {
-            GroupDBDAO groupDBDAO = (GroupDBDAO) ctx.getGroupDao();
-            List<GroupMemberEntity> dbMembers = groupDBDAO.getGroupMembers(group.getID());
+        if (ctx.getGroupDAO() instanceof GroupDAO) {
+            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+            List<GroupMemberEntity> dbMembers = groupDAO.getGroupMembers(group.getID());
             
             for (GroupMemberEntity dbMember : dbMembers) {
                 String role = dbMember.getRole();
@@ -517,9 +515,9 @@ public class GroupController extends SidebarController {
         
         // Add admin functionality
         User currentUser = ctx.getUserSession().getCurrentUser();
-        if (ctx.getGroupDao() instanceof GroupDBDAO) {
-            GroupDBDAO groupDBDAO = (GroupDBDAO) ctx.getGroupDao();
-            if (groupDBDAO.isAdmin(group.getID(), currentUser.getUserId()) || 
+        if (ctx.getGroupDAO() instanceof GroupDAO) {
+            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+            if (groupDAO.isAdmin(group.getID(), currentUser.getUserId()) ||
                 group.getOwner().equals(currentUser.getUsername())) {
                 showJoinRequestsIfAny(group);
             }
@@ -527,9 +525,9 @@ public class GroupController extends SidebarController {
     }
     
     private void showJoinRequestsIfAny(Group group) {
-        if (ctx.getGroupDao() instanceof GroupDBDAO) {
-            GroupDBDAO groupDBDAO = (GroupDBDAO) ctx.getGroupDao();
-            List<GroupJoinRequest> pendingRequests = groupDBDAO.getPendingJoinRequests(group.getID());
+        if (ctx.getGroupDAO() instanceof GroupDAO) {
+            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+            List<GroupJoinRequest> pendingRequests = groupDAO.getPendingJoinRequests(group.getID());
             
             if (!pendingRequests.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

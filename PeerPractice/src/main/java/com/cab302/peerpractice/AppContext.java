@@ -1,80 +1,108 @@
 package com.cab302.peerpractice;
 
-import com.cab302.peerpractice.Model.*;
+import com.cab302.peerpractice.Model.daos.*;
+import com.cab302.peerpractice.Model.entities.Group;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.*;
+import com.cab302.peerpractice.Model.utils.BcryptHasher;
+import com.cab302.peerpractice.Model.utils.PasswordHasher;
+
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class AppContext {
     private final UserSession userSession = new UserSession();
-    private final IUserDAO userDao = new UserDAO();
-    private final IFriendDAO friendDao;
-    private final IGroupDAO groupDao;
-    private final Notifier notifier = new Notifier(userDao);
-    private final PasswordHasher passwordHasher = new BcryptHasher();
-    private final UserManager userManager = new UserManager(userDao, passwordHasher);
+
+    // --- DAO layer ---
+    private final IUserDAO userDAO;
+    private final IFriendDAO friendDAO;
+    private final IGroupDAO groupDAO;
+    private final INotesDAO notesDAO;
+    private final ISessionCalendarDAO sessionCalendarDAO;
+    private final ISessionTaskDAO sessionTaskDAO;
+    private final IAvailabilityDAO availabilityDAO;
+
+    // --- Managers & Services ---
+    private final Notifier notifier;
+    private final PasswordHasher passwordHasher;
+    private final UserManager userManager;
     private final GroupManager groupManager;
-    private final MailService mailService = new MailService();
+    private final MailService mailService;
     private final SessionManager sessionManager;
-    private final SessionTaskStorage sessionTaskStorage;
     private final SessionTaskManager sessionTaskManager;
     private final SessionCalendarManager sessionCalendarManager;
     private final AvailabilityManager availabilityManager;
-    private final INotesDAO notesDAO;
     private final NotesManager notesManager;
+
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
     public AppContext() throws SQLException {
         try {
-            this.groupDao = new GroupDBDAO(userDao);
-            this.groupManager = new GroupManager(groupDao, notifier, userDao);
-            this.friendDao = new FriendDAO(userDao);
+            // DAO instantiation
+            this.userDAO = new UserDAO();
+            this.friendDAO = new FriendDAO(userDAO);
+            this.groupDAO = new GroupDAO(userDAO);
+            this.notesDAO = new NotesDAO();
+            this.sessionCalendarDAO = new SessionCalendarDAO(userDAO);
+            this.sessionTaskDAO = new SessionTaskDAO(userDAO);
+            this.availabilityDAO = new AvailabilityDAO(userDAO);
 
-            this.notesDAO = new NotesDBDAO();
-            this.notesManager = new NotesManager(notesDAO, groupDao);
+            // Services & utilities
+            this.notifier = new Notifier(userDAO);
+            this.passwordHasher = new BcryptHasher();
+            this.mailService = new MailService();
 
-            var sessionStorage = new SessionCalendarDBStorage(userDao);
-            this.sessionCalendarManager = new SessionCalendarManager(sessionStorage);
+            // Managers
+            this.userManager = new UserManager(userDAO, passwordHasher);
+            this.groupManager = new GroupManager(groupDAO, notifier, userDAO);
+            this.notesManager = new NotesManager(notesDAO, groupDAO);
+
+            this.sessionCalendarManager = new SessionCalendarManager(sessionCalendarDAO);
             this.sessionManager = new SessionManager(this.sessionCalendarManager);
-            this.sessionTaskStorage = new SessionTaskDBStorage(userDao);
-            this.sessionTaskManager = new SessionTaskManager(sessionTaskStorage, this.sessionManager);
+            this.sessionTaskManager = new SessionTaskManager(sessionTaskDAO, this.sessionManager);
 
             this.sessionCalendarManager.setSessionTaskManager(this.sessionTaskManager);
 
-            var availabilityStorage = new AvailabilityDBStorage(userDao);
-            this.availabilityManager = new AvailabilityManager(availabilityStorage);
+            this.availabilityManager = new AvailabilityManager(availabilityDAO);
 
-            User testUser = userDao.findUser("username", "Testuser17");
-
+            // --- Optional seeding ---
+            User testUser = userDAO.findUser("username", "Testuser17");
             if (testUser != null) {
                 Group testGroup = new Group("Example Group", "This is a seeded test group", false,
                         testUser.getUsername(), LocalDateTime.now());
-//                testGroup.setMembers(new ArrayList<>());
-//                testGroup.addMember(testUser);
-                this.groupDao.addGroup(testGroup);
+                this.groupDAO.addGroup(testGroup);
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to seed test data", e);
+            throw new IllegalStateException("Failed to initialise AppContext", e);
         }
     }
 
+    // --- Getters ---
     public UserSession getUserSession() { return userSession; }
-    public IUserDAO getUserDao() { return userDao; }
+    public IUserDAO getUserDAO() { return userDAO; }
+    public IFriendDAO getFriendDAO() { return friendDAO; }
+    public IGroupDAO getGroupDAO() { return groupDAO; }
+    public INotesDAO getNotesDAO() { return notesDAO; }
+    public ISessionCalendarDAO getSessionCalendarDAO() { return sessionCalendarDAO; }
+    public ISessionTaskDAO getSessionTaskDAO() { return sessionTaskDAO; }
+    public IAvailabilityDAO getAvailabilityDAO() { return availabilityDAO; }
+
     public PasswordHasher getPasswordHasher() { return passwordHasher; }
-    public UserManager getUserManager() { return userManager; }
+    public Notifier getNotifier() { return notifier; }
     public MailService getMailService() { return mailService; }
+
+    public UserManager getUserManager() { return userManager; }
     public GroupManager getGroupManager() { return groupManager; }
-    public IGroupDAO getGroupDao() { return groupDao; }
-    public IFriendDAO getFriendDao() { return friendDao; }
+    public NotesManager getNotesManager() { return notesManager; }
     public SessionManager getSessionManager() { return sessionManager; }
     public SessionTaskManager getSessionTaskManager() { return sessionTaskManager; }
     public SessionCalendarManager getSessionCalendarManager() { return sessionCalendarManager; }
     public AvailabilityManager getAvailabilityManager() { return availabilityManager; }
-    public NotesManager getNotesManager() { return notesManager; }
-    public INotesDAO getNotesDAO() { return notesDAO; }
+
     public boolean isMenuOpen() { return menuOpen; }
     public void setMenuOpen(boolean value) { this.menuOpen = value; }
     public boolean isProfileOpen() { return profileOpen; }
     public void setProfileOpen(boolean value) { this.profileOpen = value; }
+
 }

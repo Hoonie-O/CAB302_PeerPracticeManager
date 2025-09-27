@@ -1,10 +1,9 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.IUserDAO;
-import com.cab302.peerpractice.Model.MailService;
-import com.cab302.peerpractice.Model.User;
-import com.cab302.peerpractice.Model.UserSession;
+import com.cab302.peerpractice.Model.daos.IUserDAO;
+import com.cab302.peerpractice.Model.managers.MailService;
+import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;
@@ -24,7 +23,7 @@ public class ForgotPasswordController extends BaseController{
 
     @FXML
     private void onSendResetLink() throws SQLException {
-        IUserDAO userDAO = ctx.getUserDao();
+        IUserDAO userDAO = ctx.getUserDAO();
         MailService mailService = ctx.getMailService();
         User user = userDAO.findUser("email",emailField.getText());
         if(user != null){

@@ -1,6 +1,17 @@
 package com.cab302.peerpractice.test;
 
-import com.cab302.peerpractice.Model.*;
+import com.cab302.peerpractice.Model.daos.AvailabilityDAO;
+import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;
+import com.cab302.peerpractice.Model.daos.SessionTaskDAO;
+import com.cab302.peerpractice.Model.daos.UserDAO;
+import com.cab302.peerpractice.Model.entities.Availability;
+import com.cab302.peerpractice.Model.entities.Session;
+import com.cab302.peerpractice.Model.entities.SessionTask;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.AvailabilityManager;
+import com.cab302.peerpractice.Model.managers.SessionCalendarManager;
+import com.cab302.peerpractice.Model.managers.SessionManager;
+import com.cab302.peerpractice.Model.managers.SessionTaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +26,7 @@ public class SimplifiedIntegrationTest {
     private UserDAO userDao;
     private SessionCalendarManager sessionCalendarManager;
     private SessionTaskManager sessionTaskManager;
-    private SessionTaskDBStorage sessionTaskStorage;
+    private SessionTaskDAO sessionTaskStorage;
     private AvailabilityManager availabilityManager;
     
     private User alice;
@@ -26,15 +37,15 @@ public class SimplifiedIntegrationTest {
     void setUp() throws SQLException {
         userDao = new UserDAO();
         
-        var sessionStorage = new SessionCalendarDBStorage(userDao);
+        var sessionStorage = new SessionCalendarDAO(userDao);
         sessionCalendarManager = new SessionCalendarManager(sessionStorage);
         var sessionManager = new SessionManager(sessionCalendarManager);
-        sessionTaskStorage = new SessionTaskDBStorage(userDao);
+        sessionTaskStorage = new SessionTaskDAO(userDao);
         sessionTaskManager = new SessionTaskManager(sessionTaskStorage, sessionManager);
         
         sessionCalendarManager.setSessionTaskManager(sessionTaskManager);
         
-        var availabilityStorage = new AvailabilityDBStorage(userDao);
+        var availabilityStorage = new AvailabilityDAO(userDao);
         availabilityManager = new AvailabilityManager(availabilityStorage);
         
         alice = new User("Alice", "Johnson", "alice_simple", "alice.simple@example.com", "hashedpass1", "QUT");

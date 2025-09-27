@@ -2,7 +2,7 @@ package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Exceptions.InvalidPasswordException;
-import com.cab302.peerpractice.Model.*;
+import com.cab302.peerpractice.Model.managers.UserManager;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.event.ActionEvent;
@@ -10,8 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
-import java.sql.SQLException;
 
 
 public class ResetPasswordController extends BaseController {

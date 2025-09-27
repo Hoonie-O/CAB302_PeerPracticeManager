@@ -1,8 +1,8 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.User;
-import com.cab302.peerpractice.Model.UserManager;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.UserManager;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.Utilities.DateTimeFormatUtils;
 import javafx.fxml.FXML;
@@ -115,9 +115,9 @@ public class SettingController extends BaseController {
                 }
 
                 // Use the generic updateValue method
-                ctx.getUserDao().updateValue(currentUser.getUsername(),
+                ctx.getUserDAO().updateValue(currentUser.getUsername(),
                         "date_format", dateFormatBox.getValue());
-                ctx.getUserDao().updateValue(currentUser.getUsername(),
+                ctx.getUserDAO().updateValue(currentUser.getUsername(),
                         "time_format", timeFormatBox.getValue());
 
                 // Update local user object

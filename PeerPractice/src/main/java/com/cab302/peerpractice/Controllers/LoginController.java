@@ -1,15 +1,15 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.UserManager;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.SessionPersistence;
+import com.cab302.peerpractice.Model.managers.UserManager;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
-import com.cab302.peerpractice.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 
 public class LoginController extends BaseController{
@@ -54,9 +54,9 @@ public class LoginController extends BaseController{
         try {
             if (userManager.authenticate(ID, password)) {
                 // Fetch user username and if not found then fetch from email then login
-                Optional<User> loggedIn = ctx.getUserDao().getUserByUsername(ID);
+                Optional<User> loggedIn = ctx.getUserDAO().getUserByUsername(ID);
                 if (loggedIn.isEmpty()) {
-                    loggedIn = ctx.getUserDao().getUserByEmail(ID);
+                    loggedIn = ctx.getUserDAO().getUserByEmail(ID);
                 }
                 // If logged in then put user into the session
                 loggedIn.ifPresent(u -> {

@@ -1,6 +1,7 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
+import com.cab302.peerpractice.Model.managers.SessionPersistence;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.animation.KeyFrame;
@@ -223,7 +224,7 @@ public abstract class SidebarController extends BaseController {
 
             ctx.getUserSession().logout();
             // clear saved session
-            com.cab302.peerpractice.Model.SessionPersistence.clearSession();
+            SessionPersistence.clearSession();
 
             if (ctx.isMenuOpen()) closeMenu();
             if (ctx.isProfileOpen()) closeProfile();

@@ -1,6 +1,15 @@
 package com.cab302.peerpractice.test;
 
-import com.cab302.peerpractice.Model.*;
+import com.cab302.peerpractice.Model.daos.IUserDAO;
+import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;
+import com.cab302.peerpractice.Model.daos.SessionTaskDAO;
+import com.cab302.peerpractice.Model.daos.UserDAO;
+import com.cab302.peerpractice.Model.entities.Session;
+import com.cab302.peerpractice.Model.entities.SessionTask;
+import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.managers.SessionCalendarManager;
+import com.cab302.peerpractice.Model.managers.SessionManager;
+import com.cab302.peerpractice.Model.managers.SessionTaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
@@ -13,8 +22,8 @@ public class SessionDeletionIntegrationTest {
 
     private SessionCalendarManager sessionCalendarManager;
     private SessionTaskManager sessionTaskManager;
-    private SessionTaskDBStorage sessionTaskStorage;
-    private SessionCalendarDBStorage sessionCalendarStorage;
+    private SessionTaskDAO sessionTaskStorage;
+    private SessionCalendarDAO sessionCalendarStorage;
     private SessionManager sessionManager;
     private IUserDAO userDao;
     private User testUser;
@@ -23,10 +32,10 @@ public class SessionDeletionIntegrationTest {
     @BeforeEach
     void setUp() throws SQLException {
         userDao = new UserDAO();
-        sessionCalendarStorage = new SessionCalendarDBStorage(userDao);
+        sessionCalendarStorage = new SessionCalendarDAO(userDao);
         sessionCalendarManager = new SessionCalendarManager(sessionCalendarStorage);
         sessionManager = new SessionManager(sessionCalendarManager);
-        sessionTaskStorage = new SessionTaskDBStorage(userDao);
+        sessionTaskStorage = new SessionTaskDAO(userDao);
         sessionTaskManager = new SessionTaskManager(sessionTaskStorage, sessionManager);
         
         sessionCalendarManager.setSessionTaskManager(sessionTaskManager);
@@ -110,7 +119,7 @@ public class SessionDeletionIntegrationTest {
 
     @Test
     void testMultipleSessionsDeletionIndependence() throws SQLException {
-        Session anotherSession = new Session("Another Session", testUser, 
+        Session anotherSession = new Session("Another Session", testUser,
                                            LocalDateTime.now().plusHours(5), 
                                            LocalDateTime.now().plusHours(7));
         sessionCalendarManager.addSession(anotherSession);

@@ -1,14 +1,13 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.Chapter;
-import com.cab302.peerpractice.Model.Group;
-import com.cab302.peerpractice.Model.Note;
-import com.cab302.peerpractice.Model.NotesManager;
+import com.cab302.peerpractice.Model.entities.Chapter;
+import com.cab302.peerpractice.Model.entities.Group;
+import com.cab302.peerpractice.Model.entities.Note;
+import com.cab302.peerpractice.Model.managers.NotesManager;
 import com.cab302.peerpractice.Navigation;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
