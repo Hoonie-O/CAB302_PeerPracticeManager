@@ -8,12 +8,19 @@ import com.cab302.peerpractice.Model.NotesManager;
 import com.cab302.peerpractice.Navigation;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+
+import org.commonmark.node.*;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.util.List;
-import java.util.Optional;
+
 
 
 public class NotesController extends BaseController{
@@ -21,10 +28,14 @@ public class NotesController extends BaseController{
     @FXML private SplitPane rootSplit;
     @FXML private ListView<Note> notesList;
     @FXML private ListView<Chapter> chaptersList;
+    @FXML private WebView contentWebView;
+    @FXML private WebEngine webEngine;
+    @FXML private Button editButton;
 
     private NotesManager notesManager;
     private Group group;
     private Note currentNote;
+    private Chapter currentChapter;
 
     public NotesController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
@@ -46,10 +57,14 @@ public class NotesController extends BaseController{
             chaptersList.minWidthProperty().bind(rootSplit.widthProperty().multiply(1.0/6.0));
         });
 
+        webEngine = contentWebView.getEngine();
+
         /**
          * NotesList functionality
          */
         notesList.setCellFactory(listView -> new ListCell<>() {
+
+            //Button to add a Note
             private final Button addButton = new Button("+");
             {
                 addButton.setOnAction(e -> {
@@ -62,8 +77,10 @@ public class NotesController extends BaseController{
                         String noteID = notesManager.addNote(name, group.getID());
                         Note newNote = ctx.getNotesDAO().getNote(noteID);
                         var items = notesList.getItems();
-                        int insertIndex = Math.max(0, items.size() - 1);
+                        int insertIndex  = items.isEmpty() ? 0 : items.size() -1;
                         items.add(insertIndex,newNote);
+                        notesList.getSelectionModel().select(newNote);
+                        currentNote = newNote;
                     });
                 });
             }
@@ -71,7 +88,6 @@ public class NotesController extends BaseController{
             @Override
             protected void updateItem(Note note, boolean empty) {
                 super.updateItem(note, empty);
-
                 if (empty) {
                     setText(null);
                     setGraphic(null);
@@ -87,6 +103,15 @@ public class NotesController extends BaseController{
                     setAlignment(Pos.CENTER_LEFT);
                     setText(note.getName());
                 }
+            }
+        });
+
+        //Every time a note is selected refresh the chapters view to reflect the chapters in that note
+        notesList.getSelectionModel().selectedItemProperty().addListener((obs,oldNote,newNote) -> {
+            if(newNote != null){
+                currentNote = newNote;
+                updateChaptersView(newNote);
+                updateContentView(null);
             }
         });
 
@@ -107,9 +132,8 @@ public class NotesController extends BaseController{
                     dialog.showAndWait().ifPresent(name -> {
                         String chapterID = notesManager.addChapter(currentNote.getID(),name);
                         Chapter newChapter = ctx.getNotesDAO().getChapter(chapterID);
-                        System.out.println(newChapter.getID());
                         var items = chaptersList.getItems();
-                        int insertIndex = Math.max(0, items.size() - 1);
+                        int insertIndex = items.isEmpty() ? 0 : items.size() - 1;
                         items.add(insertIndex,newChapter);
                         chaptersList.getSelectionModel().select(newChapter);
                     });
@@ -122,11 +146,8 @@ public class NotesController extends BaseController{
                 if (empty) {
                     setText(null);
                     setGraphic(null);
-                    setContentDisplay(ContentDisplay.TEXT_ONLY);
-                    setAlignment(Pos.CENTER_LEFT);
-                    return;
                 }
-                if (ch == null) {
+                else if (ch == null) {
                     setText(null);
                     addButton.setDisable(currentNote == null);
                     setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -141,13 +162,26 @@ public class NotesController extends BaseController{
             }
         });
 
-        notesList.getSelectionModel().selectedItemProperty().addListener((obs,oldNote,newNote) -> {
-            if(newNote != null){
-                currentNote = newNote;
-                updateChaptersView(newNote);
+        //Renders the note in markdown
+        chaptersList.getSelectionModel().selectedItemProperty().addListener((obs,oldChapter,newChapter) -> {
+            if(newChapter != null){
+                currentChapter = newChapter;
+                updateContentView(newChapter);
             }
         });
 
+    }
+
+    private void updateContentView(Chapter chapter){
+
+        if(chapter == null || chapter.getContent() == null || chapter.getContent().isBlank()){
+            webEngine.loadContent("","text/html");
+            return;
+        }
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(chapter.getContent());
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        webEngine.loadContent(renderer.render(document),"text/html");
     }
 
     private void updateChaptersView(Note note) {
@@ -167,7 +201,6 @@ public class NotesController extends BaseController{
         items.addAll(notes);
         items.add(null);
         notesList.setItems(items);
-
         if(!notes.isEmpty()){
             notesList.getSelectionModel().selectFirst();
         }
@@ -180,4 +213,28 @@ public class NotesController extends BaseController{
         chaptersList.setItems(FXCollections.observableArrayList());
     }
 
+    public void editContents() {
+        if(currentNote == null) return;
+        TextInputDialog dialog = new TextInputDialog();
+
+        TextArea textArea = new TextArea();
+        textArea.setPrefRowCount(12);
+        textArea.setPrefColumnCount(40);
+        textArea.setWrapText(true);
+        textArea.setText(currentChapter.getContent());
+
+        dialog.getDialogPane().setContent(textArea);
+
+        dialog.setTitle("Markdown for " + currentChapter.getName());
+        dialog.setHeaderText("Markdown for " + currentChapter.getName());
+        dialog.setContentText(null);
+
+        dialog.showAndWait().ifPresent(input -> {
+            String content = textArea.getText();
+            notesManager.changeContent(currentChapter.getID(),content);
+            currentChapter.setContent(content);
+            updateContentView(currentChapter);
+        });
+
+    }
 }

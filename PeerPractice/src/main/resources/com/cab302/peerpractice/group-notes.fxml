@@ -18,8 +18,9 @@
                 <ListView fx:id="chaptersList" />
                 <StackPane fx:id="contentStack" xmlns:fx="http://javafx.com/fxml">
                     <WebView fx:id="contentWebView"/>
-                    <Button fx:id="editButton" text="Edit" minWidth="32" minHeight="32" prefWidth="36" prefHeight="36"
-                        style="-fx-background-radius: 18; -fx-font-size: 14;">
+                    <Button fx:id="editButton" text="Edit"
+                        style="-fx-background-radius: 18; -fx-font-size: 18;"
+                        onAction="#editContents">
                         <StackPane.margin>
                             <Insets bottom="12" right="12"/>
                         </StackPane.margin>

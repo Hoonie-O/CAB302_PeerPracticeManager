@@ -46,7 +46,6 @@ public class MockNotesDao implements INotesDAO {
 
     @Override
     public Note getNote(String noteID) {
-        System.out.println("inside of the shit " + noteID);
         return notes.stream().filter(n -> n.getID().equals(noteID)).findFirst().orElse(null);
     }
 
