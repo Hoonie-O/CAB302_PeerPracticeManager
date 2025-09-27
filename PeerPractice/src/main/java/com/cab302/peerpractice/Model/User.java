@@ -1,5 +1,7 @@
 package com.cab302.peerpractice.Model;
 
+import com.cab302.peerpractice.Utilities.ValidationUtils;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -90,12 +92,14 @@ public class User {
     public void setPassword(String passwordHash) { this.passwordHash = passwordHash; }
 
     public List<User> getFriendList() { return friendsList; }
+
     public void addFriend(User user) { 
         if (user == null) throw new IllegalArgumentException("Cannot add null user as friend");
         friendsList.add(user); 
     }
 
     public List<Notification> getNotifications() { return notifications; }
+    
     public void addNotification(Notification n) {notifications.add(n); }
 
     @Override
