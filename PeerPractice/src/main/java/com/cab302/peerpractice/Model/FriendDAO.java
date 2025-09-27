@@ -4,147 +4,136 @@ import com.cab302.peerpractice.Exceptions.DuplicateFriendException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javax.sound.midi.SysexMessage;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Objects;
 
-public class FriendDAO implements IFriendDAO{
+public class FriendDAO implements IFriendDAO {
+
     private final Connection connection;
     private final IUserDAO userDAO;
 
     public FriendDAO(IUserDAO userDAO) throws SQLException {
-        // get database connection and userDAO
         this.userDAO = userDAO;
-        connection = SQLiteConnection.getInstance();
+        this.connection = SQLiteConnection.getInstance();
+        createTable();
     }
 
-    @Override
-    public ObservableList<Friend> getFriends(User user) throws SQLException {
-        String searchQuery = String.format("SELECT * FROM friends WHERE user = '%s' ORDER BY status;", user.getUsername());
-        //System.out.println(searchQuery);
-        // return list of friends of user
-        return resultsToList(SQLQuery(searchQuery));
-    }
-
-    // returns false if operation failed
-    @Override
-    public boolean addFriend(User user, User friend) throws SQLException, DuplicateFriendException {
-        // checks: user not adding themselves, friends exists as a user,
-        // and friend request not already pending (which accepts if it is)
-        if (user == friend) {
-            return false;
-        } else {
-            if (checkFriendExists(user, friend)) {
-                if (acceptFriendRequest(user, friend)) {
-                    return true;
-                } else {
-                    System.err.println("DuplicateFriendException: " + new DuplicateFriendException("Friend already exists"));
-                    return false;
-                }
-            } else {
-                String searchQuery = String.format("INSERT INTO friends (user, friend, status) VALUES ('%s', '%s', 'pending');", user.getUsername(), friend.getUsername());
-                //System.out.println(searchQuery);
-                return SQLUpdate(searchQuery) != 0;
-            }
+    // -------------------- TABLE CREATION --------------------
+    private void createTable() throws SQLException {
+        try (Statement st = connection.createStatement()) {
+            st.execute("CREATE TABLE IF NOT EXISTS friends (" +
+                    "user TEXT NOT NULL, " +
+                    "friend TEXT NOT NULL, " +
+                    "status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','accepted','denied','blocked'))," +
+                    "PRIMARY KEY(user, friend), " +
+                    "FOREIGN KEY(user) REFERENCES users(username) ON DELETE CASCADE, " +
+                    "FOREIGN KEY(friend) REFERENCES users(username) ON DELETE CASCADE" +
+                    ")");
         }
     }
 
+    // -------------------- READ --------------------
     @Override
-    public boolean removeFriend(User user, User friend) throws SQLException {
-        String updateAction = String.format("DELETE FROM friends WHERE user = '%s' AND friend = '%s';", user.getUsername(), friend.getUsername());
-        //System.out.println(searchQuery);
-        // return true if update changed rows
-        return SQLUpdate(updateAction) > 0;
+    public ObservableList<Friend> getFriends(User user) throws SQLException {
+        String sql = "SELECT * FROM friends WHERE user = ? ORDER BY status";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            try (ResultSet rs = ps.executeQuery()) {
+                return resultsToList(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get friends for user: " + user.getUsername(), e);
+        }
     }
 
+    // -------------------- CREATE --------------------
+    @Override
+    public boolean addFriend(User user, User friend) throws SQLException, DuplicateFriendException {
+        if (Objects.equals(user.getUsername(), friend.getUsername())) return false;
+        if (friendExists(user, friend)) {
+            if (acceptFriendRequest(user, friend)) return true;
+            throw new DuplicateFriendException("Friend already exists");
+        }
+
+        String sql = "INSERT INTO friends (user, friend, status) VALUES (?, ?, 'pending')";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, friend.getUsername());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to add friend", e);
+        }
+    }
+
+    // -------------------- UPDATE --------------------
     @Override
     public boolean acceptFriendRequest(User user, User friend) throws SQLException {
-        String updateAction = String.format("UPDATE friends SET status = 'accepted' WHERE user = '%s' AND friend = '%s';", user.getUsername(), friend.getUsername());
-        //System.out.println(searchQuery);
-        // return true if update changed rows
-        System.out.println(SQLUpdate(updateAction) > 0);
-        return SQLUpdate(updateAction) > 0;
+        return updateFriendStatus(user, friend, "accepted");
     }
 
     @Override
     public boolean denyFriendRequest(User user, User friend) throws SQLException {
-        String updateAction = String.format("UPDATE friends SET status = 'denied' WHERE user = '%s' AND friend = '%s';", user.getUsername(), friend.getUsername());
-        //System.out.println(searchQuery);
-        // return true if update changed rows
-        return SQLUpdate(updateAction) > 0;
+        return updateFriendStatus(user, friend, "denied");
     }
 
     @Override
-    public boolean blockUser(User user, User friend) throws SQLException{
-        String updateAction = String.format("UPDATE friends SET status = 'blocked' WHERE user = '%s' AND friend = '%s';", user.getUsername(), friend.getUsername());
-        //System.out.println(searchQuery);
-        // return true if update changed rows
-        return SQLUpdate(updateAction) > 0;
+    public boolean blockUser(User user, User friend) throws SQLException {
+        return updateFriendStatus(user, friend, "blocked");
     }
 
-    private boolean checkFriendExists(User user, User friend) throws SQLException {
-        String searchQuery = String.format("SELECT * FROM friends WHERE user = '%s' AND friend = '%s';", user.getUsername(), friend.getUsername());
-        //System.out.println(searchQuery);
-        // return true if no matching results, false otherwise
-        return SQLQuery(searchQuery) == null;
-    }
-
-    private ResultSet SQLQuery(String searchQuery) throws SQLException {
-        // create statement and resultset
-        PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
-        ResultSet resultSet = null;
-
-        // execute query statement
-        try {
-            resultSet = preparedStatement.executeQuery();
+    private boolean updateFriendStatus(User user, User friend, String status) throws SQLException {
+        String sql = "UPDATE friends SET status = ? WHERE user = ? AND friend = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, user.getUsername());
+            ps.setString(3, friend.getUsername());
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Query could not be executed: " + searchQuery + e);
+            throw new RuntimeException("Failed to update friend status", e);
         }
-
-        return resultSet;
     }
 
-    private int SQLUpdate(String searchQuery) throws SQLException {
-        // create statement
-        PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
-        int rowsChanged = 0; // initial value 0 = no rows affected
-
-        // execute update statement
-        try {
-            rowsChanged = preparedStatement.executeUpdate();
+    // -------------------- DELETE --------------------
+    @Override
+    public boolean removeFriend(User user, User friend) throws SQLException {
+        String sql = "DELETE FROM friends WHERE user = ? AND friend = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, friend.getUsername());
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Update could not be executed: " + searchQuery + e);
+            throw new RuntimeException("Failed to remove friend", e);
         }
+    }
 
-        return rowsChanged;
+    // -------------------- HELPERS --------------------
+    private boolean friendExists(User user, User friend) throws SQLException {
+        String sql = "SELECT 1 FROM friends WHERE user = ? AND friend = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, friend.getUsername());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
     }
 
     private ObservableList<Friend> resultsToList(ResultSet results) throws SQLException {
-        // create list of friends
         ObservableList<Friend> friends = FXCollections.observableArrayList();
+        if (results == null) return friends;
 
-        // return null if no results found
-        if (results == null) {
-            return null;
-        }
-
-        // add each object to list
         while (results.next()) {
             String username1 = results.getString("user");
             String username2 = results.getString("friend");
             FriendStatus status = FriendStatus.valueOf(results.getString("status").toUpperCase());
 
-            // Get the user data for associated username for listed friendship
             User user1 = userDAO.findUser("username", username1);
             User user2 = userDAO.findUser("username", username2);
 
-            Friend friend = new Friend(user1, user2, status);
-            friends.add(friend);
+            if (user1 != null && user2 != null) {
+                friends.add(new Friend(user1, user2, status));
+            }
         }
-
         return friends;
     }
 }
