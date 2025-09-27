@@ -18,5 +18,12 @@ public interface IGroupDAO {
     boolean setRequireApproval(int id,boolean require_approval);
     boolean addToGroup(int id, User user);
     boolean groupExists(Group group);
-
+    boolean hasUserRequestedToJoin(int id, String userId);
+    boolean isUserMemberOfGroup(int id, String userId);
+    void createJoinRequest(int id, String userId);
+    boolean isAdmin(int id, String userId);
+    boolean promoteToAdmin(int id, String userId, String userId1);
+    boolean removeMember(int id, String userId, String userId1);
+    List<GroupMemberEntity> getGroupMembers(int id);
+    List<GroupJoinRequest> getPendingJoinRequests(int id);
 }
