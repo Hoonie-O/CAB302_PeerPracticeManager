@@ -10,6 +10,10 @@ public enum View {
     Availability("availability-view.fxml", "Availability"),
     ResetPassword("resetpassword-view.fxml","ResetPassword"),
     Groups("groups-view.fxml","Groups"),
+    EditProfile("editprofile-view.fxml", "Edit Profile"),
+    SettingProfile("settingprofile-view.fxml", "Setting Profile"),
+    SessionTasks("session-tasks-view.fxml", "Session Tasks"),
+    Friends("friends-view.fxml", "Friends");
     EditProfile("editprofile-dialog.fxml", "Edit Profile"),
     SettingProfile("setting-dialog.fxml", "Setting Profile"),
     SessionTasks("session-tasks-view.fxml", "Session Tasks"),
