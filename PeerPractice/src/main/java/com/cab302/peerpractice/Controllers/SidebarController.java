@@ -263,7 +263,7 @@ public abstract class SidebarController extends BaseController {
     private void onEditProfile(ActionEvent event) {
         try {
             // Load FXML
-            FXMLLoader loader = new FXMLLoader(View.EditProfile.url());
+            FXMLLoader loader = new FXMLLoader(View.EditProfileDialog.url());
             loader.setControllerFactory(cls -> {
                 try {
                     return cls.getDeclaredConstructor(AppContext.class, Navigation.class)
@@ -299,7 +299,7 @@ public abstract class SidebarController extends BaseController {
     private void onSetting(ActionEvent event) {
         try {
             // Load FXML
-            FXMLLoader loader = new FXMLLoader(View.SettingProfile.url());
+            FXMLLoader loader = new FXMLLoader(View.SettingProfileDialog.url());
             loader.setControllerFactory(cls -> {
                 try {
                     return cls.getDeclaredConstructor(AppContext.class, Navigation.class)

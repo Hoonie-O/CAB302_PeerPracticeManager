@@ -12,8 +12,6 @@ public enum View {
     Groups("groups-view.fxml","Groups"),
 
     // From friends branch
-    EditProfile("editprofile-view.fxml", "Edit Profile"),
-    SettingProfile("settingprofile-view.fxml", "Setting Profile"),
     Friends("friends-view.fxml", "Friends"),
 
     // From main branch
