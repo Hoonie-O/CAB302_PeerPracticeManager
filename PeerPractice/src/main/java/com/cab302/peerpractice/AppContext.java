@@ -8,10 +8,11 @@ import java.util.ArrayList;
 public class AppContext {
     private final UserSession userSession = new UserSession();
     private final IUserDAO userDao = new UserDAO();
+    private final IFriendDAO friendDao;
     private final IGroupDAO groupDao;
     private final Notifier notifier = new Notifier(userDao);
     private final PasswordHasher passwordHasher = new BcryptHasher();
-    private final UserManager userManager = new UserManager(userDao,passwordHasher);
+    private final UserManager userManager = new UserManager(userDao, passwordHasher);
     private final GroupManager groupManager;
     private final MailService mailService = new MailService();
     private final SessionManager sessionManager;
@@ -28,6 +29,8 @@ public class AppContext {
         try {
             this.groupDao = new GroupDBDAO(userDao);
             this.groupManager = new GroupManager(groupDao, notifier, userDao);
+            this.friendDao = new FriendDAO(userDao);
+
             this.notesDAO = new NotesDBDAO();
             this.notesManager = new NotesManager(notesDAO, groupDao);
 
@@ -36,7 +39,7 @@ public class AppContext {
             this.sessionManager = new SessionManager(this.sessionCalendarManager);
             this.sessionTaskStorage = new SessionTaskDBStorage(userDao);
             this.sessionTaskManager = new SessionTaskManager(sessionTaskStorage, this.sessionManager);
-            
+
             this.sessionCalendarManager.setSessionTaskManager(this.sessionTaskManager);
 
             var availabilityStorage = new AvailabilityDBStorage(userDao);
@@ -56,22 +59,22 @@ public class AppContext {
         }
     }
 
-    public UserSession getUserSession(){return userSession;}
-    public IUserDAO getUserDao(){return userDao;}
-    public PasswordHasher getPasswordHasher(){return passwordHasher;}
-    public UserManager getUserManager(){return userManager;}
-    public MailService getMailService(){return mailService;}
-    public GroupManager getGroupManager(){return  groupManager;}
-    public IGroupDAO getGroupDao() {return groupDao;}
-    public SessionManager getSessionManager(){return sessionManager;}
-    public SessionTaskManager getSessionTaskManager(){return sessionTaskManager;}
-    public SessionCalendarManager getSessionCalendarManager(){return sessionCalendarManager;}
-    public AvailabilityManager getAvailabilityManager(){return availabilityManager;}
-    public NotesManager getNotesManager(){return notesManager;}
-    public INotesDAO getNotesDAO(){return notesDAO;}
+    public UserSession getUserSession() { return userSession; }
+    public IUserDAO getUserDao() { return userDao; }
+    public PasswordHasher getPasswordHasher() { return passwordHasher; }
+    public UserManager getUserManager() { return userManager; }
+    public MailService getMailService() { return mailService; }
+    public GroupManager getGroupManager() { return groupManager; }
+    public IGroupDAO getGroupDao() { return groupDao; }
+    public IFriendDAO getFriendDao() { return friendDao; }
+    public SessionManager getSessionManager() { return sessionManager; }
+    public SessionTaskManager getSessionTaskManager() { return sessionTaskManager; }
+    public SessionCalendarManager getSessionCalendarManager() { return sessionCalendarManager; }
+    public AvailabilityManager getAvailabilityManager() { return availabilityManager; }
+    public NotesManager getNotesManager() { return notesManager; }
+    public INotesDAO getNotesDAO() { return notesDAO; }
     public boolean isMenuOpen() { return menuOpen; }
     public void setMenuOpen(boolean value) { this.menuOpen = value; }
     public boolean isProfileOpen() { return profileOpen; }
     public void setProfileOpen(boolean value) { this.profileOpen = value; }
-
 }

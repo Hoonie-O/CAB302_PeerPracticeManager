@@ -10,12 +10,18 @@ public enum View {
     Availability("availability-view.fxml", "Availability"),
     ResetPassword("resetpassword-view.fxml","ResetPassword"),
     Groups("groups-view.fxml","Groups"),
-    EditProfile("editprofile-dialog.fxml", "Edit Profile"),
-    SettingProfile("setting-dialog.fxml", "Setting Profile"),
-    SessionTasks("session-tasks-view.fxml", "Session Tasks"),
+
+    // From friends branch
+    Friends("friends-view.fxml", "Friends"),
+
+    // From main branch
+    EditProfileDialog("editprofile-dialog.fxml", "Edit Profile"),
+    SettingProfileDialog("setting-dialog.fxml", "Setting Profile"),
     InviteMember("invitemember-dialog.fxml", "Invite Members"),
     ShareGroupID("sharegroupID-dialog.fxml", "Share Group ID"),
-    ManageGroup("managegroup-dialog.fxml", "Mange Group");
+    ManageGroup("managegroup-dialog.fxml", "Manage Group"),
+
+    SessionTasks("session-tasks-view.fxml", "Session Tasks");
 
     private final String fxml;
     private final String title;
