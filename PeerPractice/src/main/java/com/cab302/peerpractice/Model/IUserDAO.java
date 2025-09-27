@@ -31,4 +31,6 @@ public interface IUserDAO {
     String getPassword(User user);
     boolean addNotification(String username, Notification notification);
     boolean removeNotification(String username, Notification notification);
+
+
 }

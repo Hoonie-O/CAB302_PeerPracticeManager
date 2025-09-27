@@ -204,10 +204,15 @@ public class MockUserDAO implements IUserDAO{
             case "password":
                 user.setPassword(value);
                 break;
+            case "date_format":
+                user.setDateFormat(value);
+                break;
+            case "time_format":
+                user.setTimeFormat(value);
+                break;
             default:
                 return false;
         }
         return true;
     }
-
 }

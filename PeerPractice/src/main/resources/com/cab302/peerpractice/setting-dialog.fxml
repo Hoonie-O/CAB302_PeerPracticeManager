@@ -18,12 +18,13 @@
                 left="12"/>
     </padding>
 
-    <Label text="Time and date"
+    <Label text="Date and Time"
            style="-fx-font-weight:bold;"/>
     <Separator/>
 
     <GridPane hgap="12"
               vgap="12">
+
         <!-- Two columns -->
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS"
@@ -31,6 +32,7 @@
             <ColumnConstraints hgrow="ALWAYS"
                                minWidth="260"/>
         </columnConstraints>
+
         <!-- Date -->
         <VBox spacing="4"
               GridPane.rowIndex="0"
@@ -40,13 +42,20 @@
                       minWidth="260">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="dd/mm/yyyy"/>
-                            <String fx:value="mm/dd/yyyy"/>
-                            <String fx:value="yyyy-mm-dd"/>
+                            <String fx:value="MMMM d, yyyy"/>
+                            <String fx:value="yyyy-MM-dd"/>
+                            <String fx:value="MM/dd/yyyy"/>
+                            <String fx:value="dd/MM/yyyy"/>
                         </FXCollections>
                     </items>
             </ComboBox>
+
+            <!-- Date Format Preview -->
+            <Label fx:id="dateFormatPreview"
+                   text="Preview: 25/12/2023"
+                   style="-fx-text-fill: #666666; -fx-font-style: italic;"/>
         </VBox>
+
         <!-- Time -->
         <VBox spacing="4"
               GridPane.rowIndex="0"
@@ -56,11 +65,16 @@
                       minWidth="260">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="hh:mm"/>
-                        <String fx:value="hh:mm AM"/>
+                        <String fx:value="h:mm a"/>
+                        <String fx:value="HH:mm"/>
                     </FXCollections>
                 </items>
             </ComboBox>
+
+            <!-- Time Format Preview -->
+            <Label fx:id="timeFormatPreview"
+                   text="Preview: 14:30"
+                   style="-fx-text-fill: #666666; -fx-font-size: 11px; -fx-font-style: italic;"/>
         </VBox>
     </GridPane>
 
@@ -70,16 +84,19 @@
 
     <Separator/>
         <VBox spacing="8">
+
             <!-- Old password -->
             <VBox spacing="4">
                 <Label text="Old password:"/>
                 <PasswordField fx:id="oldPasswordField"/>
             </VBox>
+
             <!-- New password -->
             <VBox spacing="4">
                 <Label text="New password:"/>
                 <PasswordField fx:id="newPasswordField"/>
             </VBox>
+
             <!-- Confirm new password -->
             <VBox spacing="4">
                 <Label text="Confirm new password:"/>
@@ -90,9 +107,11 @@
         <!-- Buttons -->
         <HBox alignment="CENTER_RIGHT"
               spacing="8">
+
             <padding>
                 <Insets top="14"/>
             </padding>
+
             <Region HBox.hgrow="ALWAYS"/>
             <Button text="Close"
                     onAction="#onClose"

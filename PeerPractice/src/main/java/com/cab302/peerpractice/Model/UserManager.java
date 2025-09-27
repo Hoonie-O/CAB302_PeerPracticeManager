@@ -1,10 +1,12 @@
 package com.cab302.peerpractice.Model;
 
 import com.cab302.peerpractice.Exceptions.*;
+import com.cab302.peerpractice.Utilities.ValidationUtils;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 public class UserManager {
 
@@ -91,6 +93,4 @@ public class UserManager {
             throws SQLException {
         userDAO.updateValue(username, "date_of_birth", isoDate == null ? "" : isoDate.trim());
     }
-
-
 }

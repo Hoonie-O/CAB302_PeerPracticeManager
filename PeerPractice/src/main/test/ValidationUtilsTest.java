@@ -1,4 +1,4 @@
-import com.cab302.peerpractice.Model.ValidationUtils;
+import com.cab302.peerpractice.Utilities.ValidationUtils;
 import com.cab302.peerpractice.Exceptions.InvalidPasswordException;
 import org.junit.jupiter.api.Test;
 
