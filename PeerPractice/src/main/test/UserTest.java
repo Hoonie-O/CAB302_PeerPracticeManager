@@ -555,7 +555,7 @@ public class UserTest {
     @Test
     public void testUserObjectEquality(){
         User sameUser = new User(user.getUserId(), FIRST_NAME, LAST_NAME, USERNAME, EMAIL, PASSWORD, INSTITUTION);
-        assertNotEquals(user, sameUser);
+        assertEquals(user, sameUser);
     }
 
     @Test

@@ -210,11 +210,9 @@ public class UserDAO implements IUserDAO{
         return userList;
     }
 
-    // Creates a new user
-    @Override
-    public boolean createUser(String username, String password, String firstName, String lastName, String email, String institution) throws SQLException {
-        // Generate UUID for the new user
-        String userId = java.util.UUID.randomUUID().toString();
+    // Creates a new user with a specific ID
+    public boolean createUserWithId(String userId, String username, String password, String firstName, String lastName, String email, String institution) throws SQLException {
+        // Use the provided user ID
         
         // Use prepared statement to prevent SQL injection
         PreparedStatement stmt = connection.prepareStatement(
@@ -243,6 +241,14 @@ public class UserDAO implements IUserDAO{
             System.err.println("Error occurred during update statement" + e);
             return false;
         }
+    }
+
+    // Creates a new user with auto-generated ID
+    @Override
+    public boolean createUser(String username, String password, String firstName, String lastName, String email, String institution) throws SQLException {
+        // Generate UUID for the new user
+        String userId = java.util.UUID.randomUUID().toString();
+        return createUserWithId(userId, username, password, firstName, lastName, email, institution);
     }
 
     // Adds a notification
@@ -306,7 +312,7 @@ public class UserDAO implements IUserDAO{
     @Override
     public boolean addUser(User user) {
         try {
-            return createUser(user.getUsername(), user.getPassword(), user.getFirstName(), 
+            return createUserWithId(user.getUserId(), user.getUsername(), user.getPassword(), user.getFirstName(), 
                             user.getLastName(), user.getEmail(), user.getInstitution());
         } catch (SQLException | DuplicateUsernameException | DuplicateEmailException e) {
             return false;

@@ -15,8 +15,8 @@ public class AvailabilityManager {
         this.storage = storage;
     }
 
-    public boolean createAvailability(String title, User user, LocalDateTime startTime, 
-                                    LocalDateTime endTime, String colorLabel) {
+    public boolean createAvailability(String title, User user, LocalDateTime startTime,
+                                      LocalDateTime endTime, String colorLabel) {
         try {
             Availability availability = new Availability(title, user, startTime, endTime, colorLabel);
             return storage.addAvailability(availability);

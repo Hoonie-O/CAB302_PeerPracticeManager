@@ -30,7 +30,7 @@ public class SessionTest {
         assertEquals(organiser, session.getOrganiser());
         assertEquals(startTime, session.getStartTime());
         assertEquals(endTime, session.getEndTime());
-        assertEquals(SessionStatus.PLANNED, session.getStatus());
+        assertEquals("optional", session.getPriority());
     }
 
     @Test
@@ -224,26 +224,27 @@ public class SessionTest {
     }
 
     @Test
-    public void testSetStatus() {
+    public void testSetPriority() {
         Session session = new Session("Test Session", organiser, startTime, endTime);
-        session.setStatus(SessionStatus.ACTIVE);
-        assertEquals(SessionStatus.ACTIVE, session.getStatus());
+        session.setPriority("urgent");
+        assertEquals("urgent", session.getPriority());
     }
 
     @Test
-    public void testSetStatusNull_defaultsToPlanned() {
+    public void testSetPriorityNull_defaultsToOptional() {
         Session session = new Session("Test Session", organiser, startTime, endTime);
-        session.setStatus(null);
-        assertEquals(SessionStatus.PLANNED, session.getStatus());
+        session.setPriority(null);
+        assertEquals("optional", session.getPriority());
     }
 
     @Test
-    public void testAllSessionStatuses() {
+    public void testAllPriorityValues() {
         Session session = new Session("Test Session", organiser, startTime, endTime);
 
-        for (SessionStatus status : SessionStatus.values()) {
-            assertDoesNotThrow(() -> session.setStatus(status));
-            assertEquals(status, session.getStatus());
+        String[] priorities = {"optional", "important", "urgent"};
+        for (String priority : priorities) {
+            assertDoesNotThrow(() -> session.setPriority(priority));
+            assertEquals(priority, session.getPriority());
         }
     }
 

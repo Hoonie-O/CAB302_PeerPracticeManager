@@ -18,7 +18,7 @@ import java.util.List;
  * Controller for managing session tasks. Handles creating, editing, and deleting
  * tasks within study sessions with proper validation.
  */
-public class SessionTaskController extends BaseController {
+public class SessionTaskController extends SidebarController {
     
     @FXML private TableView<SessionTask> taskTable;
     @FXML private TableColumn<SessionTask, String> titleColumn;
@@ -29,6 +29,7 @@ public class SessionTaskController extends BaseController {
     @FXML private TextField taskTitleField;
     @FXML private TextField deadlineField;
     @FXML private ComboBox<User> assigneeComboBox;
+    @FXML private Button backButton;
     @FXML private Button createTaskButton;
     @FXML private Button updateTaskButton;
     @FXML private Button deleteTaskButton;
@@ -43,7 +44,8 @@ public class SessionTaskController extends BaseController {
     public SessionTaskController(AppContext ctx, Navigation nav) { super(ctx, nav); }
     
     @FXML
-    private void initialize() {
+    public void initialize() {
+        super.initialize();
         setupTableColumns();
         setupEventHandlers();
         taskList = FXCollections.observableArrayList();
@@ -120,7 +122,7 @@ public class SessionTaskController extends BaseController {
         // enable/disable buttons based on selection
         updateButtonStates();
     }
-    
+
     /**
      * Sets the current session and loads its tasks
      */
@@ -209,15 +211,40 @@ public class SessionTaskController extends BaseController {
                 return;
             }
             
-            // create task
+            // create task with optimistic UI update
             String currentUserId = getCurrentUserId();
-            SessionTask task = ctx.getSessionTaskManager().createTask(
-                currentSessionId, title, deadline, assignee.getUserId(), currentUserId
-            );
-            
-            // refresh task list
-            loadSessionTasks();
-            clearFormFields();
+
+            // create temporary task for optimistic update
+            SessionTask tempTask = new SessionTask(currentSessionId, title, deadline, assignee.getUserId(), currentUserId);
+
+            // disable button to prevent double submission
+            createTaskButton.setDisable(true);
+            createTaskButton.setText("Saving...");
+
+            // optimistic add to UI
+            taskList.add(tempTask);
+
+            try {
+                SessionTask savedTask = ctx.getSessionTaskManager().createTask(
+                    currentSessionId, title, deadline, assignee.getUserId(), currentUserId
+                );
+
+                // replace temp task with saved task
+                int tempIndex = taskList.indexOf(tempTask);
+                if (tempIndex >= 0) {
+                    taskList.set(tempIndex, savedTask);
+                }
+
+                clearFormFields();
+            } catch (Exception ex) {
+                // rollback optimistic update on error
+                taskList.remove(tempTask);
+                showError("Failed to create task: " + ex.getMessage());
+            } finally {
+                // re-enable button
+                createTaskButton.setDisable(false);
+                createTaskButton.setText("Create Task");
+            }
             
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
@@ -265,15 +292,68 @@ public class SessionTaskController extends BaseController {
                 return;
             }
             
-            // update task
+            // update task with optimistic UI update
             String currentUserId = getCurrentUserId();
-            ctx.getSessionTaskManager().updateTask(
-                selectedTask.getTaskId(), title, deadline, assignee.getUserId(), currentUserId
-            );
-            
-            // refresh task list
-            loadSessionTasks();
-            clearFormFields();
+
+            // store original values for rollback
+            String originalTitle = selectedTask.getTitle();
+            LocalDateTime originalDeadline = selectedTask.getDeadline();
+            String originalAssigneeId = selectedTask.getAssigneeId();
+
+            // disable button to prevent double submission
+            updateTaskButton.setDisable(true);
+            updateTaskButton.setText("Updating...");
+
+            // optimistic update in UI
+            int taskIndex = taskList.indexOf(selectedTask);
+            if (taskIndex >= 0) {
+                SessionTask updatedTask = new SessionTask(
+                    selectedTask.getTaskId(),
+                    currentSessionId,
+                    title,
+                    deadline,
+                    assignee.getUserId(),
+                    currentUserId,
+                    selectedTask.getCreatedAt(),
+                    selectedTask.isCompleted()
+                );
+                taskList.set(taskIndex, updatedTask);
+                selectedTask = updatedTask;
+            }
+
+            try {
+                SessionTask savedTask = ctx.getSessionTaskManager().updateTask(
+                    selectedTask.getTaskId(), title, deadline, assignee.getUserId(), currentUserId
+                );
+
+                // replace with server response
+                if (taskIndex >= 0) {
+                    taskList.set(taskIndex, savedTask);
+                }
+
+                clearFormFields();
+            } catch (Exception ex) {
+                // rollback optimistic update on error
+                if (taskIndex >= 0) {
+                    SessionTask rolledBackTask = new SessionTask(
+                        selectedTask.getTaskId(),
+                        currentSessionId,
+                        originalTitle,
+                        originalDeadline,
+                        originalAssigneeId,
+                        selectedTask.getCreatedBy(), // use original createdBy
+                        selectedTask.getCreatedAt(),
+                        selectedTask.isCompleted()
+                    );
+                    taskList.set(taskIndex, rolledBackTask);
+                    selectedTask = rolledBackTask;
+                }
+                showError("Failed to update task: " + ex.getMessage());
+            } finally {
+                // re-enable button
+                updateTaskButton.setDisable(false);
+                updateTaskButton.setText("Update Task");
+            }
             
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
@@ -325,18 +405,51 @@ public class SessionTaskController extends BaseController {
         
         try {
             String currentUserId = getCurrentUserId();
+
+            // disable button to prevent double submission
+            markCompleteButton.setDisable(true);
+            markCompleteButton.setText("Completing...");
+
+            // optimistic update in UI
+            int taskIndex = taskList.indexOf(selectedTask);
+            SessionTask originalTask = selectedTask;
+            if (taskIndex >= 0) {
+                // create updated task with completed status using 8-parameter constructor
+                SessionTask completedTask = new SessionTask(
+                    selectedTask.getTaskId(),
+                    currentSessionId,
+                    selectedTask.getTitle(),
+                    selectedTask.getDeadline(),
+                    selectedTask.getAssigneeId(),
+                    selectedTask.getCreatedBy(),
+                    selectedTask.getCreatedAt(),
+                    true // mark as completed
+                );
+
+                taskList.set(taskIndex, completedTask);
+                selectedTask = completedTask;
+            }
+
             boolean completed = ctx.getSessionTaskManager().markTaskCompleted(selectedTask.getTaskId(), currentUserId);
-            
+
             if (completed) {
-                loadSessionTasks();
                 clearFormFields();
             } else {
+                // rollback optimistic update
+                if (taskIndex >= 0) {
+                    taskList.set(taskIndex, originalTask);
+                    selectedTask = originalTask;
+                }
                 showError("Failed to mark task as complete");
             }
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
         } catch (Exception e) {
             showError("Failed to mark task as complete: " + e.getMessage());
+        } finally {
+            // re-enable button
+            markCompleteButton.setDisable(false);
+            markCompleteButton.setText("Mark Complete");
         }
     }
     
@@ -401,7 +514,7 @@ public class SessionTaskController extends BaseController {
         User currentUser = ctx.getUserSession().getCurrentUser();
         return currentUser != null ? currentUser.getUserId() : null;
     }
-    
+
     /**
      * Helper method to find a user by ID
      */

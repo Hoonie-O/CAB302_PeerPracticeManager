@@ -76,4 +76,17 @@ public class SessionCalendarStorage {
         return sessions.stream()
                 .anyMatch(session -> session.getStartTime().toLocalDate().equals(date));
     }
+
+    public List<Session> getSessionsForGroup(Group group) {
+        return sessions.stream()
+                .filter(session -> session.getGroup() != null && session.getGroup().equals(group))
+                .collect(Collectors.toList());
+    }
+
+    public List<Session> getSessionsForDateAndGroup(LocalDate date, Group group) {
+        return sessions.stream()
+                .filter(session -> session.getStartTime().toLocalDate().equals(date))
+                .filter(session -> session.getGroup() != null && session.getGroup().equals(group))
+                .collect(Collectors.toList());
+    }
 }

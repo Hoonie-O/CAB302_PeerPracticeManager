@@ -15,7 +15,7 @@
                 <Insets top="12" right="12" bottom="12" left="12"/>
             </padding>
             <Button fx:id="studyGroupButton" text="Study Group" prefWidth="160"/>
-            <Button fx:id="calendarButton" text="Calendar" prefWidth="160"/>
+            <Button fx:id="availabilityButton" text="Availability" prefWidth="160"/>
             <Button fx:id="friendsButton" text="Friends" prefWidth="160"/>
         </VBox>
 

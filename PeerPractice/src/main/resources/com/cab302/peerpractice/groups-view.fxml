@@ -130,6 +130,8 @@
                              closable="false"/>
                         <Tab text="Sessions"
                              closable="false"/>
+                        <Tab text="Notes"
+                             closable="false"/>
                         <Tab text="Chat"
                              closable="false"/>
                         <Tab text="Files"
@@ -137,7 +139,7 @@
                     </tabs>
                 </TabPane>
 
-                <!-- Content Area -->
+                <!-- Content Area - placeholder that will be replaced by tab content -->
                 <VBox alignment="CENTER"
                       VBox.vgrow="ALWAYS"
                       spacing="10">
@@ -148,7 +150,7 @@
                                 bottom="10"/>
                     </padding>
                     <Label fx:id="tabContentLabel"
-                           text="CALENDAR"/>
+                           text="Select a tab to view content"/>
                 </VBox>
             </VBox>
         </HBox>

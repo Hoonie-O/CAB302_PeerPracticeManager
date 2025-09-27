@@ -127,9 +127,12 @@ public class GroupManagerTest {
     void testCreateGroupRefelectedInDAO(){
         try{
             groupManager.createGroup(NAME,DESCRIPTION,false,user);
-            Group group = new Group(NAME,DESCRIPTION,false,user.getUsername(),LocalDateTime.now());
             List<Group> groups = groupDAO.getAllGroups();
-            assertEquals(group, groups.get(0));
+            Group retrievedGroup = groups.get(0);
+            assertEquals(NAME, retrievedGroup.getName());
+            assertEquals(DESCRIPTION, retrievedGroup.getDescription());
+            assertEquals(false, retrievedGroup.isRequire_approval());
+            assertEquals(user.getUsername(), retrievedGroup.getOwner());
         }catch(Exception e){
             fail();
         }

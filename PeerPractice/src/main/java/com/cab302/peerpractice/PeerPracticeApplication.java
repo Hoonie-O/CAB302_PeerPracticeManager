@@ -10,7 +10,18 @@ public class PeerPracticeApplication extends Application {
             AppContext ctx = new AppContext();
             Navigation navigate = new Navigation(ctx,stage);
             stage.setUserData(navigate);
-            navigate.Display(View.Login);
+
+            // check for saved session
+            com.cab302.peerpractice.Model.User savedUser =
+                com.cab302.peerpractice.Model.SessionPersistence.loadSavedSession(ctx.getUserDao());
+
+            if (savedUser != null) {
+                ctx.getUserSession().setCurrentUser(savedUser);
+                navigate.DisplayMainMenuOrGroup();
+            } else {
+                navigate.Display(View.Login);
+            }
+
             stage.show();
         } catch (Exception e) {
             System.err.println("Failed to start application: " + e.getMessage());
