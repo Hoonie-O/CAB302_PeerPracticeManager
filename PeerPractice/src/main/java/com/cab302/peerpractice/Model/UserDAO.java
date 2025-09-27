@@ -38,6 +38,8 @@ public class UserDAO implements IUserDAO{
             addColumnIfNotExist("users", "phone", "TEXT NOT NULL DEFAULT ''");
             addColumnIfNotExist("users", "address", "TEXT NOT NULL DEFAULT ''");
             addColumnIfNotExist("users", "date_of_birth", "TEXT DEFAULT ''");
+            addColumnIfNotExist("users", "date_format", "TEXT NOT NULL DEFAULT 'dd/MM/yyyy'");
+            addColumnIfNotExist("users", "time_format", "TEXT NOT NULL DEFAULT 'HH:mm'");
 
             String createFriendsTable = "CREATE TABLE IF NOT EXISTS friends ("
                     + "friendship_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -117,12 +119,17 @@ public class UserDAO implements IUserDAO{
 
         // Construct user using constructor signature in User.java
         User u = new User(userId, firstName, lastName, username, email, password, institution);
+
         // Avoid failing if a column is missing
         try { u.setPhone(rs.getString("PHONE")); }
             catch (SQLException ignored) {}
         try { u.setAddress(rs.getString("ADDRESS")); }
             catch (SQLException ignored) {}
         try { u.setDateOfBirth(rs.getString("DATE_OF_BIRTH")); }
+            catch (SQLException ignored) {}
+        try { u.setDateFormat(rs.getString("date_format")); }
+            catch (SQLException ignored) {}
+        try { u.setTimeFormat(rs.getString("time_format")); }
             catch (SQLException ignored) {}
 
         return u;
@@ -174,7 +181,7 @@ public class UserDAO implements IUserDAO{
     }
 
     // Converts a query into user object
-    private static User getUserFromResults(ResultSet searchResults) throws SQLException {
+    private User getUserFromResults(ResultSet searchResults) throws SQLException {
         // Create null user
         User user = null;
         // Fill user fields from results
@@ -187,11 +194,12 @@ public class UserDAO implements IUserDAO{
             String passwordHash = searchResults.getString("PASSWORD");
             String institution = searchResults.getString("INSTITUTION");
             user = new User(userId, firstName, lastName, username, email, passwordHash, institution);
+            user = mapUser(searchResults);
         }
         return user;
     }
     // Converts query into an array of users
-    private static ObservableList<User> putUsersIntoList(ResultSet searchResults) throws SQLException {
+    private ObservableList<User> putUsersIntoList(ResultSet searchResults) throws SQLException {
         // Create observable list of users
         ObservableList<User> userList = FXCollections.observableArrayList();
 
@@ -203,6 +211,7 @@ public class UserDAO implements IUserDAO{
             String passwordHash = (searchResults.getString("PASSWORD"));
             String institution = (searchResults.getString("INSTITUTION"));
             User user = new User(firstName, lastName, username, email, passwordHash, institution);
+            userList.add(mapUser(searchResults));
 
             // Add user to observable list
             userList.add(user);
@@ -279,6 +288,8 @@ public class UserDAO implements IUserDAO{
             case "phone":
             case "address":
             case "date_of_birth":
+            case "date_format":
+            case "time_format":
                 break;
             default:
                 throw new SQLException("Invalid column: " + column);
