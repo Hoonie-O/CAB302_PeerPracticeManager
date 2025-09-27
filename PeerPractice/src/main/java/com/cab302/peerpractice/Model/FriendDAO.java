@@ -47,7 +47,7 @@ public class FriendDAO implements IFriendDAO{
             } else {
                 String searchQuery = String.format("INSERT INTO friends (user, friend, status) VALUES ('%s', '%s', 'pending');", user.getUsername(), friend.getUsername());
                 //System.out.println(searchQuery);
-                return resultsToList(SQLQuery(searchQuery)) != null;
+                return SQLUpdate(searchQuery) != 0;
             }
         }
     }
@@ -96,15 +96,10 @@ public class FriendDAO implements IFriendDAO{
         // create statement and resultset
         PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
         ResultSet resultSet = null;
-        boolean isInsert = searchQuery.contains("INSERT");
 
         // execute query statement
         try {
-            if (!isInsert) {
-                resultSet = preparedStatement.executeQuery();
-            } else {
-                preparedStatement.executeQuery();
-            }
+            resultSet = preparedStatement.executeQuery();
         } catch (SQLException e) {
             System.err.println("Query could not be executed: " + searchQuery + e);
         }
