@@ -1,6 +1,6 @@
 package com.cab302.peerpractice.Model.entities;
 
-import com.cab302.peerpractice.Utilities.ValidationUtils;
+import com.cab302.peerpractice.Model.utils.ValidationUtils;
 
 import java.util.List;
 import java.util.ArrayList;

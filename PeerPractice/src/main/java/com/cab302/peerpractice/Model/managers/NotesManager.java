@@ -4,7 +4,7 @@ import com.cab302.peerpractice.Model.entities.Chapter;
 import com.cab302.peerpractice.Model.entities.Note;
 import com.cab302.peerpractice.Model.daos.IGroupDAO;
 import com.cab302.peerpractice.Model.daos.INotesDAO;
-import com.cab302.peerpractice.Utilities.ValidationUtils;
+import com.cab302.peerpractice.Model.utils.ValidationUtils;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import com.cab302.peerpractice.Exceptions.*;
 import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Model.daos.IUserDAO;
 import com.cab302.peerpractice.Model.utils.PasswordHasher;
-import com.cab302.peerpractice.Utilities.ValidationUtils;
+import com.cab302.peerpractice.Model.utils.ValidationUtils;
 
 import java.sql.SQLException;
 import java.util.Optional;

@@ -1,4 +1,5 @@
-package com.cab302.peerpractice.Utilities;
+package com.cab302.peerpractice.Model.utils;
+
 
 import com.cab302.peerpractice.Exceptions.InvalidPasswordException;
 import java.util.regex.Pattern;

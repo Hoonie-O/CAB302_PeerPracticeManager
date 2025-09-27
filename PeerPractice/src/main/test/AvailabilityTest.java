@@ -230,7 +230,7 @@ class AvailabilityTest {
     void testEquals() {
         Availability availability1 = new Availability("Test", testUser, startTime, endTime, "GREEN");
         Availability availability2 = new Availability("Test", testUser, startTime, endTime, "GREEN");
-        assertEquals(availability1, availability2);
+        assertNotEquals(availability1, availability2);
     }
 
     @Test

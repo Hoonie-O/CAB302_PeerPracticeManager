@@ -9,7 +9,7 @@ import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Model.daos.GroupDAO;
 import com.cab302.peerpractice.Model.daos.IGroupDAO;
 import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Utilities.ValidationUtils;
+import com.cab302.peerpractice.Model.utils.ValidationUtils;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
