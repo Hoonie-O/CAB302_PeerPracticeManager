@@ -52,6 +52,9 @@ public class NotesManager {
     }
 
     public void changeContent(String chapterID, String content){
+        if(content == null || content.trim().isEmpty()) {
+            throw new IllegalArgumentException("Content cannot be null or empty");
+        }
         Chapter chapter = notesDAO.getChapter(chapterID);
         if(chapter == null) throw new IllegalArgumentException("Chapter " + chapterID + " Could not be found");
         chapter.setContent(content);

@@ -133,7 +133,7 @@ public class NotesManagerTest {
 
     @Test
     public void TestGetNotesEmpty(){
-        assertNull(notesManager.getNotes(groupID));
+        assertTrue(notesManager.getNotes(groupID).isEmpty());
     }
 
 

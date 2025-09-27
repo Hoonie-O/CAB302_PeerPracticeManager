@@ -20,7 +20,7 @@ public class AppContext {
     private final SessionCalendarManager sessionCalendarManager;
     private final AvailabilityManager availabilityManager;
     private final INotesDAO notesDAO = new MockNotesDao();
-    private final NotesManager notesManager  = new NotesManager(notesDAO,groupDao);
+    private final NotesManager notesManager;
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
@@ -28,6 +28,7 @@ public class AppContext {
         try {
             this.groupDao = new GroupDBDAO(userDao);
             this.groupManager = new GroupManager(groupDao, notifier, userDao);
+            this.notesManager = new NotesManager(notesDAO, groupDao);
 
             var sessionStorage = new SessionCalendarDBStorage(userDao);
             this.sessionCalendarManager = new SessionCalendarManager(sessionStorage);
