@@ -1,7 +1,6 @@
-package com.cab302.peerpractice.Model.managers;
-
 import com.cab302.peerpractice.Model.daos.MockFriendMessageDAO;
 import com.cab302.peerpractice.Model.entities.FriendMessage;
+import com.cab302.peerpractice.Model.managers.FriendMessageManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
