@@ -1,6 +1,6 @@
-package com.cab302.peerpractice.Model.daos;
+package com.cab302.peerpractice.Model.DAOs;
 
-import com.cab302.peerpractice.Model.entities.FriendMessage;
+import com.cab302.peerpractice.Model.Entities.FriendMessage;
 
 import java.util.*;
 import java.util.stream.Collectors;

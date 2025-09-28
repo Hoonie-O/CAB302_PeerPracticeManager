@@ -1,7 +1,7 @@
-package com.cab302.peerpractice.Model.managers;
+package com.cab302.peerpractice.Model.Managers;
 
-import com.cab302.peerpractice.Model.daos.IGroupMessageDAO;
-import com.cab302.peerpractice.Model.entities.GroupMessage;
+import com.cab302.peerpractice.Model.DAOs.IGroupMessageDAO;
+import com.cab302.peerpractice.Model.Entities.GroupMessage;
 
 import java.util.List;
 import java.util.Objects;

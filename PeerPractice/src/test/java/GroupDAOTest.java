@@ -1,10 +1,10 @@
-import com.cab302.peerpractice.Model.daos.GroupDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
-import com.cab302.peerpractice.Model.entities.Group;
-import com.cab302.peerpractice.Model.entities.GroupJoinRequest;
-import com.cab302.peerpractice.Model.entities.GroupMemberEntity;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.utils.SQLiteConnection;
+import com.cab302.peerpractice.Model.DAOs.GroupDAO;
+import com.cab302.peerpractice.Model.DAOs.UserDAO;
+import com.cab302.peerpractice.Model.Entities.Group;
+import com.cab302.peerpractice.Model.Entities.GroupJoinRequest;
+import com.cab302.peerpractice.Model.Entities.GroupMemberEntity;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Utils.SQLiteConnection;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;

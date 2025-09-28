@@ -1,9 +1,9 @@
-import com.cab302.peerpractice.Model.daos.AvailabilityDAO;
-import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
-import com.cab302.peerpractice.Model.entities.Availability;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.utils.SQLiteConnection;
+import com.cab302.peerpractice.Model.DAOs.AvailabilityDAO;
+import com.cab302.peerpractice.Model.DAOs.IUserDAO;
+import com.cab302.peerpractice.Model.DAOs.UserDAO;
+import com.cab302.peerpractice.Model.Entities.Availability;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Utils.SQLiteConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;

@@ -1,4 +1,4 @@
-package com.cab302.peerpractice.Model.entities;
+package com.cab302.peerpractice.Model.Entities;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

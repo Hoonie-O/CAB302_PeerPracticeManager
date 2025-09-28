@@ -1,7 +1,6 @@
-package com.cab302.peerpractice.Model.daos;
-
-import com.cab302.peerpractice.Model.entities.GroupMessage;
-import com.cab302.peerpractice.Model.utils.SQLiteConnection;
+package com.cab302.peerpractice.Model.DAOs;
+import com.cab302.peerpractice.Model.Entities.GroupMessage;
+import com.cab302.peerpractice.Model.Utils.SQLiteConnection;
 
 import java.sql.*;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-import com.cab302.peerpractice.Model.entities.SessionTask;
+import com.cab302.peerpractice.Model.Entities.SessionTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

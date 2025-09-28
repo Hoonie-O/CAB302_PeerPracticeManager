@@ -1,6 +1,6 @@
-package com.cab302.peerpractice.Model.daos;
+package com.cab302.peerpractice.Model.DAOs;
 
-import com.cab302.peerpractice.Model.entities.Message;
+import com.cab302.peerpractice.Model.Entities.Message;
 import java.util.List;
 
 /**

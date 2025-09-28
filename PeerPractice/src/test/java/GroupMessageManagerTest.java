@@ -1,6 +1,6 @@
-import com.cab302.peerpractice.Model.daos.MockGroupMessageDAO;
-import com.cab302.peerpractice.Model.entities.GroupMessage;
-import com.cab302.peerpractice.Model.managers.GroupMessageManager;
+import com.cab302.peerpractice.Model.DAOs.MockGroupMessageDAO;
+import com.cab302.peerpractice.Model.Entities.GroupMessage;
+import com.cab302.peerpractice.Model.Managers.GroupMessageManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

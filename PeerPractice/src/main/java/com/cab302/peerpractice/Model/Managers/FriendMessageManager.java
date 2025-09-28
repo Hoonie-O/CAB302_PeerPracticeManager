@@ -1,8 +1,8 @@
-package com.cab302.peerpractice.Model.managers;
+package com.cab302.peerpractice.Model.Managers;
 
-import com.cab302.peerpractice.Model.daos.IFriendMessageDAO;
-import com.cab302.peerpractice.Model.daos.MockFriendMessageDAO;
-import com.cab302.peerpractice.Model.entities.FriendMessage;
+import com.cab302.peerpractice.Model.DAOs.IFriendMessageDAO;
+import com.cab302.peerpractice.Model.DAOs.MockFriendMessageDAO;
+import com.cab302.peerpractice.Model.Entities.FriendMessage;
 
 import java.util.List;
 import java.util.Objects;

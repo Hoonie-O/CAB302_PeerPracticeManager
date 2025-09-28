@@ -1,6 +1,6 @@
-import com.cab302.peerpractice.Model.daos.MockFriendMessageDAO;
-import com.cab302.peerpractice.Model.entities.FriendMessage;
-import com.cab302.peerpractice.Model.managers.FriendMessageManager;
+import com.cab302.peerpractice.Model.DAOs.MockFriendMessageDAO;
+import com.cab302.peerpractice.Model.Entities.FriendMessage;
+import com.cab302.peerpractice.Model.Managers.FriendMessageManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
