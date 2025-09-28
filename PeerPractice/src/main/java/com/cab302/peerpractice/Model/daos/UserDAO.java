@@ -17,11 +17,45 @@ import java.util.stream.Collectors;
 public class UserDAO implements IUserDAO {
     private final Connection connection;
 
-    public UserDAO() throws SQLException, DuplicateUsernameException, DuplicateEmailException {
+    public UserDAO() throws SQLException {
         connection = SQLiteConnection.getInstance(); // persistent DB
+        ensureTables(); // create tables if missing
     }
 
     public Connection shareInstance() { return connection; }
+
+    // -------------------- TABLE CREATION --------------------
+    private void ensureTables() throws SQLException {
+        String usersTable = "CREATE TABLE IF NOT EXISTS users (" +
+                "user_id TEXT PRIMARY KEY, " +
+                "username TEXT UNIQUE NOT NULL, " +
+                "password TEXT NOT NULL, " +
+                "first_name TEXT, " +
+                "last_name TEXT, " +
+                "email TEXT UNIQUE NOT NULL, " +
+                "institution TEXT, " +
+                "biography TEXT, " +
+                "phone TEXT, " +
+                "address TEXT, " +
+                "date_of_birth TEXT, " +
+                "date_format TEXT, " +
+                "time_format TEXT" +
+                ");";
+
+        String notificationsTable = "CREATE TABLE IF NOT EXISTS notifications (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "sent_from TEXT, " +
+                "received_by TEXT, " +
+                "message TEXT, " +
+                "FOREIGN KEY(sent_from) REFERENCES users(user_id), " +
+                "FOREIGN KEY(received_by) REFERENCES users(user_id)" +
+                ");";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(usersTable);
+            stmt.execute(notificationsTable);
+        }
+    }
 
     // -------------------- MAP --------------------
     private User mapUser(ResultSet rs) throws SQLException {
@@ -147,7 +181,7 @@ public class UserDAO implements IUserDAO {
         switch (column) {
             case "first_name": case "last_name": case "username": case "password":
             case "institution": case "phone": case "address": case "date_of_birth":
-            case "date_format": case "time_format": break;
+            case "date_format": case "time_format": case "email": break;
             default: throw new SQLException("Invalid column: " + column);
         }
 
