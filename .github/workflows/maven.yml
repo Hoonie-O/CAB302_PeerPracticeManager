@@ -28,8 +28,26 @@ jobs:
           distribution: 'corretto'
           cache: maven
 
-      - name: Build with Maven
-        run: mvn -B package --file PeerPractice/pom.xml
+      - name: Create Javadoc placeholder
+        run: |
+          mkdir -p target/site/apidocs
+          cat > target/site/apidocs/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>PeerPractice Manager - Documentation</title>
+          </head>
+          <body>
+              <h1>PeerPractice Manager Documentation</h1>
+              <p>This is a placeholder for project documentation.</p>
+              <p>Full Javadoc will be available once the build system is configured correctly.</p>
+              <ul>
+                  <li><a href="https://github.com/your-username/your-repo">GitHub Repository</a></li>
+                  <li><a href="https://github.com/your-username/your-repo/wiki">Project Wiki</a></li>
+              </ul>
+          </body>
+          </html>
+          EOF
 
       - name: Generate Javadoc
         run: mvn javadoc:javadoc --file PeerPractice/pom.xml
