@@ -1,5 +1,5 @@
-import com.cab302.peerpractice.Model.utils.BcryptHasher;
-import com.cab302.peerpractice.Model.utils.PasswordHasher;
+import com.cab302.peerpractice.Model.Utils.BcryptHasher;
+import com.cab302.peerpractice.Model.Utils.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

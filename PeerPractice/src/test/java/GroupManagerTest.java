@@ -1,11 +1,11 @@
 import com.cab302.peerpractice.Exceptions.DuplicateGroupException;
 import com.cab302.peerpractice.Exceptions.InsufficientPermissionsException;
 import com.cab302.peerpractice.Exceptions.UserNotFoundException;
-import com.cab302.peerpractice.Model.daos.*;
-import com.cab302.peerpractice.Model.entities.Group;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.GroupManager;
-import com.cab302.peerpractice.Model.managers.Notifier;
+import com.cab302.peerpractice.Model.DAOs.*;
+import com.cab302.peerpractice.Model.Entities.Group;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.GroupManager;
+import com.cab302.peerpractice.Model.Managers.Notifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

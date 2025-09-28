@@ -1,8 +1,8 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.daos.GroupDAO;
-import com.cab302.peerpractice.Model.entities.*;
+import com.cab302.peerpractice.Model.DAOs.GroupDAO;
+import com.cab302.peerpractice.Model.Entities.*;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 

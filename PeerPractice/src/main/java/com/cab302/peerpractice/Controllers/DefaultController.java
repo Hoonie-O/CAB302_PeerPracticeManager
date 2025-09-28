@@ -1,8 +1,8 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.entities.Group;
-import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.Entities.Group;
+import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;

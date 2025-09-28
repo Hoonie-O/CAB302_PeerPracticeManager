@@ -1,7 +1,7 @@
 package com.cab302.peerpractice;
 
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.SessionPersistence;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.SessionPersistence;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

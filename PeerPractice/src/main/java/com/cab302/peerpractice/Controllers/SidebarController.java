@@ -1,7 +1,7 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.managers.SessionPersistence;
+import com.cab302.peerpractice.Model.Managers.SessionPersistence;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.animation.KeyFrame;
@@ -94,7 +94,10 @@ public abstract class SidebarController extends BaseController {
                 this.userNameLabel = userNameLbl;
             Label userUsernameLbl = (Label) profile.lookup("#userUsernameLabel");
                 this.userUsernameLabel = userUsernameLbl;
+
+            @SuppressWarnings("unchecked") // Add suppression warning casting on combobox
             ComboBox<String> status = (ComboBox<String>) profile.lookup("#availabilityStatus");
+
             Button editBtn = (Button) profile.lookup("#editProfileButton");
             Button settingsBtn = (Button) profile.lookup("#settingsButton");
             Button logoutBtn = (Button) profile.lookup("#logoutButton");

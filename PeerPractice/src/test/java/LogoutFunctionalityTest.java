@@ -1,10 +1,10 @@
-import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.UserManager;
-import com.cab302.peerpractice.Model.managers.UserSession;
-import com.cab302.peerpractice.Model.utils.BcryptHasher;
-import com.cab302.peerpractice.Model.utils.PasswordHasher;
+import com.cab302.peerpractice.Model.DAOs.IUserDAO;
+import com.cab302.peerpractice.Model.DAOs.UserDAO;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.UserManager;
+import com.cab302.peerpractice.Model.Managers.UserSession;
+import com.cab302.peerpractice.Model.Utils.BcryptHasher;
+import com.cab302.peerpractice.Model.Utils.PasswordHasher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

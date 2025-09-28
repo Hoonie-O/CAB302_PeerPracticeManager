@@ -1,4 +1,4 @@
-import com.cab302.peerpractice.Model.managers.MailService;
+import com.cab302.peerpractice.Model.Managers.MailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

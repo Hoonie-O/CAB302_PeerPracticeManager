@@ -1,12 +1,12 @@
-import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;
-import com.cab302.peerpractice.Model.daos.SessionTaskDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
-import com.cab302.peerpractice.Model.entities.Session;
-import com.cab302.peerpractice.Model.entities.SessionTask;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.SessionCalendarManager;
-import com.cab302.peerpractice.Model.managers.SessionManager;
-import com.cab302.peerpractice.Model.managers.SessionTaskManager;
+import com.cab302.peerpractice.Model.DAOs.SessionCalendarDAO;
+import com.cab302.peerpractice.Model.DAOs.SessionTaskDAO;
+import com.cab302.peerpractice.Model.DAOs.UserDAO;
+import com.cab302.peerpractice.Model.Entities.Session;
+import com.cab302.peerpractice.Model.Entities.SessionTask;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.SessionCalendarManager;
+import com.cab302.peerpractice.Model.Managers.SessionManager;
+import com.cab302.peerpractice.Model.Managers.SessionTaskManager;
 
 import java.time.LocalDateTime;
 import java.util.List;

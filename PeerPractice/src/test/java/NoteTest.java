@@ -1,6 +1,5 @@
-
-import com.cab302.peerpractice.Model.entities.Chapter;
-import com.cab302.peerpractice.Model.entities.Note;
+import com.cab302.peerpractice.Model.Entities.Chapter;
+import com.cab302.peerpractice.Model.Entities.Note;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;

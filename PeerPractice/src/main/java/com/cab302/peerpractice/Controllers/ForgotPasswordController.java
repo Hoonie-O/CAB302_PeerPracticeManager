@@ -1,9 +1,9 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.managers.MailService;
-import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.DAOs.IUserDAO;
+import com.cab302.peerpractice.Model.Managers.MailService;
+import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;

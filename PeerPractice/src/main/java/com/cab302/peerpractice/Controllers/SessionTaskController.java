@@ -1,9 +1,9 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.entities.Session;
-import com.cab302.peerpractice.Model.entities.SessionTask;
-import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.Entities.Session;
+import com.cab302.peerpractice.Model.Entities.SessionTask;
+import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Navigation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

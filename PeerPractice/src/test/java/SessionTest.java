@@ -1,5 +1,5 @@
-import com.cab302.peerpractice.Model.entities.Session;
-import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.Entities.Session;
+import com.cab302.peerpractice.Model.Entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;

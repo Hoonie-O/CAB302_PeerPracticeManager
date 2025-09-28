@@ -1,9 +1,9 @@
-import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.ProfileUpdateService;
-import com.cab302.peerpractice.Model.managers.UserManager;
-import com.cab302.peerpractice.Model.utils.BcryptHasher;
+import com.cab302.peerpractice.Model.DAOs.IUserDAO;
+import com.cab302.peerpractice.Model.DAOs.UserDAO;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.ProfileUpdateService;
+import com.cab302.peerpractice.Model.Managers.UserManager;
+import com.cab302.peerpractice.Model.Utils.BcryptHasher;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
