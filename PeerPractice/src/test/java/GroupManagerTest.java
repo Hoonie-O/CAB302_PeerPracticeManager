@@ -1,5 +1,3 @@
-package com.cab302.peerpractice;
-
 import com.cab302.peerpractice.Exceptions.DuplicateGroupException;
 import com.cab302.peerpractice.Exceptions.InsufficientPermissionsException;
 import com.cab302.peerpractice.Exceptions.UserNotFoundException;

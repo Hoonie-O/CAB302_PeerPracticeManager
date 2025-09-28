@@ -1,5 +1,3 @@
-package com.cab302.peerpractice;
-
 import com.cab302.peerpractice.Model.Entities.Chapter;
 import com.cab302.peerpractice.Model.Entities.Note;
 import org.junit.jupiter.api.Test;

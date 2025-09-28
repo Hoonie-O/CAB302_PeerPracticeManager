@@ -39,10 +39,12 @@ jobs:
         pwd
         echo "Directory contents:"
         ls -la
-        
+        echo "Looking for pom.xml:"
+        find . -name "pom.xml" -type f
+
     - name: Build with Maven
       run: mvn clean compile package -B --file pom.xml
-      
+
     - name: Run tests
       run: mvn test -B --file pom.xml
 

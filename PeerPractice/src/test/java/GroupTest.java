@@ -1,5 +1,3 @@
-package com.cab302.peerpractice;
-
 import com.cab302.peerpractice.Model.Entities.Group;
 import com.cab302.peerpractice.Model.Entities.User;
 import org.junit.jupiter.api.BeforeEach;
