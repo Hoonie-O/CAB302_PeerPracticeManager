@@ -176,15 +176,23 @@ public class NotesDAO implements INotesDAO {
 
     @Override
     public Chapter getChapter(String chapterID) {
+        if (chapterID == null || chapterID.trim().isEmpty()) {
+            throw new IllegalArgumentException("Chapter ID cannot be null or empty");
+        }
+
         String sql = "SELECT * FROM chapters WHERE chapter_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, chapterID);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapChapter(rs);
+                if (rs.next()) {
+                    return mapChapter(rs);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to fetch chapter", e);
         }
+
+        // chapterID valid, but not found in DB
         return null;
     }
 

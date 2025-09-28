@@ -31,8 +31,15 @@ public class NotesManager {
         notesDAO.changeName(noteID,name);
     }
 
-    public void deleteNote(String noteID){
-        if(notesDAO.getNote(noteID) == null) throw new IllegalArgumentException("Note " + noteID + " Does not exist");
+    public void deleteNote(String noteID) {
+        if (noteID == null || noteID.trim().isEmpty()) {
+            throw new IllegalArgumentException("Note ID cannot be null or empty");
+        }
+
+        if (notesDAO.getNote(noteID) == null) {
+            throw new IllegalArgumentException("Note with ID " + noteID + " does not exist");
+        }
+
         notesDAO.deleteNote(noteID);
     }
 
@@ -41,20 +48,41 @@ public class NotesManager {
         return notesDAO.getNotes(groupID);
     }
 
-    public String addChapter(String noteID, String name){
+    public String addChapter(String noteID, String name) {
+        if (noteID == null || noteID.trim().isEmpty()) {
+            throw new IllegalArgumentException("Note ID cannot be null or empty");
+        }
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Chapter name cannot be null or empty");
+        }
+
         Note note = notesDAO.getNote(noteID);
-        if(note == null) throw new IllegalArgumentException("Note " + noteID + " Does not exist");
+        if (note == null) {
+            throw new IllegalArgumentException("Note with ID " + noteID + " does not exist");
+        }
+
+        // Clean/validate chapter name
         name = ValidationUtils.validateAndCleanOthersName(name);
-        Chapter chapter = new Chapter(name,noteID);
-        String chapterID = notesDAO.addChapter(noteID,chapter);
+
+        Chapter chapter = new Chapter(name, noteID);
+        String chapterID = notesDAO.addChapter(noteID, chapter);
         note.addChapter(chapterID);
+
         return chapterID;
     }
 
-    public void changeChapterName(String chapterID, String name){
-        if(notesDAO.getChapter(chapterID) == null) throw new IllegalArgumentException("Chapter " + chapterID + " Does not exist");
+    public void changeChapterName(String chapterID, String name) {
+        if (chapterID == null || chapterID.trim().isEmpty()) {
+            throw new IllegalArgumentException("Chapter ID cannot be null or empty");
+        }
+
+        Chapter chapter = notesDAO.getChapter(chapterID);
+        if (chapter == null) {
+            throw new IllegalArgumentException("Chapter with ID " + chapterID + " does not exist");
+        }
+
         name = ValidationUtils.validateAndCleanOthersName(name);
-        notesDAO.updateChapter(chapterID,"name",name);
+        notesDAO.updateChapter(chapterID, "name", name);
     }
 
     public void changeContent(String chapterID, String content){
