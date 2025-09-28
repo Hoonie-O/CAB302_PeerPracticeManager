@@ -9,7 +9,6 @@ import com.cab302.peerpractice.Model.Managers.Notifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 

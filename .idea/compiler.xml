@@ -12,7 +12,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="PeerPractice" options="" />
+      <module name="PeerPractice" options="-Xlint:-module -Xlint:unchecked" />
     </option>
   </component>
 </project>
