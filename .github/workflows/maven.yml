@@ -30,9 +30,6 @@ jobs:
 
       - name: Generate Javadoc
         run: mvn javadoc:javadoc --file PeerPractice/pom.xml
-
-      - name: Generate Javadoc
-        run: mvn javadoc:javadoc --file PeerPractice/pom.xml
         
       - name: Publish Javadoc
         uses: JamesIves/github-pages-deploy-action@v4
