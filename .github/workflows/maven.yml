@@ -27,7 +27,10 @@ jobs:
           java-version: '21'
           distribution: 'corretto'
           cache: maven
-
+          
+      - name: Build with Maven
+        run: mvn -B package --file PeerPractice/pom.xml
+        
       - name: Generate Javadoc
         run: mvn javadoc:javadoc --file PeerPractice/pom.xml
         
