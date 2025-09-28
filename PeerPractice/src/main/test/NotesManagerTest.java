@@ -1,8 +1,8 @@
-import com.cab302.peerpractice.Model.daos.*;
-import com.cab302.peerpractice.Model.entities.Chapter;
-import com.cab302.peerpractice.Model.entities.Group;
-import com.cab302.peerpractice.Model.entities.Note;
-import com.cab302.peerpractice.Model.managers.NotesManager;
+import com.cab302.peerpractice.Model.DAOs.*;
+import com.cab302.peerpractice.Model.Entities.Chapter;
+import com.cab302.peerpractice.Model.Entities.Group;
+import com.cab302.peerpractice.Model.Entities.Note;
+import com.cab302.peerpractice.Model.Managers.NotesManager;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;

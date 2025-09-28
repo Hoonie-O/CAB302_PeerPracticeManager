@@ -1,12 +1,12 @@
 import com.cab302.peerpractice.Exceptions.DuplicateEmailException;
 import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
 import com.cab302.peerpractice.Exceptions.InvalidPasswordException;
-import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.daos.MockUserDAO;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.UserManager;
-import com.cab302.peerpractice.Model.utils.BcryptHasher;
-import com.cab302.peerpractice.Model.utils.PasswordHasher;
+import com.cab302.peerpractice.Model.DAOs.IUserDAO;
+import com.cab302.peerpractice.Model.DAOs.MockUserDAO;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.UserManager;
+import com.cab302.peerpractice.Model.Utils.BcryptHasher;
+import com.cab302.peerpractice.Model.Utils.PasswordHasher;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,9 +1,9 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.entities.Availability;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.AvailabilityManager;
+import com.cab302.peerpractice.Model.Entities.Availability;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.AvailabilityManager;
 import com.cab302.peerpractice.Navigation;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;

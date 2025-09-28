@@ -1,7 +1,7 @@
-import com.cab302.peerpractice.Model.daos.ISessionCalendarDAO;
-import com.cab302.peerpractice.Model.daos.MockSessionCalendarDAO;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.SessionCalendarManager;
+import com.cab302.peerpractice.Model.DAOs.ISessionCalendarDAO;
+import com.cab302.peerpractice.Model.DAOs.MockSessionCalendarDAO;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.SessionCalendarManager;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;

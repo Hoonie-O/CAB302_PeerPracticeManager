@@ -1,10 +1,10 @@
-import com.cab302.peerpractice.Model.daos.*;
-import com.cab302.peerpractice.Model.entities.Session;
-import com.cab302.peerpractice.Model.entities.SessionTask;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.SessionManager;
-import com.cab302.peerpractice.Model.managers.SessionTaskManager;
-import com.cab302.peerpractice.Model.managers.SessionCalendarManager;
+import com.cab302.peerpractice.Model.DAOs.*;
+import com.cab302.peerpractice.Model.Entities.Session;
+import com.cab302.peerpractice.Model.Entities.SessionTask;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.SessionManager;
+import com.cab302.peerpractice.Model.Managers.SessionTaskManager;
+import com.cab302.peerpractice.Model.Managers.SessionCalendarManager;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDateTime;

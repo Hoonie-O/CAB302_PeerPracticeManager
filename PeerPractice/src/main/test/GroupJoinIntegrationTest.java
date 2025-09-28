@@ -1,9 +1,9 @@
-import com.cab302.peerpractice.Model.daos.GroupDAO;
-import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;
-import com.cab302.peerpractice.Model.daos.SessionTaskDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
-import com.cab302.peerpractice.Model.entities.*;
-import com.cab302.peerpractice.Model.managers.*;
+import com.cab302.peerpractice.Model.DAOs.GroupDAO;
+import com.cab302.peerpractice.Model.DAOs.SessionCalendarDAO;
+import com.cab302.peerpractice.Model.DAOs.SessionTaskDAO;
+import com.cab302.peerpractice.Model.DAOs.UserDAO;
+import com.cab302.peerpractice.Model.Entities.*;
+import com.cab302.peerpractice.Model.Managers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;

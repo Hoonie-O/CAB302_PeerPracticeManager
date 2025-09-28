@@ -1,6 +1,6 @@
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.UserSession;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.UserSession;
 import com.cab302.peerpractice.View;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -38,18 +38,18 @@ module com.cab302.peerpractice {
     exports com.cab302.peerpractice.Exceptions;
 
     // --- Utilities ---
-    exports com.cab302.peerpractice.Model.utils;
-    opens com.cab302.peerpractice.Model.utils to javafx.fxml;
+    exports com.cab302.peerpractice.Model.Utils;
+    opens com.cab302.peerpractice.Model.Utils to javafx.fxml;
 
     // --- DAOs ---
-    exports com.cab302.peerpractice.Model.daos;
-    opens com.cab302.peerpractice.Model.daos to javafx.fxml;
+    exports com.cab302.peerpractice.Model.DAOs;
+    opens com.cab302.peerpractice.Model.DAOs to javafx.fxml;
 
     // --- Managers ---
-    exports com.cab302.peerpractice.Model.managers;
-    opens com.cab302.peerpractice.Model.managers to javafx.fxml;
+    exports com.cab302.peerpractice.Model.Managers;
+    opens com.cab302.peerpractice.Model.Managers to javafx.fxml;
 
     // --- Entities ---
-    exports com.cab302.peerpractice.Model.entities;
-    opens com.cab302.peerpractice.Model.entities to javafx.fxml;
+    exports com.cab302.peerpractice.Model.Entities;
+    opens com.cab302.peerpractice.Model.Entities to javafx.fxml;
 }

@@ -1,10 +1,10 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.entities.Friend;
-import com.cab302.peerpractice.Model.daos.IFriendDAO;
-import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.Entities.Friend;
+import com.cab302.peerpractice.Model.DAOs.IFriendDAO;
+import com.cab302.peerpractice.Model.DAOs.IUserDAO;
+import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Navigation;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleStringProperty;

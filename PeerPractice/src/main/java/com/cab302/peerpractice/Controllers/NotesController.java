@@ -1,10 +1,10 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
-import com.cab302.peerpractice.Model.entities.Chapter;
-import com.cab302.peerpractice.Model.entities.Group;
-import com.cab302.peerpractice.Model.entities.Note;
-import com.cab302.peerpractice.Model.managers.NotesManager;
+import com.cab302.peerpractice.Model.Entities.Chapter;
+import com.cab302.peerpractice.Model.Entities.Group;
+import com.cab302.peerpractice.Model.Entities.Note;
+import com.cab302.peerpractice.Model.Managers.NotesManager;
 import com.cab302.peerpractice.Navigation;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

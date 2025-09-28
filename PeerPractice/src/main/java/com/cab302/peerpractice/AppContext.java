@@ -1,11 +1,11 @@
 package com.cab302.peerpractice;
 
-import com.cab302.peerpractice.Model.daos.*;
-import com.cab302.peerpractice.Model.entities.Group;
-import com.cab302.peerpractice.Model.entities.User;
-import com.cab302.peerpractice.Model.managers.*;
-import com.cab302.peerpractice.Model.utils.BcryptHasher;
-import com.cab302.peerpractice.Model.utils.PasswordHasher;
+import com.cab302.peerpractice.Model.DAOs.*;
+import com.cab302.peerpractice.Model.Entities.Group;
+import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Managers.*;
+import com.cab302.peerpractice.Model.Utils.BcryptHasher;
+import com.cab302.peerpractice.Model.Utils.PasswordHasher;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;

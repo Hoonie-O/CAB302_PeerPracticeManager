@@ -1,8 +1,8 @@
-import com.cab302.peerpractice.Model.daos.AvailabilityDAO;
-import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
-import com.cab302.peerpractice.Model.entities.Availability;
-import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.DAOs.AvailabilityDAO;
+import com.cab302.peerpractice.Model.DAOs.IUserDAO;
+import com.cab302.peerpractice.Model.DAOs.UserDAO;
+import com.cab302.peerpractice.Model.Entities.Availability;
+import com.cab302.peerpractice.Model.Entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class AvailabilityDAOTest {
 
