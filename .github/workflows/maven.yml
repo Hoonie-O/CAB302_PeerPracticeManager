@@ -32,7 +32,7 @@ jobs:
         run: mvn -B package --file PeerPractice/pom.xml
 
       - name: Create Javadoc placeholder
-      run: |
+        run: |
         mkdir -p target/site/apidocs
         cat > target/site/apidocs/index.html << 'EOF'
         <!DOCTYPE html>
