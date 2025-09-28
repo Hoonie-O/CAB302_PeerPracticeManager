@@ -5,33 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/memories/architecture_patterns.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/memories/code_style_conventions.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/memories/current_sprint_status.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/memories/development_environment.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/memories/project_overview.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/memories/suggested_commands.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/memories/task_completion_checklist.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/memories/worklog.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.serena/project.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/.github/workflows/maven.yml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/.github/workflows/maven.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/EditProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/EditProfileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SettingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SettingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SidebarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SidebarController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/SessionCalendarDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/SessionCalendarDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/UserDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/MailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/MailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/ProfileUpdateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/ProfileUpdateService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/UserManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/PeerPracticeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/PeerPracticeApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/editprofile-dialog.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/editprofile-dialog.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/profile-layout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/profile-layout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/MailServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/MailServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/ProfileUpdateServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/ProfileUpdateServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionCalendarDAOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionCalendarDAOTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
