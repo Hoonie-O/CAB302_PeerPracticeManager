@@ -31,11 +31,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file PeerPractice/pom.xml
 
-      - name: Create documentation placeholder
-        run: |
-          mkdir -p target/docs
-          echo '<html><body><h1>PeerPractice Documentation</h1><p>Documentation coming soon.</p></body></html>' > target/docs/index.html
-        
+     
       - name: Generate Javadoc
         run: mvn javadoc:javadoc --file PeerPractice/pom.xml
         
@@ -43,6 +39,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: target/docs
+          folder: target/docs/javadoc
 
           
