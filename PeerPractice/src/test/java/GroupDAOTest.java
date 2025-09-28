@@ -1,5 +1,5 @@
-package com.cab302.peerpractice.Model.daos;
-
+import com.cab302.peerpractice.Model.daos.GroupDAO;
+import com.cab302.peerpractice.Model.daos.UserDAO;
 import com.cab302.peerpractice.Model.entities.Group;
 import com.cab302.peerpractice.Model.entities.GroupJoinRequest;
 import com.cab302.peerpractice.Model.entities.GroupMemberEntity;

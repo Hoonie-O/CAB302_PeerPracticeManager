@@ -1,7 +1,6 @@
-package com.cab302.peerpractice.Model.daos;
-
 import com.cab302.peerpractice.Exceptions.DuplicateEmailException;
 import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
+import com.cab302.peerpractice.Model.daos.UserDAO;
 import com.cab302.peerpractice.Model.entities.Notification;
 import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Model.utils.SQLiteConnection;
