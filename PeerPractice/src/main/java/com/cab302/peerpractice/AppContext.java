@@ -66,13 +66,54 @@ public class AppContext {
 
             this.availabilityManager = new AvailabilityManager(availabilityDAO);
 
-            // --- Optional seeding ---
-            User testUser = userDAO.findUser("username", "Testuser17");
-            if (testUser != null) {
-                Group testGroup = new Group("Example Group", "This is a seeded test group", false,
-                        testUser.getUsername(), LocalDateTime.now());
+            // --- Ensure John Doe exists ---
+            User john = userDAO.findUser("username", "Testuser17");
+            if (john == null) {
+                try {
+                    this.userManager.signUp(
+                            "John",                 // first name
+                            "Doe",                  // last name
+                            "Testuser17",           // username
+                            "testjohn@mail.com",    // email
+                            "Testuser17$",          // password (plain, manager will hash/validate)
+                            "QUT"                   // institution
+                    );
+                    john = userDAO.findUser("username", "Testuser17");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // --- Ensure Jane Doe exists ---
+            User jane = userDAO.findUser("username", "Testuser18");
+            if (jane == null) {
+                try {
+                    this.userManager.signUp(
+                            "Jane",
+                            "Doe",
+                            "Testuser18",
+                            "testjane@mail.com",
+                            "Testuser18$",
+                            "QUT"
+                    );
+                    jane = userDAO.findUser("username", "Testuser18");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // --- Always ensure group exists for John Doe ---
+            if (!groupDAO.existsByName("Example Group")) {
+                Group testGroup = new Group(
+                        "Example Group",
+                        "This is a test group",
+                        false,
+                        john.getUsername(),
+                        LocalDateTime.now()
+                );
                 this.groupDAO.addGroup(testGroup);
             }
+            this.groupDAO.addToGroup(1, john);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialise AppContext", e);
         }
