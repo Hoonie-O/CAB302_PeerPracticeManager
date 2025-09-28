@@ -16,11 +16,8 @@ on:
 
 jobs:
   build:
-
+  
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./PeerPractice
 
     steps:
       - uses: actions/checkout@v3
@@ -32,6 +29,7 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+        working-directory: ./PeerPractice
 
 
 
