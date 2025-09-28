@@ -29,7 +29,5 @@ jobs:
         cache: maven
         
     - name: Build with Maven
-      run: mvn -B package --file
-      working-directory: ./PeerPractice
-      
+      run: mvn -B package --file PeerPractice/pom.xml
 
