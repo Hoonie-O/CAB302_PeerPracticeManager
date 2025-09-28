@@ -1,3 +1,5 @@
+package com.cab302.peerpractice;
+
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Model.Managers.UserSession;

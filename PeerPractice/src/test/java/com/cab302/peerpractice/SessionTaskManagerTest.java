@@ -1,3 +1,5 @@
+package com.cab302.peerpractice;
+
 import com.cab302.peerpractice.Model.DAOs.*;
 import com.cab302.peerpractice.Model.Entities.Session;
 import com.cab302.peerpractice.Model.Entities.SessionTask;

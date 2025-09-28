@@ -1,3 +1,5 @@
+package com.cab302.peerpractice;
+
 import com.cab302.peerpractice.Model.Utils.BcryptHasher;
 import com.cab302.peerpractice.Model.Utils.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;

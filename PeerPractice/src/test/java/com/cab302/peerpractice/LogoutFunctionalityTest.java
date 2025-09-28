@@ -1,3 +1,5 @@
+package com.cab302.peerpractice;
+
 import com.cab302.peerpractice.Model.DAOs.IUserDAO;
 import com.cab302.peerpractice.Model.DAOs.UserDAO;
 import com.cab302.peerpractice.Model.Entities.User;

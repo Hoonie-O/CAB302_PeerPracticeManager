@@ -1,3 +1,5 @@
+package com.cab302.peerpractice;
+
 import com.cab302.peerpractice.Model.DAOs.SessionCalendarDAO;
 import com.cab302.peerpractice.Model.DAOs.SessionTaskDAO;
 import com.cab302.peerpractice.Model.DAOs.UserDAO;

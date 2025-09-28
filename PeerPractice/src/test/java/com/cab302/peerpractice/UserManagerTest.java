@@ -1,3 +1,5 @@
+package com.cab302.peerpractice;
+
 import com.cab302.peerpractice.Exceptions.DuplicateEmailException;
 import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
 import com.cab302.peerpractice.Exceptions.InvalidPasswordException;

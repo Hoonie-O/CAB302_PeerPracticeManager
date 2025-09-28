@@ -1,3 +1,5 @@
+package com.cab302.peerpractice;
+
 import com.cab302.peerpractice.Model.Entities.Availability;
 import com.cab302.peerpractice.Model.Entities.User;
 import org.junit.jupiter.api.BeforeEach;

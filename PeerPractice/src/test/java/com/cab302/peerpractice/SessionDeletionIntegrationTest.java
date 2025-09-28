@@ -1,4 +1,4 @@
-package com.cab302.peerpractice.test;
+package com.cab302.peerpractice;
 
 import com.cab302.peerpractice.Model.DAOs.IUserDAO;
 import com.cab302.peerpractice.Model.DAOs.SessionCalendarDAO;
