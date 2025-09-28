@@ -29,22 +29,60 @@ jobs:
         distribution: 'corretto'
         cache: maven
         
-    - name: Debug - Show environment info
+    - name: Verify repository structure
       run: |
-        echo "Java version:"
-        java -version
-        echo "Maven version:"
-        mvn --version
-        echo "Working directory:"
-        pwd
-        echo "Directory contents:"
+        echo "Repository contents:"
         ls -la
+        echo "Looking for pom.xml:"
+        find . -name "pom.xml" -type f
         
-    - name: Build with Maven
-      run: mvn clean compile package -B --file pom.xml
-      
+    - name: Build project
+      run: |
+        if [ -f "pom.xml" ]; then
+          mvn clean compile -B
+        else
+          POM_PATH=$(find . -name "pom.xml" -type f | head -1)
+          if [ -n "$POM_PATH" ]; then
+            cd "$(dirname "$POM_PATH")"
+            mvn clean compile -B
+          else
+            echo "ERROR: No pom.xml found"
+            exit 1
+          fi
+        fi
+        
     - name: Run tests
-      run: mvn test -B --file pom.xml
+      run: |
+        if [ -f "pom.xml" ]; then
+          mvn test -B
+        else
+          POM_PATH=$(find . -name "pom.xml" -type f | head -1)
+          if [ -n "$POM_PATH" ]; then
+            cd "$(dirname "$POM_PATH")"
+            mvn test -B
+          fi
+        fi
+        
+    - name: Package application
+      run: |
+        if [ -f "pom.xml" ]; then
+          mvn package -B -DskipTests
+        else
+          POM_PATH=$(find . -name "pom.xml" -type f | head -1)
+          if [ -n "$POM_PATH" ]; then
+            cd "$(dirname "$POM_PATH")"
+            mvn package -B -DskipTests
+          fi
+        fi
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: jar-artifacts
+        path: |
+          **/target/*.jar
+          !**/target/*-sources.jar
+          !**/target/*-javadoc.jar
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
