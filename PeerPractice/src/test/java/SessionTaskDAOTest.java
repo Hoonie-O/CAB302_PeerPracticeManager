@@ -5,11 +5,14 @@ import com.cab302.peerpractice.Model.DAOs.UserDAO;
 import com.cab302.peerpractice.Model.Entities.Session;
 import com.cab302.peerpractice.Model.Entities.SessionTask;
 import com.cab302.peerpractice.Model.Entities.User;
-
+import com.cab302.peerpractice.Model.Utils.SQLiteConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,9 +27,14 @@ public class SessionTaskDAOTest {
     private SessionCalendarDAO sessionStorage;
     private SessionTask testTask1;
     private SessionTask testTask2;
+    private Connection connection;
 
     @BeforeEach
     void setUp() throws SQLException {
+        // fresh in-memory DB
+        connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+        SQLiteConnection.setInstance(connection);
+
         userDao = new UserDAO();
         storage = new SessionTaskDAO(userDao);
         sessionStorage = new SessionCalendarDAO(userDao);
@@ -52,15 +60,11 @@ public class SessionTaskDAOTest {
                                   testUser2.getUserId(),
                                   testUser1.getUserId());
     }
-    
+
     @AfterEach
-    void tearDown() {
-        storage.clearAllTasks();
-        sessionStorage.clearAllSessions();
-        try {
-            userDao.deleteUser(testUser1.getUserId());
-            userDao.deleteUser(testUser2.getUserId());
-        } catch (Exception e) {
+    void tearDown() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close(); // wipes the in-memory DB
         }
     }
 
