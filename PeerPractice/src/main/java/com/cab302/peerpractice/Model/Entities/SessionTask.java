@@ -24,6 +24,9 @@ public class SessionTask {
         this.sessionId = Objects.requireNonNull(sessionId, "Session ID cannot be null");
         this.title = Objects.requireNonNull(title, "Task title cannot be null");
         this.deadline = Objects.requireNonNull(deadline, "Deadline cannot be null");
+        if (deadline.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Deadline cannot be in the past");
+        }
         this.assigneeId = Objects.requireNonNull(assigneeId, "Assignee ID cannot be null");
         this.createdBy = Objects.requireNonNull(createdBy, "Created by cannot be null");
         this.createdAt = LocalDateTime.now();

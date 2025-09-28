@@ -139,7 +139,8 @@ public class SimplifiedIntegrationTest {
 
     @Test
     void testUserCRUDOperations() throws SQLException {
-        User newUser = new User("Charlie", "Brown", "charlie_crud", "charlie@example.com", "hashedpass", "QUT");
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        User newUser = new User("Charlie", "Brown", "charlie_crud_" + timestamp, "charlie" + timestamp + "@example.com", "hashedpass", "QUT");
         boolean added = userDao.addUser(newUser);
         assertTrue(added);
         
@@ -147,7 +148,7 @@ public class SimplifiedIntegrationTest {
         assertNotNull(retrieved);
         assertEquals("Charlie", retrieved.getFirstName());
         
-        boolean updated = userDao.updateValue(newUser.getUserId(), "first_name", "Charles");
+        boolean updated = userDao.updateValue(newUser.getUsername(), "first_name", "Charles");
         assertTrue(updated);
         
         User updatedUser = userDao.findUserById(newUser.getUserId());

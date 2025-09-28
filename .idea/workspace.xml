@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/PeerPracticeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/PeerPracticeApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/markdown.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/CALENDAR_TODO.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/GroupDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/GroupDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/MockGroupDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/MockGroupDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/MockUserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/MockUserDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/SessionCalendarDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/SessionCalendarDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Entities/SessionTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Entities/SessionTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/GroupManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/GroupManagerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/NoteTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/NoteTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionTaskDAOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionTaskDAOTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SimplifiedIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SimplifiedIntegrationTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +60,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.PeerPracticeApplication.executor": "Run",
-    "JUnit.java in PeerPractice.executor": "Run",
+    "JUnit.java in PeerPractice.executor": "Coverage",
     "Maven.PeerPractice [test].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -119,6 +130,6 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1759055403203" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1759058724024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

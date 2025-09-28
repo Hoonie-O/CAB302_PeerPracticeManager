@@ -179,10 +179,17 @@ public class SessionTaskDAOTest {
 
     @Test
     void testGetOverdueTasks() {
-        SessionTask overdueTask = new SessionTask(testSession.getSessionId(), "Overdue Task",
-                                                LocalDateTime.now().minusDays(1), // Past deadline
-                                                testUser1.getUserId(),
-                                                testUser1.getUserId());
+        // Use storage constructor to bypass validation for testing overdue tasks
+        SessionTask overdueTask = new SessionTask(
+                "overdue-task-id",
+                testSession.getSessionId(),
+                "Overdue Task",
+                LocalDateTime.now().minusDays(1), // Past deadline
+                testUser1.getUserId(),
+                testUser1.getUserId(),
+                LocalDateTime.now().minusDays(2), // Created earlier
+                false
+        );
         storage.addTask(overdueTask);
         storage.addTask(testTask1); // Future deadline
 

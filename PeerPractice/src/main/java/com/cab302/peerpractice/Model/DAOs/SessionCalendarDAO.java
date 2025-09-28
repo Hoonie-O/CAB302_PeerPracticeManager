@@ -152,12 +152,12 @@ public class SessionCalendarDAO implements ISessionCalendarDAO {
         }
         try (PreparedStatement ps = connection.prepareStatement("DELETE FROM sessions WHERE session_id=?")) {
             ps.setString(1, session.getSessionId());
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
             try (PreparedStatement del = connection.prepareStatement("DELETE FROM session_participants WHERE session_id=?")) {
                 del.setString(1, session.getSessionId());
                 del.executeUpdate();
             }
-            return true;
+            return rowsAffected > 0;
         } catch (SQLException e) {
             return false;
         }

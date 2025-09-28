@@ -190,4 +190,12 @@ public class MockUserDAO implements IUserDAO {
         if (list == null) return false;
         return list.remove(notification.getMessage());  // compare by message text
     }
+
+    /**
+     * Clear all data from the mock DAO for testing purposes
+     */
+    public void clear() {
+        users.clear();
+        notifications.clear();
+    }
 }

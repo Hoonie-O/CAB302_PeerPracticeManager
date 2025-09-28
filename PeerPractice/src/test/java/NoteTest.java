@@ -50,7 +50,7 @@ public class NoteTest {
     @Test
     public void TestNullChaptersUponCreation(){
         Note note = new Note("name",1);
-        assertNull(note.getChapters());
+        assertTrue(note.getChapters().isEmpty());
     }
 
     @Test
@@ -58,8 +58,8 @@ public class NoteTest {
         Note note = new Note("name",1);
         Chapter chapter = new Chapter("name","1");
         note.addChapter("1");
-        assertEquals(1, note.getChapters());
-        assertSame(chapter, note.getChapters().getFirst());
+        assertEquals(1, note.getChapters().size());
+        assertEquals("1", note.getChapters().get(0));
     }
 
     @Test

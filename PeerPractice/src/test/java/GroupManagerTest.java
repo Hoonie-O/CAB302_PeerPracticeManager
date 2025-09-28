@@ -32,6 +32,15 @@ public class GroupManagerTest {
         // Use mocks
         userDAO = new MockUserDAO();
         groupDAO = new MockGroupDAO(userDAO);
+
+        // Clear mock state to prevent pollution between tests
+        if (groupDAO instanceof MockGroupDAO) {
+            ((MockGroupDAO) groupDAO).clear();
+        }
+        if (userDAO instanceof MockUserDAO) {
+            ((MockUserDAO) userDAO).clear();
+        }
+
         notifier = new Notifier(userDAO);
         groupManager = new GroupManager(groupDAO, notifier, userDAO);
 
@@ -43,8 +52,8 @@ public class GroupManagerTest {
         user = new User("Seiji", "Sato", USERNAME, "email" + ts + "@email.com", "masfsa", "qut");
         userDAO.addUser(user);
 
+        // Don't create the group in setup - let individual tests create it
         group = new Group(NAME, DESCRIPTION, false, user.getUsername(), LocalDateTime.now());
-        groupDAO.addGroup(group);
     }
 
     @Test
@@ -168,8 +177,16 @@ public class GroupManagerTest {
     void testRequireApprovalNormal() {
         try {
             groupManager.createGroup(NAME, DESCRIPTION, false, user);
-            groupManager.requireApproval(group, true);
-            assertTrue(group.isRequire_approval());
+            // Find the created group to get its ID
+            List<Group> groups = groupDAO.getAllGroups();
+            Group createdGroup = groups.stream()
+                .filter(g -> g.getName().equals(NAME))
+                .findFirst()
+                .orElse(null);
+            assertNotNull(createdGroup);
+
+            groupManager.requireApproval(createdGroup, true);
+            assertTrue(createdGroup.isRequire_approval());
         } catch (Exception e) {
             fail();
         }
@@ -177,25 +194,39 @@ public class GroupManagerTest {
 
     @Test
     void testAddMemberNormal() {
-        User user1 = new User("Cristiano", "Ronaldo", "cristiano7", "cr7@email.com", "asfasfaf", "QUT");
-        userDAO.addUser(user1);
-        assertDoesNotThrow(() -> groupManager.addMember(group, user, "cristiano7"));
+        try {
+            groupManager.createGroup(NAME, DESCRIPTION, false, user);
+            List<Group> groups = groupDAO.getAllGroups();
+            Group createdGroup = groups.get(0);
+
+            User user1 = new User("Cristiano", "Ronaldo", "cristiano7", "cr7@email.com", "asfasfaf", "QUT");
+            userDAO.addUser(user1);
+            assertDoesNotThrow(() -> groupManager.addMember(createdGroup, user, "cristiano7"));
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
-    void testAddMemberNonExistent() {
-        assertThrows(UserNotFoundException.class, () -> groupManager.addMember(group, user, "someone"));
+    void testAddMemberNonExistent() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+        assertThrows(UserNotFoundException.class, () -> groupManager.addMember(createdGroup, user, "someone"));
     }
 
     @Test
-    void testAddMemberNotOwner() {
+    void testAddMemberNotOwner() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
         User user1 = new User("Cristiano", "Ronaldo", "CRistiano7", "cr7@email.com", "asfsfafa", "QUT");
-        assertThrows(InsufficientPermissionsException.class, () -> groupManager.addMember(group, user1, USERNAME));
+        assertThrows(InsufficientPermissionsException.class, () -> groupManager.addMember(createdGroup, user1, USERNAME));
     }
 
     @Test
-    void testAddMemberNullOwner() {
-        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group, null, "someone"));
+    void testAddMemberNullOwner() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(createdGroup, null, "someone"));
     }
 
     @Test
@@ -204,12 +235,16 @@ public class GroupManagerTest {
     }
 
     @Test
-    void testAddMemberNullToAdd() {
-        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group, user, null));
+    void testAddMemberNullToAdd() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(createdGroup, user, null));
     }
 
     @Test
-    void testAddMemberEmptyToAdd() {
-        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group, user, ""));
+    void testAddMemberEmptyToAdd() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(createdGroup, user, ""));
     }
 }

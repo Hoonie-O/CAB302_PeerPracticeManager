@@ -447,7 +447,15 @@ public class GroupDAO implements IGroupDAO {
 
     @Override
     public void createJoinRequest(int id, String userId) {
-
+        String sql = "INSERT INTO group_join_requests (group_id, user_id, status, requested_at) VALUES (?, ?, 'pending', ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.setString(2, userId);
+            ps.setString(3, LocalDateTime.now().toString());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to create join request", e);
+        }
     }
 
     // -------------------- MAP ROW --------------------
