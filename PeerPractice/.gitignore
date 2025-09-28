@@ -40,3 +40,6 @@ build/
 ### Database ###
 *.db
 *.sqbpro
+
+### Documentation ###
+/docs/

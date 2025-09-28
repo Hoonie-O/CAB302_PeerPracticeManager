@@ -4,7 +4,7 @@ import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Model.Managers.UserManager;
 import com.cab302.peerpractice.Navigation;
-import com.cab302.peerpractice.Utilities.DateTimeFormatUtils;
+import com.cab302.peerpractice.Model.Utils.DateTimeFormatUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -12,27 +12,76 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**
+ * <hr>
+ * Controller for managing user settings and preferences.
+ *
+ * <p>This controller handles user configuration options including date/time format preferences
+ * and password changes. It provides live previews of format selections and validates
+ * all changes before applying them.
+ *
+ * <p> Key features include:
+ * <ul>
+ *   <li>Date and time format customization with live preview</li>
+ *   <li>Secure password change with current password verification</li>
+ *   <li>Input validation and error handling</li>
+ *   <li>User preference persistence</li>
+ * </ul>
+ *
+ * @see BaseController
+ * @see UserManager
+ * @see DateTimeFormatUtils
+ */
 public class SettingController extends BaseController {
 
+    /** <hr> Combo box for selecting date format preference. */
     @FXML private ComboBox<String> dateFormatBox;
+    /** <hr> Combo box for selecting time format preference. */
     @FXML private ComboBox<String> timeFormatBox;
+    /** <hr> Label displaying date format preview. */
     @FXML private Label dateFormatPreview;
+    /** <hr> Label displaying time format preview. */
     @FXML private Label timeFormatPreview;
+    /** <hr> Field for entering current password. */
     @FXML private PasswordField oldPasswordField;
+    /** <hr> Field for entering new password. */
     @FXML private PasswordField newPasswordField;
+    /** <hr> Field for confirming new password. */
     @FXML private PasswordField confirmPasswordField;
 
+    /** <hr> The stage containing this controller. */
     private Stage stage;
+    /** <hr> Manager for handling user data operations. */
     private UserManager userManager;
 
+    /**
+     * <hr>
+     * Constructs a new SettingController with the specified context and navigation.
+     *
+     * @param ctx the application context providing access to user session and managers
+     * @param nav the navigation controller for screen transitions
+     */
     public SettingController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 
+    /**
+     * <hr>
+     * Sets the stage for this controller.
+     *
+     * @param stage the stage containing this controller
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * <hr>
+     * Initializes the controller after FXML loading is complete.
+     *
+     * <p>Sets up format preview listeners and loads current user preferences
+     * into the interface components.
+     */
     @FXML
     private void initialize() {
         // Add listeners for live preview
@@ -50,6 +99,13 @@ public class SettingController extends BaseController {
         loadCurrentUserPreferences();
     }
 
+    /**
+     * <hr>
+     * Updates the date format preview with the current selection.
+     *
+     * <p>Displays a live example of the selected date format using the current date
+     * and validates the format pattern.
+     */
     private void updateDateFormatExample() {
         String format = dateFormatBox.getValue();
         if (format == null) {
@@ -65,6 +121,13 @@ public class SettingController extends BaseController {
         }
     }
 
+    /**
+     * <hr>
+     * Updates the time format preview with the current selection.
+     *
+     * <p>Displays a live example of the selected time format using the current time
+     * and validates the format pattern.
+     */
     private void updateTimeFormatExample() {
         String format = timeFormatBox.getValue();
         if (format == null) {
@@ -80,6 +143,13 @@ public class SettingController extends BaseController {
         }
     }
 
+    /**
+     * <hr>
+     * Loads current user preferences into the interface.
+     *
+     * <p>Retrieves the current user's date and time format preferences from the session
+     * and populates the corresponding form fields with preview examples.
+     */
     private void loadCurrentUserPreferences() {
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (currentUser != null) {
@@ -97,6 +167,14 @@ public class SettingController extends BaseController {
         updateTimeFormatExample();
     }
 
+    /**
+     * <hr>
+     * Saves user settings and preferences.
+     *
+     * <p>Validates all input fields, processes password changes if requested,
+     * and persists all settings to the database. Displays appropriate success
+     * or error messages to the user.
+     */
     @FXML
     private void onSave() {
         try {
@@ -149,6 +227,17 @@ public class SettingController extends BaseController {
         onClose();
     }
 
+    /**
+     * <hr>
+     * Handles password change validation and execution.
+     *
+     * <p>Validates all password fields meet requirements, verifies the current password,
+     * and updates the user's password if all validations pass.
+     *
+     * @param currentUser the current user changing their password
+     * @return true if password was successfully changed, false if no change was requested
+     * @throws Exception if password validation fails or change operation fails
+     */
     private boolean handlePasswordChange(User currentUser) throws Exception {
         String oldPassword = oldPasswordField.getText();
         String newPassword = newPasswordField.getText();
@@ -156,8 +245,8 @@ public class SettingController extends BaseController {
 
         // If no password fields are filled, skip password change
         if ((oldPassword == null || oldPassword.trim().isEmpty()) &&
-            (newPassword == null || newPassword.trim().isEmpty()) &&
-            (confirmPassword == null || confirmPassword.trim().isEmpty())) {
+                (newPassword == null || newPassword.trim().isEmpty()) &&
+                (confirmPassword == null || confirmPassword.trim().isEmpty())) {
             return false;
         }
 
@@ -205,6 +294,14 @@ public class SettingController extends BaseController {
         return true;
     }
 
+    /**
+     * <hr>
+     * Displays an alert dialog with the specified parameters.
+     *
+     * @param title the alert dialog title
+     * @param message the alert dialog message content
+     * @param type the type of alert to display
+     */
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -213,6 +310,13 @@ public class SettingController extends BaseController {
         alert.showAndWait();
     }
 
+    /**
+     * <hr>
+     * Closes the settings dialog.
+     *
+     * <p>Closes the stage containing this controller, returning the user
+     * to the previous interface.
+     */
     @FXML
     private void onClose() {
         if (stage != null)

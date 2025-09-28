@@ -5,6 +5,7 @@ import com.cab302.peerpractice.Model.Managers.SessionPersistence;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+
 public class PeerPracticeApplication extends Application {
     @Override
     public void start(Stage stage) {

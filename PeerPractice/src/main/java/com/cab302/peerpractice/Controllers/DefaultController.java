@@ -9,16 +9,57 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+/**
+ * <hr>
+ * Controller for the default/main dashboard functionality.
+ *
+ * <p>This controller handles the primary user interface for group management
+ * operations including creating new study groups and joining existing groups.
+ * It serves as the main entry point for group-related activities.
+ *
+ * <p>Key features include:
+ * <ul>
+ *   <li>Study group creation with customizable settings</li>
+ *   <li>Group joining via unique group codes</li>
+ *   <li>Dialog-based group management interfaces</li>
+ *   <li>Integration with GroupManager for data operations</li>
+ * </ul>
+ *
+ * @see Group
+ * @see SidebarController
+ * @see View
+ */
 public class DefaultController extends SidebarController {
-
+    /** <hr> Vertical box container for the default menu options. */
     @FXML public VBox defaultMenu;
+    /** <hr> Button for initiating group creation process. */
     @FXML public Button createGroupButton;
+    /** <hr> Button for initiating group joining process. */
     @FXML  public Button joinGroupButton;
 
+    /**
+     * <hr>
+     * Constructs a new DefaultController with the specified context and navigation.
+     *
+     * @param ctx the application context providing access to user session and managers
+     * @param nav the navigation controller for screen transitions
+     */
     public DefaultController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 
+    /**
+     * <hr>
+     * Handles the group creation process.
+     *
+     * <p>Displays a dialog for users to input group details including name,
+     * description, and approval requirements. Validates input and creates
+     * a new study group upon successful completion.
+     *
+     * <p>Upon successful group creation, navigates to the groups view and
+     * displays a confirmation message. Shows error alerts for any failures
+     * during the creation process.
+     */
     @FXML
     private void onCreateGroup() {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -59,6 +100,18 @@ public class DefaultController extends SidebarController {
         });
     }
 
+    /**
+     * <hr>
+     * Handles the group joining process.
+     *
+     * <p>Displays a dialog for users to input group codes and attempts to
+     * join matching groups. Supports repeated attempts if invalid codes
+     * are provided or groups are not found.
+     *
+     * <p>Process includes group lookup by code, validation checks, and
+     * group membership requests. Navigates to groups view upon successful
+     * join and displays appropriate status messages.
+     */
     @FXML
     private void onJoinGroup() {
         boolean joined = false;

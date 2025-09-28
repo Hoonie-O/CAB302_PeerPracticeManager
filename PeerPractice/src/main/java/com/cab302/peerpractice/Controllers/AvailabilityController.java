@@ -5,6 +5,8 @@ import com.cab302.peerpractice.Model.Entities.Availability;
 import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Model.Managers.AvailabilityManager;
 import com.cab302.peerpractice.Navigation;
+import com.cab302.peerpractice.Model.Utils.DateTimeFormatUtils;
+
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,21 +24,62 @@ import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
+/**
+ * <hr>
+ * Controller for managing user availability calendar functionality.
+ *
+ * <p>This controller handles the display and management of user availability schedules
+ * in a monthly calendar view. Users can view, add, edit, and delete availability
+ * entries for specific dates and times.
+ *
+ * <p> Key features include:
+ * <ul>
+ *   <li>Monthly calendar grid display with navigation</li>
+ *   <li>Color-coded availability indicators</li>
+ *   <li>Dialog-based availability management</li>
+ *   <li>Integration with AvailabilityManager for data persistence</li>
+ * </ul>
+ *
+ * @see Availability
+ * @see AvailabilityManager
+ * @see SidebarController
+ */
 public class AvailabilityController extends SidebarController {
+    /** <hr> Label displaying the current month and year. */
     @FXML private Label monthYearLabel;
+    /** <hr> Grid layout container for displaying the calendar days. */
     @FXML private GridPane calendarGrid;
+    /** <hr> Button for navigating to the previous month. */
     @FXML private Button prevButton;
+    /** <hr> Button for navigating to the next month. */
     @FXML private Button nextButton;
 
+    /** <hr> The currently displayed month and year. */
     private YearMonth currentYearMonth;
+
+    /** <hr> Manager for handling availability data operations. */
     private AvailabilityManager availabilityManager;
 
+    /**
+     * <hr>
+     * Constructs a new AvailabilityController with the specified context and navigation.
+     *
+     * @param ctx the application context providing access to user session and managers
+     * @param nav the navigation controller for screen transitions
+     */
     public AvailabilityController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
         this.availabilityManager = ctx.getAvailabilityManager();
     }
 
+    /**
+     * <hr>
+     *
+     * Initializes the controller after FXML loading is complete.
+     *
+     * <p>Sets up the initial calendar view with the current month and year,
+     * and calls the parent class initialization.
+     */
     @FXML
     public void initialize() {
         super.initialize();
@@ -44,23 +87,56 @@ public class AvailabilityController extends SidebarController {
         updateCalendarView();
     }
 
+    /**
+     * <hr>
+     *
+     * Rebuilds the calendar UI for the currently selected month.
+     *
+     * <p>Clears all cells, lays out day headers and week rows, and injects
+     * availability indicators for the signed-in user.
+     *
+     */
     private void updateCalendarView() {
         monthYearLabel.setText(currentYearMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy")));
         populateCalendarGrid();
     }
 
+    /**
+     * <hr>
+     *
+     * Navigates to the previous month and updates the calendar view.
+     *
+     * <p>Decrements the current month by one and refreshes the calendar display
+     * to show the previous month's availability data.
+     */
     @FXML
     private void onPreviousMonth() {
         currentYearMonth = currentYearMonth.minusMonths(1);
         updateCalendarView();
     }
 
+    /**
+     * <hr>
+     *
+     * Navigates to the next month and updates the calendar view.
+     *
+     * <p>Increments the current month by one and refreshes the calendar display
+     * to show the next month's availability data.
+     */
     @FXML
     private void onNextMonth() {
         currentYearMonth = currentYearMonth.plusMonths(1);
         updateCalendarView();
     }
 
+    /**
+     * <hr>
+     *
+     * Populates the calendar grid with day cells for the current month.
+     *
+     * <p>Creates and arranges day headers (Sun-Sat) and individual day cells
+     * for the current month, including availability indicators for each date.
+     */
     private void populateCalendarGrid() {
         calendarGrid.getChildren().clear();
 
@@ -95,6 +171,16 @@ public class AvailabilityController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Creates a visual cell representing a single day in the calendar.
+     *
+     * <p>Each day cell displays the date number and any availability entries
+     * for that date. Today's date is highlighted with special styling.
+     *
+     * @param date the date to create the cell for
+     * @return a VBox containing the day cell with date label and availability indicators
+     */
     private VBox createDayCell(LocalDate date) {
         VBox dayCell = new VBox();
         dayCell.setPrefWidth(80);
@@ -135,6 +221,13 @@ public class AvailabilityController extends SidebarController {
         return dayCell;
     }
 
+    /**
+     * <hr>
+     * Converts a color label string to a JavaFX Color object.
+     *
+     * @param colorLabel the color label string (e.g., "RED", "GREEN")
+     * @return the corresponding Color object, defaults to BLUE if unknown
+     */
     private Color getColorForLabel(String colorLabel) {
         return switch (colorLabel.toUpperCase()) {
             case "RED" -> Color.RED;
@@ -145,6 +238,15 @@ public class AvailabilityController extends SidebarController {
         };
     }
 
+    /**
+     * <hr>
+     * Shows the appropriate dialog when a day cell is clicked.
+     *
+     * <p>If the date has no availability entries, shows the add availability dialog.
+     * If entries exist, shows the availability list dialog.
+     *
+     * @param date the date that was clicked
+     */
     private void showItemDialog(LocalDate date) {
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (currentUser != null) {
@@ -161,6 +263,15 @@ public class AvailabilityController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Displays a dialog for adding new availability for a specific date.
+     *
+     * <p>Allows users to set title, description, start/end times, and color
+     * for a new availability entry.
+     *
+     * @param date the date to add availability for
+     */
     private void showAddAvailabilityDialog(LocalDate date) {
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (currentUser == null) return;
@@ -234,6 +345,16 @@ public class AvailabilityController extends SidebarController {
         });
     }
 
+    /**
+     * <hr>
+     * Displays a dialog listing all availability entries for a specific date.
+     *
+     * <p>Shows details of each availability entry and provides options to
+     * delete entries or add more availability.
+     *
+     * @param date the date to show availability for
+     * @param availabilities list of availability entries for the date
+     */
     private void showAvailabilityListDialog(LocalDate date, List<Availability> availabilities) {
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Availability for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
@@ -286,6 +407,12 @@ public class AvailabilityController extends SidebarController {
         dialog.showAndWait();
     }
 
+    /**
+     * <hr>
+     * Displays a confirmation dialog for deleting an availability entry.
+     *
+     * @param availability the availability entry to be deleted
+     */
     private void showDeleteAvailabilityDialog(Availability availability) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Availability");

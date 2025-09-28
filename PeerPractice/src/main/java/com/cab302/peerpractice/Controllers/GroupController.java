@@ -31,25 +31,80 @@ import java.util.List;
 
 import static javax.swing.JColorChooser.showDialog;
 
+/**
+ * <hr>
+ * Controller for managing comprehensive group functionality and user interface.
+ *
+ * <p>This controller serves as the main hub for group-related operations including
+ * group creation, membership management, session scheduling, and collaborative features.
+ * It coordinates multiple tabbed interfaces for different group functionalities.
+ *
+ * <p>Key features include:
+ * <ul>
+ *   <li>Multi-tab group interface (Calendar, Sessions, Notes, Chat, Files)</li>
+ *   <li>Group creation and membership management</li>
+ *   <li>Session scheduling and task management</li>
+ *   <li>Member invitation and role management</li>
+ *   <li>Integration with various group management controllers</li>
+ * </ul>
+ *
+ * @see Group
+ * @see Session
+ * @see SidebarController
+ */
 public class GroupController extends SidebarController {
+    /** <hr> Tab pane containing all group management interfaces. */
     @FXML private TabPane groupTabs;
+    /** <hr> List view for displaying user's groups. */
     @FXML private ListView<Group> groupListView;
+    /** <hr> Label displaying the currently selected group name. */
     @FXML private Label groupNameLabel;
+    /** <hr> Button for adding new groups or joining existing ones. */
     @FXML private Button addGroupButton;
+    /** <hr> Button for toggling group sorting preferences. */
     @FXML private Button sortGroupsButton;
-  
+
+    /** <hr> Table view for displaying group members and their roles. */
     @FXML private TableView<GroupMember> membersTable;
+    /** <hr> List view for displaying group study sessions. */
     @FXML private ListView<Session> sessionsListView;
+
+    /**
+     * <hr>
+     * Controller for managing group calendar functionality.
+     */
     private GroupCalendarController groupCalendarController;
+    /**
+     * <hr>
+     * Controller for managing group notes functionality.
+     */
     private NotesController notesController;
 
-
+    /**
+     * <hr>
+     * Flag indicating current group sorting preference (alphabetical vs date).
+     */
     private boolean sortAlphabetical = false;
 
+    /**
+     * <hr>
+     * Constructs a new GroupController with the specified context and navigation.
+     *
+     * @param ctx the application context providing access to user session and managers
+     * @param nav the navigation controller for screen transitions
+     */
     public GroupController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 
+    /**
+     * <hr>
+     * Initializes the controller after FXML loading is complete.
+     *
+     * <p>Sets up the group management interface including group list population,
+     * tab selection handling, and initial content loading for the first group.
+     * Calls parent class initialization for common sidebar setup.
+     */
     @FXML
     public void initialize() {
         super.initialize();
@@ -101,6 +156,16 @@ public class GroupController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Loads appropriate content for the specified tab based on group selection.
+     *
+     * <p>Dynamically loads and configures tab content for different group
+     * management functionalities including calendar, sessions, notes, chat, and files.
+     *
+     * @param tabName the name of the tab to load content for
+     * @param group the group to load content for
+     */
     private void loadTabContent(String tabName, Group group) {
         try {
             Tab selectedTab = groupTabs.getSelectionModel().getSelectedItem();
@@ -129,6 +194,16 @@ public class GroupController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Loads calendar content for the specified group and tab.
+     *
+     * <p>Initializes and configures the group calendar interface with
+     * session management capabilities for the selected group.
+     *
+     * @param tab the tab to load calendar content into
+     * @param group the group to load calendar for
+     */
     private void loadCalendarContent(Tab tab, Group group) {
         try {
             if (groupCalendarController == null) {
@@ -145,6 +220,16 @@ public class GroupController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Loads notes content for the specified group and tab.
+     *
+     * <p>Initializes and configures the group notes interface for
+     * collaborative note-taking within the selected group.
+     *
+     * @param tab the tab to load notes content into
+     * @param group the group to load notes for
+     */
     private void loadNotesContent(Tab tab, Group group) {
         try {
             if (notesController == null) {
@@ -161,6 +246,16 @@ public class GroupController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Loads sessions content for the specified group and tab.
+     *
+     * <p>Configures the sessions list interface with study session management
+     * capabilities and navigation options for the selected group.
+     *
+     * @param tab the tab to load sessions content into
+     * @param group the group to load sessions for
+     */
     private void loadSessionsContent(Tab tab, Group group) {
         VBox sessionsContent = new VBox(10);
         sessionsContent.setPadding(new Insets(20));
@@ -181,6 +276,16 @@ public class GroupController extends SidebarController {
         tab.setContent(sessionsContent);
     }
 
+    /**
+     * <hr>
+     * Loads chat content for the specified group and tab.
+     *
+     * <p>Configures the group chat interface placeholder with notification
+     * about upcoming chat functionality.
+     *
+     * @param tab the tab to load chat content into
+     * @param group the group to load chat for
+     */
     private void loadChatContent(Tab tab, Group group) {
         VBox chatContent = new VBox(10);
         chatContent.setPadding(new Insets(20));
@@ -192,6 +297,16 @@ public class GroupController extends SidebarController {
         tab.setContent(chatContent);
     }
 
+    /**
+     * <hr>
+     * Loads files content for the specified group and tab.
+     *
+     * <p>Configures the file sharing interface placeholder with notification
+     * about upcoming file sharing functionality.
+     *
+     * @param tab the tab to load files content into
+     * @param group the group to load files for
+     */
     private void loadFilesContent(Tab tab, Group group) {
         VBox filesContent = new VBox(10);
         filesContent.setPadding(new Insets(20));
@@ -203,6 +318,16 @@ public class GroupController extends SidebarController {
         tab.setContent(filesContent);
     }
 
+    /**
+     * <hr>
+     * Updates the sessions list view with current group sessions.
+     *
+     * <p>Retrieves and displays all study sessions for the specified group
+     * with interactive elements for session management.
+     *
+     * @param sessionsList the list view to update with session data
+     * @param group the group to retrieve sessions for
+     */
     private void updateSessionsListView(ListView<Session> sessionsList, Group group) {
         List<Session> groupSessions = ctx.getSessionCalendarManager().getSessionsForGroup(group);
 
@@ -222,8 +347,8 @@ public class GroupController extends SidebarController {
                     titleLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
 
                     Label timeLabel = new Label(
-                        session.getStartTime().format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")) +
-                        " - " + session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                            session.getStartTime().format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")) +
+                                    " - " + session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
                     );
                     timeLabel.setFont(Font.font("System", 10));
 
@@ -246,6 +371,14 @@ public class GroupController extends SidebarController {
         sessionsList.setItems(FXCollections.observableArrayList(groupSessions));
     }
 
+    /**
+     * <hr>
+     * Opens the group creation dialog for creating new study groups.
+     *
+     * <p>Displays a modal dialog for users to input group details including
+     * name, description, and join approval settings. Creates the group and
+     * automatically adds the creator as a member upon successful completion.
+     */
     private void openCreateGroupDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Create Study Group");
@@ -298,6 +431,14 @@ public class GroupController extends SidebarController {
         });
     }
 
+    /**
+     * <hr>
+     * Opens the group joining dialog for joining existing study groups.
+     *
+     * <p>Displays a modal dialog for users to enter group codes and attempts
+     * to join the matching group. Provides feedback for invalid codes and
+     * successful join operations.
+     */
     private void openJoinGroupDialog() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Join Study Group");
@@ -327,8 +468,18 @@ public class GroupController extends SidebarController {
         });
     }
 
+    /**
+     * <hr>
+     * Handles the add group button action.
+     *
+     * <p>Displays a confirmation dialog allowing users to choose between
+     * creating a new group or joining an existing group, then launches
+     * the appropriate dialog based on user selection.
+     *
+     * @param event the action event triggered by the button click
+     */
     @FXML
-    private void onAddGroup() {
+    private void onAddGroup(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Add Group");
         alert.setHeaderText("Would you like to create a new group or join an existing one?");
@@ -345,6 +496,14 @@ public class GroupController extends SidebarController {
         });
     }
 
+    /**
+     * <hr>
+     * Refreshes the group list display with current user groups.
+     *
+     * <p>Retrieves the current user's groups from the database and updates
+     * the list view. Applies current sorting preference and selects the
+     * first group if available.
+     */
     private void refreshGroupList() {
         User currentUser = ctx.getUserSession().getCurrentUser();
         List<Group> userGroups = ctx.getGroupDAO().searchByUser(currentUser);
@@ -360,6 +519,15 @@ public class GroupController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Handles group sorting toggle action.
+     *
+     * <p>Toggles between alphabetical and creation date sorting for the
+     * group list and updates the sort button text to reflect current mode.
+     *
+     * @param event the action event triggered by the sort button click
+     */
     @FXML
     private void onSortGroups(ActionEvent event) {
         sortAlphabetical = !sortAlphabetical;
@@ -371,7 +539,15 @@ public class GroupController extends SidebarController {
         }
     }
 
-
+    /**
+     * <hr>
+     * Handles member invitation functionality.
+     *
+     * <p>Opens a modal dialog for inviting new members to the currently
+     * selected group. Loads and displays the invite member interface.
+     *
+     * @param event the action event triggered by the invite button
+     */
     @FXML
     public void onInviteMembers(ActionEvent event) {
         try {
@@ -400,13 +576,21 @@ public class GroupController extends SidebarController {
             controller.setStage(dialog);
             dialog.showAndWait();
 
-
         }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * <hr>
+     * Handles group ID sharing functionality.
+     *
+     * <p>Opens a modal dialog for sharing the current group's ID with
+     * other users. Loads and displays the share group ID interface.
+     *
+     * @param event the action event triggered by the share button
+     */
     @FXML
     public void onShareGroupID(ActionEvent event) {
         try {
@@ -441,6 +625,16 @@ public class GroupController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Handles group management functionality.
+     *
+     * <p>Opens a modal dialog for advanced group management operations
+     * including member role management and group settings. Loads and
+     * displays the manage group interface.
+     *
+     * @param event the action event triggered by the manage group button
+     */
     @FXML
     public void onManageGroup(ActionEvent event) {
         try {
@@ -475,17 +669,44 @@ public class GroupController extends SidebarController {
         }
     }
 
+    /**
+     * <hr>
+     * Handles group leaving functionality.
+     *
+     * <p>Initiates the process for the current user to leave the selected
+     * group. Currently displays a placeholder implementation.
+     *
+     * @param event the action event triggered by the leave group button
+     */
     @FXML
     public void onLeaveGroup(ActionEvent event) {
 
     }
 
+    /**
+     * <hr>
+     * Handles group deletion functionality.
+     *
+     * <p>Initiates the process for deleting the selected group (admin only).
+     * Currently displays a placeholder implementation.
+     *
+     * @param event the action event triggered by the delete group button
+     */
     @FXML
     public void onDeleteGroup(ActionEvent event) {
 
     }
 
-    // Update members table with group members and their roles
+    /**
+     * <hr>
+     * Updates the members table with current group members and their roles.
+     *
+     * <p>Retrieves group membership data from the database and populates
+     * the members table with user information, roles, and availability status.
+     * Shows pending join requests for group administrators.
+     *
+     * @param group the group to update member information for
+     */
     private void updateMembersTable(Group group) {
         if (membersTable == null || group == null) return;
 
@@ -495,40 +716,49 @@ public class GroupController extends SidebarController {
         if (ctx.getGroupDAO() instanceof GroupDAO) {
             GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
             List<GroupMemberEntity> dbMembers = groupDAO.getGroupMembers(group.getID());
-            
+
             for (GroupMemberEntity dbMember : dbMembers) {
                 String role = dbMember.getRole();
                 role = role.substring(0, 1).toUpperCase() + role.substring(1).toLowerCase();
                 String availability = getUserAvailabilityStatus(dbMember.getUser());
 
                 GroupMember displayMember = new GroupMember(
-                    dbMember.getUser().getFirstName() + " " + dbMember.getUser().getLastName(),
-                    role,
-                    availability,
-                    dbMember.getUserId()
+                        dbMember.getUser().getFirstName() + " " + dbMember.getUser().getLastName(),
+                        role,
+                        availability,
+                        dbMember.getUserId()
                 );
                 membersList.add(displayMember);
             }
         }
 
         membersTable.setItems(FXCollections.observableArrayList(membersList));
-        
+
         // Add admin functionality
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (ctx.getGroupDAO() instanceof GroupDAO) {
             GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
             if (groupDAO.isAdmin(group.getID(), currentUser.getUserId()) ||
-                group.getOwner().equals(currentUser.getUsername())) {
+                    group.getOwner().equals(currentUser.getUsername())) {
                 showJoinRequestsIfAny(group);
             }
         }
     }
-    
+
+    /**
+     * <hr>
+     * Shows notification for pending join requests if any exist.
+     *
+     * <p>Displays an alert to group administrators when there are pending
+     * join requests that require approval or rejection.
+     *
+     * @param group the group to check for pending join requests
+     */
     private void showJoinRequestsIfAny(Group group) {
         if (ctx.getGroupDAO() instanceof GroupDAO) {
             GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
             List<GroupJoinRequest> pendingRequests = groupDAO.getPendingJoinRequests(group.getID());
-            
+
             if (!pendingRequests.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Pending Join Requests");
@@ -539,7 +769,15 @@ public class GroupController extends SidebarController {
         }
     }
 
-    // Update sessions list for selected group
+    /**
+     * <hr>
+     * Updates the sessions list for the selected group.
+     *
+     * <p>Retrieves and displays all study sessions associated with the
+     * specified group, including session details and management options.
+     *
+     * @param group the group to update session information for
+     */
     private void updateSessionsList(Group group) {
         if (sessionsListView == null || group == null) return;
 
@@ -562,8 +800,8 @@ public class GroupController extends SidebarController {
                     titleLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
 
                     Label timeLabel = new Label(
-                        session.getStartTime().format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")) +
-                        " - " + session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                            session.getStartTime().format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")) +
+                                    " - " + session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
                     );
                     timeLabel.setFont(Font.font("System", 10));
 
@@ -586,7 +824,15 @@ public class GroupController extends SidebarController {
         sessionsListView.setItems(FXCollections.observableArrayList(groupSessions));
     }
 
-    // Show dialog to add task to session
+    /**
+     * <hr>
+     * Shows dialog for adding tasks to study sessions.
+     *
+     * <p>Displays a modal dialog for creating new tasks associated with
+     * specific study sessions, including task details and assignment options.
+     *
+     * @param session the session to add the task to
+     */
     private void showAddTaskDialog(Session session) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Add Task");
@@ -644,11 +890,11 @@ public class GroupController extends SidebarController {
                         String createdBy = currentUser != null ? currentUser.getUserId() : assignee.getUserId();
 
                         ctx.getSessionTaskManager().createTask(
-                            session.getSessionId(),
-                            title,
-                            deadline,
-                            assignee.getUserId(),
-                            createdBy
+                                session.getSessionId(),
+                                title,
+                                deadline,
+                                assignee.getUserId(),
+                                createdBy
                         );
 
                         new Alert(Alert.AlertType.INFORMATION, "Task created successfully!").showAndWait();
@@ -660,7 +906,17 @@ public class GroupController extends SidebarController {
         });
     }
 
-    // Get user's current availability status with detailed information
+    /**
+     * <hr>
+     * Gets user's current availability status with detailed information.
+     *
+     * <p>Checks the user's availability schedule and returns a descriptive
+     * status indicating current availability, upcoming free time, or
+     * unavailability based on their scheduled availability blocks.
+     *
+     * @param user the user to check availability for
+     * @return a string describing the user's current availability status
+     */
     private String getUserAvailabilityStatus(User user) {
         if (user == null) return "Unknown";
 
@@ -681,7 +937,7 @@ public class GroupController extends SidebarController {
             LocalDate today = now.toLocalDate();
             for (Availability availability : userAvailabilities) {
                 if (availability.getStartTime().toLocalDate().equals(today) &&
-                    availability.getStartTime().isAfter(now)) {
+                        availability.getStartTime().isAfter(now)) {
                     String startTime = availability.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm"));
                     return "Free from " + startTime;
                 }

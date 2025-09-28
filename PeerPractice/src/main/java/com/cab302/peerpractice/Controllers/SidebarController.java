@@ -23,22 +23,63 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
+/**
+ * <hr>
+ * Abstract base controller providing sidebar navigation functionality.
+ *
+ * <p>This controller implements common sidebar navigation features including menu
+ * and profile panels with sliding animations. It provides the foundation for
+ * main application screens that require navigation capabilities.
+ *
+ * <p> Key features include:
+ * <ul>
+ *   <li>Sliding menu and profile panels with animation</li>
+ *   <li>User profile display and management</li>
+ *   <li>Navigation between main application views</li>
+ *   <li>Session management and logout functionality</li>
+ *   <li>Modal dialog support for profile editing and settings</li>
+ * </ul>
+ *
+ * @see BaseController
+ * @see SessionPersistence
+ */
 public abstract class SidebarController extends BaseController {
 
     // Root panels from includes
+    /** <hr> The main menu sidebar panel. */
     @FXML private BorderPane menu;
+    /** <hr> The user profile sidebar panel. */
     @FXML private BorderPane profile;
+    /** <hr> The main header container. */
     @FXML private VBox header;
+    /** <hr> Label displaying user's full name. */
     @FXML private Label userNameLabel;
+    /** <hr> Label displaying user's username. */
     @FXML private Label userUsernameLabel;
+    /** <hr> Label displaying user's biography. */
     @FXML private Label userBioLabel;
 
+    /** <hr> Duration constant for slide animations. */
     private static final Duration SLIDE = Duration.millis(180);
 
+    /**
+     * <hr>
+     * Constructs a new SidebarController with the specified context and navigation.
+     *
+     * @param ctx the application context providing access to user session and managers
+     * @param nav the navigation controller for screen transitions
+     */
     protected SidebarController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 
+    /**
+     * <hr>
+     * Initializes the controller after FXML loading is complete.
+     *
+     * <p>Restores panel states, sets up event handlers, and populates user information.
+     * Calls the parent class initialization for base setup.
+     */
     @FXML
     public void initialize() {
         // Restore menu state
@@ -92,11 +133,11 @@ public abstract class SidebarController extends BaseController {
         // Profile panel controls
         if (profile != null) {
             Label userNameLbl = (Label) profile.lookup("#userNameLabel");
-                this.userNameLabel = userNameLbl;
+            this.userNameLabel = userNameLbl;
             Label userUsernameLbl = (Label) profile.lookup("#userUsernameLabel");
-                this.userUsernameLabel = userUsernameLbl;
+            this.userUsernameLabel = userUsernameLbl;
             Label userBioLbl = (Label) profile.lookup("#userBioLabel");
-                this.userBioLabel = userBioLbl;
+            this.userBioLabel = userBioLbl;
 
             @SuppressWarnings("unchecked") // Add suppression warning casting on combobox
             ComboBox<String> status = (ComboBox<String>) profile.lookup("#availabilityStatus");
@@ -128,7 +169,12 @@ public abstract class SidebarController extends BaseController {
         }
     }
 
-    // Set header title
+    /**
+     * <hr>
+     * Sets the header title text.
+     *
+     * @param title the title text to display in the header
+     */
     protected void setHeaderTitle(String title) {
         if (header != null) {
             Label titleLbl = (Label) header.lookup("#headerTitle");
@@ -136,21 +182,30 @@ public abstract class SidebarController extends BaseController {
         }
     }
 
-    // Toggle menu
+    /**
+     * <hr>
+     * Toggles the menu sidebar open/closed state.
+     */
     @FXML
     protected void onToggleMenu() {
         if (ctx.isMenuOpen()) closeMenu();
         else openMenu();
     }
 
-    // Toggle profile
+    /**
+     * <hr>
+     * Toggles the profile sidebar open/closed state.
+     */
     @FXML
     protected void onToggleProfile() {
         if (ctx.isProfileOpen()) closeProfile();
         else openProfile();
     }
 
-    // Slide open menu
+    /**
+     * <hr>
+     * Slides the menu sidebar open with animation.
+     */
     private void openMenu() {
         menu.setVisible(true);
         menu.setManaged(true);
@@ -158,7 +213,10 @@ public abstract class SidebarController extends BaseController {
         animate(menu, 0, () -> ctx.setMenuOpen(true));
     }
 
-    // Slide close menu
+    /**
+     * <hr>
+     * Slides the menu sidebar closed with animation.
+     */
     private void closeMenu() {
         double width = menu.getPrefWidth();
         animate(menu, -width, () -> {
@@ -169,7 +227,10 @@ public abstract class SidebarController extends BaseController {
         });
     }
 
-    // Slide open profile
+    /**
+     * <hr>
+     * Slides the profile sidebar open with animation.
+     */
     private void openProfile() {
         profile.setVisible(true);
         profile.setManaged(true);
@@ -178,7 +239,10 @@ public abstract class SidebarController extends BaseController {
         animate(profile, 0, () -> ctx.setProfileOpen(true));
     }
 
-    // Slide close profile
+    /**
+     * <hr>
+     * Slides the profile sidebar closed with animation.
+     */
     private void closeProfile() {
         double width = safePrefWidth(profile, 180);
         animate(profile, width, () -> {
@@ -189,7 +253,14 @@ public abstract class SidebarController extends BaseController {
         });
     }
 
-    // Animate sliding
+    /**
+     * <hr>
+     * Animates a region's translation with a slide effect.
+     *
+     * @param node the region to animate
+     * @param targetX the target X translation value
+     * @param onComplete callback to execute after animation completes
+     */
     private void animate(Region node, double targetX, Runnable onComplete) {
         TranslateTransition tt = new TranslateTransition(SLIDE, node);
         tt.setToX(targetX);
@@ -197,12 +268,25 @@ public abstract class SidebarController extends BaseController {
         tt.play();
     }
 
+    /**
+     * <hr>
+     * Safely retrieves a region's preferred width with fallback.
+     *
+     * @param r the region to get width from
+     * @param fallback the fallback width if region width is invalid
+     * @return the region's preferred width or fallback value
+     */
     private double safePrefWidth(Region r, double fallback) {
         double w = r.getPrefWidth();
         return Double.isNaN(w) || w <= 0 ? fallback : w;
     }
 
-    // Handle logout
+    /**
+     * <hr>
+     * Handles the logout confirmation process.
+     *
+     * <p>Displays a confirmation dialog and initiates logout if confirmed by the user.
+     */
     private void handleLogout() {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirm Logout");
@@ -221,7 +305,13 @@ public abstract class SidebarController extends BaseController {
         });
     }
 
-    // Perform logout
+    /**
+     * <hr>
+     * Performs the user logout operation.
+     *
+     * <p>Clears user session, closes sidebars, and navigates to the login screen
+     * with appropriate success messaging.
+     */
     private void performLogout() {
         try {
             String currentUserName = ctx.getUserSession().getCurrentUser() != null
@@ -243,7 +333,12 @@ public abstract class SidebarController extends BaseController {
         }
     }
 
-    // Show logout message
+    /**
+     * <hr>
+     * Shows a success message after logout.
+     *
+     * @param userName the name of the user who logged out
+     */
     private void showLogoutSuccessMessage(String userName) {
         Alert success = new Alert(Alert.AlertType.INFORMATION);
         success.setTitle("Logout Successful");
@@ -255,7 +350,12 @@ public abstract class SidebarController extends BaseController {
         success.show();
     }
 
-    // Handle logout errors
+    /**
+     * <hr>
+     * Handles errors that occur during logout.
+     *
+     * @param e the exception that occurred during logout
+     */
     private void handleLogoutError(Exception e) {
         ctx.getUserSession().logout();
         Alert error = new Alert(Alert.AlertType.ERROR);
@@ -266,6 +366,12 @@ public abstract class SidebarController extends BaseController {
         nav.Display(View.Login);
     }
 
+    /**
+     * <hr>
+     * Opens the edit profile dialog.
+     *
+     * @param event the action event that triggered this operation
+     */
     @FXML
     private void onEditProfile(ActionEvent event) {
         try {
@@ -302,6 +408,12 @@ public abstract class SidebarController extends BaseController {
         }
     }
 
+    /**
+     * <hr>
+     * Opens the settings dialog.
+     *
+     * @param event the action event that triggered this operation
+     */
     @FXML
     private void onSetting(ActionEvent event) {
         try {
@@ -334,7 +446,13 @@ public abstract class SidebarController extends BaseController {
         }
     }
 
-    // Updates profile firstname, lastname, and username on sidebar
+    /**
+     * <hr>
+     * Updates the profile information displayed in the sidebar.
+     *
+     * <p>Refreshes the user's name, username, and biography in the profile panel
+     * with current session data.
+     */
     private void renderProfile() {
         if (userNameLabel == null || userUsernameLabel == null) {
             // included profile pane not resolved yet

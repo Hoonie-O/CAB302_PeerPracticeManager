@@ -15,27 +15,78 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.function.UnaryOperator;
 
+/**
+ * <hr>
+ * Controller for managing user profile editing functionality.
+ *
+ * <p>This controller handles the display and modification of user profile information
+ * including personal details, contact information, and biographical data. It provides
+ * validation and data persistence for profile updates.
+ *
+ * <p>Key features include:
+ * <ul>
+ *   <li>Comprehensive profile form with validation</li>
+ *   <li>Date of birth restrictions to prevent future dates</li>
+ *   <li>Phone number input filtering for digits only</li>
+ *   <li>Integration with ProfileUpdateService for data persistence</li>
+ * </ul>
+ *
+ * @see User
+ * @see ProfileUpdateService
+ * @see BaseController
+ */
 public class EditProfileController extends BaseController {
-
+    /** <hr> The dialog stage for this controller. */
     private Stage stage;
+    /** <hr> Root stack pane for the edit profile view. */
     @FXML private StackPane root;
+    /** <hr> Text field for entering first name. */
     @FXML private TextField firstNameField;
+    /** <hr> Text field for entering last name. */
     @FXML private TextField lastNameField;
+    /** <hr> Text field for entering username. */
     @FXML private TextField usernameField;
+    /** <hr> Text field for entering email address. */
     @FXML private TextField emailField;
+    /** <hr> Text field for entering educational institution. */
     @FXML private TextField instituteField;
+    /** <hr> Date picker for selecting date of birth. */
     @FXML private DatePicker dateOfBirthField;
+    /** <hr> Text field for entering phone number. */
     @FXML private TextField phoneField;
+    /** <hr> Text field for entering physical address. */
     @FXML private TextField addressField;
+    /** <hr> Text area for entering biographical information. */
     @FXML private TextArea bioField;
 
-    // Formatter used to parse the DatePicker value consistently.
+    /**
+     * <hr>
+     * Formatter used to parse the DatePicker value consistently.
+     */
     private static final DateTimeFormatter ISO = DateTimeFormatter.ISO_LOCAL_DATE;
 
+    /**
+     * <hr>
+     * Constructs a new EditProfileController with the specified context and navigation.
+     *
+     * @param ctx the application context providing access to user session and managers
+     * @param nav the navigation controller for screen transitions
+     */
     public EditProfileController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 
+    /**
+     * <hr>
+     * Initializes the controller after FXML loading is complete.
+     *
+     * <p>Sets up the profile form by prefilling existing user data and configuring
+     * input validation. Ensures user authentication and closes dialog if no user
+     * is logged in.
+     *
+     * <p>Configures phone field for digits-only input and date picker to disable
+     * future dates for date of birth selection.
+     */
     @FXML
     private void initialize() {
         // Ensure someone is logged in and close the dialog if not
@@ -98,15 +149,39 @@ public class EditProfileController extends BaseController {
         }
     }
 
+    /**
+     * <hr>
+     * Sets the stage for this controller's dialog.
+     *
+     * @param stage the dialog stage to set
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    @FXML private void onClose() {
+    /**
+     * <hr>
+     * Handles the close action for the edit profile dialog.
+     *
+     * <p>Closes the dialog stage when the user cancels or completes editing
+     * without saving changes.
+     */
+    @FXML
+    private void onClose() {
         if (stage != null) stage.close();
     }
 
-
+    /**
+     * <hr>
+     * Handles the save action for profile updates.
+     *
+     * <p>Validates user input, processes profile changes through the update service,
+     * and displays appropriate feedback messages. Closes the dialog on successful
+     * save or shows error messages for validation failures.
+     *
+     * <p>Performs validation for required fields and date of birth constraints
+     * before attempting to persist changes to the database.
+     */
     @FXML
     private void onSave() {
         User u = ensureLoggedIn();
@@ -142,7 +217,7 @@ public class EditProfileController extends BaseController {
         try {
             ProfileUpdateService updateService = new ProfileUpdateService(ctx.getUserManager());
             ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-                newFirstname, newLastname, newUsername, newInstitute, newPhoneNumber, newAddress, newDateOfBirth, newBio
+                    newFirstname, newLastname, newUsername, newInstitute, newPhoneNumber, newAddress, newDateOfBirth, newBio
             );
 
             boolean changed = updateService.updateProfile(u, request);
@@ -166,7 +241,17 @@ public class EditProfileController extends BaseController {
         }
     }
 
-    // Override showAlert to provide default title for this controller
+    /**
+     * <hr>
+     * Shows an alert dialog with default title for this controller.
+     *
+     * <p>Overloaded convenience method that provides a default title
+     * specific to the edit profile context.
+     *
+     * @param type the type of alert to display
+     * @param header the header text for the alert
+     * @param content the content text for the alert
+     */
     private void showAlert(Alert.AlertType type, String header, String content) {
         showAlert(type, header, content, "Edit Profile", root);
     }

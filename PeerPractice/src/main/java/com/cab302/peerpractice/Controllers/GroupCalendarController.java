@@ -24,44 +24,122 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * <hr>
+ * Controller for managing group study session calendar functionality.
+ *
+ * <p>This controller handles the display and management of study sessions
+ * within groups using a monthly calendar view. Group members can view,
+ * create, edit, and delete study sessions with detailed scheduling information.
+ *
+ * <p>Key features include:
+ * <ul>
+ *   <li>Monthly calendar grid display with group session indicators</li>
+ *   <li>Color-coded session types and priorities</li>
+ *   <li>Session creation with detailed metadata (priority, subject, etc.)</li>
+ *   <li>Role-based session editing permissions</li>
+ *   <li>Integration with SessionCalendarManager for data persistence</li>
+ * </ul>
+ *
+ * @see Session
+ * @see SessionCalendarManager
+ * @see BaseController
+ */
 public class GroupCalendarController extends BaseController {
+    /** <hr> Label displaying the current month and year. */
     @FXML private Label monthYearLabel;
+    /** <hr> Grid layout container for displaying the calendar days. */
     @FXML private GridPane calendarGrid;
+    /** <hr> Button for navigating to the previous month. */
     @FXML private Button prevButton;
+    /** <hr> Button for navigating to the next month. */
     @FXML private Button nextButton;
 
+    /**
+     * <hr>
+     * Manager for handling session calendar data operations.
+     */
     private final SessionCalendarManager sessionCalendarManager;
+    /**
+     * <hr>
+     * The currently displayed month and year.
+     */
     private YearMonth currentYearMonth;
+    /**
+     * <hr>
+     * The currently selected group for session management.
+     */
     private Group currentGroup;
 
+    /**
+     * <hr>
+     * Constructs a new GroupCalendarController with the specified context and navigation.
+     *
+     * @param ctx the application context providing access to user session and managers
+     * @param nav the navigation controller for screen transitions
+     */
     public GroupCalendarController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
         this.sessionCalendarManager = ctx.getSessionCalendarManager();
     }
 
+    /**
+     * <hr>
+     * Sets the current group for session management and updates the calendar view.
+     *
+     * @param group the group to set as current for session operations
+     */
     public void setGroup(Group group) {
         this.currentGroup = group;
         updateCalendarView();
     }
 
+    /**
+     * <hr>
+     * Initializes the controller after FXML loading is complete.
+     *
+     * <p>Sets up the initial calendar view with the current month and year,
+     * preparing the interface for group session management.
+     */
     @FXML
     public void initialize() {
         currentYearMonth = YearMonth.now();
         updateCalendarView();
     }
 
+    /**
+     * <hr>
+     * Handles navigation to the previous month.
+     *
+     * <p>Decrements the current month by one and refreshes the calendar display
+     * to show the previous month's session data.
+     */
     @FXML
     private void onPreviousMonth() {
         currentYearMonth = currentYearMonth.minusMonths(1);
         updateCalendarView();
     }
 
+    /**
+     * <hr>
+     * Handles navigation to the next month.
+     *
+     * <p>Increments the current month by one and refreshes the calendar display
+     * to show the next month's session data.
+     */
     @FXML
     private void onNextMonth() {
         currentYearMonth = currentYearMonth.plusMonths(1);
         updateCalendarView();
     }
 
+    /**
+     * <hr>
+     * Updates the calendar view with current month and session data.
+     *
+     * <p>Refreshes the month/year label and repopulates the calendar grid
+     * with the current month's days and session information.
+     */
     private void updateCalendarView() {
         if (monthYearLabel != null) {
             monthYearLabel.setText(currentYearMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy")));
@@ -69,6 +147,13 @@ public class GroupCalendarController extends BaseController {
         populateCalendarGrid();
     }
 
+    /**
+     * <hr>
+     * Populates the calendar grid with day cells for the current month.
+     *
+     * <p>Creates and arranges day headers (Sun-Sat) and individual day cells
+     * for the current month, including session indicators for each date.
+     */
     private void populateCalendarGrid() {
         calendarGrid.getChildren().clear();
 
@@ -102,6 +187,16 @@ public class GroupCalendarController extends BaseController {
         }
     }
 
+    /**
+     * <hr>
+     * Creates a visual cell representing a single day in the calendar.
+     *
+     * <p>Each day cell displays the date number and any study session entries
+     * for that date. Today's date is highlighted with special styling.
+     *
+     * @param date the date to create the cell for
+     * @return a VBox containing the day cell with date label and session indicators
+     */
     private VBox createDayCell(LocalDate date) {
         VBox dayCell = new VBox();
         dayCell.setPrefWidth(80);
@@ -136,6 +231,13 @@ public class GroupCalendarController extends BaseController {
         return dayCell;
     }
 
+    /**
+     * <hr>
+     * Converts a color label string to a JavaFX Color object.
+     *
+     * @param colorLabel the color label string (e.g., "RED", "GREEN")
+     * @return the corresponding Color object, defaults to BLUE if unknown
+     */
     private Color getColorForLabel(String colorLabel) {
         return switch (colorLabel.toUpperCase()) {
             case "RED" -> Color.RED;
@@ -146,6 +248,15 @@ public class GroupCalendarController extends BaseController {
         };
     }
 
+    /**
+     * <hr>
+     * Shows the appropriate dialog when a day cell is clicked.
+     *
+     * <p>If the date has no session entries, shows the add session dialog.
+     * If entries exist, shows the session list dialog.
+     *
+     * @param date the date that was clicked
+     */
     private void showItemDialog(LocalDate date) {
         if (currentGroup == null) return;
         List<Session> sessions = sessionCalendarManager.getSessionsForDateAndGroup(date, currentGroup);
@@ -156,6 +267,15 @@ public class GroupCalendarController extends BaseController {
         }
     }
 
+    /**
+     * <hr>
+     * Displays a dialog for adding new study sessions for a specific date.
+     *
+     * <p>Allows users to set title, description, start/end times, priority,
+     * subject, and color for a new study session entry.
+     *
+     * @param date the date to add session for
+     */
     private void showAddSessionDialog(LocalDate date) {
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (currentUser == null || currentGroup == null) return;
@@ -236,6 +356,16 @@ public class GroupCalendarController extends BaseController {
         });
     }
 
+    /**
+     * <hr>
+     * Displays a dialog listing all session entries for a specific date.
+     *
+     * <p>Shows details of each session entry and provides options to
+     * edit sessions, view tasks, delete sessions, or add more sessions.
+     *
+     * @param date the date to show sessions for
+     * @param sessions list of session entries for the date
+     */
     private void showSessionListDialog(LocalDate date, List<Session> sessions) {
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Study Sessions for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
@@ -313,6 +443,12 @@ public class GroupCalendarController extends BaseController {
         dialog.showAndWait();
     }
 
+    /**
+     * <hr>
+     * Displays a confirmation dialog for deleting a session entry.
+     *
+     * @param session the session entry to be deleted
+     */
     private void showDeleteSessionDialog(Session session) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Session");
@@ -332,7 +468,17 @@ public class GroupCalendarController extends BaseController {
         });
     }
 
-    // Check if user can edit session - admins can edit all, members only own
+    /**
+     * <hr>
+     * Checks if a user has permission to edit a specific session.
+     *
+     * <p>Group administrators can edit all sessions, while regular members
+     * can only edit sessions they have created themselves.
+     *
+     * @param user the user to check permissions for
+     * @param session the session to check edit permissions for
+     * @return true if the user can edit the session, false otherwise
+     */
     private boolean canUserEditSession(User user, Session session) {
         if (user == null || currentGroup == null) return false;
 
@@ -345,6 +491,15 @@ public class GroupCalendarController extends BaseController {
         return session.getOrganiser().getUserId().equals(user.getUserId());
     }
 
+    /**
+     * <hr>
+     * Displays a dialog for editing existing study sessions.
+     *
+     * <p>Allows users to modify session details including title, description,
+     * start/end times, and color coding.
+     *
+     * @param session the session to be edited
+     */
     private void showEditSessionDialog(Session session) {
         User currentUser = ctx.getUserSession().getCurrentUser();
         if (currentUser == null || currentGroup == null) return;
@@ -396,9 +551,9 @@ public class GroupCalendarController extends BaseController {
                 if (!title.isEmpty()) {
                     LocalDate sessionDate = startTime.toLocalDate();
                     LocalDateTime newStartTime = LocalDateTime.of(sessionDate,
-                        java.time.LocalTime.of(startHour.getValue(), startMinute.getValue()));
+                            java.time.LocalTime.of(startHour.getValue(), startMinute.getValue()));
                     LocalDateTime newEndTime = LocalDateTime.of(sessionDate,
-                        java.time.LocalTime.of(endHour.getValue(), endMinute.getValue()));
+                            java.time.LocalTime.of(endHour.getValue(), endMinute.getValue()));
 
                     if (newEndTime.isAfter(newStartTime)) {
                         Session editedSession = new Session(title, session.getOrganiser(), newStartTime, newEndTime, currentGroup);

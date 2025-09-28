@@ -12,21 +12,66 @@ import javafx.scene.control.*;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * <hr>
+ * Controller for handling user authentication and login functionality.
+ *
+ * <p>This controller manages the user login process including credential validation,
+ * session management, and navigation to appropriate application views based on
+ * user roles and group memberships.
+ *
+ * <p>Key features include:
+ * <ul>
+ *   <li>User credential validation and authentication</li>
+ *   <li>Session persistence with remember-me functionality</li>
+ *   <li>Navigation to password recovery and signup flows</li>
+ *   <li>Automatic redirection based on user group memberships</li>
+ * </ul>
+ *
+ * @see User
+ * @see UserManager
+ * @see BaseController
+ */
 public class LoginController extends BaseController{
+    /** <hr> Text field for entering username or email address. */
     @FXML private TextField IDField;
+    /** <hr> Password field for entering user password. */
     @FXML private PasswordField passwordField;
+    /** <hr> Button for initiating login process. */
     @FXML private Button loginButton;
+    /** <hr> Checkbox for enabling session persistence. */
     @FXML private CheckBox rememberMe;
+    /** <hr> Hyperlink for navigating to password recovery. */
     @FXML private Hyperlink forgotpasswordlink;
+    /** <hr> Hyperlink for navigating to user registration. */
     @FXML private Hyperlink signupLink;
+    /** <hr> Label for displaying authentication status messages. */
     @FXML private Label messageLabel;
 
+    /**
+     * <hr>
+     * Manager for handling user authentication and management operations.
+     */
+    private final UserManager userManager = ctx.getUserManager();
+
+    /**
+     * <hr>
+     * Constructs a new LoginController with the specified context and navigation.
+     *
+     * @param ctx the application context providing access to user session and managers
+     * @param nav the navigation controller for screen transitions
+     */
     public LoginController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
     }
 
-    private final UserManager userManager = ctx.getUserManager();
-
+    /**
+     * <hr>
+     * Initializes the controller after FXML loading is complete.
+     *
+     * <p>Sets up form validation, button bindings, and event handlers for
+     * login functionality and navigation options.
+     */
     @FXML
     private void initialize() {
         // Disable login button until fields filled
@@ -46,6 +91,16 @@ public class LoginController extends BaseController{
         signupLink.setOnAction(e -> nav.Display(View.Signup));
     }
 
+    /**
+     * <hr>
+     * Handles the user authentication process.
+     *
+     * <p>Validates user credentials, manages user session creation, and
+     * navigates to appropriate application views upon successful authentication.
+     * Provides feedback for failed login attempts and handles session persistence.
+     *
+     * @throws SQLException if database access errors occur during authentication
+     */
     private void login() throws SQLException {
         messageLabel.setText("");
         String ID = IDField.getText();
