@@ -4,8 +4,11 @@ import com.cab302.peerpractice.Model.daos.UserDAO;
 import com.cab302.peerpractice.Model.entities.Group;
 import com.cab302.peerpractice.Model.entities.GroupMessage;
 import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.utils.SQLiteConnection;
 import org.junit.jupiter.api.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GroupMessageDAOTest {
 
+    private Connection connection;
     private GroupMessageDAO dao;
     private UserDAO userDao;
     private GroupDAO groupDao;
@@ -23,34 +27,29 @@ class GroupMessageDAOTest {
 
     @BeforeEach
     void setUp() throws SQLException {
+        // fresh in-memory DB
+        connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+        SQLiteConnection.setInstance(connection);
+
+        // init DAOs (will create tables in memory)
         userDao = new UserDAO();
         groupDao = new GroupDAO(userDao);
         dao = new GroupMessageDAO();
 
-        // Clean DB
-        dao.getAllMessages().forEach(m -> dao.deleteMessage(m.getMessageId()));
-        groupDao.getAllGroups().forEach(g -> {
-            try { groupDao.deleteGroup(g.getID()); } catch (Exception ignored) {}
-        });
-        userDao.getAllUsers().forEach(u -> {
-            try { userDao.deleteUser(u.getUserId()); } catch (Exception ignored) {}
-        });
-
-        // Seed user and group
+        // seed user and group
         alice = new User("Alice", "Wonder", "alice123", "alice@mail.com", "Password1!", "QUT");
         userDao.addUser(alice);
 
-        testGroup = new Group("Study Group", "Group for testing", false, alice.getUsername(), LocalDateTime.now());
+        testGroup = new Group("Study Group", "Group for testing", false,
+                alice.getUsername(), LocalDateTime.now());
         groupDao.addGroup(testGroup);
     }
 
     @AfterEach
-    void tearDown() {
-        dao.getAllMessages().forEach(m -> dao.deleteMessage(m.getMessageId()));
-        try {
-            groupDao.deleteGroup(testGroup.getID());
-            userDao.deleteUser(alice.getUserId());
-        } catch (Exception ignored) {}
+    void tearDown() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close(); // wipes the in-memory DB
+        }
     }
 
     @Test

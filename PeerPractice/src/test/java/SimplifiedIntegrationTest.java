@@ -1,5 +1,3 @@
-package com.cab302.peerpractice.test;
-
 import com.cab302.peerpractice.Model.daos.AvailabilityDAO;
 import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;
 import com.cab302.peerpractice.Model.daos.SessionTaskDAO;

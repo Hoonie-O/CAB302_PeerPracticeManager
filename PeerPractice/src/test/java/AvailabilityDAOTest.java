@@ -3,16 +3,19 @@ import com.cab302.peerpractice.Model.daos.IUserDAO;
 import com.cab302.peerpractice.Model.daos.UserDAO;
 import com.cab302.peerpractice.Model.entities.Availability;
 import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.utils.SQLiteConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class AvailabilityDAOTest {
 
@@ -22,9 +25,14 @@ public class AvailabilityDAOTest {
     private User testUser2;
     private Availability testAvailability1;
     private Availability testAvailability2;
+    private Connection connection;
 
     @BeforeEach
     void setUp() throws SQLException {
+        // fresh in-memory DB
+        connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+        SQLiteConnection.setInstance(connection);
+
         userDao = new UserDAO();
         storage = new AvailabilityDAO(userDao);
 
@@ -46,12 +54,10 @@ public class AvailabilityDAOTest {
     }
 
     @AfterEach
-    void tearDown() {
-        storage.clearAllAvailabilities();
-        try {
-            userDao.deleteUser(testUser1.getUserId());
-            userDao.deleteUser(testUser2.getUserId());
-        } catch (Exception ignored) {}
+    void tearDown() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close(); // wipes the in-memory DB
+        }
     }
 
     @Test

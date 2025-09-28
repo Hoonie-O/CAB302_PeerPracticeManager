@@ -2,8 +2,11 @@ import com.cab302.peerpractice.Model.daos.FriendMessageDAO;
 import com.cab302.peerpractice.Model.daos.UserDAO;
 import com.cab302.peerpractice.Model.entities.FriendMessage;
 import com.cab302.peerpractice.Model.entities.User;
+import com.cab302.peerpractice.Model.utils.SQLiteConnection;
 import org.junit.jupiter.api.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FriendMessageDAOTest {
 
+    private Connection connection;
     private FriendMessageDAO dao;
     private UserDAO userDao;
 
@@ -21,6 +25,10 @@ class FriendMessageDAOTest {
 
     @BeforeEach
     void setUp() throws SQLException {
+        // fresh in-memory DB
+        connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+        SQLiteConnection.setInstance(connection);
+
         userDao = new UserDAO();
         dao = new FriendMessageDAO();
 
@@ -41,13 +49,10 @@ class FriendMessageDAOTest {
     }
 
     @AfterEach
-    void tearDown() {
-        dao.getAllMessages().forEach(m -> dao.deleteMessage(m.getMessageId()));
-        try {
-            userDao.deleteUser(alice.getUserId());
-            userDao.deleteUser(bob.getUserId());
-            userDao.deleteUser(someone.getUserId());
-        } catch (Exception ignored) {}
+    void tearDown() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close(); // wipes the in-memory DB
+        }
     }
 
     @Test
