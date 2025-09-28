@@ -126,6 +126,10 @@ public class SessionTaskDAO implements ISessionTaskDAO {
 
     @Override
     public boolean updateTask(SessionTask updatedTask) {
+        if (updatedTask == null) {
+            return false; // or throw IllegalArgumentException
+        }
+
         try (PreparedStatement ps = connection.prepareStatement(
                 "UPDATE session_tasks SET title = ?, deadline = ?, assignee_id = ?, completed = ?, updated = ? " +
                         "WHERE task_id = ?")) {
@@ -156,6 +160,9 @@ public class SessionTaskDAO implements ISessionTaskDAO {
 
     @Override
     public boolean removeAllTasksForSession(String sessionId) {
+        if (sessionId == null) {
+            return false; // or throw IllegalArgumentException
+        }
         try (PreparedStatement ps = connection.prepareStatement(
                 "DELETE FROM session_tasks WHERE session_id = ?")) {
             ps.setString(1, sessionId);

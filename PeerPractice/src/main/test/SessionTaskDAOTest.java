@@ -1,5 +1,3 @@
-package com.cab302.peerpractice.test;
-
 import com.cab302.peerpractice.Model.daos.IUserDAO;
 import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;
 import com.cab302.peerpractice.Model.daos.SessionTaskDAO;
@@ -182,7 +180,7 @@ public class SessionTaskDAOTest {
                                                 testUser1.getUserId());
         storage.addTask(overdueTask);
         storage.addTask(testTask1); // Future deadline
-        
+
         List<SessionTask> overdueTasks = storage.getOverdueTasks();
         assertEquals(1, overdueTasks.size());
         assertEquals("Overdue Task", overdueTasks.get(0).getTitle());
@@ -250,21 +248,31 @@ public class SessionTaskDAOTest {
     }
 
     @Test
-    void testUpdateTaskWithNullId() {
-        SessionTask taskWithNullId = new SessionTask(testSession.getSessionId(), "Null ID Task",
-                                                   LocalDateTime.now().plusDays(1),
-                                                   testUser1.getUserId(),
-                                                   testUser1.getUserId());
-        try {
-            var taskIdField = SessionTask.class.getDeclaredField("taskId");
-            taskIdField.setAccessible(true);
-            taskIdField.set(taskWithNullId, null);
-        } catch (Exception e) {
-            fail("Failed to set null task ID for test");
-        }
-        
-        boolean result = storage.updateTask(taskWithNullId);
-        assertFalse(result);
+    void testUpdateNonExistentTask() {
+        // Create a valid task that hasn't been added
+        SessionTask nonExistent = new SessionTask(
+                testSession.getSessionId(),
+                "Non-existent Task",
+                LocalDateTime.now().plusDays(1),
+                testUser1.getUserId(),
+                testUser1.getUserId()
+        );
+
+        boolean result = storage.updateTask(nonExistent);
+        assertFalse(result, "Updating a task that does not exist should return false");
+    }
+
+    @Test
+    void testUpdateExistingTask() {
+        storage.addTask(testTask1);
+
+        testTask1.setCompleted(true);
+        boolean result = storage.updateTask(testTask1);
+
+        assertTrue(result, "Updating an existing task should succeed");
+
+        SessionTask updated = storage.getTaskById(testTask1.getTaskId());
+        assertTrue(updated.isCompleted(), "The updated task should reflect the new state");
     }
 
     @Test

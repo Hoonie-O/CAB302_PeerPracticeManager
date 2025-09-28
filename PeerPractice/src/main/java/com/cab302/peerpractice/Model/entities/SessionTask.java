@@ -28,11 +28,6 @@ public class SessionTask {
         this.createdBy = Objects.requireNonNull(createdBy, "Created by cannot be null");
         this.createdAt = LocalDateTime.now();
         this.completed = false;
-        
-        // basic validation, deadline should be in the future
-        if (deadline.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Deadline cannot be in the past");
-        }
     }
     
     // constructor for loading from storage (includes taskId and creation time)
