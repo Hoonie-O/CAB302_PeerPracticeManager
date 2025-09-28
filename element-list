@@ -1,0 +1,8 @@
+module:com.cab302.peerpractice
+com.cab302.peerpractice
+com.cab302.peerpractice.Controllers
+com.cab302.peerpractice.Exceptions
+com.cab302.peerpractice.Model.DAOs
+com.cab302.peerpractice.Model.Entities
+com.cab302.peerpractice.Model.Managers
+com.cab302.peerpractice.Model.Utils
