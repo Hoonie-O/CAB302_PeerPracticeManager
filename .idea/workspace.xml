@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PeerPractice/.github/workflows/maven.yml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/.github/workflows/maven.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +56,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/HoonieG15/IdeaProjects/CAB302_PeerPracticeManager/PeerPractice/src/main/resources/com/cab302/peerpractice",
@@ -80,6 +78,7 @@
       <recent name="C:\Users\HoonieG15\IdeaProjects\CAB302_PeerPracticeManager\PeerPractice\target\classes\com\cab302\peerpractice\resources" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
       <recent name="com.cab302.peerpractice" />
     </key>
   </component>
