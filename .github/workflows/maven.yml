@@ -31,6 +31,10 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file PeerPractice/pom.xml
 
+      - name: Create documentation in target/docs/javadoc
+        run: |
+          mkdir -p target/docs/javadoc
+          echo '<html><body><h1>PeerPractice Documentation</h1><p>Documentation coming soon.</p></body></html>' > target/docs/javadoc/index.html
      
       - name: Generate Javadoc
         run: mvn javadoc:javadoc --file PeerPractice/pom.xml
