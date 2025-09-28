@@ -5,12 +5,13 @@ import com.cab302.peerpractice.Model.entities.GroupJoinRequest;
 import com.cab302.peerpractice.Model.entities.GroupMemberEntity;
 import com.cab302.peerpractice.Model.entities.User;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IGroupDAO {
 
     // === Group Lifecycle ===
-    int addGroup(Group group); // returns group ID, or -1 / exception if failed
+    int addGroup(Group group) throws SQLException; // returns group ID, or -1 / exception if failed
     boolean updateGroup(Group group);
     boolean deleteGroup(Group group);
     boolean deleteGroup(int groupId);
@@ -30,7 +31,7 @@ public interface IGroupDAO {
     List<Group> getAllGroups();
 
     // === Group Membership ===
-    boolean addToGroup(int groupId, User user);
+    boolean addToGroup(int groupId, User user) throws SQLException;
     boolean removeMember(int groupId, String targetUserId, String actingUserId);
     boolean isUserMemberOfGroup(int groupId, String userId);
     List<GroupMemberEntity> getGroupMembers(int groupId);
@@ -42,8 +43,8 @@ public interface IGroupDAO {
 
     // === Join Requests ===
     boolean setRequireApproval(int groupId, boolean requireApproval);
-    void createJoinRequest(int groupId, String userId);
+    void createJoinRequest(int groupId, String userId) throws SQLException;
     boolean hasUserRequestedToJoin(int groupId, String userId);
     List<GroupJoinRequest> getPendingJoinRequests(int groupId);
-    boolean processJoinRequest(int requestId, String status, String approverUserId); // NEW
+    boolean processJoinRequest(int requestId, String status, String approverUserId) throws SQLException; // NEW
 }

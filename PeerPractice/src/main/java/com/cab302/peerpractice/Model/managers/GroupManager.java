@@ -82,7 +82,7 @@ public class GroupManager {
         }
     }
 
-    public void approveRequest(Group group,User user, GroupApprovalNotification notification){
+    public void approveRequest(Group group,User user, GroupApprovalNotification notification) throws SQLException {
         if(group == null) throw  new IllegalArgumentException("Group can't be null");
         if(notification == null) throw new IllegalArgumentException("Notification can't be null");
 

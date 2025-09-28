@@ -2,7 +2,6 @@ import com.cab302.peerpractice.Model.daos.*;
 import com.cab302.peerpractice.Model.entities.Chapter;
 import com.cab302.peerpractice.Model.entities.Group;
 import com.cab302.peerpractice.Model.entities.Note;
-import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Model.managers.NotesManager;
 import org.junit.jupiter.api.*;
 
@@ -18,36 +17,22 @@ public class NotesManagerTest {
     private NotesManager notesManager;
     private INotesDAO notesDAO;
     private IGroupDAO groupDAO;
+    private IUserDAO userDAO;
     private int groupID;
     private Group testGroup;
 
     @BeforeEach
     public void setUp() throws SQLException {
-        // Use real DAOs
-        notesDAO = new NotesDAO();
-        groupDAO = new GroupDAO(new UserDAO()); // GroupDAO requires UserDAO
+        // Use mocks instead of real DAOs
+        userDAO = new MockUserDAO();
+        groupDAO = new MockGroupDAO(userDAO);
+        notesDAO = new MockNotesDAO();
         notesManager = new NotesManager(notesDAO, groupDAO);
 
         // Create a fresh test group
         testGroup = new Group("group", "group description", false,
                 UUID.randomUUID().toString(), LocalDateTime.now());
         groupID = groupDAO.addGroup(testGroup);
-
-        // Cleanup in case any notes exist for this group
-        for (Note note : notesDAO.getNotes(groupID)) {
-            notesDAO.deleteNote(note.getID());
-        }
-    }
-
-    @AfterEach
-    public void tearDown() {
-        // Delete all notes for this group
-        for (Note note : notesDAO.getNotes(groupID)) {
-            try { notesDAO.deleteNote(note.getID()); } catch (Exception ignored) {}
-        }
-
-        // Delete the group itself
-        try { groupDAO.deleteGroup(groupID); } catch (Exception ignored) {}
     }
 
     @Test
@@ -134,7 +119,7 @@ public class NotesManagerTest {
         notesManager.deleteNote(noteID);
         assertNull(notesDAO.getNote(noteID));
         assertTrue(notesDAO.getNotes(groupID).isEmpty());
-        assertTrue(notesDAO.getAllNotes().isEmpty() || !notesDAO.getAllNotes().contains(noteID));
+        assertTrue(notesDAO.getAllNotes().isEmpty() || notesDAO.getAllNotes().stream().noneMatch(n -> n.getID().equals(noteID)));
     }
 
     @Test

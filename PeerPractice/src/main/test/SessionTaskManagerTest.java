@@ -7,7 +7,6 @@ import com.cab302.peerpractice.Model.managers.SessionTaskManager;
 import com.cab302.peerpractice.Model.managers.SessionCalendarManager;
 import org.junit.jupiter.api.*;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,20 +25,16 @@ public class SessionTaskManagerTest {
     private Session testSession;
 
     @BeforeEach
-    void setUp() throws SQLException {
-        // Use real DAOs (backed by SQLite)
-        userDao = new UserDAO();
-        calendarDao = new SessionCalendarDAO(userDao);
-        taskDao = new SessionTaskDAO(userDao);
+    void setUp() {
+        // Use mock DAOs (in-memory)
+        userDao = new MockUserDAO();
+        calendarDao = new MockSessionCalendarDAO();
+        taskDao = new MockSessionTaskDAO();
 
-        // Managers wired with real DAOs
+        // Managers wired with mock DAOs
         SessionCalendarManager calendarManager = new SessionCalendarManager(calendarDao);
         sessionManager = new SessionManager(calendarManager);
         manager = new SessionTaskManager(taskDao, sessionManager);
-
-        // Ensure tables start clean
-        taskDao.clearAllTasks();
-        calendarDao.clearAllSessions();
 
         // Seed users
         john = new User("John", "Doe", "john_doe", "john@email.com", "password123", "University");
@@ -62,13 +57,8 @@ public class SessionTaskManagerTest {
 
     @AfterEach
     void tearDown() {
-        // Clean DB after each test
         taskDao.clearAllTasks();
         calendarDao.clearAllSessions();
-        try {
-            userDao.deleteUser(john.getUserId());
-            userDao.deleteUser(jane.getUserId());
-        } catch (Exception ignored) {}
     }
 
     @Test

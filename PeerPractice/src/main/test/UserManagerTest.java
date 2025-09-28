@@ -2,14 +2,12 @@ import com.cab302.peerpractice.Exceptions.DuplicateEmailException;
 import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
 import com.cab302.peerpractice.Exceptions.InvalidPasswordException;
 import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
+import com.cab302.peerpractice.Model.daos.MockUserDAO;
 import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Model.managers.UserManager;
 import com.cab302.peerpractice.Model.utils.BcryptHasher;
 import com.cab302.peerpractice.Model.utils.PasswordHasher;
 import org.junit.jupiter.api.*;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,27 +25,15 @@ public class UserManagerTest {
     private User user;
 
     @BeforeEach
-    public void setUp() throws SQLException {
-        userdao = new UserDAO();
+    public void setUp() {
+        // Use mock instead of real DB
+        userdao = new MockUserDAO();
         hasher = new BcryptHasher();
         manager = new UserManager(userdao, hasher);
 
-        // Clean up possible leftovers from previous test runs
-        try { userdao.deleteUser(USERNAME); } catch (Exception ignored) {}
-        try { userdao.deleteUser("asssss"); } catch (Exception ignored) {}
-        try { userdao.deleteUser("other@other.com"); } catch (Exception ignored) {}
-
+        // fresh mock DB, just insert the baseline user
         user = new User(NAME, LASTNAME, USERNAME, EMAIL, "$oldHash", INSTITUTION);
         userdao.addUser(user);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        try { userdao.deleteUser(USERNAME); } catch (Exception ignored) {}
-        try { userdao.deleteUser("asssss"); } catch (Exception ignored) {}
-        try { userdao.deleteUser("other@other.com"); } catch (Exception ignored) {}
-        try { userdao.deleteUser("alice_01"); } catch (Exception ignored) {}
-        try { userdao.deleteUser("newusername"); } catch (Exception ignored) {}
     }
 
     // === SIGN UP TESTS ===
@@ -123,8 +109,9 @@ public class UserManagerTest {
     }
 
     @Test void signUp_usernameValid_doesNotThrow() {
+        String uniqueEmail = "unicode_" + System.currentTimeMillis() + "@email.com";
         assertDoesNotThrow(() ->
-                manager.signUp(NAME, LASTNAME, "alice_01", EMAIL, PASSWORD, INSTITUTION));
+                manager.signUp(NAME, LASTNAME, "alice_01", uniqueEmail, PASSWORD, INSTITUTION));
         try { userdao.deleteUser("alice_01"); } catch (Exception ignored) {}
     }
 
@@ -268,14 +255,18 @@ public class UserManagerTest {
     }
 
     @Test void signUp_validAsciiNames_doesNotThrow() {
+        String uniqueEmail = "unicode_" + System.currentTimeMillis() + "@email.com";
         assertDoesNotThrow(() ->
-                manager.signUp("Alice", "Smith", USERNAME + "11", EMAIL, PASSWORD, INSTITUTION));
+                manager.signUp("Alice", "Smith", USERNAME + "11", uniqueEmail, PASSWORD, INSTITUTION));
         try { userdao.deleteUser(USERNAME + "11"); } catch (Exception ignored) {}
     }
 
-    @Test void signUp_validUnicodeNames_doesNotThrow() {
+    @Test
+    void signUp_validUnicodeNames_doesNotThrow() {
+        String uniqueEmail = "unicode_" + System.currentTimeMillis() + "@email.com";
         assertDoesNotThrow(() ->
-                manager.signUp("José", "Łukasz", USERNAME + "12", EMAIL, PASSWORD, INSTITUTION));
+                manager.signUp("José", "Łukasz", USERNAME + "12", uniqueEmail, PASSWORD, INSTITUTION));
         try { userdao.deleteUser(USERNAME + "12"); } catch (Exception ignored) {}
     }
+
 }

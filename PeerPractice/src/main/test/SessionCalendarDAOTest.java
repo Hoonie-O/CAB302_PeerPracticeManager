@@ -1,5 +1,3 @@
-package com.cab302.peerpractice.test;
-
 import com.cab302.peerpractice.Model.daos.GroupDAO;
 import com.cab302.peerpractice.Model.daos.IUserDAO;
 import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;

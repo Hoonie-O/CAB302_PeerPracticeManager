@@ -1,13 +1,11 @@
 package com.cab302.peerpractice.test;
 
 import com.cab302.peerpractice.Model.daos.ISessionCalendarDAO;
-import com.cab302.peerpractice.Model.daos.SessionCalendarDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
+import com.cab302.peerpractice.Model.daos.MockSessionCalendarDAO;
 import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Model.managers.SessionCalendarManager;
 import org.junit.jupiter.api.*;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -21,19 +19,19 @@ class SessionCalendarManagerTest {
     private LocalDateTime endTime;
 
     @BeforeEach
-    void setUp() throws SQLException {
-        dao = new SessionCalendarDAO(new UserDAO());
-        dao.clearAllSessions(); // make sure DB is clean before each test
+    void setUp() {
+        dao = new MockSessionCalendarDAO();
         manager = new SessionCalendarManager(dao);
 
-        testUser = new User("Test", "User", "testuser", "test@test.com", "hashedpass", "Test Uni");
+        testUser = new User("Test", "User", "testuser",
+                "test@test.com", "hashedpass", "Test Uni");
         startTime = LocalDateTime.of(2024, 1, 15, 10, 0);
         endTime = LocalDateTime.of(2024, 1, 15, 12, 0);
     }
 
     @AfterEach
     void tearDown() {
-        dao.clearAllSessions(); // clean after test to avoid leaks
+        dao.clearAllSessions(); // Clean mock state
     }
 
     @Test

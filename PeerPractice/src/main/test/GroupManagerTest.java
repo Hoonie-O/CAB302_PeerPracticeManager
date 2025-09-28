@@ -1,15 +1,11 @@
 import com.cab302.peerpractice.Exceptions.DuplicateGroupException;
 import com.cab302.peerpractice.Exceptions.InsufficientPermissionsException;
 import com.cab302.peerpractice.Exceptions.UserNotFoundException;
-import com.cab302.peerpractice.Model.daos.GroupDAO;
-import com.cab302.peerpractice.Model.daos.IGroupDAO;
-import com.cab302.peerpractice.Model.daos.IUserDAO;
-import com.cab302.peerpractice.Model.daos.UserDAO;
+import com.cab302.peerpractice.Model.daos.*;
 import com.cab302.peerpractice.Model.entities.Group;
 import com.cab302.peerpractice.Model.entities.User;
 import com.cab302.peerpractice.Model.managers.GroupManager;
 import com.cab302.peerpractice.Model.managers.Notifier;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,8 +29,9 @@ public class GroupManagerTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
-        userDAO = new UserDAO();
-        groupDAO = new GroupDAO(userDAO);
+        // Use mocks
+        userDAO = new MockUserDAO();
+        groupDAO = new MockGroupDAO(userDAO);
         notifier = new Notifier(userDAO);
         groupManager = new GroupManager(groupDAO, notifier, userDAO);
 
@@ -50,24 +47,14 @@ public class GroupManagerTest {
         groupDAO.addGroup(group);
     }
 
-    @AfterEach
-    public void tearDown() {
-        try {
-            if (group != null) groupDAO.deleteGroup(group);
-        } catch (Exception ignored) {}
-        try {
-            if (user != null) userDAO.deleteUser(user.getUserId());
-        } catch (Exception ignored) {}
+    @Test
+    void testCreateGroupNormal() {
+        assertDoesNotThrow(() -> groupManager.createGroup(NAME, DESCRIPTION, false, user));
     }
 
     @Test
-    void testCreateGroupNormal(){
-        assertDoesNotThrow(() -> {groupManager.createGroup(NAME,DESCRIPTION,false,user);});
-    }
-
-    @Test
-   void testCreateGroupNullCreator(){
-        assertThrows(IllegalArgumentException.class, () -> groupManager.createGroup(NAME,DESCRIPTION,false,null));
+    void testCreateGroupNullCreator() {
+        assertThrows(IllegalArgumentException.class, () -> groupManager.createGroup(NAME, DESCRIPTION, false, null));
     }
 
     @Test
@@ -143,99 +130,86 @@ public class GroupManagerTest {
     }
 
     @Test
-    void testCreateGroupDuplicateGroup(){
-        Group group = new Group(NAME,DESCRIPTION,false,USERNAME, LocalDateTime.now());
-        groupDAO.addGroup(group);
-        assertThrows(DuplicateGroupException.class, () -> groupManager.createGroup(NAME,DESCRIPTION,false,user));
+    void testCreateGroupDuplicateGroup() throws SQLException {
+        Group duplicate = new Group(NAME, DESCRIPTION, false, USERNAME, LocalDateTime.now());
+        groupDAO.addGroup(duplicate);
+        assertThrows(DuplicateGroupException.class,
+                () -> groupManager.createGroup(NAME, DESCRIPTION, false, user));
     }
 
     @Test
-    void testCreateGroupRefelectedInDAO(){
-        try{
-            groupManager.createGroup(NAME,DESCRIPTION,false,user);
+    void testCreateGroupReflectedInDAO() {
+        try {
+            groupManager.createGroup(NAME, DESCRIPTION, false, user);
             List<Group> groups = groupDAO.getAllGroups();
             Group retrievedGroup = groups.get(0);
             assertEquals(NAME, retrievedGroup.getName());
             assertEquals(DESCRIPTION, retrievedGroup.getDescription());
-            assertEquals(false, retrievedGroup.isRequire_approval());
+            assertFalse(retrievedGroup.isRequire_approval());
             assertEquals(user.getUsername(), retrievedGroup.getOwner());
-        }catch(Exception e){
+        } catch (Exception e) {
             fail();
         }
     }
 
     @Test
-    void testCreateGroupContainsCreator(){
-        try{
-            groupManager.createGroup(NAME,DESCRIPTION,false,user);
+    void testCreateGroupContainsCreator() {
+        try {
+            groupManager.createGroup(NAME, DESCRIPTION, false, user);
             List<Group> groups = groupDAO.getAllGroups();
             Group g = groups.get(0);
             assertTrue(g.getMembers().contains(user));
-        }catch(Exception e){
+        } catch (Exception e) {
             fail();
         }
     }
 
-
     @Test
-    void testRequireApprovalNormal(){
-        try{
-            groupManager.createGroup(NAME,DESCRIPTION,false,user);
-            groupManager.requireApproval(group,true);
+    void testRequireApprovalNormal() {
+        try {
+            groupManager.createGroup(NAME, DESCRIPTION, false, user);
+            groupManager.requireApproval(group, true);
             assertTrue(group.isRequire_approval());
-        }catch(Exception e){
+        } catch (Exception e) {
             fail();
         }
     }
 
     @Test
-    void testAddMemberNormal(){
-        User user1 = new User("Cristiano","Ronaldo","cristiano7","cr7@email.com","asfasfaf","QUT");
+    void testAddMemberNormal() {
+        User user1 = new User("Cristiano", "Ronaldo", "cristiano7", "cr7@email.com", "asfasfaf", "QUT");
         userDAO.addUser(user1);
-        assertDoesNotThrow(() -> groupManager.addMember(group,user,"cristiano7"));
+        assertDoesNotThrow(() -> groupManager.addMember(group, user, "cristiano7"));
     }
 
     @Test
-    void testAddMemberNonExistent(){
-        assertThrows(UserNotFoundException.class, () -> groupManager.addMember(group,user,"someone"));
+    void testAddMemberNonExistent() {
+        assertThrows(UserNotFoundException.class, () -> groupManager.addMember(group, user, "someone"));
     }
 
     @Test
-    void testAddMemberNotOwner(){
-        User user1 = new User("Cristiano","Ronaldo","CRistiano7","cr7@email.com","asfsfafa","QUT");
-        assertThrows(InsufficientPermissionsException.class, () -> groupManager.addMember(group,user1,USERNAME));
+    void testAddMemberNotOwner() {
+        User user1 = new User("Cristiano", "Ronaldo", "CRistiano7", "cr7@email.com", "asfsfafa", "QUT");
+        assertThrows(InsufficientPermissionsException.class, () -> groupManager.addMember(group, user1, USERNAME));
     }
 
     @Test
-    void testAddMemberNullOwner(){
-        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group,null,"someone"));
+    void testAddMemberNullOwner() {
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group, null, "someone"));
     }
 
     @Test
-    void testAddMemberNullGroup(){
-        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(null,user,"someone"));
+    void testAddMemberNullGroup() {
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(null, user, "someone"));
     }
 
     @Test
-    void testAddMemberNullToAdd(){
-        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group,user,null));
+    void testAddMemberNullToAdd() {
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group, user, null));
     }
 
     @Test
-    void testAddMemberEmptyToAdd(){
-        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group,user,""));
+    void testAddMemberEmptyToAdd() {
+        assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(group, user, ""));
     }
-
-    void testJoinGroupNormalNoApproval(){
-
-    }
-
-
-
-
-
-
-
-
-
 }
