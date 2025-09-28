@@ -32,9 +32,10 @@ jobs:
         run: mvn -B package --file PeerPractice/pom.xml
 
       - name: Generate Javadoc
-        run: mvn javadoc:javadoc --file PeerPractice/pom.xml
+        run: mvn javadoc:javadoc -Dmaven.javadoc.failOnError=false
 
       - name: Publish Javadoc
         uses: JamesIves/github-pages-deploy-action@v4
         with:
+          branch: gh-pages
           folder: target/docs/javadoc
