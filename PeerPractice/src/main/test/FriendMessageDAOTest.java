@@ -1,5 +1,5 @@
-package com.cab302.peerpractice.Model.daos;
-
+import com.cab302.peerpractice.Model.daos.FriendMessageDAO;
+import com.cab302.peerpractice.Model.daos.UserDAO;
 import com.cab302.peerpractice.Model.entities.FriendMessage;
 import com.cab302.peerpractice.Model.entities.User;
 import org.junit.jupiter.api.*;
