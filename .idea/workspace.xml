@@ -108,6 +108,21 @@
       <recent name="com.cab302.peerpractice" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="java in PeerPractice" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PeerPractice" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/PeerPractice/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.java in PeerPractice" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="" />
