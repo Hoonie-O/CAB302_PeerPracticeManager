@@ -31,7 +31,7 @@
 
             <Label fx:id="feedbackMsg" alignment="TOP_CENTER"/>
 
-            <HBox spacing="10" prefWidth="640">
+            <HBox spacing="10">
                 <Label fx:id="friendsListLabel" text="Friends" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                 <TextField fx:id="friendsSearchBox" promptText="Search friends list" HBox.hgrow="ALWAYS"/>
 
