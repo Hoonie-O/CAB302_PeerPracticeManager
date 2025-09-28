@@ -31,6 +31,7 @@ public abstract class SidebarController extends BaseController {
     @FXML private VBox header;
     @FXML private Label userNameLabel;
     @FXML private Label userUsernameLabel;
+    @FXML private Label userBioLabel;
 
     private static final Duration SLIDE = Duration.millis(180);
 
@@ -94,6 +95,8 @@ public abstract class SidebarController extends BaseController {
                 this.userNameLabel = userNameLbl;
             Label userUsernameLbl = (Label) profile.lookup("#userUsernameLabel");
                 this.userUsernameLabel = userUsernameLbl;
+            Label userBioLbl = (Label) profile.lookup("#userBioLabel");
+                this.userBioLabel = userBioLbl;
 
             @SuppressWarnings("unchecked") // Add suppression warning casting on combobox
             ComboBox<String> status = (ComboBox<String>) profile.lookup("#availabilityStatus");
@@ -347,6 +350,20 @@ public abstract class SidebarController extends BaseController {
         userNameLabel.setText((first + " " + last).trim().replaceAll("\\s+", " "));
         userUsernameLabel.setText(u.getUsername() == null ||
                 u.getUsername().isBlank() ? "" : "@" + u.getUsername().trim());
+
+        // Set biography if available
+        if (userBioLabel != null) {
+            String bio = u.getBio();
+            if (bio != null && !bio.trim().isEmpty()) {
+                userBioLabel.setText(bio.trim());
+                userBioLabel.setVisible(true);
+                userBioLabel.setManaged(true);
+            } else {
+                userBioLabel.setText("");
+                userBioLabel.setVisible(false);
+                userBioLabel.setManaged(false);
+            }
+        }
     }
 
 }

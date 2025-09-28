@@ -53,7 +53,8 @@ void updateProfile_noChanges_returnsFalse() throws SQLException {
             testUser.getInstitution(),
             testUser.getPhone(),
             testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"),
+            null
     );
     assertFalse(service.updateProfile(testUser, request));
 }
@@ -63,7 +64,7 @@ void updateProfile_firstNameChanged_returnsTrue() throws SQLException {
     var request = new ProfileUpdateService.ProfileUpdateRequest(
             "Jane", testUser.getLastName(), testUser.getUsername(),
             testUser.getInstitution(), testUser.getPhone(),
-            testUser.getAddress(), LocalDate.parse("1990-01-01")
+            testUser.getAddress(), LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("Jane", testUser.getFirstName());
@@ -74,7 +75,7 @@ void updateProfile_lastNameChanged_returnsTrue() throws SQLException {
     var request = new ProfileUpdateService.ProfileUpdateRequest(
             testUser.getFirstName(), "Smith", testUser.getUsername(),
             testUser.getInstitution(), testUser.getPhone(),
-            testUser.getAddress(), LocalDate.parse("1990-01-01")
+            testUser.getAddress(), LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("Smith", testUser.getLastName());
@@ -86,7 +87,7 @@ void updateProfile_usernameChanged_returnsTrue() throws SQLException {
             testUser.getFirstName(), testUser.getLastName(),
             "newusername", testUser.getInstitution(),
             testUser.getPhone(), testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("newusername", testUser.getUsername());
@@ -98,7 +99,7 @@ void updateProfile_institutionChanged_returnsTrue() throws SQLException {
             testUser.getFirstName(), testUser.getLastName(),
             testUser.getUsername(), "UQ",
             testUser.getPhone(), testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("UQ", testUser.getInstitution());
@@ -110,7 +111,7 @@ void updateProfile_phoneChanged_returnsTrue() throws SQLException {
             testUser.getFirstName(), testUser.getLastName(),
             testUser.getUsername(), testUser.getInstitution(),
             "987654321", testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("987654321", testUser.getPhone());
@@ -122,7 +123,7 @@ void updateProfile_addressChanged_returnsTrue() throws SQLException {
             testUser.getFirstName(), testUser.getLastName(),
             testUser.getUsername(), testUser.getInstitution(),
             testUser.getPhone(), "456 Oak Ave",
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("456 Oak Ave", testUser.getAddress());
@@ -134,7 +135,7 @@ void updateProfile_dateOfBirthChanged_returnsTrue() throws SQLException {
             testUser.getFirstName(), testUser.getLastName(),
             testUser.getUsername(), testUser.getInstitution(),
             testUser.getPhone(), testUser.getAddress(),
-            LocalDate.parse("1985-06-15")
+            LocalDate.parse("1985-06-15"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("1985-06-15", testUser.getDateOfBirth());
@@ -148,7 +149,7 @@ void updateProfile_nullDateOfBirth_returnsTrue() throws SQLException {
             testUser.getFirstName(), testUser.getLastName(),
             testUser.getUsername(), testUser.getInstitution(),
             testUser.getPhone(), testUser.getAddress(),
-            null
+            null, null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("", testUser.getDateOfBirth());
@@ -160,7 +161,7 @@ void updateProfile_invalidFirstName_throwsException() {
             "", testUser.getLastName(),
             testUser.getUsername(), testUser.getInstitution(),
             testUser.getPhone(), testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertThrows(IllegalArgumentException.class, () -> service.updateProfile(testUser, request));
 }
@@ -171,7 +172,7 @@ void updateProfile_invalidLastName_throwsException() {
             testUser.getFirstName(), null,
             testUser.getUsername(), testUser.getInstitution(),
             testUser.getPhone(), testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertThrows(IllegalArgumentException.class, () -> service.updateProfile(testUser, request));
 }
@@ -182,7 +183,7 @@ void updateProfile_emptyInstitution_returnsTrue() throws SQLException {
             testUser.getFirstName(), testUser.getLastName(),
             testUser.getUsername(), "",
             testUser.getPhone(), testUser.getAddress(),
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("", testUser.getInstitution());
@@ -194,7 +195,7 @@ void updateProfile_unicodeCharacters_returnsTrue() throws SQLException {
             "José", "García",
             testUser.getUsername(), "Universidad Nacional",
             testUser.getPhone(), "Calle de la Paz 123",
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals("José", testUser.getFirstName());
@@ -211,7 +212,7 @@ void updateProfile_longFields_returnsTrue() throws SQLException {
     var request = new ProfileUpdateService.ProfileUpdateRequest(
             longName, longName, testUser.getUsername(),
             longInstitution, longPhone, longAddress,
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
     );
     assertTrue(service.updateProfile(testUser, request));
 }
@@ -223,7 +224,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             testUser.getFirstName(), testUser.getLastName(),
             testUser.getUsername(), testUser.getInstitution(),
             testUser.getPhone(), testUser.getAddress(),
-            futureDate
+            futureDate, null
     );
     assertTrue(service.updateProfile(testUser, request));
     assertEquals(futureDate.toString(), testUser.getDateOfBirth());
@@ -239,7 +240,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             testUser.getInstitution(),
             testUser.getPhone(),
             testUser.getAddress(),
-            pastDate
+            pastDate, null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -256,7 +257,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             "  University  ",
             "  987654321  ",
             "  456 Oak Ave  ",
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -279,7 +280,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             originalInstitution,
             "999888777",
             originalAddress,
-            LocalDate.parse(originalDateOfBirth)
+            LocalDate.parse(originalDateOfBirth), null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -298,7 +299,8 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             testUser.getInstitution(),
             testUser.getPhone(),
             testUser.getAddress(),
-            LocalDate.parse(testUser.getDateOfBirth())
+            LocalDate.parse(testUser.getDateOfBirth()),
+            null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -314,7 +316,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             "UNIVERSITY OF QUEENSLAND",
             "(07) 1234-5678",
             "123 MAIN STREET, BRISBANE QLD 4000",
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -331,7 +333,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             testUser.getInstitution(),
             testUser.getPhone(),
             testUser.getAddress(),
-            minDate
+            minDate, null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -348,7 +350,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             "St. Mary's University",
             "+1-555-123-4567",
             "123 St. Patrick's Ave, Apt #45B",
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -364,7 +366,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             "University 2024",
             "1234567890",
             "123 Street Name 456",
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -386,7 +388,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             longInstitution,
             longPhone,
             longAddress,
-            LocalDate.parse("1990-01-01")
+            LocalDate.parse("1990-01-01"), null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -404,7 +406,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             testUser.getInstitution(),
             testUser.getPhone(),
             testUser.getAddress(),
-            LocalDate.parse("1995-12-25")
+            LocalDate.parse("1995-12-25"), null
         );
 
         boolean result = service.updateProfile(testUser, request);
@@ -421,7 +423,7 @@ void updateProfile_futureDate_returnsTrue() throws SQLException {
             testUser.getInstitution(),
             testUser.getPhone(),
             testUser.getAddress(),
-            null
+            null, null
         );
 
         boolean result = service.updateProfile(testUser, request);

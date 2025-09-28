@@ -5,10 +5,14 @@ import com.cab302.peerpractice.Model.DAOs.UserDAO;
 import com.cab302.peerpractice.Model.Entities.Group;
 import com.cab302.peerpractice.Model.Entities.Session;
 import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Utils.SQLiteConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +20,7 @@ import java.util.List;
 
 public class SessionCalendarDAOTest {
 
+    private Connection connection;
     private SessionCalendarDAO storage;
     private IUserDAO userDao;
     private GroupDAO groupDao;
@@ -27,6 +32,10 @@ public class SessionCalendarDAOTest {
 
     @BeforeEach
     void setUp() throws SQLException {
+        // fresh in-memory DB
+        connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+        SQLiteConnection.setInstance(connection);
+
         userDao = new UserDAO();
         groupDao = new GroupDAO(userDao);
         storage = new SessionCalendarDAO(userDao);
@@ -49,15 +58,11 @@ public class SessionCalendarDAOTest {
                                  LocalDateTime.of(2024, 10, 15, 19, 0),
                                  LocalDateTime.of(2024, 10, 15, 21, 0));
     }
-    
+
     @AfterEach
-    void tearDown() {
-        storage.clearAllSessions();
-        try {
-            groupDao.deleteGroup(testGroup);
-            userDao.deleteUser(testUser1.getUserId());
-            userDao.deleteUser(testUser2.getUserId());
-        } catch (Exception e) {
+    void tearDown() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close(); // wipes the in-memory DB
         }
     }
 
@@ -338,18 +343,18 @@ public class SessionCalendarDAOTest {
 
     @Test
     void testComplexParticipantQueries() {
-        testSession1.addParticipant(testUser1);
+        testSession1.addParticipant(testUser1);  // testUser1 already organizer, so should be no-op
         testSession1.addParticipant(testUser2);
-        
+
         testSession2.addParticipant(testUser1); // User1 in both sessions
-        
+
         storage.addSession(testSession1);
         storage.addSession(testSession2);
-        
+
         List<Session> user1Sessions = storage.getSessionsForUser(testUser1);
-        assertEquals(2, user1Sessions.size());
-        
+        assertEquals(2, user1Sessions.size());  // organizer of session1 + participant in session2
+
         List<Session> user2Sessions = storage.getSessionsForUser(testUser2);
-        assertEquals(1, user2Sessions.size());
+        assertEquals(2, user2Sessions.size());  // participant in session1 + organizer of session2
     }
 }

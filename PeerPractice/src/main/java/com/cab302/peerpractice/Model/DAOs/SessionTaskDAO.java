@@ -45,27 +45,8 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         String createdBy = rs.getString("created_by");
         boolean completed = rs.getInt("completed") == 1;
         LocalDateTime createdAt = LocalDateTime.parse(rs.getString("created_at"));
-        LocalDateTime updatedAt = LocalDateTime.parse(rs.getString("updated"));
 
-        SessionTask task = new SessionTask(sessionId, title, deadline, assigneeId, createdBy);
-        try {
-            var idField = SessionTask.class.getDeclaredField("taskId");
-            idField.setAccessible(true);
-            idField.set(task, taskId);
-
-            var completedField = SessionTask.class.getDeclaredField("completed");
-            completedField.setAccessible(true);
-            completedField.set(task, completed);
-
-            var createdAtField = SessionTask.class.getDeclaredField("createdAt");
-            createdAtField.setAccessible(true);
-            createdAtField.set(task, createdAt);
-
-            var updatedField = SessionTask.class.getDeclaredField("updated");
-            updatedField.setAccessible(true);
-            updatedField.set(task, updatedAt);
-        } catch (Exception ignored) {}
-
+        SessionTask task = new SessionTask(taskId, sessionId, title, deadline, assigneeId, createdBy, createdAt, completed);
         return task;
     }
 

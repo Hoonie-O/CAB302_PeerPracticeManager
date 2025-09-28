@@ -243,4 +243,15 @@ public class MockGroupDAO implements IGroupDAO {
         req.setUser(userDao.findUserById(userId));
         joinRequests.put(reqId, req);
     }
+
+    /**
+     * Clear all data from the mock DAO for testing purposes
+     */
+    public void clear() {
+        groups.clear();
+        groupMembers.clear();
+        joinRequests.clear();
+        groupIdGen.set(1);
+        requestIdGen.set(1);
+    }
 }

@@ -11,8 +11,32 @@ public class MailService {
     private static final String emailFrom = "peerpracticecab302@gmail.com";
     private static final String appPassword = "wxvv yyps qbxf coin";
 
+    // Flag to disable actual email sending during tests
+    private static boolean testMode = false;
+
+    public static void setTestMode(boolean testMode) {
+        MailService.testMode = testMode;
+    }
+
     public boolean sendMessage(String msg, String destination) {
+        // Basic input validation
+        if (msg == null || destination == null || destination.trim().isEmpty()) {
+            return false;
+        }
+
+        destination = destination.trim();
+
+        // Basic email format validation
+        if (!isValidEmail(destination)) {
+            return false;
+        }
+
         try {
+            // In test mode, just return true without sending actual email
+            if (testMode) {
+                return true;
+            }
+
             Message message = new MimeMessage(getEmailSession());
             message.setFrom(new InternetAddress(emailFrom));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(destination, false));
@@ -21,9 +45,47 @@ public class MailService {
             Transport.send(message);
             return true;
         }catch (Exception e){
-            e.printStackTrace();
             return false;
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        // Basic email validation
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+
+        email = email.trim();
+
+        // Must contain @ and have parts before and after
+        int atIndex = email.indexOf('@');
+        if (atIndex <= 0 || atIndex >= email.length() - 1) {
+            return false;
+        }
+
+        // No multiple @ symbols
+        if (email.indexOf('@', atIndex + 1) != -1) {
+            return false;
+        }
+
+        String domain = email.substring(atIndex + 1);
+
+        // Special case: localhost is valid (common for testing)
+        if ("localhost".equals(domain)) {
+            return true;
+        }
+
+        // Reject international domain names (non-ASCII characters)
+        if (!domain.matches("[a-zA-Z0-9.-]+")) {
+            return false;
+        }
+
+        // Basic domain validation - must have at least one dot after @ (except localhost)
+        if (!domain.contains(".") || domain.endsWith(".") || domain.startsWith(".")) {
+            return false;
+        }
+
+        return true;
     }
 
     private static jakarta.mail.Session getEmailSession(){

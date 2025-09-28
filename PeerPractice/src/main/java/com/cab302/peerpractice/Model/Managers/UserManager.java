@@ -94,4 +94,9 @@ public class UserManager {
             throws SQLException {
         userDAO.updateValue(username, "date_of_birth", isoDate == null ? "" : isoDate.trim());
     }
+
+    public void updateBio(String username, String bio)
+            throws SQLException {
+        userDAO.updateValue(username, "biography", bio == null ? "" : bio.trim());
+    }
 }

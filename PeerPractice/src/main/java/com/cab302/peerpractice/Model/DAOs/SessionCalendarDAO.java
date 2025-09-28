@@ -106,6 +106,9 @@ public class SessionCalendarDAO implements ISessionCalendarDAO {
     // -------------------- DAO METHODS --------------------
     @Override
     public boolean addSession(Session session) {
+        if (session == null) {
+            return false;
+        }
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT OR REPLACE INTO sessions " +
                         "(session_id, title, description, start_time, end_time, organiser_user_id, priority, location, color_label, subject, max_participants, group_id) " +
@@ -144,14 +147,17 @@ public class SessionCalendarDAO implements ISessionCalendarDAO {
 
     @Override
     public boolean removeSession(Session session) {
+        if (session == null) {
+            return false;
+        }
         try (PreparedStatement ps = connection.prepareStatement("DELETE FROM sessions WHERE session_id=?")) {
             ps.setString(1, session.getSessionId());
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
             try (PreparedStatement del = connection.prepareStatement("DELETE FROM session_participants WHERE session_id=?")) {
                 del.setString(1, session.getSessionId());
                 del.executeUpdate();
             }
-            return true;
+            return rowsAffected > 0;
         } catch (SQLException e) {
             return false;
         }
@@ -181,6 +187,9 @@ public class SessionCalendarDAO implements ISessionCalendarDAO {
     @Override
     public List<Session> getSessionsForUser(User user) {
         List<Session> list = new ArrayList<>();
+        if (user == null) {
+            return list;
+        }
         try (PreparedStatement ps = connection.prepareStatement("SELECT s.* FROM sessions s JOIN session_participants p ON s.session_id=p.session_id WHERE p.user_id=?")) {
             ps.setString(1, user.getUserId());
             try (ResultSet rs = ps.executeQuery()) {
@@ -219,6 +228,17 @@ public class SessionCalendarDAO implements ISessionCalendarDAO {
 
     @Override
     public boolean updateSession(Session oldSession, Session newSession) {
+        if (oldSession == null || newSession == null) {
+            return false;
+        }
+        // Set the ID of the new session to match the old one for proper updating
+        try {
+            var field = Session.class.getDeclaredField("sessionId");
+            field.setAccessible(true);
+            field.set(newSession, oldSession.getSessionId());
+        } catch (Exception e) {
+            return false;
+        }
         return addSession(newSession);
     }
 
@@ -250,6 +270,9 @@ public class SessionCalendarDAO implements ISessionCalendarDAO {
     @Override
     public List<Session> getSessionsForGroup(Group group) {
         List<Session> list = new ArrayList<>();
+        if (group == null) {
+            return list;
+        }
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM sessions WHERE group_id=?")) {
             ps.setInt(1, group.getID());
             try (ResultSet rs = ps.executeQuery()) {
