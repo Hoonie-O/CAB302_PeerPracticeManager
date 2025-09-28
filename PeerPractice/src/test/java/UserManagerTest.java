@@ -5,11 +5,6 @@ import com.cab302.peerpractice.Model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.print.attribute.standard.MediaSize;
-import java.io.FileReader;
-import java.util.Optional;
-
-import static javafx.beans.binding.Bindings.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserManagerTest {

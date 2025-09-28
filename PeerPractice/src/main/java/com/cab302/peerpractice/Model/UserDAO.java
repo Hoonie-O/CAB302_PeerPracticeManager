@@ -29,7 +29,7 @@ public class UserDAO implements IUserDAO{
 //            stmt.execute("DROP TABLE IF EXISTS notifications;");
 //            stmt.execute("DROP TABLE IF EXISTS events;");
 //            stmt.execute("DROP TABLE IF EXISTS friends;");
-//            stmt.execute("DROP TABLE IF EXISTS users;");
+//            stmt.execute("DROP TABLE IF EXISTS users;");  // This was originally here
 
             String createUsersTable = "CREATE TABLE IF NOT EXISTS users ("
                     + "user_id TEXT NOT NULL PRIMARY KEY AUTOINCREMENT," // Changed from INTEGER to TEXT

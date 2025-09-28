@@ -1,5 +1,3 @@
-package com.cab302.peerpractice.test;
-
 import com.cab302.peerpractice.Model.SessionTask;
 import com.cab302.peerpractice.Model.SessionTaskStorage;
 import org.junit.jupiter.api.BeforeEach;
