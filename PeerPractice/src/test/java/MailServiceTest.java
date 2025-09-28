@@ -11,6 +11,7 @@ public class MailServiceTest {
     @BeforeEach
     void setUp() {
         mailService = new MailService();
+        MailService.setTestMode(true);  // Enable test mode to avoid actual email sending
     }
 
     @Test

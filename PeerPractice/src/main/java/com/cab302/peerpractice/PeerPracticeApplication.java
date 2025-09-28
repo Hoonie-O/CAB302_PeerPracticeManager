@@ -12,7 +12,7 @@ public class PeerPracticeApplication extends Application {
             AppContext ctx = new AppContext();
             Navigation navigate = new Navigation(ctx,stage);
             stage.setUserData(navigate);
-
+|
             // check for saved session
             User savedUser =
                 SessionPersistence.loadSavedSession(ctx.getUserDAO());

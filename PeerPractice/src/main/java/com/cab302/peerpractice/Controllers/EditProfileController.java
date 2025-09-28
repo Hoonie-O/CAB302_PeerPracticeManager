@@ -27,6 +27,7 @@ public class EditProfileController extends BaseController {
     @FXML private DatePicker dateOfBirthField;
     @FXML private TextField phoneField;
     @FXML private TextField addressField;
+    @FXML private TextArea bioField;
 
     // Formatter used to parse the DatePicker value consistently.
     private static final DateTimeFormatter ISO = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -90,6 +91,11 @@ public class EditProfileController extends BaseController {
         if (addressField != null) {
             addressField.setText(u.getAddress());
         }
+
+        // Biography information prefill
+        if (bioField != null) {
+            bioField.setText(u.getBio() != null ? u.getBio() : "");
+        }
     }
 
     public void setStage(Stage stage) {
@@ -99,6 +105,7 @@ public class EditProfileController extends BaseController {
     @FXML private void onClose() {
         if (stage != null) stage.close();
     }
+
 
     @FXML
     private void onSave() {
@@ -116,6 +123,7 @@ public class EditProfileController extends BaseController {
         String newPhoneNumber = trimOrEmpty(phoneField);
         LocalDate newDateOfBirth = dateOfBirthField == null ? null : dateOfBirthField.getValue();
         String newAddress = trimOrEmpty(addressField);
+        String newBio = bioField != null ? bioField.getText().trim() : "";
 
         // Validate required fields
         if (newFirstname.isBlank() || newLastname.isBlank() || newUsername.isBlank()) {
@@ -134,7 +142,7 @@ public class EditProfileController extends BaseController {
         try {
             ProfileUpdateService updateService = new ProfileUpdateService(ctx.getUserManager());
             ProfileUpdateService.ProfileUpdateRequest request = new ProfileUpdateService.ProfileUpdateRequest(
-                newFirstname, newLastname, newUsername, newInstitute, newPhoneNumber, newAddress, newDateOfBirth
+                newFirstname, newLastname, newUsername, newInstitute, newPhoneNumber, newAddress, newDateOfBirth, newBio
             );
 
             boolean changed = updateService.updateProfile(u, request);

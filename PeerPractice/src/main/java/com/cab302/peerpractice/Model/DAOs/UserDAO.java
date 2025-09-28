@@ -75,6 +75,7 @@ public class UserDAO implements IUserDAO {
         try { u.setDateOfBirth(rs.getString("date_of_birth")); } catch (SQLException ignored) {}
         try { u.setDateFormat(rs.getString("date_format")); } catch (SQLException ignored) {}
         try { u.setTimeFormat(rs.getString("time_format")); } catch (SQLException ignored) {}
+        try { u.setBio(bio); } catch (Exception ignored) {}
 
         return u;
     }

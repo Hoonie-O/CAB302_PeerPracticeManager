@@ -57,6 +57,10 @@ public class ProfileUpdateService {
             () -> userManager.updateDateOfBirth(user.getUsername(), dobIso),
             () -> user.setDateOfBirth(dobIso));
 
+        changed |= updateIfChanged(user.getBio(), request.getBio(),
+            () -> userManager.updateBio(user.getUsername(), request.getBio()),
+            () -> user.setBio(request.getBio()));
+
         return changed;
     }
 
@@ -91,10 +95,11 @@ public class ProfileUpdateService {
         private final String phone;
         private final String address;
         private final LocalDate dateOfBirth;
+        private final String bio;
 
         public ProfileUpdateRequest(String firstName, String lastName, String username,
                                   String institution, String phone, String address,
-                                  LocalDate dateOfBirth) {
+                                  LocalDate dateOfBirth, String bio) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.username = username;
@@ -102,6 +107,7 @@ public class ProfileUpdateService {
             this.phone = phone;
             this.address = address;
             this.dateOfBirth = dateOfBirth;
+            this.bio = bio;
         }
 
         public String getFirstName() { return firstName; }
@@ -111,5 +117,6 @@ public class ProfileUpdateService {
         public String getPhone() { return phone; }
         public String getAddress() { return address; }
         public LocalDate getDateOfBirth() { return dateOfBirth; }
+        public String getBio() { return bio; }
     }
 }

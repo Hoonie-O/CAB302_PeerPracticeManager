@@ -17,6 +17,8 @@
             <VBox alignment="CENTER_LEFT" spacing="6">
                 <Label fx:id="userNameLabel" text="John Doe"/>
                 <Label fx:id="userUsernameLabel" text="\@johndoe123"/>
+                <Label fx:id="userBioLabel" text="" wrapText="true" maxWidth="168"
+                       style="-fx-text-fill: gray; -fx-font-size: 11px;"/>
                 <ComboBox fx:id="availabilityStatus" prefWidth="180"/>
             </VBox>
             <Separator/>

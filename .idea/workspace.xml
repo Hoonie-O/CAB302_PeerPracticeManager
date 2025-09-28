@@ -5,32 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/FriendMessageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/FriendMessageDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/GroupMessageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/GroupMessageDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/IFriendMessageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/IFriendMessageDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/IGroupMessageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/IGroupMessageDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/IMessageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/IMessageDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/MockFriendMessageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/MockFriendMessageDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/MockGroupMessageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/MockGroupMessageDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Entities/FriendMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Entities/FriendMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Entities/GroupMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Entities/GroupMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Entities/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Entities/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/FriendMessageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/FriendMessageManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/GroupMessageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/GroupMessageManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/MessageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/MessageManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/AvailabilityDAOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/AvailabilityDAOTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/FriendMessageDAOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/FriendMessageDAOTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/FriendMessageManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/FriendMessageManagerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/GroupDAOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/GroupDAOTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/GroupMessageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/GroupMessageDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/GroupMessageManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/GroupMessageManagerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/.github/workflows/maven.yml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/.github/workflows/maven.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/EditProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/EditProfileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SidebarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SidebarController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/SessionCalendarDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/SessionCalendarDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/DAOs/UserDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/MailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/MailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/ProfileUpdateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/ProfileUpdateService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Managers/UserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/editprofile-dialog.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/editprofile-dialog.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/profile-layout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/profile-layout.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/MailServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/MailServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/ProfileUpdateServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/ProfileUpdateServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionCalendarDAOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionCalendarDAOTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionDeletionIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionDeletionIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionTaskDAOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionTaskDAOTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionTaskTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionTaskTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SimplifiedIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SimplifiedIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/UserDAOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/UserDAOTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,9 +62,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Launcher.executor": "Run",
     "Application.PeerPracticeApplication.executor": "Run",
-    "JUnit.FriendMessageDAOTest and 3 more.executor": "Run",
     "JUnit.java in PeerPractice.executor": "Run",
     "Maven.PeerPractice [test].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
@@ -83,7 +70,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "#107 on Messages",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/HoonieG15/IdeaProjects/CAB302_PeerPracticeManager/PeerPractice/src/main/resources/com/cab302/peerpractice",
@@ -109,54 +96,7 @@
       <recent name="com.cab302.peerpractice" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.FriendMessageDAOTest and 11 more">
-    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.cab302.peerpractice.Launcher" />
-      <module name="PeerPractice" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.cab302.peerpractice.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FriendMessageDAOTest and 11 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PeerPractice" />
-      <option name="TEST_OBJECT" value="pattern" />
-      <patterns>
-        <pattern testClass="FriendMessageDAOTest" />
-        <pattern testClass="FriendMessageManagerTest" />
-        <pattern testClass="GroupMessageDAOTest" />
-        <pattern testClass="GroupMessageManagerTest" />
-        <pattern testClass="GroupDAOTest" />
-        <pattern testClass="AvailabilityDAOTest" />
-        <pattern testClass="SessionCalendarDAOTest" />
-        <pattern testClass="SessionDeletionIntegrationTest" />
-        <pattern testClass="SessionTaskDAOTest" />
-        <pattern testClass="SessionTaskTest" />
-        <pattern testClass="SimplifiedIntegrationTest" />
-        <pattern testClass="UserDAOTest" />
-      </patterns>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FriendMessageDAOTest and 3 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PeerPractice" />
-      <option name="TEST_OBJECT" value="pattern" />
-      <patterns>
-        <pattern testClass="FriendMessageDAOTest" />
-        <pattern testClass="FriendMessageManagerTest" />
-        <pattern testClass="GroupMessageDAOTest" />
-        <pattern testClass="GroupMessageManagerTest" />
-      </patterns>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="java in PeerPractice" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PeerPractice" />
       <option name="TEST_OBJECT" value="directory" />
@@ -167,9 +107,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.FriendMessageDAOTest and 11 more" />
-        <item itemvalue="JUnit.FriendMessageDAOTest and 3 more" />
-        <item itemvalue="Application.Launcher" />
         <item itemvalue="JUnit.java in PeerPractice" />
       </list>
     </recent_temporary>
@@ -182,15 +119,6 @@
       <option name="presentableId" value="Default" />
       <updated>1758981752414</updated>
     </task>
-    <task id="LOCAL-00001">
-      <option name="closed" value="true" />
-      <created>1759055166890</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1759055166890</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -204,19 +132,7 @@
       </map>
     </option>
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update maven.yml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update maven.yml" />
-  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$UserTest.ic" NAME="UserTest Coverage Results" MODIFIED="1758688125400" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$UserManagerTest.ic" NAME="UserManagerTest Coverage Results" MODIFIED="1758292254613" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$test_in_PeerPractice.ic" NAME="test in PeerPractice Coverage Results" MODIFIED="1758970853426" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$GroupManagerTest.ic" NAME="GroupManagerTest Coverage Results" MODIFIED="1758688090463" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$DefaultControllerLogoutTest.ic" NAME="DefaultControllerLogoutTest Coverage Results" MODIFIED="1758645505605" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$GroupTest.ic" NAME="GroupTest Coverage Results" MODIFIED="1758687877226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$NotesManagerTest_and_21_more.ic" NAME="NotesManagerTest and 21 more Coverage Results" MODIFIED="1759040242443" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$GroupMessageManagerTest_and_1_more.ic" NAME="GroupMessageManagerTest and 1 more Coverage Results" MODIFIED="1759043935330" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$SessionCalendarManagerTest.ic" NAME="SessionCalendarManagerTest Coverage Results" MODIFIED="1758293880587" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1759055403203" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

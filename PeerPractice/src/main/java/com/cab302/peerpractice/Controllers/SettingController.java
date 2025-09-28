@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class SettingController extends BaseController {
@@ -114,6 +115,9 @@ public class SettingController extends BaseController {
                     return;
                 }
 
+                // Handle password change if fields are filled
+                boolean passwordChanged = handlePasswordChange(currentUser);
+
                 // Use the generic updateValue method
                 ctx.getUserDAO().updateValue(currentUser.getUsername(),
                         "date_format", dateFormatBox.getValue());
@@ -124,8 +128,13 @@ public class SettingController extends BaseController {
                 currentUser.setDateFormat(dateFormatBox.getValue());
                 currentUser.setTimeFormat(timeFormatBox.getValue());
 
-                showAlert("Success", "Date and time settings saved successfully!",
-                        Alert.AlertType.INFORMATION);
+                if (passwordChanged) {
+                    showAlert("Success", "Settings and password updated successfully!",
+                            Alert.AlertType.INFORMATION);
+                } else {
+                    showAlert("Success", "Date and time settings saved successfully!",
+                            Alert.AlertType.INFORMATION);
+                }
             }
             else {
                 showAlert("Error", "No user logged in",
@@ -138,6 +147,62 @@ public class SettingController extends BaseController {
             e.printStackTrace();
         }
         onClose();
+    }
+
+    private boolean handlePasswordChange(User currentUser) throws Exception {
+        String oldPassword = oldPasswordField.getText();
+        String newPassword = newPasswordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
+
+        // If no password fields are filled, skip password change
+        if ((oldPassword == null || oldPassword.trim().isEmpty()) &&
+            (newPassword == null || newPassword.trim().isEmpty()) &&
+            (confirmPassword == null || confirmPassword.trim().isEmpty())) {
+            return false;
+        }
+
+        // Validate all password fields are filled
+        if (oldPassword == null || oldPassword.trim().isEmpty()) {
+            showAlert("Error", "Please enter your current password", Alert.AlertType.ERROR);
+            throw new Exception("Missing current password");
+        }
+
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            showAlert("Error", "Please enter a new password", Alert.AlertType.ERROR);
+            throw new Exception("Missing new password");
+        }
+
+        if (newPassword.length() < 6) {
+            showAlert("Error", "Password must be at least 6 characters long", Alert.AlertType.ERROR);
+            throw new Exception("Password too short");
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            showAlert("Error", "New password and confirmation password must match", Alert.AlertType.ERROR);
+            throw new Exception("Passwords don't match");
+        }
+
+        // Verify current password
+        if (!ctx.getUserManager().authenticate(currentUser.getUsername(), oldPassword)) {
+            showAlert("Error", "Current password is incorrect", Alert.AlertType.ERROR);
+            throw new Exception("Incorrect current password");
+        }
+
+        // Check if new password is same as current
+        if (oldPassword.equals(newPassword)) {
+            showAlert("Error", "New password must be different from current password", Alert.AlertType.ERROR);
+            throw new Exception("Same password");
+        }
+
+        // Change password
+        ctx.getUserManager().changePassword(currentUser.getUsername(), newPassword);
+
+        // Clear password fields
+        oldPasswordField.clear();
+        newPasswordField.clear();
+        confirmPasswordField.clear();
+
+        return true;
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {

@@ -106,6 +106,17 @@
                        maxWidth="Infinity"/>
         </VBox>
 
+        <!-- Biography -->
+        <VBox spacing="4"
+              GridPane.rowIndex="6"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2">
+            <Label text="Biography:"/>
+            <TextArea fx:id="bioField"
+                      prefRowCount="3"
+                      maxWidth="Infinity"/>
+        </VBox>
+
         <!-- Buttons -->
         <HBox alignment="CENTER_RIGHT"
               spacing="8"
