@@ -22,16 +22,15 @@ public class Notifier {
     public void groupApprovalRequest(User requester, Group group) throws SQLException {
         // Build the notification via a factory hook for easy overriding.
         GroupApprovalNotification notification = buildGroupApprovalNotification(requester, group);
-
-        userDAO.addNotification(notification.getTo(), requester.getUsername(), notification.getMessage());
+        userDAO.addNotification(notification.getFrom(), notification.getTo(), notification.getMsg());
     }
 
     /**
      * Factory method that builds the notification for a group-approval request.
      */
     protected GroupApprovalNotification buildGroupApprovalNotification(User requester, Group group) {
-        String ownerUsername = group.getOwner();
-        return new GroupApprovalNotification(requester, ownerUsername, group);
+        User groupOwner = group.getOwner();
+        return new GroupApprovalNotification(requester, groupOwner, group);
     }
 
     /**

@@ -247,11 +247,11 @@ public class UserDAO implements IUserDAO {
 
     // -------------------- NOTIFICATIONS --------------------
     @Override
-    public boolean addNotification(String sentFrom, String receivedBy, String message) {
+    public boolean addNotification(User sentFrom, User receivedBy, String message) {
         String sql = "INSERT INTO notifications (sent_from, received_by, message) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, sentFrom);
-            ps.setString(2, receivedBy);
+            ps.setString(1, sentFrom.getUsername());
+            ps.setString(2, receivedBy.getUsername());
             ps.setString(3, message);
             ps.executeUpdate();
             return true;
@@ -259,10 +259,10 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public boolean addNotification(String username, Notification notification) {
+    public boolean addNotification(User username, Notification notification) {
         return addNotification(username, username, notification.toString());
     }
 
     @Override
-    public boolean removeNotification(String username, Notification notification) { return false; }
+    public boolean removeNotification(User username, Notification notification) { return false; }
 }

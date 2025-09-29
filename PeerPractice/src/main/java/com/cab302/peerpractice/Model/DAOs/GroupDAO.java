@@ -65,7 +65,7 @@ public class GroupDAO implements IGroupDAO {
             ps.setString(1, group.getName());
             ps.setString(2, group.getDescription());
             ps.setInt(3, group.isRequire_approval() ? 1 : 0);
-            ps.setString(4, group.getOwner());
+            ps.setString(4, group.getOwner().getUsername());
             ps.setString(5, group.getCreated_at().toString());
             ps.executeUpdate();
 
@@ -73,7 +73,7 @@ public class GroupDAO implements IGroupDAO {
                 if (keys.next()) {
                     int groupId = keys.getInt(1);
                     group.setID(groupId);
-                    User owner = userDao.findUser("username", group.getOwner());
+                    User owner = userDao.findUser("username", group.getOwner().getUsername());
                     if (owner != null) addMemberWithRole(groupId, owner.getUserId(), "admin");
                     return groupId;
                 }
@@ -464,8 +464,10 @@ public class GroupDAO implements IGroupDAO {
         String name = rs.getString("name");
         String description = rs.getString("description");
         boolean requireApproval = rs.getInt("require_approval") == 1;
-        String owner = rs.getString("owner");
+        String ownerName = rs.getString("owner");
         LocalDateTime createdAt = LocalDateTime.parse(rs.getString("created_at"));
+
+        User owner = userDao.findUser("username", ownerName);
 
         Group group = new Group(name, description, requireApproval, owner, createdAt);
         group.setID(groupId);

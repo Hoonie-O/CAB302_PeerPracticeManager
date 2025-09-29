@@ -108,7 +108,7 @@ public class AppContext {
                         "Example Group",
                         "This is a test group",
                         false,
-                        john.getUsername(),
+                        john,
                         LocalDateTime.now()
                 );
                 this.groupDAO.addGroup(testGroup);

@@ -38,7 +38,7 @@ public class MockGroupDAO implements IGroupDAO {
         groups.put(groupId, group);
 
         // Add owner as admin if exists
-        User owner = userDao.getUserByUsername(group.getOwner()).orElse(null);
+        User owner = userDao.getUserByUsername(group.getOwner().getUsername()).orElse(null);
         if (owner != null) {
             addMemberWithRole(groupId, owner.getUserId(), "admin");
         }
