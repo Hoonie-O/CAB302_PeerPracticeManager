@@ -1,5 +1,6 @@
 package com.cab302.peerpractice.Controllers;
 
+import com.cab302.peerpractice.Model.Managers.Notifier;
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Entities.Friend;
 import com.cab302.peerpractice.Model.DAOs.IFriendDAO;
@@ -72,6 +73,11 @@ public class FriendsController extends SidebarController{
      * Data access object for friend-related database operations.
      */
     IFriendDAO friendDAO = ctx.getFriendDAO();
+    /**
+     * <hr>
+     * Notifier to show friend request notifications
+     */
+    Notifier notifier = ctx.getNotifier();
 
     /**
      * <hr>
@@ -168,6 +174,7 @@ public class FriendsController extends SidebarController{
                     if (friend == null) { friend = userDAO.findUser("email", identifier.getText());}
                     if (friend != null) {
                         boolean success = friendDAO.addFriend(currentUser, friend);
+                        notifier.createFriendRequest(currentUser, friend);
 
                         // (un)successful message
                         if (success) {
