@@ -123,6 +123,8 @@ public class GroupController extends SidebarController {
         groupListView.getSelectionModel().selectedItemProperty().addListener((obs, oldGroup, newGroup) -> {
             if (newGroup != null) {
                 groupNameLabel.setText(newGroup.getName());
+                // Preload all tabs in background to avoid delays when switching
+                preloadAllTabs(newGroup);
                 // Reload current tab content with new group
                 Tab selectedTab = groupTabs.getSelectionModel().getSelectedItem();
                 if (selectedTab != null) {
@@ -192,6 +194,46 @@ public class GroupController extends SidebarController {
             System.err.println("Error loading tab content: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Preloads all tabs in the background to eliminate switching delays
+     */
+    private void preloadAllTabs(Group group) {
+        // Run in background thread to avoid blocking UI
+        new Thread(() -> {
+            try {
+                // Small delay to let the current tab load first
+                Thread.sleep(50);
+
+                // Preload each tab on the JavaFX thread
+                Platform.runLater(() -> {
+                    for (Tab tab : groupTabs.getTabs()) {
+                        String tabName = tab.getText();
+                        // Load each tab's content if not already loaded
+                        switch (tabName) {
+                            case "Calendar":
+                                if (groupCalendarController == null) loadCalendarContent(tab, group);
+                                break;
+                            case "Notes":
+                                if (notesController == null) loadNotesContent(tab, group);
+                                break;
+                            case "Sessions":
+                                loadSessionsContent(tab, group);
+                                break;
+                            case "Chat":
+                                loadChatContent(tab, group);
+                                break;
+                            case "Files":
+                                loadFilesContent(tab, group);
+                                break;
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("Error preloading tabs: " + e.getMessage());
+            }
+        }).start();
     }
 
     /**
@@ -638,6 +680,30 @@ public class GroupController extends SidebarController {
     @FXML
     public void onManageGroup(ActionEvent event) {
         try {
+            // Get currently selected group
+            Group selectedGroup = groupListView.getSelectionModel().getSelectedItem();
+            if (selectedGroup == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("No Group Selected");
+                alert.setHeaderText("Please select a group");
+                alert.setContentText("Select a group from the list to manage it.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Check if user is admin of this group
+            User currentUser = ensureLoggedIn();
+            if (currentUser == null) return;
+
+            if (!ctx.getGroupManager().isAdmin(selectedGroup, currentUser)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Insufficient Permissions");
+                alert.setHeaderText("Admin Access Required");
+                alert.setContentText("Only group admins can manage group settings.");
+                alert.showAndWait();
+                return;
+            }
+
             // Load FXML
             FXMLLoader loader = new FXMLLoader(View.ManageGroup.url());
             loader.setControllerFactory(cls -> {
@@ -652,9 +718,12 @@ public class GroupController extends SidebarController {
             Parent root = loader.load();
             ManageGroupController controller = loader.getController();
 
+            // Set the group BEFORE opening the dialog
+            controller.setGroup(selectedGroup);
+
             // Open modal
             Stage dialog = new Stage();
-            dialog.setTitle("Manage Group");
+            dialog.setTitle("Manage Group - " + selectedGroup.getName());
             dialog.initOwner(groupTabs.getScene().getWindow());
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.setResizable(false);
@@ -662,6 +731,82 @@ public class GroupController extends SidebarController {
 
             controller.setStage(dialog);
             dialog.showAndWait();
+
+            // Refresh the group list after closing dialog (in case members were changed)
+            refreshGroupList();
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Opens the group settings dialog
+     */
+    @FXML
+    public void onGroupSettings(ActionEvent event) {
+        try {
+            // Get currently selected group
+            Group selectedGroup = groupListView.getSelectionModel().getSelectedItem();
+            if (selectedGroup == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("No Group Selected");
+                alert.setHeaderText("Please select a group");
+                alert.setContentText("Select a group from the list to manage its settings.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Check if user is admin of this group
+            User currentUser = ensureLoggedIn();
+            if (currentUser == null) return;
+
+            if (!ctx.getGroupManager().isAdmin(selectedGroup, currentUser)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Insufficient Permissions");
+                alert.setHeaderText("Admin Access Required");
+                alert.setContentText("Only group admins can modify group settings.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Load FXML
+            FXMLLoader loader = new FXMLLoader(View.GroupSettings.url());
+            loader.setControllerFactory(cls -> {
+                try {
+                    return cls.getDeclaredConstructor(AppContext.class, Navigation.class)
+                            .newInstance(ctx, nav);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            Parent root = loader.load();
+            GroupSettingsController controller = loader.getController();
+
+            // Set the group BEFORE opening the dialog
+            controller.setGroup(selectedGroup);
+
+            // Open modal
+            Stage dialog = new Stage();
+            dialog.setTitle("Group Settings - " + selectedGroup.getName());
+            dialog.initOwner(groupTabs.getScene().getWindow());
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setResizable(false);
+            dialog.setScene(new Scene(root));
+
+            controller.setStage(dialog);
+            dialog.showAndWait();
+
+            // Refresh the group list after closing dialog (in case settings were changed)
+            refreshGroupList();
+
+            // Also reload the current tab to reflect any changes
+            Tab selectedTab = groupTabs.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                loadTabContent(selectedTab.getText(), selectedGroup);
+            }
 
         }
         catch (IOException e) {

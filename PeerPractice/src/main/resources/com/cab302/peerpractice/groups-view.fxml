@@ -8,7 +8,8 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.GroupController"
             prefWidth="1280"
-            prefHeight="720">
+            prefHeight="720"
+            stylesheets="@styles/modern.css">
 
     <top>
         <fx:include source="header-layout.fxml"
@@ -41,19 +42,23 @@
                 <!-- Groups Header and Buttons -->
                 <HBox alignment="CENTER_LEFT"
                       spacing="10">
-                    <Label text="My Groups"/>
+                    <Label text="My Groups"
+                           styleClass="modern-label-heading"/>
                     <Button fx:id="addGroupButton"
                             text="New Group"
+                            styleClass="modern-button"
                             onAction="#onAddGroup"
-                            prefWidth="80"/>
+                            prefWidth="100"/>
                     <Button fx:id="sortGroupsButton"
                             text="Sort"
+                            styleClass="modern-button-secondary"
                             onAction="#onSortGroups"
                             prefWidth="80"/>
                 </HBox>
 
                 <!-- Search Field -->
                 <TextField fx:id="searchField"
+                           styleClass="modern-text-field"
                            promptText="Search groups..."/>
 
                 <!-- Groups List -->
@@ -62,6 +67,7 @@
 
                 <!-- Join Request -->
                 <Button text="Join Request"
+                        styleClass="modern-button-secondary"
                         maxWidth="Infinity"/>
             </VBox>
         </HBox>
@@ -76,32 +82,35 @@
             <VBox HBox.hgrow="ALWAYS">
 
                 <!-- Header -->
-                <VBox>
+                <VBox styleClass="modern-card">
                     <padding>
-                        <Insets top="5"
-                                left="5"
-                                right="5"
-                                bottom="5"/>
+                        <Insets top="15"
+                                left="20"
+                                right="20"
+                                bottom="15"/>
                     </padding>
-                    <HBox alignment="CENTER_LEFT">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
                         <Label fx:id="groupNameLabel"
                                text="Example Group"
-                               style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                               styleClass="modern-label-title"/>
 
                         <Region HBox.hgrow="ALWAYS"/>
 
                         <!-- More Button -->
                         <MenuButton fx:id="moreMenu"
                                     text="More"
-                                    prefWidth="80">
+                                    styleClass="modern-button-secondary"
+                                    prefWidth="100">
                             <items>
                                 <MenuItem text="Invite Members"
                                           onAction="#onInviteMembers"/>
                                 <MenuItem text="Share Group ID"
                                           onAction="#onShareGroupID"/>
                                 <SeparatorMenuItem/>
-                                <MenuItem text="Manage Group"
+                                <MenuItem text="Manage Members"
                                           onAction="#onManageGroup"/>
+                                <MenuItem text="Group Settings"
+                                          onAction="#onGroupSettings"/>
                                 <SeparatorMenuItem/>
                                 <MenuItem text="Leave Group"
                                           onAction="#onLeaveGroup"/>

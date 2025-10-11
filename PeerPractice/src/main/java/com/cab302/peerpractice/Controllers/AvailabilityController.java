@@ -140,14 +140,14 @@ public class AvailabilityController extends SidebarController {
     private void populateCalendarGrid() {
         calendarGrid.getChildren().clear();
 
+        // Day headers with modern styling
         String[] dayHeaders = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         for (int i = 0; i < dayHeaders.length; i++) {
             Label dayHeader = new Label(dayHeaders[i]);
-            dayHeader.setFont(Font.font("System", FontWeight.BOLD, 12));
+            dayHeader.getStyleClass().add("calendar-day-header");
             dayHeader.setAlignment(Pos.CENTER);
             dayHeader.setPrefWidth(80);
             dayHeader.setPrefHeight(30);
-            dayHeader.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #ccc;");
             calendarGrid.add(dayHeader, i, 0);
         }
 
@@ -158,16 +158,32 @@ public class AvailabilityController extends SidebarController {
         int row = 1;
         int col = dayOfWeek;
 
+        // Fill in days from previous month
+        LocalDate prevMonthStart = firstDayOfMonth.minusDays(dayOfWeek);
+        for (int i = 0; i < dayOfWeek; i++) {
+            LocalDate date = prevMonthStart.plusDays(i);
+            VBox dayCell = createDayCell(date, true);
+            calendarGrid.add(dayCell, i, row);
+        }
+
+        // Fill in current month days
         for (int day = 1; day <= daysInMonth; day++) {
             LocalDate date = LocalDate.of(currentYearMonth.getYear(), currentYearMonth.getMonth(), day);
-            VBox dayCell = createDayCell(date);
+            VBox dayCell = createDayCell(date, false);
             calendarGrid.add(dayCell, col, row);
-
             col++;
             if (col > 6) {
                 col = 0;
                 row++;
             }
+        }
+
+        // Fill in days from next month
+        while (col > 0 && col <= 6) {
+            LocalDate date = currentYearMonth.atEndOfMonth().plusDays(col - dayOfWeek - daysInMonth + 1);
+            VBox dayCell = createDayCell(date, true);
+            calendarGrid.add(dayCell, col, row);
+            col++;
         }
     }
 
@@ -179,46 +195,76 @@ public class AvailabilityController extends SidebarController {
      * for that date. Today's date is highlighted with special styling.
      *
      * @param date the date to create the cell for
+     * @param isOtherMonth whether this day is from previous or next month
      * @return a VBox containing the day cell with date label and availability indicators
      */
-    private VBox createDayCell(LocalDate date) {
-        VBox dayCell = new VBox();
+    private VBox createDayCell(LocalDate date, boolean isOtherMonth) {
+        VBox dayCell = new VBox(5);
         dayCell.setPrefWidth(80);
         dayCell.setPrefHeight(80);
-        dayCell.setPadding(new Insets(2));
+        dayCell.setPadding(new Insets(8));
         dayCell.setAlignment(Pos.TOP_LEFT);
-        dayCell.setStyle("-fx-border-color: #ccc; -fx-background-color: white;");
 
+        // Apply modern CSS classes
+        dayCell.getStyleClass().add("calendar-day-cell");
+
+        if (isOtherMonth) {
+            dayCell.getStyleClass().add("calendar-day-other-month");
+        }
+
+        // Day number label
         Label dayLabel = new Label(String.valueOf(date.getDayOfMonth()));
-        dayLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
+        dayLabel.getStyleClass().add("calendar-day-number");
 
+        // Check if there are availabilities
+        boolean hasAvailability = false;
+        User currentUser = ctx.getUserSession().getCurrentUser();
+        if (currentUser != null && !isOtherMonth) {
+            List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date);
+            availabilities = availabilities.stream()
+                    .filter(avail -> avail.getUser().equals(currentUser))
+                    .toList();
+            hasAvailability = !availabilities.isEmpty();
+        }
+
+        // Apply special styling for today or days with availability
         if (date.equals(LocalDate.now())) {
-            dayLabel.setTextFill(Color.BLUE);
-            dayCell.setStyle("-fx-border-color: #ccc; -fx-background-color: #e6f3ff;");
+            dayCell.getStyleClass().add("calendar-day-today");
+        } else if (hasAvailability && !isOtherMonth) {
+            dayCell.getStyleClass().add("calendar-day-has-session");
         }
 
         dayCell.getChildren().add(dayLabel);
 
-        User currentUser = ctx.getUserSession().getCurrentUser();
-        if (currentUser != null) {
+        // Add availability indicators
+        if (currentUser != null && !isOtherMonth) {
             List<Availability> availabilities = availabilityManager.getAvailabilitiesForDate(date);
-
             availabilities = availabilities.stream()
                     .filter(avail -> avail.getUser().equals(currentUser))
                     .toList();
 
-            for (Availability availability : availabilities) {
-                Label availLabel = new Label(availability.getTitle());
-                availLabel.setFont(Font.font("System", 8));
-                availLabel.setTextFill(getColorForLabel(availability.getColorLabel()));
-                availLabel.setPrefWidth(75);
-                availLabel.setWrapText(true);
-                dayCell.getChildren().add(availLabel);
+            if (!availabilities.isEmpty()) {
+                // Show availability count badge instead of listing all
+                Label availBadge = new Label(availabilities.size() + " slot" + (availabilities.size() > 1 ? "s" : ""));
+                availBadge.getStyleClass().add("calendar-session-badge");
+                dayCell.getChildren().add(availBadge);
             }
         }
 
-        dayCell.setOnMouseClicked(e -> showItemDialog(date));
+        dayCell.setOnMouseClicked(e -> {
+            if (!isOtherMonth) {
+                showItemDialog(date);
+            }
+        });
+
         return dayCell;
+    }
+
+    /**
+     * Old createDayCell signature for backwards compatibility
+     */
+    private VBox createDayCell(LocalDate date) {
+        return createDayCell(date, false);
     }
 
     /**

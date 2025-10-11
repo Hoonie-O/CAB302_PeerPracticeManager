@@ -2,36 +2,44 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <VBox xmlns="http://javafx.com/javafx/11.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.cab302.peerpractice.Controllers.GroupCalendarController"
-      alignment="TOP_CENTER" spacing="12">
+      alignment="TOP_CENTER"
+      spacing="0"
+      styleClass="calendar-container"
+      stylesheets="@styles/modern.css">
+
     <padding>
-        <!-- A touch of space under the tabs -->
-        <Insets top="12" left="0" right="0" bottom="0"/>
+        <Insets top="20" left="20" right="20" bottom="20"/>
     </padding>
 
-    <!-- Month navigation -->
-    <HBox alignment="CENTER" spacing="10">
-        <Button fx:id="prevButton" onAction="#onPreviousMonth" text="&lt;"/>
-        <Label fx:id="monthYearLabel" text="Month Year">
-            <font>
-                <Font name="System Bold" size="18.0"/>
-            </font>
-        </Label>
-        <Button fx:id="nextButton" onAction="#onNextMonth" text="&gt;"/>
+    <!-- Month navigation with modern styling -->
+    <HBox alignment="CENTER" spacing="16" styleClass="calendar-header">
+        <Button fx:id="prevButton"
+                onAction="#onPreviousMonth"
+                text="←"
+                styleClass="calendar-nav-button"/>
+
+        <Label fx:id="monthYearLabel"
+               text="Month Year"
+               styleClass="calendar-month-label"/>
+
+        <Button fx:id="nextButton"
+                onAction="#onNextMonth"
+                text="→"
+                styleClass="calendar-nav-button"/>
     </HBox>
 
-    <!-- Calendar grid centred in available space -->
+    <!-- Calendar grid with improved layout -->
     <StackPane VBox.vgrow="ALWAYS">
         <GridPane fx:id="calendarGrid"
                   alignment="CENTER"
                   gridLinesVisible="false"
-                  hgap="1" vgap="1">
+                  styleClass="calendar-grid">
             <padding>
-                <Insets top="10" left="10" right="10" bottom="10"/>
+                <Insets top="20" left="10" right="10" bottom="10"/>
             </padding>
         </GridPane>
     </StackPane>

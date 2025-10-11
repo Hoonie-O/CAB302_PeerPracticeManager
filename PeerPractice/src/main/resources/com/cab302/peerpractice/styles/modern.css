@@ -1,0 +1,651 @@
+/* ==================== Modern Clean Theme ==================== */
+/* Color Palette - keeping the current vibe but modernized */
+* {
+    /* Primary colors */
+    -fx-primary: #4CAF50;
+    -fx-primary-hover: #45a049;
+    -fx-primary-light: #e8f5e9;
+
+    /* Secondary/accent colors */
+    -fx-accent: #2196F3;
+    -fx-accent-hover: #1976D2;
+    -fx-accent-light: #e3f2fd;
+
+    /* Neutrals - softer and more modern */
+    -fx-background: #fafafa;
+    -fx-surface: #ffffff;
+    -fx-surface-hover: #f5f5f5;
+    -fx-border: #e0e0e0;
+    -fx-border-light: #eeeeee;
+
+    /* Text colors */
+    -fx-text-primary: #212121;
+    -fx-text-secondary: #757575;
+    -fx-text-disabled: #bdbdbd;
+
+    /* Danger */
+    -fx-danger: #f44336;
+    -fx-danger-hover: #d32f2f;
+
+    /* Shadows and effects */
+    -fx-shadow-light: rgba(0, 0, 0, 0.08);
+    -fx-shadow-medium: rgba(0, 0, 0, 0.12);
+}
+
+/* ==================== Color Picker Styles ==================== */
+
+.color-picker-grid {
+    -fx-hgap: 8;
+    -fx-vgap: 8;
+    -fx-padding: 10;
+}
+
+.color-choice-button {
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-border-width: 3;
+    -fx-border-radius: 8;
+}
+
+.color-choice-button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.3, 0, 2);
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.color-choice-button:selected {
+    -fx-border-color: -fx-text-primary;
+    -fx-border-width: 3;
+}
+
+/* Event color styles */
+.event-blue { -fx-background-color: #2196F3; }
+.event-green { -fx-background-color: #4CAF50; }
+.event-red { -fx-background-color: #f44336; }
+.event-orange { -fx-background-color: #FF9800; }
+.event-purple { -fx-background-color: #9C27B0; }
+.event-pink { -fx-background-color: #E91E63; }
+.event-teal { -fx-background-color: #009688; }
+.event-yellow { -fx-background-color: #FFC107; }
+.event-indigo { -fx-background-color: #3F51B5; }
+
+/* ==================== Calendar Specific Styles ==================== */
+
+/* Calendar container */
+.calendar-container {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}
+
+/* Month navigation bar */
+.calendar-header {
+    -fx-spacing: 16;
+    -fx-padding: 8 0 16 0;
+}
+
+.calendar-nav-button {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8 16;
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-primary;
+    -fx-cursor: hand;
+}
+
+.calendar-nav-button:hover {
+    -fx-background-color: -fx-surface-hover;
+    -fx-border-color: -fx-accent;
+}
+
+.calendar-nav-button:pressed {
+    -fx-background-color: -fx-accent-light;
+}
+
+.calendar-month-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-primary;
+    -fx-min-width: 200px;
+    -fx-alignment: center;
+}
+
+/* Calendar grid */
+.calendar-grid {
+    -fx-background-color: transparent;
+    -fx-hgap: 8;
+    -fx-vgap: 8;
+}
+
+/* Day of week headers */
+.calendar-day-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-alignment: center;
+    -fx-padding: 8;
+    -fx-letter-spacing: 0.5px;
+}
+
+/* Day cells - base style */
+.calendar-day-cell {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -fx-border-light;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 12;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-max-width: 80px;
+    -fx-max-height: 80px;
+    -fx-alignment: top-left;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-light, 0, 0, 0, 1);
+}
+
+.calendar-day-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+    -fx-border-color: -fx-accent;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-medium, 2, 0, 0, 2);
+}
+
+/* Today's date */
+.calendar-day-today {
+    -fx-background-color: -fx-accent-light;
+    -fx-border-color: -fx-accent;
+    -fx-border-width: 2;
+}
+
+.calendar-day-today:hover {
+    -fx-background-color: derive(-fx-accent-light, -10%);
+}
+
+/* Days with sessions */
+.calendar-day-has-session {
+    -fx-background-color: -fx-primary-light;
+    -fx-border-color: -fx-primary;
+    -fx-border-width: 2;
+}
+
+.calendar-day-has-session:hover {
+    -fx-background-color: derive(-fx-primary-light, -10%);
+}
+
+/* Days outside current month */
+.calendar-day-other-month {
+    -fx-opacity: 0.4;
+}
+
+/* Day number label */
+.calendar-day-number {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* Session indicator badge */
+.calendar-session-badge {
+    -fx-background-color: -fx-primary;
+    -fx-background-radius: 8;
+    -fx-padding: 4 8;
+    -fx-font-size: 11px;
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+}
+
+/* Event indicator dots */
+.calendar-event-indicators {
+    -fx-spacing: 3;
+    -fx-alignment: center;
+}
+
+.calendar-event-dot {
+    -fx-min-width: 8px;
+    -fx-min-height: 8px;
+    -fx-max-width: 8px;
+    -fx-max-height: 8px;
+    -fx-background-radius: 50%;
+}
+
+/* Colored border left accent for days with events */
+.calendar-day-event-blue {
+    -fx-border-color: transparent transparent transparent #2196F3;
+    -fx-border-width: 0 0 0 4;
+}
+
+.calendar-day-event-green {
+    -fx-border-color: transparent transparent transparent #4CAF50;
+    -fx-border-width: 0 0 0 4;
+}
+
+.calendar-day-event-red {
+    -fx-border-color: transparent transparent transparent #f44336;
+    -fx-border-width: 0 0 0 4;
+}
+
+.calendar-day-event-orange {
+    -fx-border-color: transparent transparent transparent #FF9800;
+    -fx-border-width: 0 0 0 4;
+}
+
+.calendar-day-event-purple {
+    -fx-border-color: transparent transparent transparent #9C27B0;
+    -fx-border-width: 0 0 0 4;
+}
+
+.calendar-day-event-pink {
+    -fx-border-color: transparent transparent transparent #E91E63;
+    -fx-border-width: 0 0 0 4;
+}
+
+.calendar-day-event-teal {
+    -fx-border-color: transparent transparent transparent #009688;
+    -fx-border-width: 0 0 0 4;
+}
+
+.calendar-day-event-yellow {
+    -fx-border-color: transparent transparent transparent #FFC107;
+    -fx-border-width: 0 0 0 4;
+}
+
+.calendar-day-event-indigo {
+    -fx-border-color: transparent transparent transparent #3F51B5;
+    -fx-border-width: 0 0 0 4;
+}
+
+/* Multiple events - show gradient border */
+.calendar-day-multiple-events {
+    -fx-border-color: linear-gradient(to right, #2196F3, #4CAF50, #f44336);
+    -fx-border-width: 0 0 3 0;
+}
+
+/* ==================== General Modern Button Styles ==================== */
+
+.modern-button {
+    -fx-background-color: -fx-primary;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-light, 2, 0, 0, 2);
+}
+
+.modern-button:hover {
+    -fx-background-color: -fx-primary-hover;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-medium, 4, 0, 0, 3);
+}
+
+.modern-button:pressed {
+    -fx-background-color: derive(-fx-primary, -20%);
+    -fx-effect: none;
+}
+
+/* Secondary button */
+.modern-button-secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.modern-button-secondary:hover {
+    -fx-background-color: -fx-surface-hover;
+    -fx-border-color: -fx-accent;
+}
+
+/* Accent button */
+.modern-button-accent {
+    -fx-background-color: -fx-accent;
+}
+
+.modern-button-accent:hover {
+    -fx-background-color: -fx-accent-hover;
+}
+
+/* ==================== Card Styles ==================== */
+
+.modern-card {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-light, 4, 0, 0, 2);
+    -fx-padding: 16;
+}
+
+.modern-card:hover {
+    -fx-effect: dropshadow(gaussian, -fx-shadow-medium, 6, 0, 0, 3);
+}
+
+/* ==================== Input Fields ==================== */
+
+.modern-text-field {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 10 14;
+    -fx-font-size: 14px;
+}
+
+.modern-text-field:focused {
+    -fx-border-color: -fx-accent;
+    -fx-effect: dropshadow(gaussian, derive(-fx-accent, 50%), 4, 0.3, 0, 0);
+}
+
+/* ==================== Labels ==================== */
+
+.modern-label-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.modern-label-heading {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.modern-label-body {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.modern-label-caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-secondary;
+}
+
+/* ==================== ListView Styles ==================== */
+
+.list-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.list-cell {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+    -fx-background-insets: 0 0 4 0;
+}
+
+.list-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.list-cell:selected {
+    -fx-background-color: -fx-accent-light;
+    -fx-border-color: -fx-accent;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+}
+
+/* ==================== TabPane Styles ==================== */
+
+.tab-pane {
+    -fx-background-color: transparent;
+    -fx-tab-min-height: 40px;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 10 0;
+}
+
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: transparent transparent -fx-border transparent;
+    -fx-padding: 10 20;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-accent -fx-accent transparent -fx-accent;
+    -fx-border-width: 0 0 3 0;
+}
+
+.tab-pane .tab:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.tab-pane .tab-label {
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: -fx-accent;
+}
+
+/* ==================== TableView Styles ==================== */
+
+.table-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+.table-view .column-header {
+    -fx-background-color: -fx-surface-hover;
+    -fx-padding: 10;
+    -fx-font-weight: 600;
+}
+
+.table-row-cell {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: transparent transparent -fx-border-light transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 8;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -fx-accent-light;
+}
+
+/* ==================== ComboBox Styles ==================== */
+
+.combo-box {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+}
+
+.combo-box:hover {
+    -fx-border-color: -fx-accent;
+}
+
+.combo-box .list-cell {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+/* ==================== ScrollPane Styles ==================== */
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: -fx-border;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: -fx-text-secondary;
+}
+
+/* ==================== Dialog Styles ==================== */
+
+.dialog-pane {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 15 0;
+}
+
+.dialog-pane .content {
+    -fx-padding: 15 0;
+}
+
+.dialog-pane .button-bar {
+    -fx-padding: 15 0 0 0;
+}
+
+/* ==================== CheckBox Styles ==================== */
+
+.check-box {
+    -fx-font-size: 14px;
+}
+
+.check-box .box {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 4;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 4;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-primary;
+}
+
+.check-box:hover .box {
+    -fx-border-color: -fx-accent;
+}
+
+/* ==================== Hyperlink Styles ==================== */
+
+.hyperlink {
+    -fx-text-fill: -fx-accent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.hyperlink:hover {
+    -fx-underline: true;
+    -fx-text-fill: -fx-accent-hover;
+}
+
+.hyperlink:visited {
+    -fx-text-fill: -fx-accent;
+}
+
+/* ==================== Sidebar Styles ==================== */
+
+.sidebar-container {
+    -fx-background-color: -fx-background;
+}
+
+.sidebar-heading {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-letter-spacing: 1px;
+}
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 12 16;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.sidebar-button:pressed,
+.sidebar-button:selected {
+    -fx-background-color: -fx-accent-light;
+    -fx-text-fill: -fx-accent;
+}
+
+/* ==================== Menu Button Styles ==================== */
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 16;
+}
+
+.menu-button:hover {
+    -fx-background-color: -fx-surface-hover;
+    -fx-border-color: -fx-accent;
+}
+
+.menu-button .label {
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* ==================== RadioButton Styles ==================== */
+
+.radio-button {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.radio-button .radio {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 50%;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 50%;
+}
+
+.radio-button:selected .radio {
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-primary;
+}
+
+.radio-button:hover .radio {
+    -fx-border-color: -fx-accent;
+}
+
+.radio-button .dot {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+}

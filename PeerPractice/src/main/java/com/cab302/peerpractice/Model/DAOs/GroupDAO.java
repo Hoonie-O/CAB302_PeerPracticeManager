@@ -422,6 +422,19 @@ public class GroupDAO implements IGroupDAO {
     }
 
     @Override
+    public boolean demoteAdmin(int groupId, String userId, String demoterUserId) {
+        if (!isAdmin(groupId, demoterUserId)) return false;
+        String sql = "UPDATE group_members SET role = 'member' WHERE group_id = ? AND user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, groupId);
+            ps.setString(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to demote admin", e);
+        }
+    }
+
+    @Override
     public boolean hasUserRequestedToJoin(int groupId, String userId) {
         String sql = "SELECT 1 FROM group_join_requests WHERE group_id = ? AND user_id = ? AND status = 'pending'";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -470,16 +483,21 @@ public class GroupDAO implements IGroupDAO {
         Group group = new Group(name, description, requireApproval, owner, createdAt);
         group.setID(groupId);
 
-        // Load members
+        // Load members and their roles
         List<User> members = new ArrayList<>();
-        String sql = "SELECT user_id FROM group_members WHERE group_id = ?";
+        String sql = "SELECT user_id, role FROM group_members WHERE group_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, groupId);
             try (ResultSet memberRs = ps.executeQuery()) {
                 while (memberRs.next()) {
                     String userId = memberRs.getString("user_id");
+                    String role = memberRs.getString("role");
                     User user = userDao.findUserById(userId);
-                    if (user != null) members.add(user);
+                    if (user != null) {
+                        members.add(user);
+                        // Sync the role into the Group's memberRoles map
+                        group.setMemberRole(userId, role);
+                    }
                 }
             }
         }

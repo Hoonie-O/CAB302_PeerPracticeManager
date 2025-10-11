@@ -6,34 +6,47 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.cab302.peerpractice.Controllers.LoginController"
-      spacing="12"
-      alignment="TOP_CENTER">
+      spacing="20"
+      alignment="TOP_CENTER"
+      styleClass="modern-card"
+      stylesheets="@styles/modern.css"
+      maxWidth="400">
 
     <padding>
-        <Insets top="24"
-                right="56"
-                bottom="24"
-                left="56"/>
+        <Insets top="40"
+                right="40"
+                bottom="40"
+                left="40"/>
     </padding>
 
-    <Label text="Login"
-           style="-fx-font-size: 24px; -fx-font-weight: bold;">
+    <Label text="Welcome Back"
+           styleClass="modern-label-title">
         <VBox.margin>
-            <Insets top="20"
-                    bottom="20"/>
+            <Insets bottom="10"/>
         </VBox.margin>
     </Label>
 
-    <VBox spacing="4">
-        <Label text="Email or Username:"/>
+    <Label text="Sign in to continue"
+           styleClass="modern-label-caption">
+        <VBox.margin>
+            <Insets bottom="20"/>
+        </VBox.margin>
+    </Label>
+
+    <VBox spacing="8">
+        <Label text="Email or Username"
+               styleClass="modern-label-body"/>
         <TextField fx:id="IDField"
-                   promptText="email@email.com || username"/>
+                   styleClass="modern-text-field"
+                   promptText="Enter your email or username"/>
     </VBox>
 
-    <VBox spacing="4">
-        <Label text="Password:"/>
+    <VBox spacing="8">
+        <Label text="Password"
+               styleClass="modern-label-body"/>
         <PasswordField fx:id="passwordField"
-                       promptText="password"/>
+                       styleClass="modern-text-field"
+                       promptText="Enter your password"/>
     </VBox>
 
     <HBox spacing="12"
@@ -43,29 +56,35 @@
         <Region maxWidth="Infinity"
                 HBox.hgrow="ALWAYS"/>
         <Hyperlink fx:id="forgotpasswordlink"
-                   text="Forgot password?"/>
+                   text="Forgot password?"
+                   styleClass="modern-label-caption"/>
     </HBox>
 
-    <HBox>
-        <Button fx:id="loginButton"
-                text="Log in"
-                defaultButton="true"
-                maxWidth="Infinity"
-                HBox.hgrow="ALWAYS"/>
-    </HBox>
+    <Button fx:id="loginButton"
+            text="Sign In"
+            styleClass="modern-button"
+            defaultButton="true"
+            maxWidth="Infinity">
+        <VBox.margin>
+            <Insets top="10"/>
+        </VBox.margin>
+    </Button>
 
     <HBox spacing="6"
           alignment="CENTER">
         <VBox.margin>
-            <Insets top="20"
-                    bottom="20"/>
+            <Insets top="20"/>
         </VBox.margin>
-        <Label text="Don't have an account?"/>
+        <Label text="Don't have an account?"
+               styleClass="modern-label-body"/>
         <Hyperlink fx:id="signupLink"
-                   text="Sign up"/>
+                   text="Sign up"
+                   style="-fx-font-weight: 600;"/>
     </HBox>
 
     <Label fx:id="messageLabel"
-           textFill="red"/>
+           textFill="red"
+           wrapText="true"
+           maxWidth="Infinity"/>
 
 </VBox>

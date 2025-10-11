@@ -216,6 +216,18 @@ public class MockGroupDAO implements IGroupDAO {
     }
 
     @Override
+    public boolean demoteAdmin(int groupId, String userId, String demoterUserId) {
+        if (!isAdmin(groupId, demoterUserId)) return false;
+        for (GroupMemberEntity m : groupMembers.getOrDefault(groupId, Collections.emptyList())) {
+            if (m.getUserId().equals(userId)) {
+                m.setRole("member");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean hasUserRequestedToJoin(int groupId, String userId) {
         return joinRequests.values().stream()
                 .anyMatch(r -> r.getGroupId() == groupId && r.getUserId().equals(userId) && r.getStatus().equals("pending"));

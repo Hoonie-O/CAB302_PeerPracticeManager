@@ -40,6 +40,7 @@ public interface IGroupDAO {
     // === Admin / Roles ===
     boolean isAdmin(int groupId, String userId);
     boolean promoteToAdmin(int groupId, String targetUserId, String actingUserId);
+    boolean demoteAdmin(int groupId, String targetUserId, String actingUserId);
 
     // === Join Requests ===
     boolean setRequireApproval(int groupId, boolean requireApproval);

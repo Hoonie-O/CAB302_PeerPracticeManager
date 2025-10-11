@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cab302.peerpractice.Controllers.GroupSettingsController"
+      spacing="20"
+      styleClass="modern-card"
+      stylesheets="@styles/modern.css"
+      prefWidth="500">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <!-- Header -->
+    <Label text="Group Settings"
+           styleClass="modern-label-title">
+        <VBox.margin>
+            <Insets bottom="5"/>
+        </VBox.margin>
+    </Label>
+
+    <Label text="Manage your group settings and preferences"
+           styleClass="modern-label-caption">
+        <VBox.margin>
+            <Insets bottom="10"/>
+        </VBox.margin>
+    </Label>
+
+    <Separator/>
+
+    <!-- Group Name -->
+    <VBox spacing="8">
+        <Label text="Group Name"
+               styleClass="modern-label-body"
+               style="-fx-font-weight: 600;"/>
+        <TextField fx:id="groupNameField"
+                   styleClass="modern-text-field"
+                   promptText="Enter group name"/>
+        <Label fx:id="nameErrorLabel"
+               textFill="red"
+               wrapText="true"
+               visible="false"
+               managed="false"/>
+    </VBox>
+
+    <!-- Group Description -->
+    <VBox spacing="8">
+        <Label text="Description"
+               styleClass="modern-label-body"
+               style="-fx-font-weight: 600;"/>
+        <TextArea fx:id="groupDescriptionArea"
+                  styleClass="modern-text-field"
+                  promptText="Enter group description"
+                  wrapText="true"
+                  prefRowCount="3"/>
+    </VBox>
+
+    <!-- Visibility Settings -->
+    <VBox spacing="12">
+        <Label text="Privacy Settings"
+               styleClass="modern-label-body"
+               style="-fx-font-weight: 600;"/>
+
+        <VBox spacing="8" styleClass="modern-card" style="-fx-background-color: -fx-background;">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <RadioButton fx:id="publicRadio"
+                         text="Public"
+                         selected="true">
+                <VBox.margin>
+                    <Insets bottom="5"/>
+                </VBox.margin>
+            </RadioButton>
+            <Label text="Anyone can join this group without approval"
+                   styleClass="modern-label-caption"
+                   wrapText="true">
+                <VBox.margin>
+                    <Insets left="28" bottom="12"/>
+                </VBox.margin>
+            </Label>
+
+            <RadioButton fx:id="privateRadio"
+                         text="Join Request Required">
+                <VBox.margin>
+                    <Insets bottom="5"/>
+                </VBox.margin>
+            </RadioButton>
+            <Label text="Members must request to join and wait for admin approval"
+                   styleClass="modern-label-caption"
+                   wrapText="true">
+                <VBox.margin>
+                    <Insets left="28"/>
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Danger Zone -->
+    <VBox spacing="12">
+        <Label text="Danger Zone"
+               styleClass="modern-label-body"
+               style="-fx-font-weight: 600; -fx-text-fill: -fx-danger;"/>
+
+        <Button fx:id="deleteGroupButton"
+                text="Delete Group"
+                onAction="#onDeleteGroup"
+                style="-fx-background-color: -fx-danger; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-font-weight: 600;"
+                maxWidth="Infinity"/>
+
+        <Label text="Once you delete a group, there is no going back. Please be certain."
+               styleClass="modern-label-caption"
+               wrapText="true"/>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <VBox.margin>
+            <Insets top="10"/>
+        </VBox.margin>
+
+        <Button fx:id="cancelButton"
+                text="Cancel"
+                styleClass="modern-button-secondary"
+                onAction="#onCancel"
+                prefWidth="100"/>
+
+        <Button fx:id="saveButton"
+                text="Save Changes"
+                styleClass="modern-button"
+                onAction="#onSave"
+                prefWidth="130"/>
+    </HBox>
+
+</VBox>
