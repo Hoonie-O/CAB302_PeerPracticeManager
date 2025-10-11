@@ -3,13 +3,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/11.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.cab302.peerpractice.Controllers.AvailabilityController"
             prefWidth="1280"
-            prefHeight="720">
+            prefHeight="720"
+            stylesheets="@styles/modern.css">
 
     <!-- Top Header -->
     <top>
@@ -28,46 +28,54 @@
 
     <!-- Center: Availability Calendar -->
     <center>
-        <VBox alignment="TOP_CENTER" spacing="10">
+        <VBox alignment="TOP_CENTER" spacing="0" styleClass="calendar-container">
+            <padding>
+                <Insets top="20" left="20" right="20" bottom="20"/>
+            </padding>
 
-            <!-- Month navigation -->
-            <HBox alignment="CENTER" spacing="10.0">
-                <children>
-                    <Label text="Select your available dates:">
-                        <font>
-                            <Font name="System Bold" size="24.0"/>
-                        </font>
-                    </Label>
-                </children>
-                <padding>
-                    <Insets bottom="5.0" left="10.0" right="10.0" top="10.0"/>
-                </padding>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-                <children>
-                    <Button fx:id="prevButton" onAction="#onPreviousMonth" text="&lt;"/>
-                    <Label fx:id="monthYearLabel" text="Month Year">
-                        <font>
-                            <Font name="System Bold" size="18.0"/>
-                        </font>
-                    </Label>
-                    <Button fx:id="nextButton" onAction="#onNextMonth" text="&gt;"/>
-                </children>
-                <padding>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="5.0"/>
-                </padding>
+            <!-- Title Section -->
+            <Label text="Select Your Available Dates"
+                   styleClass="modern-label-title">
+                <VBox.margin>
+                    <Insets bottom="10"/>
+                </VBox.margin>
+            </Label>
+
+            <Label text="Mark the days you're available for study sessions"
+                   styleClass="modern-label-caption">
+                <VBox.margin>
+                    <Insets bottom="30"/>
+                </VBox.margin>
+            </Label>
+
+            <!-- Month navigation with modern styling -->
+            <HBox alignment="CENTER" spacing="16" styleClass="calendar-header">
+                <Button fx:id="prevButton"
+                        onAction="#onPreviousMonth"
+                        text="←"
+                        styleClass="calendar-nav-button"/>
+
+                <Label fx:id="monthYearLabel"
+                       text="Month Year"
+                       styleClass="calendar-month-label"/>
+
+                <Button fx:id="nextButton"
+                        onAction="#onNextMonth"
+                        text="→"
+                        styleClass="calendar-nav-button"/>
             </HBox>
 
-            <!-- Calendar grid -->
-            <GridPane fx:id="calendarGrid"
-                      alignment="CENTER"
-                      gridLinesVisible="false"
-                      hgap="1.0" vgap="1.0"
-                      VBox.vgrow="ALWAYS">
-                <padding>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                </padding>
-            </GridPane>
+            <!-- Calendar grid with improved layout -->
+            <StackPane VBox.vgrow="ALWAYS">
+                <GridPane fx:id="calendarGrid"
+                          alignment="CENTER"
+                          gridLinesVisible="false"
+                          styleClass="calendar-grid">
+                    <padding>
+                        <Insets top="20" left="10" right="10" bottom="10"/>
+                    </padding>
+                </GridPane>
+            </StackPane>
         </VBox>
     </center>
 </BorderPane>

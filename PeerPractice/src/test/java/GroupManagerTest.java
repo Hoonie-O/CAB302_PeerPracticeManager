@@ -247,4 +247,386 @@ public class GroupManagerTest {
         Group createdGroup = groupDAO.getAllGroups().get(0);
         assertThrows(IllegalArgumentException.class, () -> groupManager.addMember(createdGroup, user, ""));
     }
+
+    // ========== Admin Role Management Tests ==========
+
+    @Test
+    void testOwnerIsAdminByDefault() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        // Owner should be admin by default
+        assertTrue(groupManager.isAdmin(createdGroup, user));
+    }
+
+    @Test
+    void testPromoteToAdminSuccess() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User member = new User("Jane", "Doe", "janedoe", "jane@email.com", "pass123", "QUT");
+        userDAO.addUser(member);
+        groupDAO.addToGroup(createdGroup.getID(), member);
+
+        // Member should not be admin initially
+        assertFalse(groupManager.isAdmin(createdGroup, member));
+
+        // Owner promotes member to admin
+        assertDoesNotThrow(() -> groupManager.promoteToAdmin(createdGroup, user, member));
+
+        // Now member should be admin
+        assertTrue(groupManager.isAdmin(createdGroup, member));
+    }
+
+    @Test
+    void testPromoteToAdminNonAdminCannotPromote() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User member1 = new User("Jane", "Doe", "janedoe", "jane@email.com", "pass123", "QUT");
+        User member2 = new User("John", "Smith", "johnsmith", "john@email.com", "pass456", "QUT");
+        userDAO.addUser(member1);
+        userDAO.addUser(member2);
+        groupDAO.addToGroup(createdGroup.getID(), member1);
+        groupDAO.addToGroup(createdGroup.getID(), member2);
+
+        // Regular member tries to promote another member
+        assertThrows(InsufficientPermissionsException.class,
+            () -> groupManager.promoteToAdmin(createdGroup, member1, member2));
+    }
+
+    @Test
+    void testPromoteToAdminNullChecks() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User member = new User("Jane", "Doe", "janedoe", "jane@email.com", "pass123", "QUT");
+        userDAO.addUser(member);
+
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.promoteToAdmin(null, user, member));
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.promoteToAdmin(createdGroup, null, member));
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.promoteToAdmin(createdGroup, user, null));
+    }
+
+    @Test
+    void testAdminCanPromoteOthers() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User admin1 = new User("Admin", "One", "admin1", "admin1@email.com", "pass123", "QUT");
+        User member = new User("Regular", "Member", "member1", "member1@email.com", "pass456", "QUT");
+        userDAO.addUser(admin1);
+        userDAO.addUser(member);
+        groupDAO.addToGroup(createdGroup.getID(), admin1);
+        groupDAO.addToGroup(createdGroup.getID(), member);
+
+        // Owner promotes admin1
+        groupManager.promoteToAdmin(createdGroup, user, admin1);
+
+        // admin1 should be able to promote member
+        assertDoesNotThrow(() -> groupManager.promoteToAdmin(createdGroup, admin1, member));
+        assertTrue(groupManager.isAdmin(createdGroup, member));
+    }
+
+    @Test
+    void testIsAdminReturnsFalseForNonMember() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User nonMember = new User("Not", "Member", "notmember", "not@email.com", "pass123", "QUT");
+        userDAO.addUser(nonMember);
+
+        assertFalse(groupManager.isAdmin(createdGroup, nonMember));
+    }
+
+    @Test
+    void testIsAdminNullSafety() {
+        assertFalse(groupManager.isAdmin(null, user));
+        assertFalse(groupManager.isAdmin(group, null));
+        assertFalse(groupManager.isAdmin(null, null));
+    }
+
+    // ========== Demote Admin Tests ==========
+
+    @Test
+    void testDemoteAdminSuccess() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User admin = new User("Admin", "User", "adminuser", "admin@email.com", "pass123", "QUT");
+        userDAO.addUser(admin);
+        groupDAO.addToGroup(createdGroup.getID(), admin);
+
+        // Promote to admin first
+        groupManager.promoteToAdmin(createdGroup, user, admin);
+        assertTrue(groupManager.isAdmin(createdGroup, admin));
+
+        // Now demote
+        assertDoesNotThrow(() -> groupManager.demoteAdmin(createdGroup, user, admin));
+        assertFalse(groupManager.isAdmin(createdGroup, admin));
+    }
+
+    @Test
+    void testCannotDemoteOwner() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        // Try to demote the owner
+        assertThrows(InsufficientPermissionsException.class,
+            () -> groupManager.demoteAdmin(createdGroup, user, user));
+    }
+
+    @Test
+    void testNonAdminCannotDemote() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User admin = new User("Admin", "User", "adminuser", "admin@email.com", "pass123", "QUT");
+        User member = new User("Regular", "Member", "member1", "member1@email.com", "pass456", "QUT");
+        userDAO.addUser(admin);
+        userDAO.addUser(member);
+        groupDAO.addToGroup(createdGroup.getID(), admin);
+        groupDAO.addToGroup(createdGroup.getID(), member);
+
+        // Promote admin
+        groupManager.promoteToAdmin(createdGroup, user, admin);
+
+        // Regular member tries to demote admin
+        assertThrows(InsufficientPermissionsException.class,
+            () -> groupManager.demoteAdmin(createdGroup, member, admin));
+    }
+
+    @Test
+    void testDemoteAdminNullChecks() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User admin = new User("Admin", "User", "adminuser", "admin@email.com", "pass123", "QUT");
+        userDAO.addUser(admin);
+
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.demoteAdmin(null, user, admin));
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.demoteAdmin(createdGroup, null, admin));
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.demoteAdmin(createdGroup, user, null));
+    }
+
+    // ========== Kick Member Tests ==========
+
+    @Test
+    void testKickMemberSuccess() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User member = new User("Jane", "Doe", "janedoe", "jane@email.com", "pass123", "QUT");
+        userDAO.addUser(member);
+        groupDAO.addToGroup(createdGroup.getID(), member);
+
+        // Verify member is in group
+        assertTrue(groupDAO.isUserMemberOfGroup(createdGroup.getID(), member.getUserId()));
+
+        // Owner kicks member
+        assertDoesNotThrow(() -> groupManager.kickMember(createdGroup, user, member));
+
+        // Member should no longer be in group
+        assertFalse(groupDAO.isUserMemberOfGroup(createdGroup.getID(), member.getUserId()));
+    }
+
+    @Test
+    void testKickMemberNonAdminCannotKick() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User member1 = new User("Jane", "Doe", "janedoe", "jane@email.com", "pass123", "QUT");
+        User member2 = new User("John", "Smith", "johnsmith", "john@email.com", "pass456", "QUT");
+        userDAO.addUser(member1);
+        userDAO.addUser(member2);
+        groupDAO.addToGroup(createdGroup.getID(), member1);
+        groupDAO.addToGroup(createdGroup.getID(), member2);
+
+        // Regular member tries to kick another member
+        assertThrows(InsufficientPermissionsException.class,
+            () -> groupManager.kickMember(createdGroup, member1, member2));
+    }
+
+    @Test
+    void testCannotKickOwner() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User admin = new User("Admin", "User", "adminuser", "admin@email.com", "pass123", "QUT");
+        userDAO.addUser(admin);
+        groupDAO.addToGroup(createdGroup.getID(), admin);
+        groupManager.promoteToAdmin(createdGroup, user, admin);
+
+        // Even another admin cannot kick the owner
+        assertThrows(InsufficientPermissionsException.class,
+            () -> groupManager.kickMember(createdGroup, admin, user));
+    }
+
+    @Test
+    void testKickMemberNullChecks() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User member = new User("Jane", "Doe", "janedoe", "jane@email.com", "pass123", "QUT");
+        userDAO.addUser(member);
+
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.kickMember(null, user, member));
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.kickMember(createdGroup, null, member));
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.kickMember(createdGroup, user, null));
+    }
+
+    @Test
+    void testAdminCanKickRegularMembers() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User admin = new User("Admin", "User", "adminuser", "admin@email.com", "pass123", "QUT");
+        User member = new User("Regular", "Member", "member1", "member1@email.com", "pass456", "QUT");
+        userDAO.addUser(admin);
+        userDAO.addUser(member);
+        groupDAO.addToGroup(createdGroup.getID(), admin);
+        groupDAO.addToGroup(createdGroup.getID(), member);
+
+        // Promote admin
+        groupManager.promoteToAdmin(createdGroup, user, admin);
+
+        // Admin kicks member
+        assertDoesNotThrow(() -> groupManager.kickMember(createdGroup, admin, member));
+        assertFalse(groupDAO.isUserMemberOfGroup(createdGroup.getID(), member.getUserId()));
+    }
+
+    // ========== Delete Group Tests ==========
+
+    @Test
+    void testDeleteGroupSuccess() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        // Verify group exists
+        assertNotNull(groupDAO.searchByID(createdGroup.getID()));
+
+        // Owner deletes group
+        assertDoesNotThrow(() -> groupManager.deleteGroup(createdGroup, user));
+
+        // Group should no longer exist
+        assertNull(groupDAO.searchByID(createdGroup.getID()));
+    }
+
+    @Test
+    void testDeleteGroupOnlyOwnerCan() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, false, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User admin = new User("Admin", "User", "adminuser", "admin@email.com", "pass123", "QUT");
+        userDAO.addUser(admin);
+        groupDAO.addToGroup(createdGroup.getID(), admin);
+        groupManager.promoteToAdmin(createdGroup, user, admin);
+
+        // Even an admin cannot delete the group, only owner can
+        assertThrows(InsufficientPermissionsException.class,
+            () -> groupManager.deleteGroup(createdGroup, admin));
+
+        // Group should still exist
+        assertNotNull(groupDAO.searchByID(createdGroup.getID()));
+    }
+
+    @Test
+    void testDeleteGroupNullChecks() {
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.deleteGroup(null, user));
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.deleteGroup(group, null));
+    }
+
+    // ========== Process Join Request Tests ==========
+
+    @Test
+    void testProcessJoinRequestApprove() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, true, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User requester = new User("Request", "User", "requester", "req@email.com", "pass123", "QUT");
+        userDAO.addUser(requester);
+
+        // User requests to join
+        groupManager.joinGroup(createdGroup, requester);
+
+        // Get the join request ID
+        List<com.cab302.peerpractice.Model.Entities.GroupJoinRequest> requests = groupDAO.getPendingJoinRequests(createdGroup.getID());
+        assertEquals(1, requests.size());
+        int requestId = requests.get(0).getRequestId();
+
+        // Verify user is not a member yet
+        assertFalse(groupDAO.isUserMemberOfGroup(createdGroup.getID(), requester.getUserId()));
+
+        // Admin approves
+        assertDoesNotThrow(() -> groupManager.processJoinRequest(createdGroup, user, requestId, true));
+
+        // User should now be a member
+        assertTrue(groupDAO.isUserMemberOfGroup(createdGroup.getID(), requester.getUserId()));
+    }
+
+    @Test
+    void testProcessJoinRequestDeny() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, true, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User requester = new User("Request", "User", "requester", "req@email.com", "pass123", "QUT");
+        userDAO.addUser(requester);
+
+        // User requests to join
+        groupManager.joinGroup(createdGroup, requester);
+
+        // Get the join request ID
+        List<com.cab302.peerpractice.Model.Entities.GroupJoinRequest> requests = groupDAO.getPendingJoinRequests(createdGroup.getID());
+        assertEquals(1, requests.size());
+        int requestId = requests.get(0).getRequestId();
+
+        // Admin denies - should not throw but user won't be added
+        assertDoesNotThrow(() -> groupManager.processJoinRequest(createdGroup, user, requestId, false));
+
+        // User should not be a member
+        assertFalse(groupDAO.isUserMemberOfGroup(createdGroup.getID(), requester.getUserId()));
+    }
+
+    @Test
+    void testProcessJoinRequestNonAdminCannotProcess() throws Exception {
+        groupManager.createGroup(NAME, DESCRIPTION, true, user);
+        Group createdGroup = groupDAO.getAllGroups().get(0);
+
+        User member = new User("Regular", "Member", "member1", "member1@email.com", "pass456", "QUT");
+        User requester = new User("Request", "User", "requester", "req@email.com", "pass123", "QUT");
+        userDAO.addUser(member);
+        userDAO.addUser(requester);
+        groupDAO.addToGroup(createdGroup.getID(), member);
+
+        // User requests to join
+        groupManager.joinGroup(createdGroup, requester);
+
+        // Get the join request ID
+        List<com.cab302.peerpractice.Model.Entities.GroupJoinRequest> requests = groupDAO.getPendingJoinRequests(createdGroup.getID());
+        assertEquals(1, requests.size());
+        int requestId = requests.get(0).getRequestId();
+
+        // Regular member tries to process request
+        assertThrows(InsufficientPermissionsException.class,
+            () -> groupManager.processJoinRequest(createdGroup, member, requestId, true));
+    }
+
+    @Test
+    void testProcessJoinRequestNullChecks() {
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.processJoinRequest(null, user, 1, true));
+        assertThrows(IllegalArgumentException.class,
+            () -> groupManager.processJoinRequest(group, null, 1, true));
+    }
 }

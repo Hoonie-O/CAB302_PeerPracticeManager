@@ -68,12 +68,9 @@ public class GroupManager {
         if(user == null) throw new IllegalArgumentException("User can't be null");
         if(group == null) throw new IllegalArgumentException("Group can't be null");
         if(group.isRequire_approval()){
-            if (groupDAO instanceof GroupDAO) {
-                GroupDAO dbDAO = (GroupDAO) groupDAO;
-                if (!dbDAO.hasUserRequestedToJoin(group.getID(), user.getUserId()) &&
-                    !dbDAO.isUserMemberOfGroup(group.getID(), user.getUserId())) {
-                    dbDAO.createJoinRequest(group.getID(), user.getUserId());
-                }
+            if (!groupDAO.hasUserRequestedToJoin(group.getID(), user.getUserId()) &&
+                !groupDAO.isUserMemberOfGroup(group.getID(), user.getUserId())) {
+                groupDAO.createJoinRequest(group.getID(), user.getUserId());
             }
         }
         else{
@@ -135,12 +132,8 @@ public class GroupManager {
             return true;
         }
 
-        // Check if user has admin role in database
-        if (groupDAO instanceof GroupDAO) {
-            return ((GroupDAO) groupDAO).isAdmin(group.getID(), user.getUserId());
-        }
-
-        return false;
+        // Check if user has admin role in database via the interface method
+        return groupDAO.isAdmin(group.getID(), user.getUserId());
     }
 
     public void promoteToAdmin(Group group, User promoter, User userToPromote) throws SQLException {
@@ -152,16 +145,38 @@ public class GroupManager {
             throw new InsufficientPermissionsException("Only admins can promote members to admin");
         }
 
-        if (groupDAO instanceof GroupDAO) {
-            boolean success = ((GroupDAO) groupDAO).promoteToAdmin(
-                group.getID(), userToPromote.getUserId(), promoter.getUserId()
-            );
-            if (!success) {
-                throw new IllegalStateException("Failed to promote user to admin");
-            }
-            // Update local group object
-            group.setMemberRole(userToPromote.getUserId(), "admin");
+        boolean success = groupDAO.promoteToAdmin(
+            group.getID(), userToPromote.getUserId(), promoter.getUserId()
+        );
+        if (!success) {
+            throw new IllegalStateException("Failed to promote user to admin");
         }
+        // Update local group object
+        group.setMemberRole(userToPromote.getUserId(), "admin");
+    }
+
+    public void demoteAdmin(Group group, User demoter, User userToDemote) throws SQLException {
+        if (group == null || demoter == null || userToDemote == null) {
+            throw new IllegalArgumentException("Group, demoter, and user to demote cannot be null");
+        }
+
+        if (!isAdmin(group, demoter)) {
+            throw new InsufficientPermissionsException("Only admins can demote other admins");
+        }
+
+        // Can't demote the original owner
+        if (group.getOwner().equals(userToDemote.getUsername())) {
+            throw new InsufficientPermissionsException("Cannot demote the group owner");
+        }
+
+        boolean success = groupDAO.demoteAdmin(
+            group.getID(), userToDemote.getUserId(), demoter.getUserId()
+        );
+        if (!success) {
+            throw new IllegalStateException("Failed to demote admin");
+        }
+        // Update local group object
+        group.setMemberRole(userToDemote.getUserId(), "member");
     }
 
     public void kickMember(Group group, User admin, User memberToKick) throws SQLException {
@@ -178,16 +193,16 @@ public class GroupManager {
             throw new InsufficientPermissionsException("Cannot kick the group owner");
         }
 
-        if (groupDAO instanceof GroupDAO) {
-            boolean success = ((GroupDAO) groupDAO).removeMember(
-                group.getID(), memberToKick.getUserId(), admin.getUserId()
-            );
-            if (!success) {
-                throw new IllegalStateException("Failed to remove member from group");
-            }
-            // Update local group object
-            group.getMembers().remove(memberToKick);
+        boolean success = groupDAO.removeMember(
+            group.getID(), memberToKick.getUserId(), admin.getUserId()
+        );
+        if (!success) {
+            throw new IllegalStateException("Failed to remove member from group");
         }
+        // Update local group object - need to create new list since getMembers() returns unmodifiable
+        java.util.List<User> updatedMembers = new java.util.ArrayList<>(group.getMembers());
+        updatedMembers.remove(memberToKick);
+        group.setMembers(updatedMembers);
     }
 
     public void deleteGroup(Group group, User user) throws SQLException {
@@ -206,23 +221,35 @@ public class GroupManager {
         }
     }
 
-    public void processJoinRequest(Group group, User admin, User requestingUser, boolean approve) throws SQLException {
-        if (group == null || admin == null || requestingUser == null) {
-            throw new IllegalArgumentException("Group, admin, and requesting user cannot be null");
+    public void processJoinRequest(Group group, User admin, int requestId, boolean approve) throws SQLException {
+        if (group == null || admin == null) {
+            throw new IllegalArgumentException("Group and admin cannot be null");
         }
 
         if (!isAdmin(group, admin)) {
             throw new InsufficientPermissionsException("Only admins can process join requests");
         }
 
-        if (approve) {
-            // Add user to group
-            groupDAO.addToGroup(group.getID(), requestingUser);
-            group.addMember(requestingUser);
+        String status = approve ? "approved" : "rejected";
+        boolean success = groupDAO.processJoinRequest(requestId, status, admin.getUserId());
+
+        if (!success) {
+            throw new IllegalStateException("Failed to process join request");
         }
 
-        // TODO: Update join request status in database
-        // This would require extending the database schema to track join requests
+        // If approved, the DAO already added the user to the group, so reload members
+        if (approve) {
+            java.util.List<com.cab302.peerpractice.Model.Entities.GroupMemberEntity> members = groupDAO.getGroupMembers(group.getID());
+            java.util.List<User> users = new java.util.ArrayList<>();
+            for (com.cab302.peerpractice.Model.Entities.GroupMemberEntity member : members) {
+                if (member.getUser() != null) {
+                    users.add(member.getUser());
+                    // Sync roles
+                    group.setMemberRole(member.getUserId(), member.getRole());
+                }
+            }
+            group.setMembers(users);
+        }
     }
 
 }

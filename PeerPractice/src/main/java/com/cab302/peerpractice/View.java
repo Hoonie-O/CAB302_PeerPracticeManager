@@ -20,6 +20,7 @@ public enum View {
     InviteMember("invitemember-dialog.fxml", "Invite Members"),
     ShareGroupID("sharegroupID-dialog.fxml", "Share Group ID"),
     ManageGroup("managegroup-dialog.fxml", "Manage Group"),
+    GroupSettings("groupsettings-dialog.fxml", "Group Settings"),
 
     SessionTasks("session-tasks-view.fxml", "Session Tasks");
 
