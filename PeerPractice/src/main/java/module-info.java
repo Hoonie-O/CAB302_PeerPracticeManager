@@ -26,6 +26,7 @@ module com.cab302.peerpractice {
     requires org.commonmark;
     requires org.slf4j;
 
+
     // --- Core application ---
     exports com.cab302.peerpractice;
     opens com.cab302.peerpractice to javafx.fxml;

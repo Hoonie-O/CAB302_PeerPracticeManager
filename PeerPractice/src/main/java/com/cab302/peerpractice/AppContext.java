@@ -21,6 +21,7 @@ public class AppContext {
     private final ISessionCalendarDAO sessionCalendarDAO;
     private final ISessionTaskDAO sessionTaskDAO;
     private final IAvailabilityDAO availabilityDAO;
+    private final IGroupMessageDAO groupMessageDAO;
 
     // --- Managers & Services ---
     private final Notifier notifier;
@@ -33,6 +34,7 @@ public class AppContext {
     private final SessionCalendarManager sessionCalendarManager;
     private final AvailabilityManager availabilityManager;
     private final NotesManager notesManager;
+    private final GroupMessageManager groupMessageManager;
 
     private boolean menuOpen = false;
     private boolean profileOpen = false;
@@ -47,6 +49,7 @@ public class AppContext {
             this.sessionCalendarDAO = new SessionCalendarDAO(userDAO);
             this.sessionTaskDAO = new SessionTaskDAO(userDAO);
             this.availabilityDAO = new AvailabilityDAO(userDAO);
+            this.groupMessageDAO = new GroupMessageDAO();
 
             // Services & utilities
             this.notifier = new Notifier(userDAO);
@@ -57,6 +60,7 @@ public class AppContext {
             this.userManager = new UserManager(userDAO, passwordHasher);
             this.groupManager = new GroupManager(groupDAO, notifier, userDAO);
             this.notesManager = new NotesManager(notesDAO, groupDAO);
+            this.groupMessageManager = new GroupMessageManager(groupMessageDAO);
 
             this.sessionCalendarManager = new SessionCalendarManager(sessionCalendarDAO);
             this.sessionManager = new SessionManager(this.sessionCalendarManager);
@@ -128,6 +132,7 @@ public class AppContext {
     public ISessionCalendarDAO getSessionCalendarDAO() { return sessionCalendarDAO; }
     public ISessionTaskDAO getSessionTaskDAO() { return sessionTaskDAO; }
     public IAvailabilityDAO getAvailabilityDAO() { return availabilityDAO; }
+    public IGroupMessageDAO getGroupMessageDAO() { return groupMessageDAO; }
 
     public PasswordHasher getPasswordHasher() { return passwordHasher; }
     public Notifier getNotifier() { return notifier; }
@@ -140,6 +145,7 @@ public class AppContext {
     public SessionTaskManager getSessionTaskManager() { return sessionTaskManager; }
     public SessionCalendarManager getSessionCalendarManager() { return sessionCalendarManager; }
     public AvailabilityManager getAvailabilityManager() { return availabilityManager; }
+    public GroupMessageManager getGroupMessageManager() { return groupMessageManager; }
 
     public boolean isMenuOpen() { return menuOpen; }
     public void setMenuOpen(boolean value) { this.menuOpen = value; }

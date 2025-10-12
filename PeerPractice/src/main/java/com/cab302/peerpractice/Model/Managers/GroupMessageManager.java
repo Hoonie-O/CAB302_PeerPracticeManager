@@ -32,13 +32,17 @@ public class GroupMessageManager extends MessageManager<GroupMessage> {
     }
 
     @Override
-    public List<GroupMessage> getMessages(String groupId) {
+    public List<GroupMessage> getMessages(int groupId) {
         try {
-            int gid = Integer.parseInt(groupId);
-            return groupMessageDAO.getMessagesForGroup(gid);
+            return groupMessageDAO.getMessagesForGroup((groupId));
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Group ID must be a valid integer", e);
         }
+    }
+
+    @Override
+    public List<GroupMessage> getMessages(String receiverId) {
+        throw new IllegalArgumentException("Group ID must be a valid integer", new NumberFormatException());
     }
 
     @Override

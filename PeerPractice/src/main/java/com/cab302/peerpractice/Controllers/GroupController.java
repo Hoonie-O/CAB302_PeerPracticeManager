@@ -80,6 +80,8 @@ public class GroupController extends SidebarController {
      */
     private NotesController notesController;
 
+    private GroupChatController groupChatController;
+
     /**
      * <hr>
      * Flag indicating current group sorting preference (alphabetical vs date).
@@ -329,15 +331,21 @@ public class GroupController extends SidebarController {
      * @param group the group to load chat for
      */
     private void loadChatContent(Tab tab, Group group) {
-        VBox chatContent = new VBox(10);
-        chatContent.setPadding(new Insets(20));
-
-        Label comingSoon = new Label("Chat functionality coming soon!");
-        comingSoon.setFont(Font.font("System", FontWeight.BOLD, 14));
-
-        chatContent.getChildren().add(comingSoon);
-        tab.setContent(chatContent);
+        try {
+            if (groupChatController == null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/peerpractice/group-chat.fxml"));
+                loader.setControllerFactory(cls -> new GroupChatController(ctx, nav));
+                Parent chatView = loader.load();
+                groupChatController = loader.getController();
+                tab.setContent(chatView);
+            }
+            groupChatController.setGroup(group);
+        } catch (Exception e) {
+            System.err.println("Failed to load group chat: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * <hr>

@@ -1,7 +1,6 @@
 package com.cab302.peerpractice.Model.Entities;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * Represents a message sent within a group.
