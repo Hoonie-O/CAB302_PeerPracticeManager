@@ -53,7 +53,7 @@ public class GroupManagerTest {
         userDAO.addUser(user);
 
         // Don't create the group in setup - let individual tests create it
-        group = new Group(NAME, DESCRIPTION, false, user.getUsername(), LocalDateTime.now());
+        group = new Group(NAME, DESCRIPTION, false, user, LocalDateTime.now());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class GroupManagerTest {
 
     @Test
     void testCreateGroupDuplicateGroup() throws SQLException {
-        Group duplicate = new Group(NAME, DESCRIPTION, false, USERNAME, LocalDateTime.now());
+        Group duplicate = new Group(NAME, DESCRIPTION, false, user, LocalDateTime.now());
         groupDAO.addGroup(duplicate);
         assertThrows(DuplicateGroupException.class,
                 () -> groupManager.createGroup(NAME, DESCRIPTION, false, user));
