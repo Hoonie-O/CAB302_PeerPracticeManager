@@ -30,7 +30,7 @@ public class PopupController extends BaseController{
      */
     protected PopupController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
-        this.notifier = new Notifier(ctx.getUserDAO());
+        this.notifier = new Notifier(ctx.getUserDAO(), ctx.getFriendDAO());
     }
 
     /**
@@ -54,9 +54,33 @@ public class PopupController extends BaseController{
         popupInfo.setPadding(new Insets(20));
         popupInfo.setStyle("-fx-opacity: 0.8; -fx-background-color: #f5f5f5");
 
-        accept.setOnAction(e -> popup.hide());
-        ignore.setOnAction(e -> popup.hide());
-        deny.setOnAction(e -> popup.hide());
+        accept.setOnAction(e -> {
+            try {
+                notifier.approveNotification(from, n);
+                popup.hide();
+                resultPopup("Accepted friend request!");
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        ignore.setOnAction(e -> {
+            try {
+                notifier.denyNotification(from, n);
+                popup.hide();
+                resultPopup("Ignored friend request!");
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        deny.setOnAction(e -> {
+            try {
+                notifier.denyNotification(from, n);
+                popup.hide();
+                resultPopup("Denied friend request!");
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         popup.getContent().add(popupInfo);
         nav.displayPopup(popup);
@@ -70,6 +94,7 @@ public class PopupController extends BaseController{
         popupInfo.getChildren().add(text);
         popup.getContent().add(text);
 
+        popup.setAutoHide(true);
         nav.displayPopup(popup);
     }
 

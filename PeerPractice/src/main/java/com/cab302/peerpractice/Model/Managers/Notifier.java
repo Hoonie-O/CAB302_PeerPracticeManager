@@ -1,5 +1,6 @@
 package com.cab302.peerpractice.Model.Managers;
 
+import com.cab302.peerpractice.Model.DAOs.IFriendDAO;
 import com.cab302.peerpractice.Model.Entities.*;
 import com.cab302.peerpractice.Model.DAOs.IUserDAO;
 
@@ -8,9 +9,11 @@ import java.sql.SQLException;
 public class Notifier {
 
     private final IUserDAO userDAO;
+    private final IFriendDAO friendDAO;
 
-    public Notifier(IUserDAO userDAO){
+    public Notifier(IUserDAO userDAO, IFriendDAO friendDAO){
         this.userDAO = userDAO;
+        this.friendDAO = friendDAO;
     }
 
     /**
@@ -48,28 +51,29 @@ public class Notifier {
     /**
      * Approve pending notification
      */
-    public void approveNotification(User user, Notification notification){
-        onApprove(user, notification);
+    public void approveNotification(User user, Notification notification) throws SQLException {
+        onApprove(notification);
     }
 
     /**
      * Deny pending notification.
      */
-    public void denyNotification(User user, Notification notification){
-        onDeny(user, notification);
+    public void denyNotification(User user, Notification notification) throws SQLException {
+        onDeny(notification);
     }
 
     /**
      * Implement onApprove requirement when approval is performed.
      */
-    protected void onApprove(User actor, Notification notification) {
-
+    protected void onApprove(Notification notification) throws SQLException {
+        friendDAO.acceptFriendRequest(notification.getFrom(), notification.getTo());
+        notification.approve();
     }
 
     /**
      * Implement onDeny requirement when denial is performed.
      */
-    protected void onDeny(User actor, Notification notification) {
-
+    protected void onDeny(Notification notification) throws SQLException {
+        friendDAO.denyFriendRequest(notification.getFrom(), notification.getTo());
     }
 }

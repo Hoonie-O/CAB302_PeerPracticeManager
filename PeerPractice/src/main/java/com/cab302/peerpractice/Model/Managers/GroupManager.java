@@ -98,7 +98,7 @@ public class GroupManager {
         groupDAO.addToGroup(group.getID(),from);
     }
 
-    public void denyRequest(Group group, User user, GroupApprovalNotification notification){
+    public void denyRequest(Group group, User user, GroupApprovalNotification notification) throws SQLException {
         if(group == null) throw new IllegalArgumentException("Group can't be null");
         if(notification == null) throw new IllegalArgumentException("Notification can't be null");
 

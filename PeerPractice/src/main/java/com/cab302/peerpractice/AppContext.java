@@ -49,7 +49,7 @@ public class AppContext {
             this.availabilityDAO = new AvailabilityDAO(userDAO);
 
             // Services & utilities
-            this.notifier = new Notifier(userDAO);
+            this.notifier = new Notifier(userDAO, friendDAO);
             this.passwordHasher = new BcryptHasher();
             this.mailService = new MailService();
 
