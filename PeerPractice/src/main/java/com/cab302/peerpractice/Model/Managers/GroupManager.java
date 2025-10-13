@@ -35,7 +35,7 @@ public class GroupManager {
         name = ValidationUtils.validateAndCleanOthersName(name);
         description = ValidationUtils.validateAndCleanGroupDescription(description);
 
-        Group group = new Group(name,description,require_approval,user.getUsername(), LocalDateTime.now());
+        Group group = new Group(name,description,require_approval,user,LocalDateTime.now());
         group.addMember(user);
 
         if(groupDAO.groupExists(group)) throw new DuplicateGroupException("Group already exists");
@@ -88,7 +88,6 @@ public class GroupManager {
         notifier.approveNotification(user,notification);
 
         if(!notification.isApproved()) throw new IllegalStateException("notification has not been approved");
-        if(notification.isDenied()) throw new IllegalStateException("Notification can't be denied");
 
         User from = notification.getFrom();
 
@@ -96,7 +95,7 @@ public class GroupManager {
         groupDAO.addToGroup(group.getID(),from);
     }
 
-    public void denyRequest(Group group, User user, GroupApprovalNotification notification){
+    public void denyRequest(Group group, User user, GroupApprovalNotification notification) throws SQLException {
         if(group == null) throw new IllegalArgumentException("Group can't be null");
         if(notification == null) throw new IllegalArgumentException("Notification can't be null");
 

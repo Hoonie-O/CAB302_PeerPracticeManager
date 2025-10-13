@@ -54,10 +54,7 @@ public class FriendDAO implements IFriendDAO {
     @Override
     public boolean addFriend(User user, User friend) throws SQLException, DuplicateFriendException {
         if (Objects.equals(user.getUsername(), friend.getUsername())) return false;
-        if (friendExists(user, friend)) {
-            if (acceptFriendRequest(user, friend)) return true;
-            throw new DuplicateFriendException("Friend already exists");
-        }
+        if (friendExists(user, friend)) return false;
 
         String sql = "INSERT INTO friends (user, friend, status) VALUES (?, ?, 'pending')";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

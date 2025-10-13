@@ -30,7 +30,7 @@ public class GroupJoinIntegrationTest {
         userDao = new UserDAO();
         groupDao = new GroupDAO(userDao);
         
-        Notifier notifier = new Notifier(userDao);
+        Notifier notifier = new Notifier(userDao, null);
         groupManager = new GroupManager(groupDao, notifier, userDao);
         
         var sessionStorage = new SessionCalendarDAO(userDao);

@@ -1,5 +1,7 @@
 package com.cab302.peerpractice.Controllers;
 
+import com.cab302.peerpractice.Exceptions.DuplicateFriendException;
+import com.cab302.peerpractice.Model.Managers.Notifier;
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Entities.Friend;
 import com.cab302.peerpractice.Model.DAOs.IFriendDAO;
@@ -72,6 +74,11 @@ public class FriendsController extends SidebarController{
      * Data access object for friend-related database operations.
      */
     IFriendDAO friendDAO = ctx.getFriendDAO();
+    /**
+     * <hr>
+     * Notifier to show friend request notifications
+     */
+    PopupController popups = new PopupController(ctx, nav);
 
     /**
      * <hr>
@@ -172,6 +179,7 @@ public class FriendsController extends SidebarController{
                         // (un)successful message
                         if (success) {
                             feedbackMsg.setText("Friend request sent!"); ft.playFromStart();
+                            popups.friendPopup(currentUser, friend);
                         } else {
                             feedbackMsg.setText("Friend request failed! Maybe already on friends list?"); ft.playFromStart();
                         }

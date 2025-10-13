@@ -41,7 +41,7 @@ public class GroupManagerTest {
             ((MockUserDAO) userDAO).clear();
         }
 
-        notifier = new Notifier(userDAO);
+        notifier = new Notifier(userDAO, null);
         groupManager = new GroupManager(groupDAO, notifier, userDAO);
 
         // Use unique values to avoid clashes across runs
