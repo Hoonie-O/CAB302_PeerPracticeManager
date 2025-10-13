@@ -10,8 +10,11 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -156,15 +159,34 @@ public class GroupCalendarController extends BaseController {
      */
     private void populateCalendarGrid() {
         calendarGrid.getChildren().clear();
+        calendarGrid.getColumnConstraints().clear();
+        calendarGrid.getRowConstraints().clear();
 
-        // Day headers with modern styling
+        for (int i = 0; i < 7; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(100.0 / 7);
+            col.setHgrow(Priority.ALWAYS);
+            calendarGrid.getColumnConstraints().add(col);
+        }
+
+        RowConstraints headerRow = new RowConstraints();
+        headerRow.setMinHeight(40);
+        headerRow.setVgrow(Priority.NEVER);
+        calendarGrid.getRowConstraints().add(headerRow);
+
+        for (int i = 0; i < 6; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setMinHeight(120);
+            row.setVgrow(Priority.ALWAYS);
+            calendarGrid.getRowConstraints().add(row);
+        }
+
         String[] dayHeaders = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         for (int i = 0; i < dayHeaders.length; i++) {
             Label dayHeader = new Label(dayHeaders[i]);
             dayHeader.getStyleClass().add("calendar-day-header");
             dayHeader.setAlignment(Pos.CENTER);
-            dayHeader.setPrefWidth(80);
-            dayHeader.setPrefHeight(30);
+            dayHeader.setMaxWidth(Double.MAX_VALUE);
             calendarGrid.add(dayHeader, i, 0);
         }
 
@@ -217,12 +239,15 @@ public class GroupCalendarController extends BaseController {
      */
     private VBox createDayCell(LocalDate date, boolean isOtherMonth) {
         VBox dayCell = new VBox(5);
-        dayCell.setPrefWidth(80);
-        dayCell.setPrefHeight(80);
-        dayCell.setPadding(new Insets(8));
+        dayCell.setMaxWidth(Double.MAX_VALUE);
+        dayCell.setMaxHeight(Double.MAX_VALUE);
+        dayCell.setPadding(new Insets(12));
         dayCell.setAlignment(Pos.TOP_LEFT);
+        GridPane.setHgrow(dayCell, Priority.ALWAYS);
+        GridPane.setVgrow(dayCell, Priority.ALWAYS);
+        GridPane.setFillWidth(dayCell, true);
+        GridPane.setFillHeight(dayCell, true);
 
-        // Apply modern CSS classes
         dayCell.getStyleClass().add("calendar-day-cell");
 
         if (isOtherMonth) {
@@ -249,14 +274,38 @@ public class GroupCalendarController extends BaseController {
 
         dayCell.getChildren().add(dayLabel);
 
-        // Add session indicators
         if (currentGroup != null && !isOtherMonth) {
             List<Session> sessions = sessionCalendarManager.getSessionsForDateAndGroup(date, currentGroup);
             if (!sessions.isEmpty()) {
-                // Show session count badge instead of listing all
-                Label sessionBadge = new Label(sessions.size() + " session" + (sessions.size() > 1 ? "s" : ""));
-                sessionBadge.getStyleClass().add("calendar-session-badge");
-                dayCell.getChildren().add(sessionBadge);
+                VBox eventIndicators = new VBox(3);
+                eventIndicators.setAlignment(Pos.TOP_LEFT);
+
+                int displayCount = Math.min(sessions.size(), 3);
+                for (int i = 0; i < displayCount; i++) {
+                    Session session = sessions.get(i);
+                    HBox eventBox = new HBox(4);
+                    eventBox.setAlignment(Pos.CENTER_LEFT);
+
+                    Label eventDot = new Label("●");
+                    eventDot.setStyle("-fx-text-fill: " + getColorHexForLabel(session.getColorLabel()) + "; -fx-font-size: 12px;");
+
+                    Label eventTitle = new Label(session.getTitle());
+                    eventTitle.setStyle("-fx-font-size: 11px; -fx-text-fill: #424242; -fx-font-weight: 500;");
+                    eventTitle.setMaxWidth(Double.MAX_VALUE);
+                    eventTitle.setWrapText(false);
+                    HBox.setHgrow(eventTitle, javafx.scene.layout.Priority.ALWAYS);
+
+                    eventBox.getChildren().addAll(eventDot, eventTitle);
+                    eventIndicators.getChildren().add(eventBox);
+                }
+
+                if (sessions.size() > 3) {
+                    Label moreLabel = new Label("+" + (sessions.size() - 3) + " more");
+                    moreLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #757575; -fx-font-weight: 600; -fx-font-style: italic;");
+                    eventIndicators.getChildren().add(moreLabel);
+                }
+
+                dayCell.getChildren().add(eventIndicators);
             }
         }
 
@@ -293,6 +342,20 @@ public class GroupCalendarController extends BaseController {
         };
     }
 
+    private String getColorHexForLabel(String colorLabel) {
+        return switch (colorLabel.toUpperCase()) {
+            case "RED" -> "#f44336";
+            case "GREEN" -> "#4CAF50";
+            case "ORANGE" -> "#FF9800";
+            case "PURPLE" -> "#9C27B0";
+            case "PINK" -> "#E91E63";
+            case "TEAL" -> "#009688";
+            case "YELLOW" -> "#FFC107";
+            case "INDIGO" -> "#3F51B5";
+            default -> "#2196F3";
+        };
+    }
+
     /**
      * <hr>
      * Shows the appropriate dialog when a day cell is clicked.
@@ -326,20 +389,25 @@ public class GroupCalendarController extends BaseController {
         if (currentUser == null || currentGroup == null) return;
 
         Dialog<Session> dialog = new Dialog<>();
-        dialog.setTitle("Add Study Session");
-        dialog.setHeaderText("Create study session for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+        dialog.setTitle("Create Study Session");
+        dialog.setHeaderText("New session for " + date.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
 
         ButtonType saveButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/com/cab302/peerpractice/styles/modern.css").toExternalForm());
 
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setHgap(12);
+        grid.setVgap(12);
+        grid.setPadding(new Insets(20, 20, 10, 20));
 
         TextField titleField = new TextField();
+        titleField.getStyleClass().add("modern-text-field");
+        titleField.setPromptText("Session title");
+
         TextArea descriptionField = new TextArea();
-        descriptionField.setPromptText("Description optional");
+        descriptionField.getStyleClass().add("modern-text-field");
+        descriptionField.setPromptText("Description (optional)");
         descriptionField.setPrefRowCount(2);
 
         Spinner<Integer> startHour = new Spinner<>(0, 23, 9);
@@ -348,7 +416,7 @@ public class GroupCalendarController extends BaseController {
         Spinner<Integer> endMinute = new Spinner<>(0, 59, 0, 15);
 
         ComboBox<String> colorCombo = new ComboBox<>();
-        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE");
+        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE", "PINK", "TEAL", "YELLOW", "INDIGO");
         colorCombo.setValue("BLUE");
 
         ComboBox<String> priorityCombo = new ComboBox<>();
@@ -359,19 +427,40 @@ public class GroupCalendarController extends BaseController {
         subjectCombo.getItems().addAll("Science", "Technology", "Engineering", "Maths", "Humanities and Social Sciences");
         subjectCombo.setValue("Science");
 
-        grid.add(new Label("Title:"), 0, 0);
+        Label titleLabel = new Label("Title:");
+        titleLabel.getStyleClass().add("modern-label-body");
+
+        Label descLabel = new Label("Description:");
+        descLabel.getStyleClass().add("modern-label-body");
+
+        Label startLabel = new Label("Start time:");
+        startLabel.getStyleClass().add("modern-label-body");
+
+        Label endLabel = new Label("End time:");
+        endLabel.getStyleClass().add("modern-label-body");
+
+        Label priorityLabel = new Label("Priority:");
+        priorityLabel.getStyleClass().add("modern-label-body");
+
+        Label subjectLabel = new Label("Subject:");
+        subjectLabel.getStyleClass().add("modern-label-body");
+
+        Label colorLabel = new Label("Color:");
+        colorLabel.getStyleClass().add("modern-label-body");
+
+        grid.add(titleLabel, 0, 0);
         grid.add(titleField, 1, 0);
-        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descLabel, 0, 1);
         grid.add(descriptionField, 1, 1);
-        grid.add(new Label("Start time:"), 0, 2);
+        grid.add(startLabel, 0, 2);
         grid.add(new HBox(5, new VBox(5, new Label("Hour"), startHour), new VBox(5, new Label("Minute"), startMinute)), 1, 2);
-        grid.add(new Label("End time:"), 0, 3);
+        grid.add(endLabel, 0, 3);
         grid.add(new HBox(5, new VBox(5, new Label("Hour"), endHour), new VBox(5, new Label("Minute"), endMinute)), 1, 3);
-        grid.add(new Label("Priority:"), 0, 4);
+        grid.add(priorityLabel, 0, 4);
         grid.add(priorityCombo, 1, 4);
-        grid.add(new Label("Subject:"), 0, 5);
+        grid.add(subjectLabel, 0, 5);
         grid.add(subjectCombo, 1, 5);
-        grid.add(new Label("Color:"), 0, 6);
+        grid.add(colorLabel, 0, 6);
         grid.add(colorCombo, 1, 6);
 
         dialog.getDialogPane().setContent(grid);
@@ -413,37 +502,69 @@ public class GroupCalendarController extends BaseController {
      */
     private void showSessionListDialog(LocalDate date, List<Session> sessions) {
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Study Sessions for " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+        dialog.setTitle("Study Sessions");
+        dialog.setHeaderText(date.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/com/cab302/peerpractice/styles/modern.css").toExternalForm());
 
-        VBox content = new VBox(10);
+        VBox content = new VBox(12);
         content.setPadding(new Insets(20));
 
         User currentUser = ctx.getUserSession().getCurrentUser();
 
         for (Session session : sessions) {
-            VBox sessionBox = new VBox(5);
-            sessionBox.setStyle("-fx-border-color: #ccc; -fx-padding: 10; -fx-background-color: #f9f9f9;");
+            VBox sessionCard = new VBox(8);
+            sessionCard.getStyleClass().add("modern-card");
+            sessionCard.setStyle("-fx-border-left-width: 4px; -fx-border-left-color: " + getColorHexForLabel(session.getColorLabel()) + ";");
+
+            HBox headerBox = new HBox(8);
+            headerBox.setAlignment(Pos.CENTER_LEFT);
 
             Label titleLabel = new Label(session.getTitle());
-            titleLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
-            titleLabel.setTextFill(getColorForLabel(session.getColorLabel()));
+            titleLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
+            titleLabel.setStyle("-fx-text-fill: #212121;");
 
+            if (session.getPriority() != null && !session.getPriority().isEmpty() && !session.getPriority().equals("optional")) {
+                Label priorityBadge = new Label(session.getPriority().toUpperCase());
+                priorityBadge.setStyle("-fx-background-color: " + (session.getPriority().equals("urgent") ? "#f44336" : "#FF9800") + "; -fx-text-fill: white; -fx-padding: 2 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-font-weight: 600;");
+                headerBox.getChildren().addAll(titleLabel, priorityBadge);
+            } else {
+                headerBox.getChildren().add(titleLabel);
+            }
+
+            HBox timeBox = new HBox(6);
+            timeBox.setAlignment(Pos.CENTER_LEFT);
+            Label clockIcon = new Label("🕒");
             Label timeLabel = new Label(
                     session.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
                             " - " +
                             session.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
             );
+            timeLabel.setStyle("-fx-text-fill: #757575; -fx-font-size: 13px;");
+            timeBox.getChildren().addAll(clockIcon, timeLabel);
 
-            Label descriptionLabel = new Label(session.getDescription().isEmpty() ? "No description" : session.getDescription());
-            descriptionLabel.setWrapText(true);
+            if (session.getSubject() != null && !session.getSubject().isEmpty()) {
+                Label subjectLabel = new Label("📚 " + session.getSubject());
+                subjectLabel.setStyle("-fx-text-fill: #757575; -fx-font-size: 12px;");
+                sessionCard.getChildren().addAll(headerBox, timeBox, subjectLabel);
+            } else {
+                sessionCard.getChildren().addAll(headerBox, timeBox);
+            }
+
+            if (session.getDescription() != null && !session.getDescription().isEmpty()) {
+                Label descriptionLabel = new Label(session.getDescription());
+                descriptionLabel.setWrapText(true);
+                descriptionLabel.setStyle("-fx-text-fill: #424242; -fx-font-size: 13px;");
+                sessionCard.getChildren().add(descriptionLabel);
+            }
 
             HBox buttonBox = new HBox(8);
+            buttonBox.setAlignment(Pos.CENTER_LEFT);
 
-            // Edit button - admins can edit all, members can edit own
             boolean canEdit = canUserEditSession(currentUser, session);
             if (canEdit) {
                 Button editButton = new Button("Edit");
+                editButton.getStyleClass().addAll("modern-button-secondary");
                 editButton.setOnAction(e -> {
                     dialog.close();
                     javafx.application.Platform.runLater(() -> showEditSessionDialog(session));
@@ -451,17 +572,17 @@ public class GroupCalendarController extends BaseController {
                 buttonBox.getChildren().add(editButton);
             }
 
-            // View Tasks button
             Button viewTasksButton = new Button("View Tasks");
+            viewTasksButton.getStyleClass().addAll("modern-button-accent");
             viewTasksButton.setOnAction(e -> {
                 dialog.close();
                 nav.openSessionTasks(session.getSessionId());
             });
             buttonBox.getChildren().add(viewTasksButton);
 
-            // Delete button - same permissions as edit
             if (canEdit) {
                 Button deleteButton = new Button("Delete");
+                deleteButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-cursor: hand;");
                 deleteButton.setOnAction(e -> {
                     dialog.close();
                     javafx.application.Platform.runLater(() -> showDeleteSessionDialog(session));
@@ -469,11 +590,13 @@ public class GroupCalendarController extends BaseController {
                 buttonBox.getChildren().add(deleteButton);
             }
 
-            sessionBox.getChildren().addAll(titleLabel, timeLabel, descriptionLabel, buttonBox);
-            content.getChildren().add(sessionBox);
+            sessionCard.getChildren().add(buttonBox);
+            content.getChildren().add(sessionCard);
         }
 
-        Button addNewButton = new Button("Add Another Session");
+        Button addNewButton = new Button("+ Add Another Session");
+        addNewButton.getStyleClass().add("modern-button");
+        addNewButton.setPrefWidth(200);
         addNewButton.setOnAction(e -> {
             dialog.close();
             javafx.application.Platform.runLater(() -> showAddSessionDialog(date));
@@ -481,8 +604,9 @@ public class GroupCalendarController extends BaseController {
         content.getChildren().add(addNewButton);
 
         ScrollPane scrollPane = new ScrollPane(content);
-        scrollPane.setPrefSize(500, 400);
+        scrollPane.setPrefSize(550, 450);
         scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background-color: transparent;");
 
         dialog.getDialogPane().setContent(scrollPane);
         dialog.showAndWait();
@@ -551,18 +675,22 @@ public class GroupCalendarController extends BaseController {
 
         Dialog<Session> dialog = new Dialog<>();
         dialog.setTitle("Edit Study Session");
-        dialog.setHeaderText("Edit session: " + session.getTitle());
+        dialog.setHeaderText("Editing: " + session.getTitle());
 
-        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveButtonType = new ButtonType("Save Changes", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/com/cab302/peerpractice/styles/modern.css").toExternalForm());
 
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setHgap(12);
+        grid.setVgap(12);
+        grid.setPadding(new Insets(20, 20, 10, 20));
 
         TextField titleField = new TextField(session.getTitle());
+        titleField.getStyleClass().add("modern-text-field");
+
         TextArea descriptionField = new TextArea(session.getDescription());
+        descriptionField.getStyleClass().add("modern-text-field");
         descriptionField.setPrefRowCount(2);
 
         LocalDateTime startTime = session.getStartTime();
@@ -574,18 +702,33 @@ public class GroupCalendarController extends BaseController {
         Spinner<Integer> endMinute = new Spinner<>(0, 59, endTime.getMinute(), 15);
 
         ComboBox<String> colorCombo = new ComboBox<>();
-        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE");
+        colorCombo.getItems().addAll("BLUE", "RED", "GREEN", "ORANGE", "PURPLE", "PINK", "TEAL", "YELLOW", "INDIGO");
         colorCombo.setValue(session.getColorLabel());
 
-        grid.add(new Label("Title:"), 0, 0);
+        Label titleLabel = new Label("Title:");
+        titleLabel.getStyleClass().add("modern-label-body");
+
+        Label descLabel = new Label("Description:");
+        descLabel.getStyleClass().add("modern-label-body");
+
+        Label startLabel = new Label("Start time:");
+        startLabel.getStyleClass().add("modern-label-body");
+
+        Label endLabel = new Label("End time:");
+        endLabel.getStyleClass().add("modern-label-body");
+
+        Label colorLabel = new Label("Color:");
+        colorLabel.getStyleClass().add("modern-label-body");
+
+        grid.add(titleLabel, 0, 0);
         grid.add(titleField, 1, 0);
-        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descLabel, 0, 1);
         grid.add(descriptionField, 1, 1);
-        grid.add(new Label("Start time:"), 0, 2);
+        grid.add(startLabel, 0, 2);
         grid.add(new HBox(5, new VBox(5, new Label("Hour"), startHour), new VBox(5, new Label("Minute"), startMinute)), 1, 2);
-        grid.add(new Label("End time:"), 0, 3);
+        grid.add(endLabel, 0, 3);
         grid.add(new HBox(5, new VBox(5, new Label("Hour"), endHour), new VBox(5, new Label("Minute"), endMinute)), 1, 3);
-        grid.add(new Label("Color:"), 0, 4);
+        grid.add(colorLabel, 0, 4);
         grid.add(colorCombo, 1, 4);
 
         dialog.getDialogPane().setContent(grid);

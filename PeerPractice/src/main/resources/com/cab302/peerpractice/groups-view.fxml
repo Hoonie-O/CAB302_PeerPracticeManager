@@ -30,43 +30,42 @@
         <fx:include source="sidebar-layout.fxml"
                     fx:id="menu"/>
 
-            <!-- Groups Panel -->
-            <VBox spacing="10">
+            <VBox spacing="12" minWidth="280" maxWidth="320">
                 <padding>
-                    <Insets top="10"
-                            left="10"
-                            right="10"
-                            bottom="10"/>
+                    <Insets top="16"
+                            left="16"
+                            right="16"
+                            bottom="16"/>
                 </padding>
 
-                <!-- Groups Header and Buttons -->
-                <HBox alignment="CENTER_LEFT"
-                      spacing="10">
+                <VBox spacing="10">
                     <Label text="My Groups"
-                           styleClass="modern-label-heading"/>
-                    <Button fx:id="addGroupButton"
-                            text="New Group"
-                            styleClass="modern-button"
-                            onAction="#onAddGroup"
-                            prefWidth="100"/>
-                    <Button fx:id="sortGroupsButton"
-                            text="Sort"
-                            styleClass="modern-button-secondary"
-                            onAction="#onSortGroups"
-                            prefWidth="80"/>
-                </HBox>
+                           styleClass="modern-label-heading"
+                           style="-fx-font-size: 16px;"/>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Button fx:id="addGroupButton"
+                                text="+ New"
+                                styleClass="modern-button"
+                                onAction="#onAddGroup"
+                                HBox.hgrow="ALWAYS"
+                                maxWidth="Infinity"/>
+                        <Button fx:id="sortGroupsButton"
+                                text="Sort"
+                                styleClass="modern-button-secondary"
+                                onAction="#onSortGroups"
+                                prefWidth="70"/>
+                    </HBox>
+                </VBox>
 
-                <!-- Search Field -->
                 <TextField fx:id="searchField"
                            styleClass="modern-text-field"
-                           promptText="Search groups..."/>
+                           promptText="🔍 Search groups..."/>
 
-                <!-- Groups List -->
                 <ListView fx:id="groupListView"
-                          VBox.vgrow="ALWAYS"/>
+                          VBox.vgrow="ALWAYS"
+                          minHeight="400"/>
 
-                <!-- Join Request -->
-                <Button text="Join Request"
+                <Button text="📨 Join Requests"
                         styleClass="modern-button-secondary"
                         maxWidth="Infinity"/>
             </VBox>

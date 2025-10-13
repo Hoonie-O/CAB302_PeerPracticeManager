@@ -4,13 +4,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.cab302.peerpractice.Controllers.SignupController"
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           stylesheets="@styles/modern.css"
+           style="-fx-background-color: -fx-background;"
+           alignment="CENTER">
+<VBox fx:controller="com.cab302.peerpractice.Controllers.SignupController"
       spacing="18"
       alignment="TOP_CENTER"
       styleClass="modern-card"
-      stylesheets="@styles/modern.css"
-      maxWidth="400">
+      maxWidth="450"
+      minWidth="400">
 
     <padding>
         <Insets top="40"
@@ -93,3 +96,4 @@
            maxWidth="Infinity"/>
 
 </VBox>
+</StackPane>

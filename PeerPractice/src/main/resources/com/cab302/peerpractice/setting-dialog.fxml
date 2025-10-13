@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.collections.FXCollections?>
+
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.cab302.peerpractice.Controllers.SettingController"
-      spacing="8">
+      spacing="16"
+      stylesheets="@styles/modern.css">
     <padding>
-        <Insets top="12"
-                right="12"
-                bottom="12"
-                left="12"/>
+        <Insets top="20"
+                right="20"
+                bottom="20"
+                left="20"/>
     </padding>
 
     <Label text="Date and Time"
-           style="-fx-font-weight:bold;"/>
+           styleClass="modern-label-heading"/>
     <Separator/>
 
     <GridPane hgap="12"
@@ -33,11 +31,10 @@
                                minWidth="260"/>
         </columnConstraints>
 
-        <!-- Date -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="0"
               GridPane.columnIndex="0">
-            <Label text="Date format:"/>
+            <Label text="Date format:" styleClass="modern-label-body"/>
             <ComboBox fx:id="dateFormatBox"
                       minWidth="260">
                     <items>
@@ -50,17 +47,16 @@
                     </items>
             </ComboBox>
 
-            <!-- Date Format Preview -->
             <Label fx:id="dateFormatPreview"
                    text="Preview: 25/12/2023"
-                   style="-fx-text-fill: #666666; -fx-font-style: italic;"/>
+                   styleClass="modern-label-caption"
+                   style="-fx-font-style: italic;"/>
         </VBox>
 
-        <!-- Time -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="0"
               GridPane.columnIndex="1">
-            <Label text="Time format:"/>
+            <Label text="Time format:" styleClass="modern-label-body"/>
             <ComboBox fx:id="timeFormatBox"
                       minWidth="260">
                 <items>
@@ -71,53 +67,54 @@
                 </items>
             </ComboBox>
 
-            <!-- Time Format Preview -->
             <Label fx:id="timeFormatPreview"
                    text="Preview: 14:30"
-                   style="-fx-text-fill: #666666; -fx-font-size: 11px; -fx-font-style: italic;"/>
+                   styleClass="modern-label-caption"
+                   style="-fx-font-style: italic;"/>
         </VBox>
     </GridPane>
 
-        <VBox spacing="4"/>
-        <Label text="Change password"
-               style="-fx-font-weight:bold;"/>
+    <VBox spacing="4"/>
+    <Label text="Change Password"
+           styleClass="modern-label-heading"/>
 
     <Separator/>
-        <VBox spacing="8">
+    <VBox spacing="12">
 
-            <!-- Old password -->
-            <VBox spacing="4">
-                <Label text="Old password:"/>
-                <PasswordField fx:id="oldPasswordField"/>
-            </VBox>
-
-            <!-- New password -->
-            <VBox spacing="4">
-                <Label text="New password:"/>
-                <PasswordField fx:id="newPasswordField"/>
-            </VBox>
-
-            <!-- Confirm new password -->
-            <VBox spacing="4">
-                <Label text="Confirm new password:"/>
-                <PasswordField fx:id="confirmPasswordField"/>
-            </VBox>
+        <VBox spacing="6">
+            <Label text="Old password:" styleClass="modern-label-body"/>
+            <PasswordField fx:id="oldPasswordField"
+                           styleClass="modern-text-field"/>
         </VBox>
 
-        <!-- Buttons -->
-        <HBox alignment="CENTER_RIGHT"
-              spacing="8">
+        <VBox spacing="6">
+            <Label text="New password:" styleClass="modern-label-body"/>
+            <PasswordField fx:id="newPasswordField"
+                           styleClass="modern-text-field"/>
+        </VBox>
 
-            <padding>
-                <Insets top="14"/>
-            </padding>
+        <VBox spacing="6">
+            <Label text="Confirm new password:" styleClass="modern-label-body"/>
+            <PasswordField fx:id="confirmPasswordField"
+                           styleClass="modern-text-field"/>
+        </VBox>
+    </VBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Close"
-                    onAction="#onClose"
-                    minWidth="110"/>
-            <Button text="Save"
-                    onAction="#onSave"
-                    minWidth="110"/>
-        </HBox>
+    <HBox alignment="CENTER_RIGHT"
+          spacing="12">
+
+        <padding>
+            <Insets top="14"/>
+        </padding>
+
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Close"
+                onAction="#onClose"
+                minWidth="110"
+                styleClass="modern-button-secondary"/>
+        <Button text="Save Changes"
+                onAction="#onSave"
+                minWidth="130"
+                styleClass="modern-button"/>
+    </HBox>
 </VBox>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
-<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml"
+
+<BorderPane fx:id="rootPane"
+            xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.FriendsController"
-            prefHeight="720" prefWidth="1280">
+            prefHeight="720"
+            prefWidth="1280"
+            stylesheets="@styles/modern.css">
 
     <top>
         <fx:include source="header-layout.fxml" fx:id="header"/>
@@ -24,24 +24,44 @@
     </right>
 
     <center>
-        <FlowPane orientation="VERTICAL" alignment="CENTER" prefWrapLength="10" style="-fx-background-color: #f5f5f5;">
+        <VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: -fx-background;" VBox.vgrow="ALWAYS">
             <padding>
-                <Insets top="10" bottom="10" left="10" right="10"/>
+                <Insets top="30" bottom="30" left="30" right="30"/>
             </padding>
 
-            <Label fx:id="feedbackMsg" alignment="TOP_CENTER"/>
+            <VBox spacing="20" VBox.vgrow="ALWAYS" maxWidth="Infinity">
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <Label text="Friends" styleClass="modern-label-title" style="-fx-font-size: 28px;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="feedbackMsg" styleClass="modern-label-body" textFill="#2196F3"/>
+                </HBox>
 
-            <HBox spacing="10">
-                <Label fx:id="friendsListLabel" text="Friends" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                <TextField fx:id="friendsSearchBox" promptText="Search friends list" HBox.hgrow="ALWAYS"/>
+                <VBox spacing="16" styleClass="modern-card" VBox.vgrow="ALWAYS">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <TextField fx:id="friendsSearchBox"
+                                   promptText="🔍 Search friends..."
+                                   HBox.hgrow="ALWAYS"
+                                   styleClass="modern-text-field"
+                                   minWidth="200"/>
 
-                <Button fx:id="addFriend" text="Add friend" onAction="#addFriend"/>
-                <Button fx:id="removeFriend" text="Remove friend" onAction="#removeFriend"/>
-                <Button fx:id="viewRequests" text="Friend requests" onAction="#viewRequests"/>
-            </HBox>
+                        <Button fx:id="addFriend"
+                                text="+ Add Friend"
+                                onAction="#addFriend"
+                                styleClass="modern-button"/>
+                        <Button fx:id="removeFriend"
+                                text="Remove"
+                                onAction="#removeFriend"
+                                styleClass="modern-button-secondary"/>
+                        <Button fx:id="viewRequests"
+                                text="📨 Requests"
+                                onAction="#viewRequests"
+                                styleClass="modern-button-accent"/>
+                    </HBox>
 
-            <TableView fx:id="friendsTable" HBox.hgrow="ALWAYS"/>
-        </FlowPane>
+                    <TableView fx:id="friendsTable" VBox.vgrow="ALWAYS" minHeight="500"/>
+                </VBox>
+            </VBox>
+        </VBox>
     </center>
 
 </BorderPane>
