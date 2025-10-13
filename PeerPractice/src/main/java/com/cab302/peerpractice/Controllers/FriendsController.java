@@ -77,7 +77,7 @@ public class FriendsController extends SidebarController{
      * <hr>
      * Notifier to show friend request notifications
      */
-    Notifier notifier = ctx.getNotifier();
+    PopupController popups = new PopupController(ctx, nav);
 
     /**
      * <hr>
@@ -174,11 +174,11 @@ public class FriendsController extends SidebarController{
                     if (friend == null) { friend = userDAO.findUser("email", identifier.getText());}
                     if (friend != null) {
                         boolean success = friendDAO.addFriend(currentUser, friend);
-                        notifier.createFriendRequest(currentUser, friend);
 
                         // (un)successful message
                         if (success) {
                             feedbackMsg.setText("Friend request sent!"); ft.playFromStart();
+                            popups.friendPopup(currentUser, friend);
                         } else {
                             feedbackMsg.setText("Friend request failed! Maybe already on friends list?"); ft.playFromStart();
                         }

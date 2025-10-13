@@ -26,7 +26,11 @@ public final class Navigation {
 
     public void displayPopup(Popup popup) {
         try {
-            popup.show(stage);
+            popup.show(stage,
+                    stage.getWidth(),
+                    stage.getHeight());
+
+            popup.requestFocus();
         }
 
         catch (Exception e) {

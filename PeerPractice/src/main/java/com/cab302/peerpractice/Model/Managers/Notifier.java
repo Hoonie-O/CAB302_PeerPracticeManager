@@ -1,6 +1,5 @@
 package com.cab302.peerpractice.Model.Managers;
 
-import com.cab302.peerpractice.Controllers.PopupController;
 import com.cab302.peerpractice.Model.Entities.*;
 import com.cab302.peerpractice.Model.DAOs.IUserDAO;
 
@@ -37,13 +36,13 @@ public class Notifier {
      * @param receiver The target user of the friend request
      * @throws SQLException SQLException
      */
-    public void createFriendRequest(User sender, User receiver) throws SQLException {
+    public FriendRequestNotification createFriendRequest(User sender, User receiver) throws SQLException {
         // Create object
         FriendRequestNotification notification = new FriendRequestNotification(sender, receiver);
         // Insert into table
         userDAO.addNotification(notification.getFrom(), notification.getTo(), notification.getMsg());
-        // Show popup
-        PopupController.createPopup(notification.getMsg());
+
+        return notification;
     }
 
     /**
