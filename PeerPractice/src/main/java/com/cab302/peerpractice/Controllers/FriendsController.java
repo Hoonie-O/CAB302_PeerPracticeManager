@@ -1,5 +1,6 @@
 package com.cab302.peerpractice.Controllers;
 
+import com.cab302.peerpractice.Exceptions.DuplicateFriendException;
 import com.cab302.peerpractice.Model.Managers.Notifier;
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Entities.Friend;

@@ -34,25 +34,19 @@ public class PopupController extends BaseController{
     }
 
     /**
-     *
-     * @param from
-     * @param to
-     * @throws SQLException
+     * Displays a popup for a friend request with buttons to take actions
+     * @param from The user sending the friend request
+     * @param to The user receiving the friend request
+     * @throws SQLException error
      */
     public void friendPopup(User from, User to) throws SQLException {
         FriendRequestNotification n = notifier.createFriendRequest(from, to);
 
         Popup popup = new Popup();
-
         Label msg = new Label(n.getMsg());
         Button accept = new Button("Accept");
         Button ignore = new Button("Ignore");
         Button deny = new Button("Block");
-
-        FlowPane popupInfo = new FlowPane(20, 20, msg, accept, ignore, deny);
-        popupInfo.setMaxSize(40, 40);
-        popupInfo.setPadding(new Insets(20));
-        popupInfo.setStyle("-fx-opacity: 0.8; -fx-background-color: #f5f5f5");
 
         accept.setOnAction(e -> {
             try {
@@ -82,27 +76,43 @@ public class PopupController extends BaseController{
             }
         });
 
+        FlowPane popupInfo = formatPopup();
+        popupInfo.getChildren().addAll(msg, accept, ignore, deny);
         popup.getContent().add(popupInfo);
-        nav.displayPopup(popup);
+
+        // display appropriate popup depending on current user
+        if (ctx.getUserSession().getCurrentUser() == from) {
+            resultPopup("Friend request sent!");
+        } else {
+            nav.displayPopup(popup);
+        }
     }
 
+    /**
+     * Displays a popup with a simple message
+     * @param feedback string to display
+     */
     public void resultPopup(String feedback) {
         Popup popup = new Popup();
         Label text = new Label(feedback);
 
         FlowPane popupInfo = formatPopup();
-        popupInfo.getChildren().add(text);
-        popup.getContent().add(text);
+        popupInfo.getChildren().addAll(text);
+        popup.getContent().add(popupInfo);
 
         popup.setAutoHide(true);
         nav.displayPopup(popup);
     }
 
+    /**
+     * Generates a blank popup
+     * @return popup object
+     */
     private FlowPane formatPopup() {
         FlowPane popupInfo = new FlowPane(20, 20);
         popupInfo.setMaxSize(40, 40);
         popupInfo.setPadding(new Insets(20));
-        popupInfo.setStyle("-fx-opacity: 0.8; -fx-background-color: #f5f5f5");
+        popupInfo.setStyle("-fx-opacity: 0.8; -fx-border-color: black; -fx-background-color: #f5f5f5");
 
         return popupInfo;
     }

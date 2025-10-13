@@ -24,11 +24,15 @@ public final class Navigation {
         this.ctx = ctx;
     }
 
+    /**
+     * Displays a popup on the main stage
+     * @param popup The popup to display
+     */
     public void displayPopup(Popup popup) {
         try {
             popup.show(stage,
-                    stage.getWidth(),
-                    stage.getHeight());
+                    stage.getX() + stage.getWidth() - 200,
+                    stage.getY() + stage.getHeight() - 100);
 
             popup.requestFocus();
         }
