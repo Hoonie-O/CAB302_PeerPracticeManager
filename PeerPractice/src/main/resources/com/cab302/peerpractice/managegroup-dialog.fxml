@@ -7,17 +7,18 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.ManageGroupController"
-            prefWidth="500"
-            prefHeight="400">
+            prefWidth="550"
+            prefHeight="450"
+            stylesheets="@styles/modern.css">
 
-    <VBox spacing="10"
-          minWidth="500"
+    <VBox spacing="12"
+          minWidth="550"
           fillWidth="true">
         <padding>
-            <Insets top="10"
-                    right="10"
-                    bottom="10"
-                    left="10"/>
+            <Insets top="20"
+                    right="20"
+                    bottom="20"
+                    left="20"/>
         </padding>
 
         <!-- Tab Navigation -->
@@ -121,28 +122,30 @@
                     <VBox spacing="10"
                           fillWidth="true">
                         <Label text="Block User"
-                               style="-fx-font-weight: bold; -fx-font-size: 14;"/>
-                        <Label text="Enter username to block from this group"/>
+                               styleClass="modern-label-heading"/>
+                        <Label text="Enter username to block from this group"
+                               styleClass="modern-label-body"/>
 
                         <HBox spacing="12"
                               alignment="CENTER_LEFT"
                               maxWidth="Infinity">
                             <TextField fx:id="blockUserField"
                                        promptText="Enter username"
-                                       HBox.hgrow="ALWAYS"/>
+                                       HBox.hgrow="ALWAYS"
+                                       styleClass="modern-text-field"/>
                             <Button fx:id="blockButton"
                                     text="Block"
                                     prefWidth="80"
-                                    onAction="#onBlockUser"/>
+                                    onAction="#onBlockUser"
+                                    styleClass="modern-button"/>
                         </HBox>
                         <Separator/>
                     </VBox>
 
-                    <!-- Blocked Users Table -->
                     <VBox spacing="10"
                           fillWidth="true">
                         <Label text="Currently Blocked Users"
-                               style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+                               styleClass="modern-label-heading"/>
 
                         <TableView fx:id="blockedUsersTable"
                                    VBox.vgrow="ALWAYS">
@@ -164,14 +167,14 @@
             </Tab>
         </TabPane>
 
-        <!-- Save Button -->
         <HBox alignment="CENTER_RIGHT"
               maxWidth="Infinity">
             <Region HBox.hgrow="ALWAYS"/>
             <Button fx:id="saveButton"
-                    text="Save"
-                    prefWidth="80"
-                    onAction="#onSave"/>
+                    text="Save Changes"
+                    prefWidth="130"
+                    onAction="#onSave"
+                    styleClass="modern-button"/>
         </HBox>
     </VBox>
 </AnchorPane>

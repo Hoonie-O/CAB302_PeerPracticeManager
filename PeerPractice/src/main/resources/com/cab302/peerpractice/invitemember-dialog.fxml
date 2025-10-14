@@ -2,44 +2,51 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.InviteMemberController"
-            prefWidth="460">
+            prefWidth="500"
+            stylesheets="@styles/modern.css">
 
-    <VBox AnchorPane.topAnchor="10"
-          AnchorPane.rightAnchor="10"
-          AnchorPane.bottomAnchor="10"
-          AnchorPane.leftAnchor="10"
-          spacing="10">
+    <VBox AnchorPane.topAnchor="20"
+          AnchorPane.rightAnchor="20"
+          AnchorPane.bottomAnchor="20"
+          AnchorPane.leftAnchor="20"
+          spacing="16">
 
-        <VBox spacing="8" VBox.vgrow="ALWAYS">
+        <VBox spacing="12" VBox.vgrow="ALWAYS">
             <Label fx:id="titleLabel"
-                   text="Type a username or email to add to this group. You can add up to 10 members."
-                   wrapText="true"/>
-            <HBox spacing="8">
+                   text="Invite members to your group by entering their username or email. You can add up to 10 members at once."
+                   wrapText="true"
+                   styleClass="modern-label-body"/>
+            <HBox spacing="10">
                 <TextField fx:id="inviteeField"
-                           promptText="Enter username or email"
-                           HBox.hgrow="ALWAYS"/>
+                           promptText="Username or email address"
+                           HBox.hgrow="ALWAYS"
+                           styleClass="modern-text-field"/>
                 <Button fx:id="addButton"
                         text="Add"
-                        prefWidth="60"
-                        onAction="#onAdd"/>
+                        prefWidth="70"
+                        onAction="#onAdd"
+                        styleClass="modern-button-secondary"/>
             </HBox>
 
+            <Label text="Members to invite:" styleClass="modern-label-body"/>
             <ListView fx:id="inviteesList"
                       VBox.vgrow="ALWAYS"
-                      maxHeight="120"/>
+                      maxHeight="150"/>
 
         </VBox>
 
-        <HBox spacing="8"
+        <HBox spacing="10"
               alignment="CENTER_RIGHT">
             <Button fx:id="inviteButton"
-                    text="Invite"
-                    prefWidth="80"
-                    onAction="#onInvite"/>
+                    text="Send Invites"
+                    prefWidth="120"
+                    onAction="#onInvite"
+                    styleClass="modern-button"/>
         </HBox>
     </VBox>
 </AnchorPane>

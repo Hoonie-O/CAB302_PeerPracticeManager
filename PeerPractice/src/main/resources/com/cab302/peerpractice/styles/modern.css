@@ -126,13 +126,14 @@
 
 /* Day of week headers */
 .calendar-day-header {
-    -fx-background-color: transparent;
-    -fx-text-fill: -fx-text-secondary;
-    -fx-font-size: 12px;
-    -fx-font-weight: 600;
+    -fx-background-color: -fx-accent-light;
+    -fx-text-fill: -fx-accent;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
     -fx-alignment: center;
-    -fx-padding: 8;
+    -fx-padding: 12;
     -fx-letter-spacing: 0.5px;
+    -fx-background-radius: 8;
 }
 
 /* Day cells - base style */
@@ -141,12 +142,9 @@
     -fx-background-radius: 10;
     -fx-border-color: -fx-border-light;
     -fx-border-radius: 10;
-    -fx-border-width: 1;
+    -fx-border-width: 1.5;
     -fx-padding: 12;
-    -fx-min-width: 60px;
-    -fx-min-height: 60px;
-    -fx-max-width: 80px;
-    -fx-max-height: 80px;
+    -fx-min-height: 100px;
     -fx-alignment: top-left;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, -fx-shadow-light, 0, 0, 0, 1);
@@ -187,8 +185,8 @@
 
 /* Day number label */
 .calendar-day-number {
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
     -fx-text-fill: -fx-text-primary;
 }
 
@@ -648,4 +646,742 @@
 .radio-button .dot {
     -fx-background-color: white;
     -fx-background-radius: 50%;
+}
+
+/* ==================== DatePicker Styles ==================== */
+
+.date-picker {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+}
+
+.date-picker:hover {
+    -fx-border-color: -fx-accent;
+}
+
+.date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-padding: 10 14;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 8 8 0;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: -fx-text-primary;
+}
+
+.date-picker-popup {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-medium, 8, 0, 0, 4);
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: -fx-accent-light;
+}
+
+.date-picker-popup .week-number-cell {
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: -fx-surface;
+    -fx-text-fill: -fx-text-primary;
+    -fx-background-radius: 6;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.date-picker-popup .selected {
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .today {
+    -fx-background-color: -fx-accent-light;
+    -fx-text-fill: -fx-accent;
+    -fx-font-weight: bold;
+}
+
+/* ==================== Spinner Styles ==================== */
+
+.spinner {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+}
+
+.spinner:focused {
+    -fx-border-color: -fx-accent;
+}
+
+.spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-padding: 8 10;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: -fx-border-light;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.spinner .increment-arrow-button .increment-arrow,
+.spinner .decrement-arrow-button .decrement-arrow {
+    -fx-background-color: -fx-text-primary;
+}
+
+/* ==================== TextArea Styles ==================== */
+
+.text-area {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 10 14;
+    -fx-font-size: 14px;
+}
+
+.text-area:focused {
+    -fx-border-color: -fx-accent;
+    -fx-effect: dropshadow(gaussian, derive(-fx-accent, 50%), 4, 0.3, 0, 0);
+}
+
+.text-area .content {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+/* ==================== Alert Dialog Styles ==================== */
+
+.alert {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+}
+
+.alert .header-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 20 20 10 20;
+}
+
+.alert .content {
+    -fx-padding: 10 20;
+}
+
+.alert .button-bar {
+    -fx-padding: 10 20 20 20;
+}
+
+.alert .header-panel .label {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-text-primary;
+}
+
+/* ==================== ProgressBar Styles ==================== */
+
+.progress-bar {
+    -fx-background-color: -fx-border-light;
+    -fx-background-radius: 8;
+    -fx-pref-height: 8px;
+}
+
+.progress-bar .bar {
+    -fx-background-color: -fx-accent;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.progress-bar .track {
+    -fx-background-color: -fx-border-light;
+    -fx-background-radius: 8;
+}
+
+/* ==================== Tooltip Styles ==================== */
+
+.tooltip {
+    -fx-background-color: rgba(33, 33, 33, 0.95);
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 6 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 0, 2);
+}
+
+/* ==================== Context Menu Styles ==================== */
+
+.context-menu {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-medium, 8, 0, 0, 4);
+}
+
+.context-menu .menu-item {
+    -fx-background-color: transparent;
+    -fx-padding: 8 16;
+}
+
+.context-menu .menu-item:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.context-menu .menu-item .label {
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 14px;
+}
+
+.context-menu .separator {
+    -fx-padding: 4 0;
+}
+
+/* ==================== Notification Styles ==================== */
+
+.notification-card {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-medium, 6, 0, 0, 3);
+    -fx-padding: 16;
+    -fx-border-color: -fx-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.notification-success {
+    -fx-border-color: -fx-primary;
+    -fx-background-color: derive(-fx-primary-light, 20%);
+}
+
+.notification-error {
+    -fx-border-color: -fx-danger;
+    -fx-background-color: derive(#ffebee, 20%);
+}
+
+.notification-info {
+    -fx-border-color: -fx-accent;
+    -fx-background-color: derive(-fx-accent-light, 20%);
+}
+
+/* ==================== Badge Styles ==================== */
+
+.badge {
+    -fx-background-radius: 12;
+    -fx-padding: 2 8;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-text-fill: white;
+}
+
+.badge-primary {
+    -fx-background-color: -fx-primary;
+}
+
+.badge-accent {
+    -fx-background-color: -fx-accent;
+}
+
+.badge-danger {
+    -fx-background-color: -fx-danger;
+}
+
+.badge-warning {
+    -fx-background-color: #FF9800;
+}
+
+/* ==================== Divider Styles ==================== */
+
+.divider {
+    -fx-border-color: -fx-border-light;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 8 0;
+}
+
+/* ==================== Chip/Tag Styles ==================== */
+
+.chip {
+    -fx-background-color: -fx-surface-hover;
+    -fx-background-radius: 16;
+    -fx-padding: 6 12;
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 13px;
+}
+
+.chip:hover {
+    -fx-background-color: -fx-border;
+}
+
+/* ==================== Header Styles ==================== */
+
+.header-container {
+    -fx-background-color: -fx-surface;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 4, 0, 0, 2);
+}
+
+.header-content {
+    -fx-background-color: -fx-surface;
+}
+
+.header-brand {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary;
+}
+
+.header-icon-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-size: 18px;
+    -fx-padding: 8 12;
+    -fx-cursor: hand;
+}
+
+.header-icon-button:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.header-icon-button:pressed {
+    -fx-background-color: -fx-border;
+}
+
+.header-profile-button {
+    -fx-background-color: -fx-accent-light;
+    -fx-background-radius: 20;
+    -fx-text-fill: -fx-accent;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.header-profile-button:hover {
+    -fx-background-color: derive(-fx-accent-light, -10%);
+}
+
+.header-separator {
+    -fx-padding: 0;
+}
+
+/* ==================== Profile Panel Styles ==================== */
+
+.profile-panel {
+    -fx-background-color: -fx-surface;
+}
+
+.profile-header {
+    -fx-background-color: transparent;
+}
+
+.profile-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.profile-username {
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.profile-bio {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-text-alignment: center;
+}
+
+.profile-section-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-letter-spacing: 0.5px;
+}
+
+/* ==================== Loading Spinner Styles ==================== */
+
+.loading-spinner {
+    -fx-background-color: transparent;
+}
+
+.loading-overlay {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-alignment: center;
+}
+
+.loading-content {
+    -fx-alignment: center;
+    -fx-spacing: 16;
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+    -fx-padding: 30 40;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-medium, 8, 0, 0, 4);
+}
+
+/* ==================== Empty State Styles ==================== */
+
+.empty-state {
+    -fx-alignment: center;
+    -fx-spacing: 16;
+    -fx-padding: 40;
+}
+
+.empty-state-icon {
+    -fx-font-size: 64px;
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.empty-state-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.empty-state-message {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-text-alignment: center;
+}
+
+/* ==================== Animations ==================== */
+
+@keyframes fadeIn {
+    from { -fx-opacity: 0; }
+    to { -fx-opacity: 1; }
+}
+
+@keyframes slideDown {
+    from {
+        -fx-translate-y: -20;
+        -fx-opacity: 0;
+    }
+    to {
+        -fx-translate-y: 0;
+        -fx-opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        -fx-translate-y: 20;
+        -fx-opacity: 0;
+    }
+    to {
+        -fx-translate-y: 0;
+        -fx-opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
+    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
+}
+
+.animated-fade-in {
+    -fx-opacity: 0;
+}
+
+.animated-slide-down {
+    -fx-translate-y: -20;
+    -fx-opacity: 0;
+}
+
+/* ==================== Focus States ==================== */
+
+.modern-button:focused,
+.modern-button-secondary:focused,
+.modern-button-accent:focused {
+    -fx-border-color: -fx-accent;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+}
+
+.modern-text-field:focused,
+.text-area:focused {
+    -fx-border-color: -fx-accent;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, derive(-fx-accent, 50%), 6, 0.4, 0, 0);
+}
+
+/* ==================== Error State Styles ==================== */
+
+.error-border {
+    -fx-border-color: -fx-danger;
+    -fx-border-width: 2;
+}
+
+.error-text {
+    -fx-text-fill: -fx-danger;
+    -fx-font-size: 12px;
+    -fx-padding: 4 0 0 0;
+}
+
+.success-border {
+    -fx-border-color: -fx-primary;
+    -fx-border-width: 2;
+}
+
+.success-text {
+    -fx-text-fill: -fx-primary;
+    -fx-font-size: 12px;
+    -fx-padding: 4 0 0 0;
+}
+
+.warning-border {
+    -fx-border-color: #FF9800;
+    -fx-border-width: 2;
+}
+
+.warning-text {
+    -fx-text-fill: #FF9800;
+    -fx-font-size: 12px;
+    -fx-padding: 4 0 0 0;
+}
+
+/* ==================== Hover Effects Enhancement ==================== */
+
+.modern-button {
+    -fx-transition: all 0.2s ease;
+}
+
+.modern-button:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.modern-button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.modern-card:hover {
+    -fx-translate-y: -2;
+    -fx-effect: dropshadow(gaussian, -fx-shadow-medium, 8, 0, 0, 4);
+}
+
+/* ==================== Disabled State ==================== */
+
+.modern-button:disabled,
+.modern-button-secondary:disabled,
+.modern-button-accent:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+.modern-text-field:disabled,
+.text-area:disabled {
+    -fx-opacity: 0.6;
+    -fx-background-color: -fx-border-light;
+}
+
+/* ==================== Selection Highlight ==================== */
+
+.text-input:focused {
+    -fx-highlight-fill: derive(-fx-accent, 50%);
+    -fx-highlight-text-fill: white;
+}
+
+/* ==================== Custom Scrollbar Enhancement ==================== */
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: derive(-fx-border, -20%);
+    -fx-background-radius: 8;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: -fx-text-secondary;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+}
+
+/* ==================== Skeleton Loading Animation ==================== */
+
+.skeleton {
+    -fx-background-color: linear-gradient(90deg,
+        -fx-border-light 0%,
+        -fx-surface-hover 50%,
+        -fx-border-light 100%);
+    -fx-background-radius: 4;
+}
+
+/* ==================== Status Indicator Styles ==================== */
+
+.status-online {
+    -fx-background-color: #4CAF50;
+    -fx-background-radius: 50%;
+    -fx-min-width: 10px;
+    -fx-min-height: 10px;
+    -fx-max-width: 10px;
+    -fx-max-height: 10px;
+}
+
+.status-away {
+    -fx-background-color: #FF9800;
+    -fx-background-radius: 50%;
+    -fx-min-width: 10px;
+    -fx-min-height: 10px;
+    -fx-max-width: 10px;
+    -fx-max-height: 10px;
+}
+
+.status-busy {
+    -fx-background-color: #f44336;
+    -fx-background-radius: 50%;
+    -fx-min-width: 10px;
+    -fx-min-height: 10px;
+    -fx-max-width: 10px;
+    -fx-max-height: 10px;
+}
+
+.status-offline {
+    -fx-background-color: #9E9E9E;
+    -fx-background-radius: 50%;
+    -fx-min-width: 10px;
+    -fx-min-height: 10px;
+    -fx-max-width: 10px;
+    -fx-max-height: 10px;
+}
+
+/* ==================== Welcome Actions ==================== */
+
+.welcome-actions .modern-card {
+    -fx-cursor: hand;
+}
+
+.welcome-actions .modern-card:hover {
+    -fx-background-color: derive(-fx-surface, -5%);
+    -fx-translate-y: -4;
+}
+
+/* ==================== Form Field Group ==================== */
+
+.form-field-group {
+    -fx-spacing: 8;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.form-label-required:after {
+    -fx-text-fill: -fx-danger;
+}
+
+/* ==================== Icon Button Styles ==================== */
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 50%;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+}
+
+.icon-button:hover {
+    -fx-background-color: -fx-surface-hover;
+}
+
+.icon-button:pressed {
+    -fx-background-color: -fx-border;
+}
+
+/* ==================== Snackbar / Toast Notification ==================== */
+
+.snackbar {
+    -fx-background-color: #323232;
+    -fx-background-radius: 4;
+    -fx-padding: 14 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 4);
+}
+
+.snackbar-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.snackbar-success {
+    -fx-background-color: -fx-primary;
+}
+
+.snackbar-error {
+    -fx-background-color: -fx-danger;
+}
+
+.snackbar-warning {
+    -fx-background-color: #FF9800;
+}
+
+/* ==================== Glassmorphism Effect ==================== */
+
+.glass-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 4);
+}
+
+/* ==================== Elevation Levels ==================== */
+
+.elevation-0 {
+    -fx-effect: none;
+}
+
+.elevation-1 {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 2, 0, 0, 1);
+}
+
+.elevation-2 {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 4, 0, 0, 2);
+}
+
+.elevation-3 {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 6, 0, 0, 3);
+}
+
+.elevation-4 {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 0, 4);
 }
