@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.cab302.peerpractice.Controllers.SignupController"
            stylesheets="@styles/modern.css"
            style="-fx-background-color: -fx-background;"
            alignment="CENTER">
-<VBox fx:controller="com.cab302.peerpractice.Controllers.SignupController"
-      spacing="18"
+<VBox spacing="18"
       alignment="TOP_CENTER"
       styleClass="modern-card"
       maxWidth="450"
