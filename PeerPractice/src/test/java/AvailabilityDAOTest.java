@@ -20,7 +20,6 @@ import java.util.List;
 public class AvailabilityDAOTest {
 
     private AvailabilityDAO storage;
-    private IUserDAO userDao;
     private User testUser1;
     private User testUser2;
     private Availability testAvailability1;
@@ -33,7 +32,7 @@ public class AvailabilityDAOTest {
         connection = DriverManager.getConnection("jdbc:sqlite::memory:");
         SQLiteConnection.setInstance(connection);
 
-        userDao = new UserDAO();
+        IUserDAO userDao = new UserDAO();
         storage = new AvailabilityDAO(userDao);
 
         testUser1 = new User("John", "Doe", "johndoe_avail", "john.avail@example.com", "hashedpass1", "Test University");

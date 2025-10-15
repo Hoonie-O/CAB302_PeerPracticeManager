@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SessionManager {
-    private List<Session> sessions;
+    private final List<Session> sessions;
     private final SessionCalendarManager calendarManager;
 
     public SessionManager() {

@@ -9,7 +9,7 @@ public class Note {
     private final int groupID;
     private String ID;
     private String name;
-    private ArrayList<String> chapters;
+    private final ArrayList<String> chapters;
 
     public Note(String name, int groupID) {
         this.name = name;

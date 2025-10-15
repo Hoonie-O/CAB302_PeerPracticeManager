@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SessionTaskManagerTest {
 
     private SessionTaskManager manager;
-    private SessionManager sessionManager;
     private ISessionTaskDAO taskDao;
     private ISessionCalendarDAO calendarDao;
     private IUserDAO userDao;
@@ -22,7 +21,6 @@ public class SessionTaskManagerTest {
     private String sessionId;
     private User john;
     private User jane;
-    private Session testSession;
 
     @BeforeEach
     void setUp() {
@@ -33,7 +31,7 @@ public class SessionTaskManagerTest {
 
         // Managers wired with mock DAOs
         SessionCalendarManager calendarManager = new SessionCalendarManager(calendarDao);
-        sessionManager = new SessionManager(calendarManager);
+        SessionManager sessionManager = new SessionManager(calendarManager);
         manager = new SessionTaskManager(taskDao, sessionManager);
 
         // Seed users
@@ -43,7 +41,7 @@ public class SessionTaskManagerTest {
         userDao.addUser(jane);
 
         // Create session
-        testSession = sessionManager.createSession(
+        Session testSession = sessionManager.createSession(
                 "Test Study Session",
                 jane,
                 LocalDateTime.now().plusHours(2),

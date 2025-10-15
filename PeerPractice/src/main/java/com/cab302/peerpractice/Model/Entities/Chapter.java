@@ -8,7 +8,7 @@ public class Chapter {
     private final String noteID;
     private String ID;
     private String name;
-    private List<Attachment> attachments;
+    private final List<Attachment> attachments;
     private String content;
 
     public Chapter(String name,String noteID){

@@ -22,8 +22,6 @@ public class SessionCalendarDAOTest {
 
     private Connection connection;
     private SessionCalendarDAO storage;
-    private IUserDAO userDao;
-    private GroupDAO groupDao;
     private User testUser1;
     private User testUser2;
     private Group testGroup;
@@ -36,8 +34,8 @@ public class SessionCalendarDAOTest {
         connection = DriverManager.getConnection("jdbc:sqlite::memory:");
         SQLiteConnection.setInstance(connection);
 
-        userDao = new UserDAO();
-        groupDao = new GroupDAO(userDao);
+        IUserDAO userDao = new UserDAO();
+        GroupDAO groupDao = new GroupDAO(userDao);
         storage = new SessionCalendarDAO(userDao);
         
         testUser1 = new User("Alice", "Cooper", "alice_session", "alice.session@example.com", "hashedpass1", "Test University");

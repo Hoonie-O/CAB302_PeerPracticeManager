@@ -10,6 +10,7 @@ import com.cab302.peerpractice.Model.Utils.PasswordHasher;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+@SuppressWarnings("ALL")
 public class AppContext {
     private final UserSession userSession = new UserSession();
 

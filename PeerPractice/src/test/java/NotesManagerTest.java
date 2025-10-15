@@ -16,21 +16,18 @@ public class NotesManagerTest {
 
     private NotesManager notesManager;
     private INotesDAO notesDAO;
-    private IGroupDAO groupDAO;
-    private IUserDAO userDAO;
     private int groupID;
-    private Group testGroup;
 
     @BeforeEach
     public void setUp() throws SQLException {
         // Use mocks instead of real DAOs
-        userDAO = new MockUserDAO();
-        groupDAO = new MockGroupDAO(userDAO);
+        IUserDAO userDAO = new MockUserDAO();
+        IGroupDAO groupDAO = new MockGroupDAO(userDAO);
         notesDAO = new MockNotesDAO();
         notesManager = new NotesManager(notesDAO, groupDAO);
 
         // Create a fresh test group
-        testGroup = new Group("group", "group description", false,
+        Group testGroup = new Group("group", "group description", false,
                 UUID.randomUUID().toString(), LocalDateTime.now());
         groupID = groupDAO.addGroup(testGroup);
     }

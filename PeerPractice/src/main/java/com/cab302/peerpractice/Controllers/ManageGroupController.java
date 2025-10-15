@@ -142,7 +142,7 @@ public class ManageGroupController extends BaseController {
         // Role column with ComboBox for admins to change roles
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
         roleColumn.setCellFactory(column -> new TableCell<MemberDisplay, String>() {
-            private ComboBox<String> comboBox = new ComboBox<>();
+            private final ComboBox<String> comboBox = new ComboBox<>();
             {
                 comboBox.getItems().addAll("Admin", "Member");
                 comboBox.setMaxWidth(Double.MAX_VALUE);
@@ -271,8 +271,8 @@ public class ManageGroupController extends BaseController {
             User currentUser = ensureLoggedIn();
             if (currentUser == null) return;
 
-            User targetUser = memberDisplay.getUser();
-            String currentRole = memberDisplay.getRole();
+            User targetUser = memberDisplay.user();
+            String currentRole = memberDisplay.role();
 
             // No change needed
             if (currentRole.equalsIgnoreCase(newRole)) return;
@@ -310,7 +310,7 @@ public class ManageGroupController extends BaseController {
                 User currentUser = ensureLoggedIn();
                 if (currentUser == null) return;
 
-                ctx.getGroupManager().kickMember(currentGroup, currentUser, memberDisplay.getUser());
+                ctx.getGroupManager().kickMember(currentGroup, currentUser, memberDisplay.user());
                 showAlert(Alert.AlertType.INFORMATION, "Success",
                     memberDisplay.getName() + " has been removed from the group", "Success", null);
                 loadData(); // Refresh
@@ -329,7 +329,7 @@ public class ManageGroupController extends BaseController {
             if (currentUser == null) return;
 
             ctx.getGroupManager().processJoinRequest(
-                currentGroup, currentUser, requestDisplay.getRequest().getRequestId(), approve
+                currentGroup, currentUser, requestDisplay.request().getRequestId(), approve
             );
 
             String action = approve ? "approved" : "declined";
@@ -366,52 +366,27 @@ public class ManageGroupController extends BaseController {
     // ========== Display Classes ==========
 
     /**
-     * Display wrapper for group members
-     */
-    public static class MemberDisplay {
-        private final User user;
-        private final String role;
-        private final boolean isOwner;
-
-        public MemberDisplay(User user, String role, boolean isOwner) {
-            this.user = user;
-            this.role = role;
-            this.isOwner = isOwner;
-        }
+         * Display wrapper for group members
+         */
+        public record MemberDisplay(User user, String role, boolean isOwner) {
 
         public String getName() {
-            return user.getUsername();
-        }
+                return user.getUsername();
+            }
 
-        public String getRole() {
-            return role.substring(0, 1).toUpperCase() + role.substring(1);
+            @Override
+            public String role() {
+                return role.substring(0, 1).toUpperCase() + role.substring(1);
+            }
         }
-
-        public User getUser() {
-            return user;
-        }
-
-        public boolean isOwner() {
-            return isOwner;
-        }
-    }
 
     /**
-     * Display wrapper for join requests
-     */
-    public static class JoinRequestDisplay {
-        private final GroupJoinRequest request;
-
-        public JoinRequestDisplay(GroupJoinRequest request) {
-            this.request = request;
-        }
+         * Display wrapper for join requests
+         */
+        public record JoinRequestDisplay(GroupJoinRequest request) {
 
         public String getName() {
-            return request.getUser() != null ? request.getUser().getUsername() : "Unknown";
+                return request.getUser() != null ? request.getUser().getUsername() : "Unknown";
+            }
         }
-
-        public GroupJoinRequest getRequest() {
-            return request;
-        }
-    }
 }

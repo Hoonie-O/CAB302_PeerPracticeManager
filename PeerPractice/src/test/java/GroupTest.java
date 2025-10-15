@@ -13,7 +13,7 @@ public class GroupTest {
 
     private Group group;
     private User user;
-    private String USERNAME = "sati2030";
+    private final String USERNAME = "sati2030";
     private LocalDateTime localDateTime;
 
     @BeforeEach

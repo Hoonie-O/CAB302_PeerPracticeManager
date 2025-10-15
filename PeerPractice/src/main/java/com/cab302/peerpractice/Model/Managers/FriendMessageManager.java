@@ -46,7 +46,7 @@ public class FriendMessageManager extends MessageManager<FriendMessage> {
         if (userId == null || userId.isBlank()) {
             throw new IllegalArgumentException("User ID cannot be null or empty");
         }
-        return ((MockFriendMessageDAO) friendMessageDAO).getMessagesForUser(userId);
+        return friendMessageDAO.getMessagesForUser(userId);
     }
 
     @Override

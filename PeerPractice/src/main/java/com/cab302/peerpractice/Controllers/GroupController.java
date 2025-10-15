@@ -52,6 +52,7 @@ import static javax.swing.JColorChooser.showDialog;
  * @see Session
  * @see SidebarController
  */
+@SuppressWarnings("ALL")
 public class GroupController extends SidebarController {
     /** <hr> Tab pane containing all group management interfaces. */
     @FXML private TabPane groupTabs;
@@ -866,8 +867,7 @@ public class GroupController extends SidebarController {
         List<GroupMember> membersList = new ArrayList<>();
 
         // Get group members from database
-        if (ctx.getGroupDAO() instanceof GroupDAO) {
-            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+        if (ctx.getGroupDAO() instanceof GroupDAO groupDAO) {
             List<GroupMemberEntity> dbMembers = groupDAO.getGroupMembers(group.getID());
 
             for (GroupMemberEntity dbMember : dbMembers) {
@@ -889,8 +889,7 @@ public class GroupController extends SidebarController {
 
         // Add admin functionality
         User currentUser = ctx.getUserSession().getCurrentUser();
-        if (ctx.getGroupDAO() instanceof GroupDAO) {
-            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+        if (ctx.getGroupDAO() instanceof GroupDAO groupDAO) {
             if (groupDAO.isAdmin(group.getID(), currentUser.getUserId()) ||
                     group.getOwner().equals(currentUser.getUsername())) {
                 showJoinRequestsIfAny(group);
@@ -908,8 +907,7 @@ public class GroupController extends SidebarController {
      * @param group the group to check for pending join requests
      */
     private void showJoinRequestsIfAny(Group group) {
-        if (ctx.getGroupDAO() instanceof GroupDAO) {
-            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+        if (ctx.getGroupDAO() instanceof GroupDAO groupDAO) {
             List<GroupJoinRequest> pendingRequests = groupDAO.getPendingJoinRequests(group.getID());
 
             if (!pendingRequests.isEmpty()) {

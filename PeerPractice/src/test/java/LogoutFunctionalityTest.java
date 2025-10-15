@@ -22,14 +22,13 @@ public class LogoutFunctionalityTest {
     private UserSession userSession;
     private User testUser;
     private IUserDAO userDao;
-    private PasswordHasher passwordHasher;
     private UserManager userManager;
 
     @BeforeEach
     public void setUp() throws SQLException {
         userSession = new UserSession();
         userDao = new UserDAO(); // real DAO
-        passwordHasher = new BcryptHasher();
+        PasswordHasher passwordHasher = new BcryptHasher();
         userManager = new UserManager(userDao, passwordHasher);
 
         // Use unique identifiers to avoid clashes between test runs

@@ -27,7 +27,6 @@ public class GroupSettingsController extends BaseController {
 
     private Group currentGroup;
     private Stage dialogStage;
-    private ToggleGroup visibilityToggle;
     private boolean changesMade = false;
 
     public GroupSettingsController(AppContext ctx, Navigation nav) {
@@ -52,7 +51,7 @@ public class GroupSettingsController extends BaseController {
     @FXML
     public void initialize() {
         // Setup radio button toggle group
-        visibilityToggle = new ToggleGroup();
+        ToggleGroup visibilityToggle = new ToggleGroup();
         publicRadio.setToggleGroup(visibilityToggle);
         privateRadio.setToggleGroup(visibilityToggle);
 

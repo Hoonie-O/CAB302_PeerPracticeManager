@@ -102,8 +102,7 @@ public class Availability {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Availability)) return false;
-        Availability that = (Availability) o;
+        if (!(o instanceof Availability that)) return false;
         return Objects.equals(availabilityId, that.availabilityId);
     }
 

@@ -4,5 +4,5 @@ public enum FriendStatus{
     PENDING,
     ACCEPTED,
     DENIED,
-    BLOCKED;
+    BLOCKED
 }
