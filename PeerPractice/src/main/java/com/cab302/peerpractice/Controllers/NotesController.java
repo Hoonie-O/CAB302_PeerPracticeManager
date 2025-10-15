@@ -70,7 +70,7 @@ public class NotesController extends BaseController{
      * <hr>
      * Manager for handling notes and chapters data operations.
      */
-    private NotesManager notesManager;
+    private final NotesManager notesManager;
     /**
      * <hr>
      * The currently selected group for note operations.

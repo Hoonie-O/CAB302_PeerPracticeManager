@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class AvailabilityDAO implements IAvailabilityDAO {
     private final Connection connection;
     private final IUserDAO userDao;

@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class DefaultControllerLogoutTest {
 
-    private AppContext appContext;
     private MockNavigation mockNavigation;
     private UserSession userSession;
     private User testUser;
@@ -20,6 +19,7 @@ public class DefaultControllerLogoutTest {
     @BeforeEach
     public void setUp() {
         // Set up test dependencies
+        AppContext appContext;
         try {
             appContext = new AppContext();
         } catch (java.sql.SQLException e) {

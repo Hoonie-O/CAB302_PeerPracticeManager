@@ -7,13 +7,13 @@ import java.util.Objects;
 
 public class Session {
 
-    private String sessionId;
+    private final String sessionId;
     private String title;
     private String description;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private User organiser;
-    private List<User> participants;
+    private final User organiser;
+    private final List<User> participants;
     private String priority;
     private String location;
     private String colorLabel;
@@ -164,8 +164,7 @@ public class Session {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Session)) return false;
-        Session session = (Session) o;
+        if (!(o instanceof Session session)) return false;
         return Objects.equals(sessionId, session.sessionId);
     }
 

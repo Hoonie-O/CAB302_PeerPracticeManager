@@ -10,19 +10,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
-    private String FIRST_NAME = "Seiji";
-    private String FIRST_NAME2 = "Jack";
-    private String LAST_NAME = "Sato";
-    private String LAST_NAME2 = "Smith";
-    private String USERNAME = "sati2030";
-    private String USERNAME2 = "jack_Harlow";
-    private String EMAIL = "seiji@email.com";
-    private String EMAIL2 = "jack@email.com";
-    private String INSTITUTION = "QUT";
-    private String INSTITUTION2 = "UQ";
-    private String PASSWORD = "password";
-    private String PASSWORD2 = "password2";
-    private String BIO = "Im a student";
+    private final String FIRST_NAME = "Seiji";
+    private final String FIRST_NAME2 = "Jack";
+    private final String LAST_NAME = "Sato";
+    private final String LAST_NAME2 = "Smith";
+    private final String USERNAME = "sati2030";
+    private final String USERNAME2 = "jack_Harlow";
+    private final String EMAIL = "seiji@email.com";
+    private final String EMAIL2 = "jack@email.com";
+    private final String INSTITUTION = "QUT";
+    private final String INSTITUTION2 = "UQ";
+    private final String PASSWORD = "password";
+    private final String PASSWORD2 = "password2";
 
     private User user;
     private User user2;
@@ -236,6 +235,7 @@ public class UserTest {
 
     @Test
     public void testSetBio(){
+        String BIO = "Im a student";
         user.setBio(BIO);
         assertEquals(BIO,user.getBio());
     }

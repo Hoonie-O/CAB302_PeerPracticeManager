@@ -81,11 +81,7 @@ public class MailService {
         }
 
         // Basic domain validation - must have at least one dot after @ (except localhost)
-        if (!domain.contains(".") || domain.endsWith(".") || domain.startsWith(".")) {
-            return false;
-        }
-
-        return true;
+        return domain.contains(".") && !domain.endsWith(".") && !domain.startsWith(".");
     }
 
     private static jakarta.mail.Session getEmailSession(){

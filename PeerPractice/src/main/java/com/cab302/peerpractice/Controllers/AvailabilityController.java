@@ -61,7 +61,7 @@ public class AvailabilityController extends SidebarController {
     private YearMonth currentYearMonth;
 
     /** <hr> Manager for handling availability data operations. */
-    private AvailabilityManager availabilityManager;
+    private final AvailabilityManager availabilityManager;
 
     /**
      * <hr>

@@ -648,6 +648,18 @@
     -fx-background-radius: 50%;
 }
 
+.sender-text {
+    -fx-font-weight: bold;
+}
+
+.message-text {
+    -fx-font-size: 14px;
+}
+
+.timestamp-text {
+    -fx-font-size: 10px;
+    -fx-fill: grey;
+}
 /* ==================== DatePicker Styles ==================== */
 
 .date-picker {

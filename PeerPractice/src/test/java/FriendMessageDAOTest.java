@@ -19,10 +19,6 @@ class FriendMessageDAOTest {
     private FriendMessageDAO dao;
     private UserDAO userDao;
 
-    private User alice;
-    private User bob;
-    private User someone;
-
     @BeforeEach
     void setUp() throws SQLException {
         // fresh in-memory DB
@@ -39,9 +35,9 @@ class FriendMessageDAOTest {
         });
 
         // seed users with valid usernames + passwords
-        alice = new User("Alice", "Wonder", "alice123", "alice@mail.com", "Password1!", "QUT");
-        bob = new User("Bob", "Builder", "bob1234", "bob@mail.com", "Secure1@", "QUT");
-        someone = new User("Some", "One", "someone1", "someone@mail.com", "Valid1$", "QUT");
+        User alice = new User("Alice", "Wonder", "alice123", "alice@mail.com", "Password1!", "QUT");
+        User bob = new User("Bob", "Builder", "bob1234", "bob@mail.com", "Secure1@", "QUT");
+        User someone = new User("Some", "One", "someone1", "someone@mail.com", "Valid1$", "QUT");
 
         userDao.addUser(alice);
         userDao.addUser(bob);

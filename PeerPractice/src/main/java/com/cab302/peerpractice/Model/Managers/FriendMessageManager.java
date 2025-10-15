@@ -37,11 +37,16 @@ public class FriendMessageManager extends MessageManager<FriendMessage> {
     }
 
     @Override
+    public List<FriendMessage> getMessages(int receiverId) {
+        return List.of();
+    }
+
+    @Override
     public List<FriendMessage> getMessages(String userId) {
         if (userId == null || userId.isBlank()) {
             throw new IllegalArgumentException("User ID cannot be null or empty");
         }
-        return ((MockFriendMessageDAO) friendMessageDAO).getMessagesForUser(userId);
+        return friendMessageDAO.getMessagesForUser(userId);
     }
 
     @Override

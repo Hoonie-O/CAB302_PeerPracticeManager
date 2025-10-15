@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
  * @see UserManager
  * @see DateTimeFormatUtils
  */
+@SuppressWarnings("ALL")
 public class SettingController extends BaseController {
 
     /** <hr> Combo box for selecting date format preference. */

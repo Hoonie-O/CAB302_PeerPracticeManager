@@ -10,7 +10,7 @@ import java.util.Map;
 public class Group {
 
     private List<User> members;
-    private Map<String, String> memberRoles; // userId -> role mapping
+    private final Map<String, String> memberRoles; // userId -> role mapping
     private String name;
     private int ID;
     private String description;
