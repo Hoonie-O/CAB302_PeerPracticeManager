@@ -7,6 +7,7 @@ import com.cab302.peerpractice.Model.Managers.GroupMessageManager;
 import com.cab302.peerpractice.Navigation;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -31,6 +32,9 @@ public class GroupChatController extends BaseController {
 
     @FXML
     private TextField messageInput;
+
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private Button sendButton;
@@ -97,16 +101,37 @@ public class GroupChatController extends BaseController {
      * @param message the message to display
      */
     private void addMessageToView(GroupMessage message) {
-        Text senderText = new Text(message.getSenderId() + "\n");
+        // Sender
+        Text senderText = new Text(message.getSenderId());
         senderText.getStyleClass().add("sender-text");
 
-        Text contentText = new Text(message.getContent());
+        // Content
+        Text contentText = new Text(message.getContent() + " ");
         contentText.getStyleClass().add("message-text");
 
-        TextFlow messageBubble = new TextFlow(senderText, contentText);
+        // Timestamp
+        String timeString = message.getTimestamp().toLocalTime().withNano(0).toString();
+        Text timestampText = new Text(timeString);
+        timestampText.getStyleClass().add("timestamp-text");
+
+        // Combine content + timestamp in a flow
+        TextFlow messageContentFlow = new TextFlow(contentText, timestampText);
+        messageContentFlow.setLineSpacing(2); // small line spacing for readability
+
+        // Bubble containing sender + message
+        VBox messageBubble = new VBox();
+        messageBubble.getChildren().addAll(senderText, messageContentFlow);
         messageBubble.getStyleClass().add("message-bubble");
         messageBubble.setMaxWidth(350);
+        messageBubble.setSpacing(2); // space between username and message
 
-        Platform.runLater(() -> messagesBox.getChildren().add(messageBubble));
+        // Add a little margin below the bubble for spacing between messages
+        VBox.setMargin(messageBubble, new Insets(0, 0, 6, 0)); // 6px gap to next message
+
+        Platform.runLater(() -> {
+            messagesBox.getChildren().add(messageBubble);
+            scrollPane.layout();
+            scrollPane.setVvalue(1.0);
+        });
     }
 }
