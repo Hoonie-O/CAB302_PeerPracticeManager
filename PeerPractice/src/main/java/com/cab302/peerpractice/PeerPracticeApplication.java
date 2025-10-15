@@ -14,7 +14,6 @@ public class PeerPracticeApplication extends Application {
             Navigation navigate = new Navigation(ctx,stage);
             stage.setUserData(navigate);
 
-            // check for saved session
             User savedUser =
                 SessionPersistence.loadSavedSession(ctx.getUserDAO());
 
@@ -30,5 +29,9 @@ public class PeerPracticeApplication extends Application {
             System.err.println("Failed to start application: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

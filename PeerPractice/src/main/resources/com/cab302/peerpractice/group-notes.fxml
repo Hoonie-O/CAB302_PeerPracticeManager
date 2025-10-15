@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.WebView?>
-
 <?import javafx.geometry.Insets?>
-<?import org.kordamp.ikonli.javafx.StackedFontIcon?>
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.cab302.peerpractice.Controllers.NotesController">
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.peerpractice.Controllers.NotesController"
+            stylesheets="@styles/modern.css">
     <center>
         <SplitPane fx:id="rootSplit" orientation="HORIZONTAL">
             <items>
                 <StackPane fx:id="notes">
                     <ListView fx:id="notesList"/>
-                    <Button fx:id="addNoteButton" text="Add note" onAction="#addNote"
-                            style="-fx-background-radius: 18; -fx-font-size: 12;">
+                    <Button fx:id="addNoteButton" text="+ Add Note" onAction="#addNote"
+                            styleClass="modern-button"
+                            style="-fx-background-radius: 20; -fx-font-size: 12;">
                         <StackPane.margin>
-                            <Insets bottom="10" left="10"/>
+                            <Insets bottom="12" left="12"/>
                         </StackPane.margin>
                         <StackPane.alignment>
                             BOTTOM_LEFT
                         </StackPane.alignment>
                     </Button>
                     <Button fx:id="removeNoteButton" text="Delete" onAction="#removeNote"
-                            style="-fx-background-radius: 18; -fx-font-size: 12;">
+                            style="-fx-background-color: -fx-danger; -fx-text-fill: white; -fx-background-radius: 20; -fx-font-size: 12; -fx-padding: 8 16;">
                         <StackPane.margin>
-                            <Insets bottom="10" right="10"/>
+                            <Insets bottom="12" right="12"/>
                         </StackPane.margin>
                         <StackPane.alignment>
                             BOTTOM_RIGHT
@@ -37,19 +36,20 @@
                 </StackPane>
                 <StackPane fx:id="chapters">
                     <ListView fx:id="chaptersList" />
-                    <Button fx:id="addChapterButton" text="Add chapter" onAction="#addChapter"
-                            style="-fx-background-radius: 18; -fx-font-size: 12;">
+                    <Button fx:id="addChapterButton" text="+ Add Chapter" onAction="#addChapter"
+                            styleClass="modern-button"
+                            style="-fx-background-radius: 20; -fx-font-size: 12;">
                         <StackPane.margin>
-                            <Insets bottom="10" left="10"/>
+                            <Insets bottom="12" left="12"/>
                         </StackPane.margin>
                         <StackPane.alignment>
                             BOTTOM_LEFT
                         </StackPane.alignment>
                     </Button>
                     <Button fx:id="removeChapterButton" text="Delete" onAction="#removeChapter"
-                            style="-fx-background-radius: 18; -fx-font-size: 12;">
+                            style="-fx-background-color: -fx-danger; -fx-text-fill: white; -fx-background-radius: 20; -fx-font-size: 12; -fx-padding: 8 16;">
                         <StackPane.margin>
-                            <Insets bottom="10" right="10"/>
+                            <Insets bottom="12" right="12"/>
                         </StackPane.margin>
                         <StackPane.alignment>
                             BOTTOM_RIGHT
@@ -58,11 +58,12 @@
                 </StackPane>
                 <StackPane fx:id="contentStack" xmlns:fx="http://javafx.com/fxml">
                     <WebView fx:id="contentWebView"/>
-                    <Button fx:id="editButton" text="Edit"
-                        style="-fx-background-radius: 18; -fx-font-size: 18;"
+                    <Button fx:id="editButton" text="✏ Edit"
+                        styleClass="modern-button-accent"
+                        style="-fx-background-radius: 20; -fx-font-size: 16;"
                         onAction="#editContents">
                         <StackPane.margin>
-                            <Insets bottom="12" right="12"/>
+                            <Insets bottom="14" right="14"/>
                         </StackPane.margin>
                         <StackPane.alignment>
                             BOTTOM_RIGHT

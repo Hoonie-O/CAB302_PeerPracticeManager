@@ -6,33 +6,101 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.peerpractice.Controllers.DefaultController"
-            prefWidth="1280" prefHeight="720">
+            prefWidth="1280"
+            prefHeight="720"
+            stylesheets="@styles/modern.css"
+            style="-fx-background-color: -fx-background;">
 
-    <!-- Top Header -->
     <top>
         <fx:include source="header-layout.fxml" fx:id="header"/>
     </top>
 
-    <!-- Left Sidebar -->
     <left>
         <fx:include source="sidebar-layout.fxml" fx:id="menu"/>
     </left>
 
-    <!-- Right Sidebar -->
     <right>
         <fx:include source="profile-layout.fxml" fx:id="profile"/>
     </right>
 
-    <!-- Body -->
     <center>
-        <VBox fx:id="defaultMenu" alignment="CENTER" spacing="10" maxWidth="420">
-            <Label text="Build your study group"/>
-            <Label text="Take your study group outside of a class for a more efficient way to get things done."
-                   wrapText="true" maxWidth="360"/>
-            <VBox alignment="CENTER" spacing="10">
-                <Button fx:id="createGroupButton" text="Create group" prefWidth="220" onAction="#onCreateGroup"/>
-                <Button fx:id="joinGroupButton" text="Join group" prefWidth="220" onAction="#onJoinGroup"/>
+        <StackPane>
+            <VBox fx:id="defaultMenu" alignment="CENTER" spacing="40" maxWidth="600">
+                <VBox alignment="CENTER" spacing="16">
+                    <Label text="📚"
+                           style="-fx-font-size: 72px;"/>
+                    <Label text="Build Your Study Group"
+                           styleClass="modern-label-title"
+                           style="-fx-font-size: 32px;"/>
+                    <Label text="Take your study group outside of a class for a more efficient way to collaborate and get things done together."
+                           wrapText="true"
+                           textAlignment="CENTER"
+                           maxWidth="450"
+                           styleClass="modern-label-body"
+                           style="-fx-text-alignment: center;"/>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="16" styleClass="welcome-actions">
+                    <HBox spacing="16" alignment="CENTER">
+                        <VBox alignment="CENTER" spacing="12" styleClass="modern-card" style="-fx-min-width: 240; -fx-min-height: 160;">
+                            <Label text="🎯"
+                                   style="-fx-font-size: 40px;"/>
+                            <Label text="Create a Group"
+                                   styleClass="modern-label-heading"/>
+                            <Label text="Start your own study community"
+                                   styleClass="modern-label-caption"
+                                   wrapText="true"
+                                   textAlignment="CENTER"
+                                   maxWidth="200"/>
+                            <Button fx:id="createGroupButton"
+                                    text="Get Started"
+                                    prefWidth="180"
+                                    onAction="#onCreateGroup"
+                                    styleClass="modern-button"/>
+                        </VBox>
+
+                        <VBox alignment="CENTER" spacing="12" styleClass="modern-card" style="-fx-min-width: 240; -fx-min-height: 160;">
+                            <Label text="🤝"
+                                   style="-fx-font-size: 40px;"/>
+                            <Label text="Join a Group"
+                                   styleClass="modern-label-heading"/>
+                            <Label text="Connect with existing communities"
+                                   styleClass="modern-label-caption"
+                                   wrapText="true"
+                                   textAlignment="CENTER"
+                                   maxWidth="200"/>
+                            <Button fx:id="joinGroupButton"
+                                    text="Join Now"
+                                    prefWidth="180"
+                                    onAction="#onJoinGroup"
+                                    styleClass="modern-button-accent"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="12">
+                    <Label text="Features"
+                           styleClass="modern-label-heading"/>
+                    <HBox spacing="30" alignment="CENTER">
+                        <VBox alignment="CENTER" spacing="6">
+                            <Label text="📅" style="-fx-font-size: 24px;"/>
+                            <Label text="Calendar" styleClass="modern-label-body"/>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="6">
+                            <Label text="✓" style="-fx-font-size: 24px;"/>
+                            <Label text="Tasks" styleClass="modern-label-body"/>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="6">
+                            <Label text="📝" style="-fx-font-size: 24px;"/>
+                            <Label text="Notes" styleClass="modern-label-body"/>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="6">
+                            <Label text="💬" style="-fx-font-size: 24px;"/>
+                            <Label text="Chat" styleClass="modern-label-body"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
             </VBox>
-        </VBox>
+        </StackPane>
     </center>
 </BorderPane>

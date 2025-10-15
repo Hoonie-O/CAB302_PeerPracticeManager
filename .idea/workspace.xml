@@ -46,6 +46,11 @@
       <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionTaskManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/SessionTaskManagerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/UserManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/UserManagerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PeerPractice/src/test/java/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/test/java/UserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/PeerPracticeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/PeerPracticeApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/forgotpassword-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/forgotpassword-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/login-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/login-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/resetpassword-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/resetpassword-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/signup-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/signup-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,6 +118,24 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.3038529",
     "run.code.analysis.last.selected.profile": "pProject Default"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.PeerPracticeApplication.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in PeerPractice.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.java in PeerPractice.executor&quot;: &quot;Coverage&quot;,
+    &quot;Maven.PeerPractice [test].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;UI-features&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/HoonieG15/IdeaProjects/CAB302_PeerPracticeManager/PeerPractice/src/main/resources/com/cab302/peerpractice&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.3038529&quot;
   }
 }]]></component>
   <component name="RecentsManager">
@@ -176,6 +199,7 @@
         <item itemvalue="JUnit.test in PeerPractice" />
         <item itemvalue="JUnit.java in PeerPractice" />
         <item itemvalue="JUnit.All in PeerPractice" />
+        <item itemvalue="JUnit.java in PeerPractice" />
       </list>
     </recent_temporary>
   </component>
@@ -203,5 +227,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1759114530672" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/PeerPracticeManagerApp$All_in_PeerPractice.ic" NAME="All in PeerPractice Coverage Results" MODIFIED="1759063198289" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$All_in_PeerPractice.ic" NAME="All in PeerPractice Coverage Results" MODIFIED="1760324281249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>
