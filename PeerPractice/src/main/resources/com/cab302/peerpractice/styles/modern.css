@@ -1249,10 +1249,7 @@
 /* ==================== Skeleton Loading Animation ==================== */
 
 .skeleton {
-    -fx-background-color: linear-gradient(90deg,
-        -fx-border-light 0%,
-        -fx-surface-hover 50%,
-        -fx-border-light 100%);
+    -fx-background-color: linear-gradient(to right, -fx-border-light 0%, -fx-surface-hover 50%, -fx-border-light 100%);
     -fx-background-radius: 4;
 }
 
