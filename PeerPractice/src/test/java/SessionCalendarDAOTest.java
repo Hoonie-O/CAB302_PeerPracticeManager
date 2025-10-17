@@ -44,7 +44,7 @@ public class SessionCalendarDAOTest {
         userDao.addUser(testUser1);
         userDao.addUser(testUser2);
         
-        testGroup = new Group("Study Group", "Test group for sessions", false, testUser1.getUsername(), LocalDateTime.now());
+        testGroup = new Group("Study Group", "Test group for sessions", false, testUser1, LocalDateTime.now());
         groupDao.addGroup(testGroup);
         
         testSession1 = new Session("Morning Study", testUser1,

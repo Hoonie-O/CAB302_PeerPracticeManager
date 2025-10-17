@@ -20,7 +20,7 @@ public class GroupTest {
     public void setUp(){
         user = new User("Seiji","Sato",USERNAME,"email@email.com","asfasfasfasf","QUT");
         localDateTime = LocalDateTime.now();
-        group = new Group("Group1","Group for CAB302",false,USERNAME, localDateTime);
+        group = new Group("Group1","Group for CAB302",false, user, localDateTime);
     }
 
     @Test
@@ -73,13 +73,14 @@ public class GroupTest {
 
     @Test
     public void testGetOwner(){
-        assertEquals(USERNAME,group.getOwner());
+        assertEquals(USERNAME,group.getOwner().getUsername());
     }
 
     @Test
     public void testSetOwner(){
-        group.setOwner("someone");
-        assertEquals("someone",group.getOwner());
+        user.setUsername("someone");
+        group.setOwner(user);
+        assertEquals("someone",group.getOwner().getUsername());
     }
 
     @Test
@@ -101,11 +102,12 @@ public class GroupTest {
 
     @Test
     public void testGroupConstructorAllParameters(){
-        Group newGroup = new Group("TestGroup", "Description", true, "owner123", localDateTime);
+        user.setUsername("owner123");
+        Group newGroup = new Group("TestGroup", "Description", true, user, localDateTime);
         assertEquals("TestGroup", newGroup.getName());
         assertEquals("Description", newGroup.getDescription());
         assertTrue(newGroup.isRequire_approval());
-        assertEquals("owner123", newGroup.getOwner());
+        assertEquals("owner123", newGroup.getOwner().getUsername());
         assertEquals(localDateTime, newGroup.getCreated_at());
     }
 

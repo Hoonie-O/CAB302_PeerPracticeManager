@@ -38,7 +38,7 @@ class GroupMessageDAOTest {
         userDao.addUser(alice);
 
         testGroup = new Group("Study Group", "Group for testing", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         groupDao.addGroup(testGroup);
     }
 
