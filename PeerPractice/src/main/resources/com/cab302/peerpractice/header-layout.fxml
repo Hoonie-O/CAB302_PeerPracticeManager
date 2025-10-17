@@ -4,23 +4,39 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml">
-    <BorderPane>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      stylesheets="@styles/modern.css"
+      styleClass="header-container">
+    <BorderPane styleClass="header-content">
         <padding>
-            <Insets top="10" right="10" bottom="10" left="10"/>
+            <Insets top="16" right="20" bottom="16" left="20"/>
         </padding>
         <left>
-            <Button fx:id="menuToggleButton" text="Menu"/>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Button fx:id="menuToggleButton"
+                        text="☰"
+                        styleClass="header-icon-button"
+                        style="-fx-font-size: 18px;"/>
+                <Label text="Peer Practice"
+                       styleClass="header-brand"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: -fx-primary;"/>
+            </HBox>
         </left>
         <center>
-            <Label text="Peer Practice - GROUPTEN"/>
+            <HBox alignment="CENTER">
+                <Label text="Study Smarter, Together"
+                       styleClass="modern-label-caption"
+                       style="-fx-font-style: italic;"/>
+            </HBox>
         </center>
         <right>
-            <HBox spacing="8">
-                <Button fx:id="profileToggleButton" text="Profile"/>
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <Button fx:id="profileToggleButton"
+                        text="👤 Profile"
+                        styleClass="header-profile-button"/>
             </HBox>
         </right>
     </BorderPane>
-    <Separator/>
+    <Separator styleClass="header-separator"/>
 </VBox>
 

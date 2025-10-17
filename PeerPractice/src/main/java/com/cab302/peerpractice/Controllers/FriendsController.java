@@ -298,5 +298,5 @@ public class FriendsController extends SidebarController{
      */
     private Friend getSelection() {
         return friendsTable.getSelectionModel().selectedItemProperty().get();
-    };
+    }
 }

@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class GroupDAOTest {
 
     private Connection memConn;
-    private UserDAO userDao;
     private GroupDAO groupDao;
 
     private User alice;
@@ -31,7 +30,7 @@ class GroupDAOTest {
         memConn = DriverManager.getConnection("jdbc:sqlite::memory:");
         SQLiteConnection.setInstance(memConn);
 
-        userDao = new UserDAO();
+        UserDAO userDao = new UserDAO();
         groupDao = new GroupDAO(userDao);
 
         // Seed users

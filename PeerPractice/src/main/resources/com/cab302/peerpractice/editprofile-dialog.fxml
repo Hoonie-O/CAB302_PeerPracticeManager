@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.cab302.peerpractice.Controllers.EditProfileController"
-      spacing="8">
+      spacing="12"
+      stylesheets="@styles/modern.css">
     <padding>
-        <Insets top="12"
-                right="12"
-                bottom="12"
-                left="12"/>
+        <Insets top="20"
+                right="20"
+                bottom="20"
+                left="20"/>
     </padding>
 
     <GridPane hgap="12"
@@ -29,106 +27,108 @@
 
         <Separator/>
         <!-- First name -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="0"
               GridPane.columnIndex="0">
-            <Label text="First name:"/>
+            <Label text="First name:" styleClass="modern-label-body"/>
             <TextField fx:id="firstNameField"
-                       maxWidth="Infinity"/>
+                       maxWidth="Infinity"
+                       styleClass="modern-text-field"/>
         </VBox>
 
-        <!-- Last name -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="0"
               GridPane.columnIndex="1">
-            <Label text="Last name:"/>
+            <Label text="Last name:" styleClass="modern-label-body"/>
             <TextField fx:id="lastNameField"
-                       maxWidth="Infinity"/>
+                       maxWidth="Infinity"
+                       styleClass="modern-text-field"/>
         </VBox>
 
-        <!-- Email -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="1"
               GridPane.columnIndex="0">
-            <Label text="Email:"/>
+            <Label text="Email:" styleClass="modern-label-body"/>
             <TextField fx:id="emailField"
                        disable="true"
                        editable="false"
-                       maxWidth="Infinity"/>
+                       maxWidth="Infinity"
+                       styleClass="modern-text-field"
+                       style="-fx-opacity: 0.6;"/>
         </VBox>
 
-        <!-- Username -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="1"
               GridPane.columnIndex="1">
-            <Label text="Username:"/>
+            <Label text="Username:" styleClass="modern-label-body"/>
             <TextField fx:id="usernameField"
-                       maxWidth="Infinity"/>
+                       maxWidth="Infinity"
+                       styleClass="modern-text-field"/>
         </VBox>
 
-        <!-- Date of birth -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="2"
               GridPane.columnIndex="0"
               GridPane.columnSpan="2">
-            <Label text="Date of birth:"/>
+            <Label text="Date of birth:" styleClass="modern-label-body"/>
             <DatePicker fx:id="dateOfBirthField"
                         maxWidth="Infinity"/>
         </VBox>
 
-        <!-- Phone number -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="3"
               GridPane.columnIndex="0"
               GridPane.columnSpan="2">
-            <Label text="Phone number:"/>
+            <Label text="Phone number:" styleClass="modern-label-body"/>
             <TextField fx:id="phoneField"
-                       maxWidth="Infinity"/>
+                       maxWidth="Infinity"
+                       styleClass="modern-text-field"/>
         </VBox>
 
-        <!-- Home address -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="4"
               GridPane.columnIndex="0"
               GridPane.columnSpan="2">
-            <Label text="Home address:"/>
+            <Label text="Home address:" styleClass="modern-label-body"/>
             <TextField fx:id="addressField"
-                       maxWidth="Infinity"/>
+                       maxWidth="Infinity"
+                       styleClass="modern-text-field"/>
         </VBox>
 
-        <!-- Institute -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="5"
               GridPane.columnIndex="0"
               GridPane.columnSpan="2">
-            <Label text="Institute:"/>
+            <Label text="Institute:" styleClass="modern-label-body"/>
             <TextField fx:id="instituteField"
-                       maxWidth="Infinity"/>
+                       maxWidth="Infinity"
+                       styleClass="modern-text-field"/>
         </VBox>
 
-        <!-- Biography -->
-        <VBox spacing="4"
+        <VBox spacing="6"
               GridPane.rowIndex="6"
               GridPane.columnIndex="0"
               GridPane.columnSpan="2">
-            <Label text="Biography:"/>
+            <Label text="Biography:" styleClass="modern-label-body"/>
             <TextArea fx:id="bioField"
                       prefRowCount="3"
-                      maxWidth="Infinity"/>
+                      maxWidth="Infinity"
+                      styleClass="modern-text-field"/>
         </VBox>
 
-        <!-- Buttons -->
         <HBox alignment="CENTER_RIGHT"
-              spacing="8"
+              spacing="12"
               GridPane.rowIndex="7"
               GridPane.columnIndex="0"
               GridPane.columnSpan="2">
             <Button text="Close"
                     onAction="#onClose"
-                    minWidth="110"/>
-            <Button text="Save"
+                    minWidth="110"
+                    styleClass="modern-button-secondary"/>
+            <Button text="Save Changes"
                     onAction="#onSave"
-                    minWidth="110"/>
+                    minWidth="130"
+                    styleClass="modern-button"/>
         </HBox>
     </GridPane>
 </VBox>

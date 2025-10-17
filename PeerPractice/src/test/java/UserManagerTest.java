@@ -15,7 +15,6 @@ public class UserManagerTest {
 
     private IUserDAO userdao;
     private UserManager manager;
-    private PasswordHasher hasher;
     private final String NAME = "Seiji";
     private final String LASTNAME = "Sato";
     private final String INSTITUTION = "QUT";
@@ -28,7 +27,7 @@ public class UserManagerTest {
     public void setUp() {
         // Use mock instead of real DB
         userdao = new MockUserDAO();
-        hasher = new BcryptHasher();
+        PasswordHasher hasher = new BcryptHasher();
         manager = new UserManager(userdao, hasher);
 
         // fresh mock DB, just insert the baseline user

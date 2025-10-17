@@ -14,10 +14,8 @@ import java.util.stream.Collectors;
 public class MockAvailabilityDAO implements IAvailabilityDAO {
 
     private final Map<String, Availability> availabilities = new ConcurrentHashMap<>();
-    private final IUserDAO userDao;
 
     public MockAvailabilityDAO(IUserDAO userDao) {
-        this.userDao = userDao;
     }
 
     private String generateId() {

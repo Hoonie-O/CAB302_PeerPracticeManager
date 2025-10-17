@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class User {
 
-    private String userId; // unique identifier for the user
+    private final String userId; // unique identifier for the user
     private String firstName;
     private String lastName;
     private String username;
@@ -19,7 +19,7 @@ public class User {
     private String dateOfBirth;
     private String institution;
     private String bio;
-    private List<User> friendsList;
+    private final List<User> friendsList;
     private List<Notification> notifications;
     private String dateFormat;
     private String timeFormat;
@@ -111,8 +111,7 @@ public class User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
+        if (!(o instanceof User user)) return false;
         return Objects.equals(userId, user.userId);
     }
 

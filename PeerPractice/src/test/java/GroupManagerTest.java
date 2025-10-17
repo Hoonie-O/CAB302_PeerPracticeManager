@@ -19,11 +19,10 @@ public class GroupManagerTest {
 
     private GroupManager groupManager;
     private IGroupDAO groupDAO;
-    private Notifier notifier;
     private IUserDAO userDAO;
     private User user;
     private String NAME;
-    private String DESCRIPTION = "This is the description of a group";
+    private final String DESCRIPTION = "This is the description of a group";
     private String USERNAME;
     private Group group;
 
@@ -41,7 +40,7 @@ public class GroupManagerTest {
             ((MockUserDAO) userDAO).clear();
         }
 
-        notifier = new Notifier(userDAO, null);
+        Notifier notifier = new Notifier(userDAO, null);
         groupManager = new GroupManager(groupDAO, notifier, userDAO);
 
         // Use unique values to avoid clashes across runs

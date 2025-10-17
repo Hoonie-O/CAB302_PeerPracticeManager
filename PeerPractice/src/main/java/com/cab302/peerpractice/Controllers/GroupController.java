@@ -52,6 +52,7 @@ import static javax.swing.JColorChooser.showDialog;
  * @see Session
  * @see SidebarController
  */
+@SuppressWarnings("ALL")
 public class GroupController extends SidebarController {
     /** <hr> Tab pane containing all group management interfaces. */
     @FXML private TabPane groupTabs;
@@ -79,6 +80,8 @@ public class GroupController extends SidebarController {
      * Controller for managing group notes functionality.
      */
     private NotesController notesController;
+
+    private GroupChatController groupChatController;
 
     /**
      * <hr>
@@ -329,15 +332,21 @@ public class GroupController extends SidebarController {
      * @param group the group to load chat for
      */
     private void loadChatContent(Tab tab, Group group) {
-        VBox chatContent = new VBox(10);
-        chatContent.setPadding(new Insets(20));
-
-        Label comingSoon = new Label("Chat functionality coming soon!");
-        comingSoon.setFont(Font.font("System", FontWeight.BOLD, 14));
-
-        chatContent.getChildren().add(comingSoon);
-        tab.setContent(chatContent);
+        try {
+            if (groupChatController == null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/peerpractice/group-chat.fxml"));
+                loader.setControllerFactory(cls -> new GroupChatController(ctx, nav));
+                Parent chatView = loader.load();
+                groupChatController = loader.getController();
+                tab.setContent(chatView);
+            }
+            groupChatController.setGroup(group);
+        } catch (Exception e) {
+            System.err.println("Failed to load group chat: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * <hr>
@@ -858,8 +867,7 @@ public class GroupController extends SidebarController {
         List<GroupMember> membersList = new ArrayList<>();
 
         // Get group members from database
-        if (ctx.getGroupDAO() instanceof GroupDAO) {
-            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+        if (ctx.getGroupDAO() instanceof GroupDAO groupDAO) {
             List<GroupMemberEntity> dbMembers = groupDAO.getGroupMembers(group.getID());
 
             for (GroupMemberEntity dbMember : dbMembers) {
@@ -881,8 +889,7 @@ public class GroupController extends SidebarController {
 
         // Add admin functionality
         User currentUser = ctx.getUserSession().getCurrentUser();
-        if (ctx.getGroupDAO() instanceof GroupDAO) {
-            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+        if (ctx.getGroupDAO() instanceof GroupDAO groupDAO) {
             if (groupDAO.isAdmin(group.getID(), currentUser.getUserId()) ||
                     group.getOwner().equals(currentUser.getUsername())) {
                 showJoinRequestsIfAny(group);
@@ -900,8 +907,7 @@ public class GroupController extends SidebarController {
      * @param group the group to check for pending join requests
      */
     private void showJoinRequestsIfAny(Group group) {
-        if (ctx.getGroupDAO() instanceof GroupDAO) {
-            GroupDAO groupDAO = (GroupDAO) ctx.getGroupDAO();
+        if (ctx.getGroupDAO() instanceof GroupDAO groupDAO) {
             List<GroupJoinRequest> pendingRequests = groupDAO.getPendingJoinRequests(group.getID());
 
             if (!pendingRequests.isEmpty()) {

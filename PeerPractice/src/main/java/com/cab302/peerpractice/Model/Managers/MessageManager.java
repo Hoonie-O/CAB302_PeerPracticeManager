@@ -18,6 +18,11 @@ public abstract class MessageManager<T extends Message> {
     /**
      * Get all messages for a given user or group.
      */
+    public abstract List<T> getMessages(int receiverId);
+
+    /**
+     * Get all messages for a given user or group.
+     */
     public abstract List<T> getMessages(String receiverId);
 
     /**

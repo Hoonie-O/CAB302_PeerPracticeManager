@@ -20,7 +20,6 @@ import java.util.List;
 public class SessionTaskDAOTest {
 
     private SessionTaskDAO storage;
-    private IUserDAO userDao;
     private User testUser1;
     private User testUser2;
     private Session testSession;
@@ -35,7 +34,7 @@ public class SessionTaskDAOTest {
         connection = DriverManager.getConnection("jdbc:sqlite::memory:");
         SQLiteConnection.setInstance(connection);
 
-        userDao = new UserDAO();
+        IUserDAO userDao = new UserDAO();
         storage = new SessionTaskDAO(userDao);
         sessionStorage = new SessionCalendarDAO(userDao);
         

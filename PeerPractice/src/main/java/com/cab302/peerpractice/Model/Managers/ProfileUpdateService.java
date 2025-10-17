@@ -28,38 +28,38 @@ public class ProfileUpdateService {
     public boolean updateProfile(User user, ProfileUpdateRequest request) throws SQLException {
         boolean changed = false;
 
-        changed |= updateIfChanged(user.getFirstName(), request.getFirstName(),
-            () -> userManager.updateFirstName(user.getUsername(), request.getFirstName()),
-            () -> user.setFirstName(request.getFirstName()));
+        changed |= updateIfChanged(user.getFirstName(), request.firstName(),
+            () -> userManager.updateFirstName(user.getUsername(), request.firstName()),
+            () -> user.setFirstName(request.firstName()));
 
-        changed |= updateIfChanged(user.getLastName(), request.getLastName(),
-            () -> userManager.updateLastName(user.getUsername(), request.getLastName()),
-            () -> user.setLastName(request.getLastName()));
+        changed |= updateIfChanged(user.getLastName(), request.lastName(),
+            () -> userManager.updateLastName(user.getUsername(), request.lastName()),
+            () -> user.setLastName(request.lastName()));
 
-        changed |= updateIfChanged(user.getUsername(), request.getUsername(),
-            () -> userManager.changeUsername(user.getUsername(), request.getUsername()),
-            () -> user.setUsername(request.getUsername()));
+        changed |= updateIfChanged(user.getUsername(), request.username(),
+            () -> userManager.changeUsername(user.getUsername(), request.username()),
+            () -> user.setUsername(request.username()));
 
-        changed |= updateIfChanged(user.getInstitution(), request.getInstitution(),
-            () -> userManager.updateInstitution(user.getUsername(), request.getInstitution()),
-            () -> user.setInstitution(request.getInstitution()));
+        changed |= updateIfChanged(user.getInstitution(), request.institution(),
+            () -> userManager.updateInstitution(user.getUsername(), request.institution()),
+            () -> user.setInstitution(request.institution()));
 
-        changed |= updateIfChanged(user.getPhone(), request.getPhone(),
-            () -> userManager.updatePhone(user.getUsername(), request.getPhone()),
-            () -> user.setPhone(request.getPhone()));
+        changed |= updateIfChanged(user.getPhone(), request.phone(),
+            () -> userManager.updatePhone(user.getUsername(), request.phone()),
+            () -> user.setPhone(request.phone()));
 
-        changed |= updateIfChanged(user.getAddress(), request.getAddress(),
-            () -> userManager.updateAddress(user.getUsername(), request.getAddress()),
-            () -> user.setAddress(request.getAddress()));
+        changed |= updateIfChanged(user.getAddress(), request.address(),
+            () -> userManager.updateAddress(user.getUsername(), request.address()),
+            () -> user.setAddress(request.address()));
 
-        String dobIso = request.getDateOfBirth() == null ? "" : ISO.format(request.getDateOfBirth());
+        String dobIso = request.dateOfBirth() == null ? "" : ISO.format(request.dateOfBirth());
         changed |= updateIfChanged(user.getDateOfBirth(), dobIso,
             () -> userManager.updateDateOfBirth(user.getUsername(), dobIso),
             () -> user.setDateOfBirth(dobIso));
 
-        changed |= updateIfChanged(user.getBio(), request.getBio(),
-            () -> userManager.updateBio(user.getUsername(), request.getBio()),
-            () -> user.setBio(request.getBio()));
+        changed |= updateIfChanged(user.getBio(), request.bio(),
+            () -> userManager.updateBio(user.getUsername(), request.bio()),
+            () -> user.setBio(request.bio()));
 
         return changed;
     }
@@ -85,38 +85,9 @@ public class ProfileUpdateService {
     }
 
     /**
-     * Data class containing profile update information.
-     */
-    public static class ProfileUpdateRequest {
-        private final String firstName;
-        private final String lastName;
-        private final String username;
-        private final String institution;
-        private final String phone;
-        private final String address;
-        private final LocalDate dateOfBirth;
-        private final String bio;
-
-        public ProfileUpdateRequest(String firstName, String lastName, String username,
-                                  String institution, String phone, String address,
-                                  LocalDate dateOfBirth, String bio) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.username = username;
-            this.institution = institution;
-            this.phone = phone;
-            this.address = address;
-            this.dateOfBirth = dateOfBirth;
-            this.bio = bio;
-        }
-
-        public String getFirstName() { return firstName; }
-        public String getLastName() { return lastName; }
-        public String getUsername() { return username; }
-        public String getInstitution() { return institution; }
-        public String getPhone() { return phone; }
-        public String getAddress() { return address; }
-        public LocalDate getDateOfBirth() { return dateOfBirth; }
-        public String getBio() { return bio; }
+         * Data class containing profile update information.
+         */
+        public record ProfileUpdateRequest(String firstName, String lastName, String username, String institution,
+                                           String phone, String address, LocalDate dateOfBirth, String bio) {
     }
 }

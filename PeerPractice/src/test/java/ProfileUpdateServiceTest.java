@@ -14,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProfileUpdateServiceTest {
 
 private ProfileUpdateService service;
-private UserManager userManager;
-private IUserDAO userDao;
+    private IUserDAO userDao;
 private User testUser;
 
 @BeforeEach
@@ -26,7 +25,7 @@ void setUp() throws SQLException {
     try { userDao.deleteUser("johndoe"); } catch (Exception ignored) {}
     try { userDao.deleteUser("janesmith"); } catch (Exception ignored) {}
 
-    userManager = new UserManager(userDao, new BcryptHasher());
+    UserManager userManager = new UserManager(userDao, new BcryptHasher());
     service = new ProfileUpdateService(userManager);
 
     testUser = new User("John", "Doe", "johndoe", "john@example.com", "hashedpass", "QUT");

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="messageContainer" spacing="8" prefWidth="400" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cab302.peerpractice.Controllers.GroupChatController">
+
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" prefHeight="400">
+        <VBox fx:id="messagesBox" spacing="6" prefWidth="380" />
+    </ScrollPane>
+
+
+    <HBox spacing="8" alignment="CENTER">
+        <TextField fx:id="messageInput" promptText="Type a message..." HBox.hgrow="ALWAYS" />
+        <Button fx:id="sendButton" text="Send" onAction="#onSendMessage"/>
+    </HBox>
+</VBox>
+

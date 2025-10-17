@@ -11,8 +11,11 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -58,7 +61,7 @@ public class AvailabilityController extends SidebarController {
     private YearMonth currentYearMonth;
 
     /** <hr> Manager for handling availability data operations. */
-    private AvailabilityManager availabilityManager;
+    private final AvailabilityManager availabilityManager;
 
     /**
      * <hr>
@@ -139,15 +142,34 @@ public class AvailabilityController extends SidebarController {
      */
     private void populateCalendarGrid() {
         calendarGrid.getChildren().clear();
+        calendarGrid.getColumnConstraints().clear();
+        calendarGrid.getRowConstraints().clear();
 
-        // Day headers with modern styling
+        for (int i = 0; i < 7; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(100.0 / 7);
+            col.setHgrow(Priority.ALWAYS);
+            calendarGrid.getColumnConstraints().add(col);
+        }
+
+        RowConstraints headerRow = new RowConstraints();
+        headerRow.setMinHeight(40);
+        headerRow.setVgrow(Priority.NEVER);
+        calendarGrid.getRowConstraints().add(headerRow);
+
+        for (int i = 0; i < 6; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setMinHeight(120);
+            row.setVgrow(Priority.ALWAYS);
+            calendarGrid.getRowConstraints().add(row);
+        }
+
         String[] dayHeaders = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         for (int i = 0; i < dayHeaders.length; i++) {
             Label dayHeader = new Label(dayHeaders[i]);
             dayHeader.getStyleClass().add("calendar-day-header");
             dayHeader.setAlignment(Pos.CENTER);
-            dayHeader.setPrefWidth(80);
-            dayHeader.setPrefHeight(30);
+            dayHeader.setMaxWidth(Double.MAX_VALUE);
             calendarGrid.add(dayHeader, i, 0);
         }
 
@@ -200,12 +222,15 @@ public class AvailabilityController extends SidebarController {
      */
     private VBox createDayCell(LocalDate date, boolean isOtherMonth) {
         VBox dayCell = new VBox(5);
-        dayCell.setPrefWidth(80);
-        dayCell.setPrefHeight(80);
-        dayCell.setPadding(new Insets(8));
+        dayCell.setMaxWidth(Double.MAX_VALUE);
+        dayCell.setMaxHeight(Double.MAX_VALUE);
+        dayCell.setPadding(new Insets(12));
         dayCell.setAlignment(Pos.TOP_LEFT);
+        GridPane.setHgrow(dayCell, Priority.ALWAYS);
+        GridPane.setVgrow(dayCell, Priority.ALWAYS);
+        GridPane.setFillWidth(dayCell, true);
+        GridPane.setFillHeight(dayCell, true);
 
-        // Apply modern CSS classes
         dayCell.getStyleClass().add("calendar-day-cell");
 
         if (isOtherMonth) {

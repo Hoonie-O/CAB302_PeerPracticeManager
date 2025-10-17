@@ -19,10 +19,7 @@ class GroupMessageDAOTest {
 
     private Connection connection;
     private GroupMessageDAO dao;
-    private UserDAO userDao;
-    private GroupDAO groupDao;
 
-    private User alice;
     private Group testGroup;
 
     @BeforeEach
@@ -32,12 +29,12 @@ class GroupMessageDAOTest {
         SQLiteConnection.setInstance(connection);
 
         // init DAOs (will create tables in memory)
-        userDao = new UserDAO();
-        groupDao = new GroupDAO(userDao);
+        UserDAO userDao = new UserDAO();
+        GroupDAO groupDao = new GroupDAO(userDao);
         dao = new GroupMessageDAO();
 
         // seed user and group
-        alice = new User("Alice", "Wonder", "alice123", "alice@mail.com", "Password1!", "QUT");
+        User alice = new User("Alice", "Wonder", "alice123", "alice@mail.com", "Password1!", "QUT");
         userDao.addUser(alice);
 
         testGroup = new Group("Study Group", "Group for testing", false,

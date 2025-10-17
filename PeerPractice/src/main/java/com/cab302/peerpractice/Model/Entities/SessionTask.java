@@ -10,13 +10,13 @@ import java.util.UUID;
  */
 public class SessionTask {
     
-    private String taskId;
-    private String sessionId;
+    private final String taskId;
+    private final String sessionId;
     private String title;
     private LocalDateTime deadline;
     private String assigneeId; // User ID of the person this task is assigned to
-    private String createdBy; // User ID who created the task
-    private LocalDateTime createdAt;
+    private final String createdBy; // User ID who created the task
+    private final LocalDateTime createdAt;
     private boolean completed;
     
     public SessionTask(String sessionId, String title, LocalDateTime deadline, String assigneeId, String createdBy) {

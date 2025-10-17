@@ -22,7 +22,6 @@ public class SessionDeletionIntegrationTest {
     private SessionTaskManager sessionTaskManager;
     private SessionTaskDAO sessionTaskStorage;
     private SessionCalendarDAO sessionCalendarStorage;
-    private SessionManager sessionManager;
     private IUserDAO userDao;
     private User testUser;
     private Session testSession;
@@ -32,7 +31,7 @@ public class SessionDeletionIntegrationTest {
         userDao = new UserDAO();
         sessionCalendarStorage = new SessionCalendarDAO(userDao);
         sessionCalendarManager = new SessionCalendarManager(sessionCalendarStorage);
-        sessionManager = new SessionManager(sessionCalendarManager);
+        SessionManager sessionManager = new SessionManager(sessionCalendarManager);
         sessionTaskStorage = new SessionTaskDAO(userDao);
         sessionTaskManager = new SessionTaskManager(sessionTaskStorage, sessionManager);
         

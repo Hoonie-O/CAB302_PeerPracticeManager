@@ -41,7 +41,7 @@ class GroupMessageManagerTest {
         dao.addMessage(new GroupMessage("2", "bob", "Hello all", LocalDateTime.now(), 101));
         dao.addMessage(new GroupMessage("3", "carol", "Unrelated", LocalDateTime.now(), 202));
 
-        List<GroupMessage> group101Msgs = manager.getMessages("101");
+        List<GroupMessage> group101Msgs = manager.getMessages(101);
         assertEquals(2, group101Msgs.size());
         assertTrue(group101Msgs.stream().anyMatch(m -> m.getSenderId().equals("alice")));
     }

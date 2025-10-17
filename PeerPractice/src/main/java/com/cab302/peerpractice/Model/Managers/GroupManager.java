@@ -17,9 +17,9 @@ import java.util.regex.Pattern;
 
 public class GroupManager {
 
-    private IGroupDAO groupDAO;
-    private Notifier notifier;
-    private IUserDAO userDAO;
+    private final IGroupDAO groupDAO;
+    private final Notifier notifier;
+    private final IUserDAO userDAO;
 
 
     public GroupManager(IGroupDAO groupDAO,Notifier notifier,IUserDAO userDAO){
