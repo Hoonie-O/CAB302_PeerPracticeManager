@@ -176,14 +176,6 @@ public class MockUserDAO implements IUserDAO {
     }
 
     @Override
-    public boolean addNotification(User username, Notification notification) {
-        if (notification == null) return false;
-        String message = notification.getMsg();  // extract text only
-        notifications.computeIfAbsent(username.getUsername(), k -> new ArrayList<>()).add(message);
-        return true;
-    }
-
-    @Override
     public boolean removeNotification(User username, Notification notification) {
         if (notification == null) return false;
         List<String> list = notifications.get(username.getUsername());

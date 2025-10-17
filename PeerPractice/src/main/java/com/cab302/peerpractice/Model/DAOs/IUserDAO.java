@@ -31,7 +31,6 @@ public interface IUserDAO {
     java.util.List<User> getAllUsers();
     boolean storePassword(User user, String hash);
     String getPassword(User user);
-    boolean addNotification(User username, Notification notification);
     boolean removeNotification(User username, Notification notification);
 
 

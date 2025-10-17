@@ -259,10 +259,5 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public boolean addNotification(User username, Notification notification) {
-        return addNotification(username, username, notification.toString());
-    }
-
-    @Override
     public boolean removeNotification(User username, Notification notification) { return false; }
 }

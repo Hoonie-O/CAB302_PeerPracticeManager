@@ -174,6 +174,6 @@ class UserDAOTest {
     @Test
     void addNotificationWithObject_insertsRow() {
         Notification n = new TestNotification(alice, bob, "Reminder: study session");
-        assertTrue(userDao.addNotification(alice, n));
+        assertTrue(userDao.addNotification(alice, bob, n.getMsg()));
     }
 }
