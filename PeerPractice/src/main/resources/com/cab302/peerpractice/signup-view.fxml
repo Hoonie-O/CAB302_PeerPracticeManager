@@ -43,17 +43,24 @@
         <TextField fx:id="emailField"
                    promptText="Email"
                    prefWidth="320"/>
-
+        
         <TextField fx:id="institutionField"
                    promptText="Institution or School"
                    prefWidth="320"/>
 
-        <PasswordField fx:id="passwordField"
-                       promptText="Password"
-                       prefWidth="320"/>
+        <PasswordField fx:id="passwordField" promptText="Password">
+            <tooltip>
+                <Tooltip text="Password must:&#10; • Be at least 8 characters&#10; • Contains at least one uppercase&#10; • Contains at least one lowercase&#10; • Contains at least one number&#10; • Contains at least one special character"
+                         style="-fx-font-size: 12px;" />
+            </tooltip>
+        </PasswordField>
 
-        <PasswordField fx:id="confirmPasswordField"
-                       promptText="Confirm password"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirm password">
+            <tooltip>
+                <Tooltip text="Repeat the password"
+                         style="-fx-font-size: 12px;" />
+            </tooltip>
+        </PasswordField>
     </VBox>
 
     <HBox>

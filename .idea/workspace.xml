@@ -5,167 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/maven.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/maven.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/AvailabilityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/AvailabilityController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/BaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/BaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/DefaultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/DefaultController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/EditProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/EditProfileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/ForgotPasswordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/ForgotPasswordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/FriendsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/FriendsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/GroupCalendarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/GroupCalendarController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/GroupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/InviteMemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/InviteMemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/ManageGroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/ManageGroupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/NotesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/NotesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/ResetPasswordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/ResetPasswordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SessionTaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SessionTaskController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SettingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SettingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/ShareGroupIDController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/ShareGroupIDController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SidebarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SidebarController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SignupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/SignupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Utils/DateTimeFormatUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Model/Utils/DateTimeFormatUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/PeerPracticeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/PeerPracticeApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/AppContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/AvailabilityController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/BaseController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/DefaultController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/EditProfileController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/EditProfileController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ForgotPasswordController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/FriendsController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/GroupCalendarController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/GroupController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/GroupController$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/GroupController$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/GroupController$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/GroupController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/InviteMemberController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/LoginController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController$BlockedUser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController$Member.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController$MemberRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ManageGroupController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/NotesController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/NotesController$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/NotesController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ResetPasswordController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/SessionTaskController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/SessionTaskController$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/SessionTaskController$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/SessionTaskController$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/SessionTaskController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/SettingController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/ShareGroupIDController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/SidebarController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Controllers/SignupController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Exceptions/ControllerFactoryFailedException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Exceptions/DuplicateEmailException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Exceptions/DuplicateFriendException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Exceptions/DuplicateGroupException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Exceptions/DuplicateUsernameException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Exceptions/InsufficientPermissionsException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Exceptions/InvalidPasswordException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Exceptions/UserNotFoundException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Launcher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/AvailabilityDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/FriendDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/GroupDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/IAvailabilityDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/IFriendDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/IGroupDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/INotesDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/ISessionCalendarDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/ISessionTaskDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/IUserDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/MockAvailabilityDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/MockFriendDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/MockGroupDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/MockNotesDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/MockSessionCalendarDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/MockSessionTaskDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/MockUserDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/NotesDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/SessionCalendarDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/SessionTaskDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/DAOs/UserDAO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/Attachment.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/Availability.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/Chapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/Friend.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/FriendStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/Group.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/GroupApprovalNotification.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/GroupJoinRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/GroupMember.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/GroupMemberEntity.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/Note.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/Notification.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/Session.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/SessionTask.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Entities/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/AvailabilityManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/GroupManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/MailService$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/MailService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/NotesManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/Notifier.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/ProfileUpdateService$DatabaseUpdater.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/ProfileUpdateService$ProfileUpdateRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/ProfileUpdateService$UserUpdater.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/ProfileUpdateService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/SessionCalendarManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/SessionManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/SessionPersistence.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/SessionTaskManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/UserManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Managers/UserSession.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Utils/BcryptHasher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Utils/PasswordHasher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Utils/SQLiteConnection.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Model/Utils/ValidationUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Navigation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/PeerPracticeApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/Utilities/DateTimeFormatUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cab302/peerpractice/View.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/AvailabilityDAOTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/AvailabilityTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/DefaultControllerLogoutTest$MockNavigation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/DefaultControllerLogoutTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/FriendDAOTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/GroupJoinIntegrationTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/GroupManagerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/GroupTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/HasherTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/LogoutFunctionalityTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/MailServiceTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/NoteTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/NotesManagerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/ProfileUpdateServiceTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SessionCalendarDAOTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SessionCalendarManagerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SessionDeletionIntegrationTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SessionTaskDAOTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SessionTaskDemoTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SessionTaskManagerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SessionTaskTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SessionTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/SimplifiedIntegrationTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/UserManagerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/UserTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/ValidationUtilsTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/signup-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/resources/com/cab302/peerpractice/signup-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,32 +49,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.PeerPracticeApplication.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AvailabilityDAOTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AvailabilityTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.java in PeerPractice.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.4.0:javadoc].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.6.0:javadoc].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.7.0:javadoc].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.PeerPractice [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.PeerPractice [test].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/HoonieG15/IdeaProjects/CAB302_PeerPracticeManager/PeerPractice/src/main/resources/com/cab302/peerpractice&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.3038529&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.PeerPracticeApplication.executor": "Run",
+    "JUnit.AvailabilityDAOTest.executor": "Run",
+    "JUnit.AvailabilityTest.executor": "Run",
+    "JUnit.java in PeerPractice.executor": "Coverage",
+    "Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.4.0:javadoc].executor": "Run",
+    "Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.6.0:javadoc].executor": "Run",
+    "Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.7.0:javadoc].executor": "Run",
+    "Maven.PeerPractice [package].executor": "Run",
+    "Maven.PeerPractice [test].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "PasswordFieldRequirements",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/HoonieG15/IdeaProjects/CAB302_PeerPracticeManager/PeerPractice/src/main/resources/com/cab302/peerpractice",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.3038529",
+    "settings.editor.selected.configurable": "project.scopes"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\HoonieG15\IdeaProjects\CAB302_PeerPracticeManager\PeerPractice\src\main\resources\com\cab302\peerpractice" />
@@ -248,6 +91,21 @@
       <recent name="" />
       <recent name="com.cab302.peerpractice" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="java in PeerPractice" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PeerPractice" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/PeerPractice/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.java in PeerPractice" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -281,5 +139,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1760691915790" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>
