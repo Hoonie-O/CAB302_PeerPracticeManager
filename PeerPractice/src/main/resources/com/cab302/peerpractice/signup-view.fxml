@@ -1,82 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.cab302.peerpractice.Controllers.SignupController"
-      spacing="12"
-      alignment="TOP_CENTER">
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.cab302.peerpractice.Controllers.SignupController"
+           stylesheets="@styles/modern.css"
+           style="-fx-background-color: -fx-background;"
+           alignment="CENTER">
+    <VBox spacing="18"
+          alignment="TOP_CENTER"
+          styleClass="modern-card"
+          maxWidth="450"
+          minWidth="400">
 
-    <padding>
-        <Insets top="24"
-                right="56"
-                bottom="24"
-                left="56"/>
-    </padding>
+        <padding>
+            <Insets top="40"
+                    right="40"
+                    bottom="40"
+                    left="40"/>
+        </padding>
 
-    <VBox alignment="CENTER">
-        <Label text="Sign up"
-               style="-fx-font-size: 24px; -fx-font-weight: bold;">
+        <Label text="Create Account"
+               styleClass="modern-label-title">
             <VBox.margin>
-                <Insets top="20"
-                        bottom="20"/>
+                <Insets bottom="10"/>
             </VBox.margin>
         </Label>
-    </VBox>
 
-    <VBox spacing="8">
-        <TextField fx:id="firstNameField"
-                   promptText="First Name"
-                   prefWidth="320"/>
-        <TextField fx:id="lastNameField"
-                   promptText="Last Name"
-                   prefWidth="320"/>
-        <TextField fx:id="usernameField"
-                   promptText="Username"
-                   prefWidth="320"/>
+        <Label text="Join us to get started"
+               styleClass="modern-label-caption">
+            <VBox.margin>
+                <Insets bottom="20"/>
+            </VBox.margin>
+        </Label>
 
-        <TextField fx:id="emailField"
-                   promptText="Email"
-                   prefWidth="320"/>
-
-        <TextField fx:id="institutionField"
-                   promptText="Institution or School"
-                   prefWidth="320"/>
-
-        <PasswordField fx:id="passwordField"
-                       promptText="Password"
+        <VBox spacing="12">
+            <TextField fx:id="firstNameField"
+                       styleClass="modern-text-field"
+                       promptText="First Name"
                        prefWidth="320"/>
+            <TextField fx:id="lastNameField"
+                       styleClass="modern-text-field"
+                       promptText="Last Name"
+                       prefWidth="320"/>
+            <TextField fx:id="usernameField"
+                       styleClass="modern-text-field"
+                       promptText="Username"
+                       prefWidth="320"/>
+            <TextField fx:id="emailField"
+                       styleClass="modern-text-field"
+                       promptText="Email"
+                       prefWidth="320"/>
+            <TextField fx:id="institutionField"
+                       styleClass="modern-text-field"
+                       promptText="Institution or School"
+                       prefWidth="320"/>
+            <PasswordField fx:id="passwordField"
+                           styleClass="modern-text-field"
+                           promptText="Password"
+                           prefWidth="320">
+                <tooltip>
+                    <Tooltip text="Password must:&#10; • Be at least 8 characters&#10; • Contains at least one uppercase&#10; • Contains at least one lowercase&#10; • Contains at least one number&#10; • Contains at least one special character"
+                             style="-fx-font-size: 12px;"/>
+                </tooltip>
+            </PasswordField>
+            <PasswordField fx:id="confirmPasswordField"
+                           styleClass="modern-text-field"
+                           promptText="Confirm password"
+                           prefWidth="320">
+                <tooltip>
+                    <Tooltip text="Repeat the password"
+                             style="-fx-font-size: 12px;"/>
+                </tooltip>
+            </PasswordField>
 
-        <PasswordField fx:id="confirmPasswordField"
-                       promptText="Confirm password"/>
-    </VBox>
 
-    <HBox>
+        </VBox>
+
         <Button fx:id="signupButton"
-                text="Sign up"
+                text="Create Account"
+                styleClass="modern-button"
                 onAction="#onSignupButton"
-                maxWidth="Infinity"
-                HBox.hgrow="ALWAYS"/>
-    </HBox>
+                maxWidth="Infinity">
+            <VBox.margin>
+                <Insets top="10"/>
+            </VBox.margin>
+        </Button>
 
-    <HBox spacing="6"
-          alignment="CENTER">
-        <VBox.margin>
-            <Insets top="20"
-                    bottom="20"/>
-        </VBox.margin>
-        <Label text="Already have an account?"/>
-        <Hyperlink fx:id="backButton"
-                   text="Login"
-                   onAction="#onBackToLogin"/>
-    </HBox>
+        <HBox spacing="6"
+              alignment="CENTER">
+            <VBox.margin>
+                <Insets top="20"/>
+            </VBox.margin>
+            <Label text="Already have an account?"
+                   styleClass="modern-label-body"/>
+            <Hyperlink fx:id="backButton"
+                       text="Sign in"
+                       style="-fx-font-weight: 600;"
+                       onAction="#onBackToLogin"/>
+        </HBox>
 
-    <Label fx:id="messageLabel"
-           textFill="red"/>
+        <Label fx:id="messageLabel"
+               textFill="red"
+               wrapText="true"
+               maxWidth="Infinity"/>
 
-</VBox>
+    </VBox>
+</StackPane>
