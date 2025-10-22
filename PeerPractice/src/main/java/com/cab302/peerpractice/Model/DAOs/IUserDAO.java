@@ -6,6 +6,7 @@ import com.cab302.peerpractice.Model.Entities.Notification;
 import com.cab302.peerpractice.Model.Entities.User;
 import javafx.collections.ObservableList;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface IUserDAO {
     User findUser(String column, String value) throws SQLException;
@@ -31,6 +32,10 @@ public interface IUserDAO {
     java.util.List<User> getAllUsers();
     boolean storePassword(User user, String hash);
     String getPassword(User user);
+    List<Notification> getNotificationsForUser(User user);
+    boolean markNotificationAsRead(User user, Notification notification);
+    boolean markAllNotificationsAsRead(User user);
+    int getUnreadNotificationCount(User user);
     boolean removeNotification(User username, Notification notification);
 
 

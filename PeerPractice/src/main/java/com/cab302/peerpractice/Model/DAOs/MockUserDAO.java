@@ -168,11 +168,30 @@ public class MockUserDAO implements IUserDAO {
 
     // -------------------- NOTIFICATIONS --------------------
 
-
     @Override
     public boolean addNotification(User sentFrom, User receivedBy, String message) {
         notifications.computeIfAbsent(receivedBy.getUsername(), k -> new ArrayList<>()).add(message);
         return true;
+    }
+
+    @Override
+    public List<Notification> getNotificationsForUser(User user) {
+        return new ArrayList<>(); // Mock implementation - returns empty list
+    }
+
+    @Override
+    public boolean markNotificationAsRead(User user, Notification notification) {
+        return true; // Mock implementation
+    }
+
+    @Override
+    public boolean markAllNotificationsAsRead(User user) {
+        return true; // Mock implementation
+    }
+
+    @Override
+    public int getUnreadNotificationCount(User user) {
+        return 0; // Mock implementation
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.cab302.peerpractice.Model.Entities.*;
 import com.cab302.peerpractice.Model.DAOs.IUserDAO;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Notifier {
 
@@ -75,5 +77,84 @@ public class Notifier {
      */
     protected void onDeny(Notification notification) throws SQLException {
         friendDAO.denyFriendRequest(notification.getFrom(), notification.getTo());
+    }
+
+    /**
+     * Get all notifications for a user
+     * @param user The user to get notifications for
+     * @return List of notifications
+     */
+    public List<Notification> getNotificationsForUser(User user) {
+        return userDAO.getNotificationsForUser(user);
+    }
+
+    /**
+     * Get pending friend requests for a user
+     * @param user The user to get friend requests for
+     * @return List of pending friend request notifications
+     */
+    public List<FriendRequestNotification> getPendingFriendRequests(User user) {
+        return userDAO.getNotificationsForUser(user).stream()
+                .filter(n -> n instanceof FriendRequestNotification)
+                .map(n -> (FriendRequestNotification) n)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the count of pending friend requests for a user
+     * @param user The user to get count for
+     * @return Number of pending friend requests
+     */
+    public int getPendingFriendRequestCount(User user) {
+        return getPendingFriendRequests(user).size();
+    }
+
+    /**
+     * Clear a friend request notification after acceptance/denial
+     * @param notification The notification to clear
+     * @param user The user receiving the notification
+     * @return true if successfully removed
+     */
+    public boolean clearNotification(User user, Notification notification) {
+        return userDAO.removeNotification(user, notification);
+    }
+
+    /**
+     * Get count of unread notifications for a user
+     * @param user The user
+     * @return Number of unread notifications
+     */
+    public int getUnreadNotificationCount(User user) {
+        return userDAO.getUnreadNotificationCount(user);
+    }
+
+    /**
+     * Get count of unread friend requests for a user
+     * @param user The user
+     * @return Number of unread friend requests
+     */
+    public int getUnreadFriendRequestCount(User user) {
+        return (int) getPendingFriendRequests(user).stream()
+                .filter(n -> !n.isRead())
+                .count();
+    }
+
+    /**
+     * Mark a notification as read
+     * @param user The user
+     * @param notification The notification to mark as read
+     * @return true if successful
+     */
+    public boolean markNotificationAsRead(User user, Notification notification) {
+        return userDAO.markNotificationAsRead(user, notification);
+    }
+
+    /**
+     * Mark all notifications as read for a user
+     * @param user The user
+     * @return true if successful
+     */
+    public boolean markAllNotificationsAsRead(User user) {
+        return userDAO.markAllNotificationsAsRead(user);
     }
 }
