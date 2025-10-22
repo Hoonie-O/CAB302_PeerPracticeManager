@@ -77,7 +77,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.3038529"
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\HoonieG15\IdeaProjects\CAB302_PeerPracticeManager\PeerPractice\src\main\resources\com\cab302\peerpractice" />
@@ -134,15 +134,25 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1759114530672" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/PeerPracticeManagerApp$All_in_PeerPractice.ic" NAME="All in PeerPractice Coverage Results" MODIFIED="1759063198289" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$All_in_PeerPractice.ic" NAME="All in PeerPractice Coverage Results" MODIFIED="1760324281249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1760804952172" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

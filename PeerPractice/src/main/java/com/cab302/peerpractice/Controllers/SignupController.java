@@ -6,6 +6,7 @@ import com.cab302.peerpractice.Navigation;
 import com.cab302.peerpractice.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.Duration;
 
 /**
  * <hr>
@@ -60,6 +61,12 @@ public class SignupController extends BaseController {
         super(ctx, nav);
     }
 
+    @FXML
+    public void initialize() {
+        makeInstant(passwordField.getTooltip());
+        makeInstant(confirmPasswordField.getTooltip());
+    }
+
     /**
      * <hr>
      * Handles the user registration process.
@@ -95,6 +102,13 @@ public class SignupController extends BaseController {
             // Catch validation errors (duplicate email, invalid username, etc.)
             messageLabel.setText(e.getMessage());
         }
+    }
+
+    private void makeInstant(Tooltip t) {
+        if (t == null) return;
+        t.setShowDelay(Duration.ZERO);          // show immediately
+        t.setHideDelay(Duration.millis(80));    // optional: quick hide
+        t.setShowDuration(Duration.INDEFINITE); // optional: stay while hovered
     }
 
     /**
