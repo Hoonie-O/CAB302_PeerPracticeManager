@@ -1,29 +1,38 @@
 package com.cab302.peerpractice.Model.Entities;
 
+import java.time.LocalDateTime;
+
 public abstract class Notification {
 
-   protected final User from;
-   protected final String to;
-   private String message;
-   private boolean approved;
-   private boolean denied;
+    private final User from;
+    private final User to;
+    private String msg;
+    private boolean approved;
+    private LocalDateTime createdAt;
+    private boolean isRead;
 
-   protected Notification(User from, String to ){
-       this.from = from;
-       this.to = to;
-   }
+    protected Notification(User from, User to) {
+        this.from = from;
+        this.to = to;
+        msg = "";
+        approved = false;
+        this.createdAt = LocalDateTime.now();
+        this.isRead = false;
+    }
 
-   public User getFrom(){ return from;}
+    public User getFrom() { return from; }
+    public User getTo() { return to; }
 
-    public String getTo(){return  to;}
+    public String getMsg() { return msg; }
+    public void setMsg(String msg) { this.msg = msg; }
 
-    public boolean isApproved(){return approved;}
-    public void approve(){approved = true;}
+    public boolean isApproved() { return approved; }
+    public void approve() { approved = true; }
 
-    public boolean isDenied(){return denied;}
-    public void deny(){denied = true;}
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-   public abstract String getMessage();
-
-
+    public boolean isRead() { return isRead; }
+    public void markAsRead() { this.isRead = true; }
+    public void markAsUnread() { this.isRead = false; }
 }

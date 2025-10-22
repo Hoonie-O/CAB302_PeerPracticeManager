@@ -14,11 +14,11 @@ public class Group {
     private String name;
     private int ID;
     private String description;
-    private String owner;
+    private User owner;
     private boolean require_approval;
     LocalDateTime created_at;
 
-    public Group(String name, String description,boolean require_approval,String owner,LocalDateTime created_at){
+    public Group(String name, String description,boolean require_approval,User owner,LocalDateTime created_at){
         this.name = name;
         this.description = description;
         this.require_approval = require_approval;
@@ -41,8 +41,8 @@ public class Group {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getOwner() { return owner; }
-    public void setOwner(String owner) { this.owner = owner; }
+    public User getOwner() { return owner; }
+    public void setOwner(User owner) { this.owner = owner; }
 
     public boolean isRequire_approval() { return require_approval; }
     public void setRequire_approval(boolean require_approval) { this.require_approval = require_approval; }
@@ -54,7 +54,7 @@ public class Group {
         return require_approval; 
     }
     
-    public String getCreatorUsername() { 
+    public User getCreatorUsername() {
         return owner; 
     }
 

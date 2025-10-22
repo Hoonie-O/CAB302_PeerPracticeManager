@@ -40,7 +40,7 @@ public class GroupManagerTest {
             ((MockUserDAO) userDAO).clear();
         }
 
-        Notifier notifier = new Notifier(userDAO);
+        Notifier notifier = new Notifier(userDAO, null);
         groupManager = new GroupManager(groupDAO, notifier, userDAO);
 
         // Use unique values to avoid clashes across runs
@@ -52,7 +52,7 @@ public class GroupManagerTest {
         userDAO.addUser(user);
 
         // Don't create the group in setup - let individual tests create it
-        group = new Group(NAME, DESCRIPTION, false, user.getUsername(), LocalDateTime.now());
+        group = new Group(NAME, DESCRIPTION, false, user, LocalDateTime.now());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class GroupManagerTest {
 
     @Test
     void testCreateGroupDuplicateGroup() throws SQLException {
-        Group duplicate = new Group(NAME, DESCRIPTION, false, USERNAME, LocalDateTime.now());
+        Group duplicate = new Group(NAME, DESCRIPTION, false, user, LocalDateTime.now());
         groupDAO.addGroup(duplicate);
         assertThrows(DuplicateGroupException.class,
                 () -> groupManager.createGroup(NAME, DESCRIPTION, false, user));
@@ -154,7 +154,7 @@ public class GroupManagerTest {
             assertEquals(NAME, retrievedGroup.getName());
             assertEquals(DESCRIPTION, retrievedGroup.getDescription());
             assertFalse(retrievedGroup.isRequire_approval());
-            assertEquals(user.getUsername(), retrievedGroup.getOwner());
+            assertEquals(user.getUsername(), retrievedGroup.getOwner().getUsername());
         } catch (Exception e) {
             fail();
         }

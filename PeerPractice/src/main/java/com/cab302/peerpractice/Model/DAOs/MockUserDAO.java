@@ -168,27 +168,38 @@ public class MockUserDAO implements IUserDAO {
 
     // -------------------- NOTIFICATIONS --------------------
 
-
     @Override
-    public boolean addNotification(String sentFrom, String receivedBy, String message) {
-        notifications.computeIfAbsent(receivedBy, k -> new ArrayList<>()).add(message);
+    public boolean addNotification(User sentFrom, User receivedBy, String message) {
+        notifications.computeIfAbsent(receivedBy.getUsername(), k -> new ArrayList<>()).add(message);
         return true;
     }
 
     @Override
-    public boolean addNotification(String username, Notification notification) {
-        if (notification == null) return false;
-        String message = notification.getMessage();  // extract text only
-        notifications.computeIfAbsent(username, k -> new ArrayList<>()).add(message);
-        return true;
+    public List<Notification> getNotificationsForUser(User user) {
+        return new ArrayList<>(); // Mock implementation - returns empty list
     }
 
     @Override
-    public boolean removeNotification(String username, Notification notification) {
+    public boolean markNotificationAsRead(User user, Notification notification) {
+        return true; // Mock implementation
+    }
+
+    @Override
+    public boolean markAllNotificationsAsRead(User user) {
+        return true; // Mock implementation
+    }
+
+    @Override
+    public int getUnreadNotificationCount(User user) {
+        return 0; // Mock implementation
+    }
+
+    @Override
+    public boolean removeNotification(User username, Notification notification) {
         if (notification == null) return false;
-        List<String> list = notifications.get(username);
+        List<String> list = notifications.get(username.getUsername());
         if (list == null) return false;
-        return list.remove(notification.getMessage());  // compare by message text
+        return list.remove(notification.getMsg());  // compare by message text
     }
 
     /**

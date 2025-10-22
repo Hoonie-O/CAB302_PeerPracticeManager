@@ -3,6 +3,7 @@ package com.cab302.peerpractice.Model.DAOs;
 import com.cab302.peerpractice.Exceptions.DuplicateUsernameException;
 import com.cab302.peerpractice.Exceptions.DuplicateEmailException;
 import com.cab302.peerpractice.Model.Entities.Notification;
+import com.cab302.peerpractice.Model.Entities.FriendRequestNotification;
 import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Model.Utils.SQLiteConnection;
 import javafx.collections.FXCollections;
@@ -47,6 +48,9 @@ public class UserDAO implements IUserDAO {
                 "sent_from TEXT, " +
                 "received_by TEXT, " +
                 "message TEXT, " +
+                "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                "read_status INTEGER DEFAULT 0, " +
+                "notification_type TEXT DEFAULT 'friend_request', " +
                 "FOREIGN KEY(sent_from) REFERENCES users(user_id), " +
                 "FOREIGN KEY(received_by) REFERENCES users(user_id)" +
                 ");";
@@ -247,11 +251,11 @@ public class UserDAO implements IUserDAO {
 
     // -------------------- NOTIFICATIONS --------------------
     @Override
-    public boolean addNotification(String sentFrom, String receivedBy, String message) {
+    public boolean addNotification(User sentFrom, User receivedBy, String message) {
         String sql = "INSERT INTO notifications (sent_from, received_by, message) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, sentFrom);
-            ps.setString(2, receivedBy);
+            ps.setString(1, sentFrom.getUserId());
+            ps.setString(2, receivedBy.getUserId());
             ps.setString(3, message);
             ps.executeUpdate();
             return true;
@@ -259,10 +263,99 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public boolean addNotification(String username, Notification notification) {
-        return addNotification(username, username, notification.toString());
+    public List<Notification> getNotificationsForUser(User user) {
+        String sql = "SELECT n.*, u.* FROM notifications n " +
+                "JOIN users u ON n.sent_from = u.user_id " +
+                "WHERE n.received_by = ? " +
+                "ORDER BY n.created_at DESC";
+        List<Notification> notifications = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUserId());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User from = mapUser(rs);
+                    FriendRequestNotification notif = new FriendRequestNotification(from, user);
+
+                    // Set timestamp
+                    try {
+                        String createdAt = rs.getString("created_at");
+                        if (createdAt != null) {
+                            notif.setCreatedAt(java.time.LocalDateTime.parse(createdAt));
+                        }
+                    } catch (Exception ignored) {}
+
+                    // Set read status
+                    try {
+                        int readStatus = rs.getInt("read_status");
+                        if (readStatus == 1) {
+                            notif.markAsRead();
+                        }
+                    } catch (Exception ignored) {}
+
+                    notifications.add(notif);
+                }
+            }
+        } catch (SQLException e) {
+            // Return empty list if query fails
+        }
+        return notifications;
     }
 
     @Override
-    public boolean removeNotification(String username, Notification notification) { return false; }
+    public boolean removeNotification(User user, Notification notification) {
+        String sql = "DELETE FROM notifications WHERE received_by = ? AND sent_from = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUserId());
+            ps.setString(2, notification.getFrom().getUserId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { return false; }
+    }
+
+    /**
+     * Mark a notification as read
+     * @param user The user receiving the notification
+     * @param notification The notification to mark as read
+     * @return true if successfully updated
+     */
+    public boolean markNotificationAsRead(User user, Notification notification) {
+        String sql = "UPDATE notifications SET read_status = 1 WHERE received_by = ? AND sent_from = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUserId());
+            ps.setString(2, notification.getFrom().getUserId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { return false; }
+    }
+
+    /**
+     * Mark all notifications for a user as read
+     * @param user The user
+     * @return true if successfully updated
+     */
+    public boolean markAllNotificationsAsRead(User user) {
+        String sql = "UPDATE notifications SET read_status = 1 WHERE received_by = ? AND read_status = 0";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUserId());
+            return ps.executeUpdate() >= 0;
+        } catch (SQLException e) { return false; }
+    }
+
+    /**
+     * Get count of unread notifications for a user
+     * @param user The user
+     * @return Count of unread notifications
+     */
+    public int getUnreadNotificationCount(User user) {
+        String sql = "SELECT COUNT(*) as count FROM notifications WHERE received_by = ? AND read_status = 0";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUserId());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count");
+                }
+            }
+        } catch (SQLException e) {
+            // Return 0 if query fails
+        }
+        return 0;
+    }
 }

@@ -10,7 +10,7 @@ public class Friend {
     public Friend(User user1, User user2, FriendStatus status) {
         this.user1 = Objects.requireNonNull(user1, "Must include two users");
         this.user2 = Objects.requireNonNull(user2, "Must include two users");
-        this.status = FriendStatus.PENDING;
+        this.status = status != null ? status : FriendStatus.PENDING;
 
         if (user1 ==  user2) {
             throw new IllegalArgumentException("Users cannot be the same");

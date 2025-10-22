@@ -81,7 +81,7 @@ public class SessionCalendarDAO implements ISessionCalendarDAO {
 
         int groupId = rs.getInt("group_id");
         if (!rs.wasNull()) {
-            Group g = new Group("Unknown", "", false, "unknown", LocalDateTime.now());
+            Group g = new Group("Unknown", "", false, null, LocalDateTime.now());
             g.setID(groupId);
             s.setGroup(g);
         }

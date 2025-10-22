@@ -53,7 +53,7 @@ class GroupDAOTest {
     @Test
     void addGroup_assignsIdAndOwnerIsAdmin() {
         Group g = new Group("Study Group", "Testing group", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         assertTrue(groupId > 0);
@@ -64,7 +64,7 @@ class GroupDAOTest {
     @Test
     void searchById_returnsCorrectGroup() {
         Group g = new Group("Math Group", "Desc", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         Group found = groupDao.searchByID(groupId);
@@ -75,7 +75,7 @@ class GroupDAOTest {
     @Test
     void searchByUser_returnsGroupsWhereUserIsMember() {
         Group g = new Group("Physics Group", "Desc", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         assertTrue(groupDao.addToGroup(groupId, bob));
@@ -88,9 +88,9 @@ class GroupDAOTest {
     @Test
     void searchByName_findsGroupsWithPartialMatch() {
         groupDao.addGroup(new Group("Chemistry Club", "Desc", false,
-                alice.getUsername(), LocalDateTime.now()));
+                alice, LocalDateTime.now()));
         groupDao.addGroup(new Group("Chess Club", "Desc", false,
-                alice.getUsername(), LocalDateTime.now()));
+                alice, LocalDateTime.now()));
 
         List<Group> results = groupDao.searchByName("Club");
         assertEquals(2, results.size());
@@ -99,7 +99,7 @@ class GroupDAOTest {
     @Test
     void updateGroup_changesNameAndDescription() {
         Group g = new Group("Old Name", "Old desc", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         g.setName("New Name");
@@ -114,7 +114,7 @@ class GroupDAOTest {
     @Test
     void setRequireApproval_andExistsByName() {
         Group g = new Group("Approval Group", "Desc", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         assertTrue(groupDao.existsByName("Approval Group"));
@@ -127,7 +127,7 @@ class GroupDAOTest {
     @Test
     void getGroupMembers_includesOwnerAndAddedMembers() {
         Group g = new Group("Music Group", "Desc", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         groupDao.addToGroup(groupId, bob);
@@ -139,7 +139,7 @@ class GroupDAOTest {
     @Test
     void promoteAndRemoveMember_flow() {
         Group g = new Group("Sports Group", "Desc", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         groupDao.addToGroup(groupId, bob);
@@ -152,7 +152,7 @@ class GroupDAOTest {
     @Test
     void processJoinRequest_approvesAndAddsMember() {
         Group g = new Group("Joinable Group", "Desc", true,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         // Manually insert join request
@@ -178,7 +178,7 @@ class GroupDAOTest {
     @Test
     void deleteGroup_removesIt() {
         Group g = new Group("Delete Group", "Desc", false,
-                alice.getUsername(), LocalDateTime.now());
+                alice, LocalDateTime.now());
         int groupId = groupDao.addGroup(g);
 
         assertTrue(groupDao.deleteGroup(groupId));

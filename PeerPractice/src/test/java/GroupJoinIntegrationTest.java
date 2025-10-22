@@ -30,7 +30,7 @@ public class GroupJoinIntegrationTest {
         userDao = new UserDAO();
         groupDao = new GroupDAO(userDao);
         
-        Notifier notifier = new Notifier(userDao);
+        Notifier notifier = new Notifier(userDao, null);
         groupManager = new GroupManager(groupDao, notifier, userDao);
         
         var sessionStorage = new SessionCalendarDAO(userDao);
@@ -48,7 +48,7 @@ public class GroupJoinIntegrationTest {
         userDao.addUser(alice);
         userDao.addUser(bob);
         
-        testGroup = new Group("Join Test Group " + timestamp, "Testing group join functionality", false, alice.getUsername(), LocalDateTime.now());
+        testGroup = new Group("Join Test Group " + timestamp, "Testing group join functionality", false, alice, LocalDateTime.now());
         groupDao.addGroup(testGroup);
     }
     
@@ -149,7 +149,7 @@ public class GroupJoinIntegrationTest {
     void testApprovalRequiredGroups() throws Exception {
         // Create a group requiring approval
         String testTimestamp = String.valueOf(System.currentTimeMillis());
-        Group approvalGroup = new Group("Approval Required Group " + testTimestamp, "Need approval to join", true, alice.getUsername(), LocalDateTime.now());
+        Group approvalGroup = new Group("Approval Required Group " + testTimestamp, "Need approval to join", true, alice, LocalDateTime.now());
         groupDao.addGroup(approvalGroup);
         
         try {

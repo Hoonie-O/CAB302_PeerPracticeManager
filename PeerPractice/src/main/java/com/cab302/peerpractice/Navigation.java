@@ -1,11 +1,13 @@
 package com.cab302.peerpractice;
 
+import com.cab302.peerpractice.Controllers.PopupController;
 import com.cab302.peerpractice.Exceptions.ControllerFactoryFailedException;
 import com.cab302.peerpractice.Model.Entities.User;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 
@@ -21,6 +23,24 @@ public final class Navigation {
         this.stage = Objects.requireNonNull(stage, "stage");
         this.ctx = ctx;
     }
+
+    /**
+     * Displays a popup on the main stage
+     * @param popup The popup to display
+     */
+    public void displayPopup(Popup popup) {
+        try {
+            popup.show(stage,
+                    stage.getX() + stage.getWidth() - 200,
+                    stage.getY() + stage.getHeight() - 100);
+
+            popup.requestFocus();
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Failed to load: " + popup, e);
+        }    }
 
     public void Display(View view) {
         try {

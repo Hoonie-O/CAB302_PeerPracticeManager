@@ -6,6 +6,7 @@ import com.cab302.peerpractice.Model.Entities.Notification;
 import com.cab302.peerpractice.Model.Entities.User;
 import javafx.collections.ObservableList;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface IUserDAO {
     User findUser(String column, String value) throws SQLException;
@@ -13,7 +14,7 @@ public interface IUserDAO {
 
     User findUserById(String userId) throws SQLException;
     boolean createUser(String username, String password, String firstName, String lastName, String email, String institution) throws SQLException, DuplicateUsernameException, DuplicateEmailException;
-    boolean addNotification(String sentFrom, String receivedBy, String message) throws SQLException;
+    boolean addNotification(User sentFrom, User receivedBy, String message) throws SQLException;
     boolean updateValue(String username, String column, String value) throws SQLException;
     boolean deleteUser(String userID) throws SQLException;
     
@@ -31,8 +32,11 @@ public interface IUserDAO {
     java.util.List<User> getAllUsers();
     boolean storePassword(User user, String hash);
     String getPassword(User user);
-    boolean addNotification(String username, Notification notification);
-    boolean removeNotification(String username, Notification notification);
+    List<Notification> getNotificationsForUser(User user);
+    boolean markNotificationAsRead(User user, Notification notification);
+    boolean markAllNotificationsAsRead(User user);
+    int getUnreadNotificationCount(User user);
+    boolean removeNotification(User username, Notification notification);
 
 
 }

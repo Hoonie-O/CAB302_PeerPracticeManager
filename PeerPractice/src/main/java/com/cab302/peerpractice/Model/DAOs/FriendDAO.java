@@ -54,9 +54,11 @@ public class FriendDAO implements IFriendDAO {
     @Override
     public boolean addFriend(User user, User friend) throws SQLException, DuplicateFriendException {
         if (Objects.equals(user.getUsername(), friend.getUsername())) return false;
-        if (friendExists(user, friend)) {
-            if (acceptFriendRequest(user, friend)) return true;
-            throw new DuplicateFriendException("Friend already exists");
+        if (friendExists(user, friend)) return false;
+
+        // Check if either user has blocked the other
+        if (isBlocked(user, friend) || isBlocked(friend, user)) {
+            return false; // Cannot add friend if either has blocked the other
         }
 
         String sql = "INSERT INTO friends (user, friend, status) VALUES (?, ?, 'pending')";
@@ -72,7 +74,29 @@ public class FriendDAO implements IFriendDAO {
     // -------------------- UPDATE --------------------
     @Override
     public boolean acceptFriendRequest(User user, User friend) throws SQLException {
-        return updateFriendStatus(user, friend, "accepted");
+        // Update the original request to accepted
+        boolean updated = updateFriendStatus(user, friend, "accepted");
+
+        // Create or update the reciprocal friendship so both users see each other as friends
+        if (updated) {
+            // Check if reciprocal entry exists
+            if (friendExists(friend, user)) {
+                // If it exists, update its status to accepted as well
+                updateFriendStatus(friend, user, "accepted");
+            } else {
+                // If it doesn't exist, create it with accepted status
+                String sql = "INSERT INTO friends (user, friend, status) VALUES (?, ?, 'accepted')";
+                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                    ps.setString(1, friend.getUsername());
+                    ps.setString(2, user.getUsername());
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException("Failed to create reciprocal friendship", e);
+                }
+            }
+        }
+
+        return updated;
     }
 
     @Override
@@ -83,6 +107,37 @@ public class FriendDAO implements IFriendDAO {
     @Override
     public boolean blockUser(User user, User friend) throws SQLException {
         return updateFriendStatus(user, friend, "blocked");
+    }
+
+    @Override
+    public boolean unblockUser(User user, User friend) throws SQLException {
+        // Remove the blocked status entry
+        return removeFriend(user, friend);
+    }
+
+    @Override
+    public ObservableList<Friend> getBlockedUsers(User user) throws SQLException {
+        String sql = "SELECT * FROM friends WHERE user = ? AND status = 'blocked' ORDER BY friend";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            try (ResultSet rs = ps.executeQuery()) {
+                return resultsToList(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get blocked users for user: " + user.getUsername(), e);
+        }
+    }
+
+    @Override
+    public boolean isBlocked(User user, User friend) throws SQLException {
+        String sql = "SELECT 1 FROM friends WHERE user = ? AND friend = ? AND status = 'blocked'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, friend.getUsername());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
     }
 
     private boolean updateFriendStatus(User user, User friend, String status) throws SQLException {

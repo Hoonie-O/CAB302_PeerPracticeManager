@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class TestNotification extends Notification {
     private final String message;
 
-    public TestNotification(User from, String to, String message) {
+    public TestNotification(User from, User to, String message) {
         super(from, to);
         this.message = message;
     }
 
     @Override
-    public String getMessage() {
+    public String getMsg() {
         return message;
     }
 
@@ -168,12 +168,12 @@ class UserDAOTest {
     // -------------------- NOTIFICATIONS --------------------
     @Test
     void addNotification_insertsRow() {
-        assertTrue(userDao.addNotification(alice.getUserId(), bob.getUserId(), "Hello!"));
+        assertTrue(userDao.addNotification(alice, bob, "Hello!"));
     }
 
     @Test
     void addNotificationWithObject_insertsRow() {
-        Notification n = new TestNotification(alice, bob.getUserId(), "Reminder: study session");
-        assertTrue(userDao.addNotification(alice.getUserId(), n));
+        Notification n = new TestNotification(alice, bob, "Reminder: study session");
+        assertTrue(userDao.addNotification(alice, bob, n.getMsg()));
     }
 }

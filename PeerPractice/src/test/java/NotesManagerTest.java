@@ -2,6 +2,7 @@ import com.cab302.peerpractice.Model.DAOs.*;
 import com.cab302.peerpractice.Model.Entities.Chapter;
 import com.cab302.peerpractice.Model.Entities.Group;
 import com.cab302.peerpractice.Model.Entities.Note;
+import com.cab302.peerpractice.Model.Entities.User;
 import com.cab302.peerpractice.Model.Managers.NotesManager;
 import org.junit.jupiter.api.*;
 
@@ -26,9 +27,11 @@ public class NotesManagerTest {
         notesDAO = new MockNotesDAO();
         notesManager = new NotesManager(notesDAO, groupDAO);
 
+        User user = new User("firstName", "lastName", "username", "email@example.com", "passwordHash", "institution");
+
         // Create a fresh test group
         Group testGroup = new Group("group", "group description", false,
-                UUID.randomUUID().toString(), LocalDateTime.now());
+                user, LocalDateTime.now());
         groupID = groupDAO.addGroup(testGroup);
     }
 
