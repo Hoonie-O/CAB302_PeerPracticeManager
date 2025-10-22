@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class cSessionManager {
+public class SessionManager {
     private final List<Session> sessions;
     private final SessionCalendarManager calendarManager;
 

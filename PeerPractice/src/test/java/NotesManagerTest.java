@@ -27,7 +27,7 @@ public class NotesManagerTest {
         notesDAO = new MockNotesDAO();
         notesManager = new NotesManager(notesDAO, groupDAO);
 
-        User user = new User("firstName", "lastName", "username", "email", "passwordHash", "institution");
+        User user = new User("firstName", "lastName", "username", "email@example.com", "passwordHash", "institution");
 
         // Create a fresh test group
         Group testGroup = new Group("group", "group description", false,

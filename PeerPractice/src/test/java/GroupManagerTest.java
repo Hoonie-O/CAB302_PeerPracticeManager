@@ -154,7 +154,7 @@ public class GroupManagerTest {
             assertEquals(NAME, retrievedGroup.getName());
             assertEquals(DESCRIPTION, retrievedGroup.getDescription());
             assertFalse(retrievedGroup.isRequire_approval());
-            assertEquals(user.getUsername(), retrievedGroup.getOwner());
+            assertEquals(user.getUsername(), retrievedGroup.getOwner().getUsername());
         } catch (Exception e) {
             fail();
         }

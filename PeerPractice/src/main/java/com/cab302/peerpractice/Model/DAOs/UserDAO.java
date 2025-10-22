@@ -303,10 +303,10 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public boolean removeNotification(User user, Notification notification) {
-        String sql = "DELETE FROM notifications WHERE received_by = ? AND message = ? LIMIT 1";
+        String sql = "DELETE FROM notifications WHERE received_by = ? AND sent_from = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getUserId());
-            ps.setString(2, notification.getMsg());
+            ps.setString(2, notification.getFrom().getUserId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { return false; }
     }
@@ -318,10 +318,10 @@ public class UserDAO implements IUserDAO {
      * @return true if successfully updated
      */
     public boolean markNotificationAsRead(User user, Notification notification) {
-        String sql = "UPDATE notifications SET read_status = 1 WHERE received_by = ? AND message = ? LIMIT 1";
+        String sql = "UPDATE notifications SET read_status = 1 WHERE received_by = ? AND sent_from = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getUserId());
-            ps.setString(2, notification.getMsg());
+            ps.setString(2, notification.getFrom().getUserId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { return false; }
     }

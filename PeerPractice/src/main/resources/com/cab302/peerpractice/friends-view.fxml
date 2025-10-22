@@ -48,6 +48,10 @@
                                 text="+ Add Friend"
                                 onAction="#addFriend"
                                 styleClass="modern-button"/>
+                        <Button fx:id="messageButton"
+                                text="💬 Message"
+                                onAction="#openMessageDialog"
+                                styleClass="modern-button-accent"/>
                         <Button fx:id="removeFriend"
                                 text="Remove"
                                 onAction="#removeFriend"
@@ -56,6 +60,10 @@
                                 text="📨 Requests"
                                 onAction="#viewRequests"
                                 styleClass="modern-button-accent"/>
+                        <Button fx:id="viewBlocked"
+                                text="🚫 Blocked"
+                                onAction="#viewBlockedUsers"
+                                styleClass="modern-button-secondary"/>
                     </HBox>
 
                     <TableView fx:id="friendsTable" VBox.vgrow="ALWAYS" minHeight="500"/>

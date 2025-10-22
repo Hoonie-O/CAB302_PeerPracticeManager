@@ -8,10 +8,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface IFriendDAO {
-    List<Friend> getFriends(User user) throws SQLException;
+    javafx.collections.ObservableList<Friend> getFriends(User user) throws SQLException;
     boolean addFriend(User user, User friend) throws SQLException, DuplicateFriendException;
     boolean removeFriend(User user, User friend) throws SQLException;
     boolean acceptFriendRequest(User user, User friend) throws SQLException;
     boolean denyFriendRequest(User user, User friend) throws SQLException;
     boolean blockUser(User user, User friend) throws SQLException;
+    boolean unblockUser(User user, User friend) throws SQLException;
+    javafx.collections.ObservableList<Friend> getBlockedUsers(User user) throws SQLException;
+    boolean isBlocked(User user, User friend) throws SQLException;
 }

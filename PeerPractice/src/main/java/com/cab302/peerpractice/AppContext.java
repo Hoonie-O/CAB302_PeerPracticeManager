@@ -23,6 +23,7 @@ public class AppContext {
     private final ISessionTaskDAO sessionTaskDAO;
     private final IAvailabilityDAO availabilityDAO;
     private final IGroupMessageDAO groupMessageDAO;
+    private final IFriendMessageDAO friendMessageDAO;
 
     // --- Managers & Services ---
     private final Notifier notifier;
@@ -51,6 +52,7 @@ public class AppContext {
             this.sessionTaskDAO = new SessionTaskDAO(userDAO);
             this.availabilityDAO = new AvailabilityDAO(userDAO);
             this.groupMessageDAO = new GroupMessageDAO();
+            this.friendMessageDAO = new FriendMessageDAO();
 
             // Services & utilities
             this.notifier = new Notifier(userDAO, friendDAO);
@@ -134,6 +136,7 @@ public class AppContext {
     public ISessionTaskDAO getSessionTaskDAO() { return sessionTaskDAO; }
     public IAvailabilityDAO getAvailabilityDAO() { return availabilityDAO; }
     public IGroupMessageDAO getGroupMessageDAO() { return groupMessageDAO; }
+    public IFriendMessageDAO getFriendMessageDAO() { return friendMessageDAO; }
 
     public PasswordHasher getPasswordHasher() { return passwordHasher; }
     public Notifier getNotifier() { return notifier; }

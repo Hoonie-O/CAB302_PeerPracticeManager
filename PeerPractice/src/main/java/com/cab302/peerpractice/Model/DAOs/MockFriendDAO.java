@@ -87,6 +87,47 @@ public class MockFriendDAO implements IFriendDAO {
         return updateFriendStatus(user, friend, FriendStatus.BLOCKED);
     }
 
+    @Override
+    public boolean unblockUser(User user, User friend) throws SQLException {
+        return removeFriend(user, friend);
+    }
+
+    @Override
+    public ObservableList<Friend> getBlockedUsers(User user) throws SQLException {
+        ObservableList<Friend> list = FXCollections.observableArrayList();
+
+        friendRelations.forEach((k, status) -> {
+            if (status == FriendStatus.BLOCKED) {
+                String[] parts = k.split(":");
+                if (parts[0].equals(user.getUsername())) {
+                    User u1 = null;
+                    try {
+                        u1 = userDAO.findUser("username", parts[0]);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    User u2 = null;
+                    try {
+                        u2 = userDAO.findUser("username", parts[1]);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if (u1 != null && u2 != null) {
+                        list.add(new Friend(u1, u2, status));
+                    }
+                }
+            }
+        });
+
+        return list;
+    }
+
+    @Override
+    public boolean isBlocked(User user, User friend) throws SQLException {
+        String k = key(user, friend);
+        return friendRelations.containsKey(k) && friendRelations.get(k) == FriendStatus.BLOCKED;
+    }
+
     private boolean updateFriendStatus(User user, User friend, FriendStatus status) {
         String k = key(user, friend);
         if (friendRelations.containsKey(k)) {

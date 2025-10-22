@@ -55,10 +55,10 @@ public class GroupManager {
         if(user == null) throw new IllegalArgumentException("User can't be null");
         if(toAdd == null || toAdd.isEmpty()) throw new IllegalArgumentException("User to add can't be null or empty");
 
-        if(!group.getOwner().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
-
         User userToAdd = userDAO.findUser("username", toAdd);
         if(userToAdd == null) throw new UserNotFoundException("User to add couldn't be found");
+
+        if(!group.getOwner().getUsername().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
 
         group.addMember(userToAdd);
         groupDAO.addToGroup(group.getID(), userToAdd);
@@ -83,7 +83,7 @@ public class GroupManager {
         if(group == null) throw  new IllegalArgumentException("Group can't be null");
         if(notification == null) throw new IllegalArgumentException("Notification can't be null");
 
-        if(!group.getOwner().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
+        if(!group.getOwner().getUsername().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
 
         notifier.approveNotification(user,notification);
 
@@ -99,7 +99,7 @@ public class GroupManager {
         if(group == null) throw new IllegalArgumentException("Group can't be null");
         if(notification == null) throw new IllegalArgumentException("Notification can't be null");
 
-        if(!group.getOwner().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
+        if(!group.getOwner().getUsername().equals(user.getUsername())) throw new InsufficientPermissionsException("You are not the owner of the group");
 
         notifier.denyNotification(user,notification);
     }
@@ -127,7 +127,7 @@ public class GroupManager {
         if (group == null || user == null) return false;
 
         // Check if user is the original owner
-        if (group.getOwner().equals(user.getUsername())) {
+        if (group.getOwner().getUsername().equals(user.getUsername())) {
             return true;
         }
 
@@ -164,7 +164,7 @@ public class GroupManager {
         }
 
         // Can't demote the original owner
-        if (group.getOwner().equals(userToDemote.getUsername())) {
+        if (group.getOwner().getUsername().equals(userToDemote.getUsername())) {
             throw new InsufficientPermissionsException("Cannot demote the group owner");
         }
 
@@ -188,7 +188,7 @@ public class GroupManager {
         }
 
         // Can't kick the original owner
-        if (group.getOwner().equals(memberToKick.getUsername())) {
+        if (group.getOwner().getUsername().equals(memberToKick.getUsername())) {
             throw new InsufficientPermissionsException("Cannot kick the group owner");
         }
 
@@ -210,7 +210,7 @@ public class GroupManager {
         }
 
         // Only the original owner can delete the group
-        if (!group.getOwner().equals(user.getUsername())) {
+        if (!group.getOwner().getUsername().equals(user.getUsername())) {
             throw new InsufficientPermissionsException("Only the group owner can delete the group");
         }
 
