@@ -1,159 +1,356 @@
 package com.cab302.peerpractice;
 
 import com.cab302.peerpractice.Model.DAOs.*;
-import com.cab302.peerpractice.Model.Entities.Group;
-import com.cab302.peerpractice.Model.Entities.User;
+import com.cab302.peerpractice.Model.Factories.DAOFactory;
+import com.cab302.peerpractice.Model.Factories.ManagerFactory;
+import com.cab302.peerpractice.Model.Initializers.TestDataInitializer;
 import com.cab302.peerpractice.Model.Managers.*;
-import com.cab302.peerpractice.Model.Utils.BcryptHasher;
 import com.cab302.peerpractice.Model.Utils.PasswordHasher;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
-@SuppressWarnings("ALL")
+/**
+ * Application context providing access to services, managers, and application state.
+ *
+ * REFACTORED to follow the Factory Method pattern and Single Responsibility Principle.
+ * This class now delegates creation to specialized factories and focuses on
+ * coordinating application-level concerns.
+ *
+ * Architecture:
+ * - DAOFactory: Creates and manages all DAO instances
+ * - ManagerFactory: Creates and manages all Manager/Service instances
+ * - TestDataInitializer: Handles test data setup (separated concern)
+ *
+ * @see DAOFactory
+ * @see ManagerFactory
+ * @see TestDataInitializer
+ */
 public class AppContext {
-    private final UserSession userSession = new UserSession();
 
-    // --- DAO layer ---
-    private final IUserDAO userDAO;
-    private final IFriendDAO friendDAO;
-    private final IGroupDAO groupDAO;
-    private final INotesDAO notesDAO;
-    private final ISessionCalendarDAO sessionCalendarDAO;
-    private final ISessionTaskDAO sessionTaskDAO;
-    private final IAvailabilityDAO availabilityDAO;
-    private final IGroupMessageDAO groupMessageDAO;
-    private final IFriendMessageDAO friendMessageDAO;
+    // Core application components
+    private final UserSession userSession;
+    private final DAOFactory daoFactory;
+    private final ManagerFactory managerFactory;
 
-    // --- Managers & Services ---
-    private final Notifier notifier;
-    private final PasswordHasher passwordHasher;
-    private final UserManager userManager;
-    private final GroupManager groupManager;
-    private final MailService mailService;
-    private final SessionManager sessionManager;
-    private final SessionTaskManager sessionTaskManager;
-    private final SessionCalendarManager sessionCalendarManager;
-    private final AvailabilityManager availabilityManager;
-    private final NotesManager notesManager;
-    private final GroupMessageManager groupMessageManager;
-
+    // UI state (will be refactored to separate UIStateManager in future iteration)
     private boolean menuOpen = false;
     private boolean profileOpen = false;
 
+    /**
+     * Creates the application context and initializes all services.
+     *
+     * @throws SQLException if database initialization fails
+     */
     public AppContext() throws SQLException {
         try {
-            // DAO instantiation
-            this.userDAO = new UserDAO();
-            this.friendDAO = new FriendDAO(userDAO);
-            this.groupDAO = new GroupDAO(userDAO);
-            this.notesDAO = new NotesDAO();
-            this.sessionCalendarDAO = new SessionCalendarDAO(userDAO);
-            this.sessionTaskDAO = new SessionTaskDAO(userDAO);
-            this.availabilityDAO = new AvailabilityDAO(userDAO);
-            this.groupMessageDAO = new GroupMessageDAO();
-            this.friendMessageDAO = new FriendMessageDAO();
+            // Initialize user session
+            this.userSession = new UserSession();
 
-            // Services & utilities
-            this.notifier = new Notifier(userDAO, friendDAO);
-            this.passwordHasher = new BcryptHasher();
-            this.mailService = new MailService();
+            // Initialize factories
+            this.daoFactory = DAOFactory.getInstance();
+            this.managerFactory = new ManagerFactory(daoFactory);
 
-            // Managers
-            this.userManager = new UserManager(userDAO, passwordHasher);
-            this.groupManager = new GroupManager(groupDAO, notifier, userDAO);
-            this.notesManager = new NotesManager(notesDAO, groupDAO);
-            this.groupMessageManager = new GroupMessageManager(groupMessageDAO);
-
-            this.sessionCalendarManager = new SessionCalendarManager(sessionCalendarDAO);
-            this.sessionManager = new SessionManager(this.sessionCalendarManager);
-            this.sessionTaskManager = new SessionTaskManager(sessionTaskDAO, this.sessionManager);
-
-            this.sessionCalendarManager.setSessionTaskManager(this.sessionTaskManager);
-
-            this.availabilityManager = new AvailabilityManager(availabilityDAO);
-
-            // --- Ensure John Doe exists ---
-            User john = userDAO.findUser("username", "Testuser17");
-            if (john == null) {
-                try {
-                    this.userManager.signUp(
-                            "John",                 // first name
-                            "Doe",                  // last name
-                            "Testuser17",           // username
-                            "testjohn@mail.com",    // email
-                            "Testuser17$",          // password (plain, manager will hash/validate)
-                            "QUT"                   // institution
-                    );
-                    john = userDAO.findUser("username", "Testuser17");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // --- Ensure Jane Doe exists ---
-            User jane = userDAO.findUser("username", "Testuser18");
-            if (jane == null) {
-                try {
-                    this.userManager.signUp(
-                            "Jane",
-                            "Doe",
-                            "Testuser18",
-                            "testjane@mail.com",
-                            "Testuser18$",
-                            "QUT"
-                    );
-                    jane = userDAO.findUser("username", "Testuser18");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // --- Always ensure group exists for John Doe ---
-            if (!groupDAO.existsByName("Example Group")) {
-                Group testGroup = new Group(
-                        "Example Group",
-                        "This is a test group",
-                        false,
-                        john,
-                        LocalDateTime.now()
+            // Initialize test data (only in development/test environments)
+            if (TestDataInitializer.isEnabled()) {
+                TestDataInitializer testDataInitializer = new TestDataInitializer(
+                    daoFactory.getUserDAO(),
+                    daoFactory.getGroupDAO(),
+                    managerFactory.getUserManager()
                 );
-                this.groupDAO.addGroup(testGroup);
+                testDataInitializer.initializeTestData();
             }
-            this.groupDAO.addToGroup(1, john);
+
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to initialise AppContext", e);
+            throw new IllegalStateException("Failed to initialize AppContext", e);
         }
     }
 
-    // --- Getters ---
-    public UserSession getUserSession() { return userSession; }
-    public IUserDAO getUserDAO() { return userDAO; }
-    public IFriendDAO getFriendDAO() { return friendDAO; }
-    public IGroupDAO getGroupDAO() { return groupDAO; }
-    public INotesDAO getNotesDAO() { return notesDAO; }
-    public ISessionCalendarDAO getSessionCalendarDAO() { return sessionCalendarDAO; }
-    public ISessionTaskDAO getSessionTaskDAO() { return sessionTaskDAO; }
-    public IAvailabilityDAO getAvailabilityDAO() { return availabilityDAO; }
-    public IGroupMessageDAO getGroupMessageDAO() { return groupMessageDAO; }
-    public IFriendMessageDAO getFriendMessageDAO() { return friendMessageDAO; }
+    // ========================================
+    // PUBLIC API - Manager Access (PREFERRED)
+    // ========================================
 
-    public PasswordHasher getPasswordHasher() { return passwordHasher; }
-    public Notifier getNotifier() { return notifier; }
-    public MailService getMailService() { return mailService; }
+    /**
+     * Gets the user session manager.
+     *
+     * @return the UserSession
+     */
+    public UserSession getUserSession() {
+        return userSession;
+    }
 
-    public UserManager getUserManager() { return userManager; }
-    public GroupManager getGroupManager() { return groupManager; }
-    public NotesManager getNotesManager() { return notesManager; }
-    public SessionManager getSessionManager() { return sessionManager; }
-    public SessionTaskManager getSessionTaskManager() { return sessionTaskManager; }
-    public SessionCalendarManager getSessionCalendarManager() { return sessionCalendarManager; }
-    public AvailabilityManager getAvailabilityManager() { return availabilityManager; }
-    public GroupMessageManager getGroupMessageManager() { return groupMessageManager; }
+    /**
+     * Gets the user authentication service (PREFERRED).
+     *
+     * Use this for authentication operations: signup, login, password changes.
+     *
+     * @return the UserAuthenticationService
+     */
+    public com.cab302.peerpractice.Model.Services.UserAuthenticationService getUserAuthenticationService() {
+        return managerFactory.getUserAuthenticationService();
+    }
 
-    public boolean isMenuOpen() { return menuOpen; }
-    public void setMenuOpen(boolean value) { this.menuOpen = value; }
-    public boolean isProfileOpen() { return profileOpen; }
-    public void setProfileOpen(boolean value) { this.profileOpen = value; }
+    /**
+     * Gets the user profile service (PREFERRED).
+     *
+     * Use this for profile updates: name, phone, address, bio, etc.
+     *
+     * @return the UserProfileService
+     */
+    public com.cab302.peerpractice.Model.Services.UserProfileService getUserProfileService() {
+        return managerFactory.getUserProfileService();
+    }
 
+    /**
+     * Gets the user manager for user-related operations.
+     *
+     * @return the UserManager
+     * @deprecated Use {@link #getUserAuthenticationService()} for authentication
+     *             and {@link #getUserProfileService()} for profile updates.
+     */
+    @Deprecated
+    public UserManager getUserManager() {
+        return managerFactory.getUserManager();
+    }
+
+    /**
+     * Gets the group operation service (PREFERRED).
+     *
+     * Use this for group operations: create, delete, member management, join requests.
+     *
+     * @return the GroupOperationService
+     */
+    public com.cab302.peerpractice.Model.Services.GroupOperationService getGroupOperationService() {
+        return managerFactory.getGroupOperationService();
+    }
+
+    /**
+     * Gets the group role service (PREFERRED).
+     *
+     * Use this for role management: promote, demote, role checking.
+     *
+     * @return the GroupRoleService
+     */
+    public com.cab302.peerpractice.Model.Services.GroupRoleService getGroupRoleService() {
+        return managerFactory.getGroupRoleService();
+    }
+
+    /**
+     * Gets the group manager for group-related operations.
+     *
+     * @return the GroupManager
+     * @deprecated Use {@link #getGroupOperationService()} for group operations
+     *             and {@link #getGroupRoleService()} for role management.
+     */
+    @Deprecated
+    public GroupManager getGroupManager() {
+        return managerFactory.getGroupManager();
+    }
+
+    /**
+     * Gets the notes manager for note-related operations.
+     *
+     * @return the NotesManager
+     */
+    public NotesManager getNotesManager() {
+        return managerFactory.getNotesManager();
+    }
+
+    /**
+     * Gets the session manager for session-related operations.
+     *
+     * @return the SessionManager
+     */
+    public SessionManager getSessionManager() {
+        return managerFactory.getSessionManager();
+    }
+
+    /**
+     * Gets the session task manager.
+     *
+     * @return the SessionTaskManager
+     */
+    public SessionTaskManager getSessionTaskManager() {
+        return managerFactory.getSessionTaskManager();
+    }
+
+    /**
+     * Gets the session calendar manager.
+     *
+     * @return the SessionCalendarManager
+     */
+    public SessionCalendarManager getSessionCalendarManager() {
+        return managerFactory.getSessionCalendarManager();
+    }
+
+    /**
+     * Gets the availability manager.
+     *
+     * @return the AvailabilityManager
+     */
+    public AvailabilityManager getAvailabilityManager() {
+        return managerFactory.getAvailabilityManager();
+    }
+
+    /**
+     * Gets the group message manager.
+     *
+     * @return the GroupMessageManager
+     */
+    public GroupMessageManager getGroupMessageManager() {
+        return managerFactory.getGroupMessageManager();
+    }
+
+    /**
+     * Gets the group file manager.
+     *
+     * @return the GroupFileManager
+     */
+    public GroupFileManager getGroupFileManager() {
+        return managerFactory.getGroupFileManager();
+    }
+
+    /**
+     * Gets the password hasher utility.
+     *
+     * @return the PasswordHasher
+     */
+    public PasswordHasher getPasswordHasher() {
+        return managerFactory.getPasswordHasher();
+    }
+
+    /**
+     * Gets the notifier service.
+     *
+     * @return the Notifier
+     */
+    public Notifier getNotifier() {
+        return managerFactory.getNotifier();
+    }
+
+    /**
+     * Gets the mail service.
+     *
+     * @return the MailService
+     */
+    public MailService getMailService() {
+        return managerFactory.getMailService();
+    }
+
+    // ========================================
+    // DEPRECATED - Direct DAO Access
+    // ========================================
+    // These methods provide backward compatibility but should NOT be used in new code.
+    // Controllers should use Managers instead of DAOs for proper layering.
+    // Will be removed in a future version.
+
+    /**
+     * @deprecated Use {@link #getUserManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public IUserDAO getUserDAO() {
+        return daoFactory.getUserDAO();
+    }
+
+    /**
+     * @deprecated Use {@link #getGroupManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public IFriendDAO getFriendDAO() {
+        return daoFactory.getFriendDAO();
+    }
+
+    /**
+     * @deprecated Use {@link #getGroupManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public IGroupDAO getGroupDAO() {
+        return daoFactory.getGroupDAO();
+    }
+
+    /**
+     * @deprecated Use {@link #getNotesManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public INotesDAO getNotesDAO() {
+        return daoFactory.getNotesDAO();
+    }
+
+    /**
+     * @deprecated Use {@link #getSessionCalendarManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public ISessionCalendarDAO getSessionCalendarDAO() {
+        return daoFactory.getSessionCalendarDAO();
+    }
+
+    /**
+     * @deprecated Use {@link #getSessionTaskManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public ISessionTaskDAO getSessionTaskDAO() {
+        return daoFactory.getSessionTaskDAO();
+    }
+
+    /**
+     * @deprecated Use {@link #getAvailabilityManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public IAvailabilityDAO getAvailabilityDAO() {
+        return daoFactory.getAvailabilityDAO();
+    }
+
+    /**
+     * @deprecated Use {@link #getGroupMessageManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public IGroupMessageDAO getGroupMessageDAO() {
+        return daoFactory.getGroupMessageDAO();
+    }
+
+    /**
+     * @deprecated Use appropriate manager instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public IFriendMessageDAO getFriendMessageDAO() {
+        return daoFactory.getFriendMessageDAO();
+    }
+
+    /**
+     * @deprecated Use {@link #getGroupFileManager()} instead.
+     * Direct DAO access violates the service layer pattern.
+     */
+    @Deprecated
+    public IGroupFileDAO getGroupFileDAO() {
+        return daoFactory.getGroupFileDAO();
+    }
+
+    // ========================================
+    // UI State Management
+    // TODO: Extract to separate UIStateManager in future iteration
+    // ========================================
+
+    public boolean isMenuOpen() {
+        return menuOpen;
+    }
+
+    public void setMenuOpen(boolean value) {
+        this.menuOpen = value;
+    }
+
+    public boolean isProfileOpen() {
+        return profileOpen;
+    }
+
+    public void setProfileOpen(boolean value) {
+        this.profileOpen = value;
+    }
 }

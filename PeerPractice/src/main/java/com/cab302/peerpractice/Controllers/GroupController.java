@@ -1,6 +1,8 @@
 package com.cab302.peerpractice.Controllers;
 
 import com.cab302.peerpractice.AppContext;
+import com.cab302.peerpractice.Controllers.TabLoading.TabContentLoader;
+import com.cab302.peerpractice.Controllers.TabLoading.TabContentLoaderRegistry;
 import com.cab302.peerpractice.Model.DAOs.GroupDAO;
 import com.cab302.peerpractice.Model.Entities.*;
 import com.cab302.peerpractice.Navigation;
@@ -83,6 +85,14 @@ public class GroupController extends SidebarController {
 
     private GroupChatController groupChatController;
 
+    private GroupFileController groupFileController;
+
+    /**
+     * Registry for tab content loading strategies (Strategy pattern).
+     * Eliminates switch statements and implements Open/Closed Principle.
+     */
+    private TabContentLoaderRegistry tabLoaderRegistry;
+
     /**
      * <hr>
      * Flag indicating current group sorting preference (alphabetical vs date).
@@ -111,6 +121,10 @@ public class GroupController extends SidebarController {
     @FXML
     public void initialize() {
         super.initialize();
+
+        // Initialize tab content loader registry (Strategy pattern)
+        initializeTabLoaderRegistry();
+
         User currentUser = ctx.getUserSession().getCurrentUser();
         List<Group> userGroups = ctx.getGroupDAO().searchByUser(currentUser);
         groupListView.setItems(FXCollections.observableArrayList(userGroups));
@@ -162,6 +176,21 @@ public class GroupController extends SidebarController {
     }
 
     /**
+     * Initializes the tab content loader registry with all tab loading strategies.
+     * Implements the Strategy pattern to eliminate switch statements.
+     */
+    private void initializeTabLoaderRegistry() {
+        tabLoaderRegistry = new TabContentLoaderRegistry();
+
+        // Register loaders for each tab type
+        tabLoaderRegistry.registerLoader("Calendar", this::loadCalendarContent);
+        tabLoaderRegistry.registerLoader("Sessions", this::loadSessionsContent);
+        tabLoaderRegistry.registerLoader("Notes", this::loadNotesContent);
+        tabLoaderRegistry.registerLoader("Chat", this::loadChatContent);
+        tabLoaderRegistry.registerLoader("Files", this::loadFilesContent);
+    }
+
+    /**
      * <hr>
      * Loads appropriate content for the specified tab based on group selection.
      *
@@ -176,22 +205,9 @@ public class GroupController extends SidebarController {
             Tab selectedTab = groupTabs.getSelectionModel().getSelectedItem();
             if (selectedTab == null) return;
 
-            switch (tabName) {
-                case "Calendar":
-                    loadCalendarContent(selectedTab, group);
-                    break;
-                case "Sessions":
-                    loadSessionsContent(selectedTab, group);
-                    break;
-                case "Notes":
-                    loadNotesContent(selectedTab, group);
-                    break;
-                case "Chat":
-                    loadChatContent(selectedTab, group);
-                    break;
-                case "Files":
-                    loadFilesContent(selectedTab, group);
-                    break;
+            // Use Strategy pattern instead of switch statement (Open/Closed Principle)
+            if (!tabLoaderRegistry.loadContent(tabName, selectedTab, group)) {
+                System.err.println("Unknown tab type: " + tabName);
             }
         } catch (Exception e) {
             System.err.println("Error loading tab content: " + e.getMessage());
@@ -214,23 +230,8 @@ public class GroupController extends SidebarController {
                     for (Tab tab : groupTabs.getTabs()) {
                         String tabName = tab.getText();
                         // Load each tab's content if not already loaded
-                        switch (tabName) {
-                            case "Calendar":
-                                if (groupCalendarController == null) loadCalendarContent(tab, group);
-                                break;
-                            case "Notes":
-                                if (notesController == null) loadNotesContent(tab, group);
-                                break;
-                            case "Sessions":
-                                loadSessionsContent(tab, group);
-                                break;
-                            case "Chat":
-                                loadChatContent(tab, group);
-                                break;
-                            case "Files":
-                                loadFilesContent(tab, group);
-                                break;
-                        }
+                        // Use Strategy pattern instead of switch statement
+                        tabLoaderRegistry.loadContent(tabName, tab, group);
                     }
                 });
             } catch (Exception e) {
@@ -352,21 +353,26 @@ public class GroupController extends SidebarController {
      * <hr>
      * Loads files content for the specified group and tab.
      *
-     * <p>Configures the file sharing interface placeholder with notification
-     * about upcoming file sharing functionality.
+     * <p>Configures the file sharing interface for the group with upload,
+     * download, and file management capabilities.
      *
      * @param tab the tab to load files content into
      * @param group the group to load files for
      */
     private void loadFilesContent(Tab tab, Group group) {
-        VBox filesContent = new VBox(10);
-        filesContent.setPadding(new Insets(20));
-
-        Label comingSoon = new Label("File sharing functionality coming soon!");
-        comingSoon.setFont(Font.font("System", FontWeight.BOLD, 14));
-
-        filesContent.getChildren().add(comingSoon);
-        tab.setContent(filesContent);
+        try {
+            if (groupFileController == null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/peerpractice/group-files.fxml"));
+                loader.setControllerFactory(cls -> new GroupFileController(ctx, nav));
+                Parent fileView = loader.load();
+                groupFileController = loader.getController();
+                tab.setContent(fileView);
+            }
+            groupFileController.setGroup(group);
+        } catch (Exception e) {
+            System.err.println("Failed to load group files: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**

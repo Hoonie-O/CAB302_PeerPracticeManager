@@ -84,7 +84,9 @@ public class LoginController extends BaseController{
             try {
                 login();
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                System.err.println("Database error during login: " + ex.getMessage());
+                ex.printStackTrace();
+                messageLabel.setText("Unable to connect to database. Please try again later.");
             }
         });
         forgotpasswordlink.setOnAction(e -> nav.Display(View.ForgotPassword));
@@ -125,7 +127,10 @@ public class LoginController extends BaseController{
                 messageLabel.setText("Invalid email/username or password.");
             }
         } catch (SQLException e) {
-            System.err.println("SQLException: " + e);
+            System.err.println("SQLException during authentication: " + e.getMessage());
+            e.printStackTrace();
+            messageLabel.setText("Database error. Please try again later.");
+            throw e; // Re-throw to be caught by the outer handler
         }
     }
 }

@@ -66,7 +66,7 @@ public class GroupChatController extends BaseController {
     private void loadMessages() {
         if (currentGroup == null) return;
 
-        messagesBox.getChildren().clear();
+        Platform.runLater(() -> messagesBox.getChildren().clear());
         List<GroupMessage> messages = groupMessageManager.getMessages(currentGroup.getID());
 
         for (GroupMessage msg : messages) {

@@ -126,7 +126,14 @@ public class FriendsController extends SidebarController{
             refreshFriendsList();
             updatePendingRequestBadge();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error initializing friends list: " + e.getMessage());
+            e.printStackTrace();
+            // Show error to user
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Initialization Error");
+            alert.setHeaderText("Failed to load friends list");
+            alert.setContentText("There was a problem loading your friends. Please restart the application.");
+            alert.showAndWait();
         }
 
         // setup feedback label to fade-out
@@ -256,7 +263,10 @@ public class FriendsController extends SidebarController{
                     refreshFriendsList();
 
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    System.err.println("Database error while adding friend: " + e.getMessage());
+                    e.printStackTrace();
+                    feedbackMsg.setText("Error: Unable to send friend request. Please try again.");
+                    ft.playFromStart();
                 }
             }
         });

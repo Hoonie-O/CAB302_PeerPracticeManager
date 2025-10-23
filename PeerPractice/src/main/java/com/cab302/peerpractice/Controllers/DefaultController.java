@@ -83,17 +83,33 @@ public class DefaultController extends SidebarController {
 
         dialog.showAndWait().ifPresent(response -> {
             if (response == createButton) {
+                // Validate input
+                String groupName = nameField.getText().trim();
+                String description = descriptionField.getText().trim();
+
+                if (groupName.isEmpty()) {
+                    new Alert(Alert.AlertType.WARNING, "Group name cannot be empty.").showAndWait();
+                    return;
+                }
+
+                if (groupName.length() > 100) {
+                    new Alert(Alert.AlertType.WARNING, "Group name must be 100 characters or less.").showAndWait();
+                    return;
+                }
+
                 try {
                     User currentUser = ctx.getUserSession().getCurrentUser();
                     ctx.getGroupManager().createGroup(
-                            nameField.getText(),
-                            descriptionField.getText(),
+                            groupName,
+                            description,
                             approvalCheck.isSelected(),
                             currentUser
                     );
                     new Alert(Alert.AlertType.INFORMATION, "Group created successfully!").showAndWait();
                     nav.Display(View.Groups);
                 } catch (Exception e) {
+                    System.err.println("Error creating group: " + e.getMessage());
+                    e.printStackTrace();
                     new Alert(Alert.AlertType.ERROR, "Error creating group: " + e.getMessage()).showAndWait();
                 }
             }
@@ -125,7 +141,19 @@ public class DefaultController extends SidebarController {
             var result = dialog.showAndWait();
             if (result.isEmpty()) break;
 
-            String code = result.get();
+            String code = result.get().trim();
+
+            // Validate that code is not empty and is numeric
+            if (code.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Group code cannot be empty.").showAndWait();
+                continue;
+            }
+
+            if (!code.matches("\\d+")) {
+                new Alert(Alert.AlertType.WARNING, "Group code must be a number.").showAndWait();
+                continue;
+            }
+
             try {
                 Group group = ctx.getGroupDAO().getAllGroups().stream()
                         .filter(g -> String.valueOf(g.getID()).equals(code))

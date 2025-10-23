@@ -10,6 +10,7 @@ public enum View {
     Availability("availability-view.fxml", "Availability"),
     ResetPassword("resetpassword-view.fxml","ResetPassword"),
     Groups("groups-view.fxml","Groups"),
+    GroupFiles("group-files.fxml", "Group Files"),
 
     // From friends branch
     Friends("friends-view.fxml", "Friends"),
