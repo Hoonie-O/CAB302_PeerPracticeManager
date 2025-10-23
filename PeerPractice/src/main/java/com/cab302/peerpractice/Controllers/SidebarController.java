@@ -3,6 +3,7 @@ package com.cab302.peerpractice.Controllers;
 import com.cab302.peerpractice.AppContext;
 import com.cab302.peerpractice.Model.Managers.SessionPersistence;
 import com.cab302.peerpractice.Navigation;
+import com.cab302.peerpractice.UiStateStore;
 import com.cab302.peerpractice.View;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -62,6 +63,8 @@ public abstract class SidebarController extends BaseController {
     /** <hr> Duration constant for slide animations. */
     private static final Duration SLIDE = Duration.millis(180);
 
+    private final UiStateStore uiStateStore;
+
     /**
      * <hr>
      * Constructs a new SidebarController with the specified context and navigation.
@@ -71,6 +74,7 @@ public abstract class SidebarController extends BaseController {
      */
     protected SidebarController(AppContext ctx, Navigation nav) {
         super(ctx, nav);
+        this.uiStateStore = ctx.getUiStateStore();
     }
 
     /**
@@ -82,30 +86,16 @@ public abstract class SidebarController extends BaseController {
      */
     @FXML
     public void initialize() {
-        // Restore menu state
+        // Restore menu state and observe future updates
         if (menu != null) {
-            if (ctx.isMenuOpen()) {
-                menu.setVisible(true);
-                menu.setManaged(true);
-                menu.setTranslateX(0);
-            } else {
-                menu.setVisible(false);
-                menu.setManaged(false);
-                menu.setTranslateX(0);
-            }
+            uiStateStore.menuOpenProperty().addListener((obs, oldValue, newValue) -> applyMenuState(newValue, true));
+            applyMenuState(uiStateStore.isMenuOpen(), false);
         }
 
-        // Restore profile state
+        // Restore profile state and observe future updates
         if (profile != null) {
-            if (ctx.isProfileOpen()) {
-                profile.setVisible(true);
-                profile.setManaged(true);
-                profile.setTranslateX(0);
-            } else {
-                profile.setVisible(false);
-                profile.setManaged(false);
-                profile.setTranslateX(0);
-            }
+            uiStateStore.profileOpenProperty().addListener((obs, oldValue, newValue) -> applyProfileState(newValue, true));
+            applyProfileState(uiStateStore.isProfileOpen(), false);
         }
 
         // Header buttons
@@ -188,8 +178,7 @@ public abstract class SidebarController extends BaseController {
      */
     @FXML
     protected void onToggleMenu() {
-        if (ctx.isMenuOpen()) closeMenu();
-        else openMenu();
+        uiStateStore.setMenuOpen(!uiStateStore.isMenuOpen());
     }
 
     /**
@@ -198,8 +187,53 @@ public abstract class SidebarController extends BaseController {
      */
     @FXML
     protected void onToggleProfile() {
-        if (ctx.isProfileOpen()) closeProfile();
-        else openProfile();
+        uiStateStore.setProfileOpen(!uiStateStore.isProfileOpen());
+    }
+
+    private void applyMenuState(boolean open, boolean animate) {
+        if (menu == null) {
+            return;
+        }
+        if (animate) {
+            if (open) {
+                openMenu();
+            } else {
+                closeMenu();
+            }
+        } else {
+            if (open) {
+                menu.setVisible(true);
+                menu.setManaged(true);
+                menu.setTranslateX(0);
+            } else {
+                menu.setVisible(false);
+                menu.setManaged(false);
+                menu.setTranslateX(0);
+            }
+        }
+    }
+
+    private void applyProfileState(boolean open, boolean animate) {
+        if (profile == null) {
+            return;
+        }
+        if (animate) {
+            if (open) {
+                openProfile();
+            } else {
+                closeProfile();
+            }
+        } else {
+            if (open) {
+                profile.setVisible(true);
+                profile.setManaged(true);
+                profile.setTranslateX(0);
+            } else {
+                profile.setVisible(false);
+                profile.setManaged(false);
+                profile.setTranslateX(0);
+            }
+        }
     }
 
     /**
@@ -210,7 +244,7 @@ public abstract class SidebarController extends BaseController {
         menu.setVisible(true);
         menu.setManaged(true);
         menu.setTranslateX(-menu.getPrefWidth());
-        animate(menu, 0, () -> ctx.setMenuOpen(true));
+        animate(menu, 0, null);
     }
 
     /**
@@ -220,7 +254,6 @@ public abstract class SidebarController extends BaseController {
     private void closeMenu() {
         double width = menu.getPrefWidth();
         animate(menu, -width, () -> {
-            ctx.setMenuOpen(false);
             menu.setVisible(false);
             menu.setManaged(false);
             menu.setTranslateX(0);
@@ -236,7 +269,7 @@ public abstract class SidebarController extends BaseController {
         profile.setManaged(true);
         double width = safePrefWidth(profile, 180);
         profile.setTranslateX(width);
-        animate(profile, 0, () -> ctx.setProfileOpen(true));
+        animate(profile, 0, null);
     }
 
     /**
@@ -246,7 +279,6 @@ public abstract class SidebarController extends BaseController {
     private void closeProfile() {
         double width = safePrefWidth(profile, 180);
         animate(profile, width, () -> {
-            ctx.setProfileOpen(false);
             profile.setVisible(false);
             profile.setManaged(false);
             profile.setTranslateX(0);
@@ -322,8 +354,8 @@ public abstract class SidebarController extends BaseController {
             // clear saved session
             SessionPersistence.clearSession();
 
-            if (ctx.isMenuOpen()) closeMenu();
-            if (ctx.isProfileOpen()) closeProfile();
+            uiStateStore.setMenuOpen(false);
+            uiStateStore.setProfileOpen(false);
 
             showLogoutSuccessMessage(currentUserName);
             nav.Display(View.Login);
@@ -358,6 +390,8 @@ public abstract class SidebarController extends BaseController {
      */
     private void handleLogoutError(Exception e) {
         ctx.getUserSession().logout();
+        uiStateStore.setMenuOpen(false);
+        uiStateStore.setProfileOpen(false);
         Alert error = new Alert(Alert.AlertType.ERROR);
         error.setTitle("Logout Error");
         error.setHeaderText("Logout failed");

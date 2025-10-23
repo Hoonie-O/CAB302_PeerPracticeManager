@@ -32,9 +32,8 @@ public class AppContext {
     private final DAOFactory daoFactory;
     private final ManagerFactory managerFactory;
 
-    // UI state (will be refactored to separate UIStateManager in future iteration)
-    private boolean menuOpen = false;
-    private boolean profileOpen = false;
+    // Shared UI state store accessible to controllers
+    private final UiStateStore uiStateStore;
 
     /**
      * Creates the application context and initializes all services.
@@ -42,6 +41,7 @@ public class AppContext {
      * @throws SQLException if database initialization fails
      */
     public AppContext() throws SQLException {
+        this.uiStateStore = new UiStateStore();
         try {
             // Initialize user session
             this.userSession = new UserSession();
@@ -335,22 +335,13 @@ public class AppContext {
 
     // ========================================
     // UI State Management
-    // TODO: Extract to separate UIStateManager in future iteration
     // ========================================
-
-    public boolean isMenuOpen() {
-        return menuOpen;
-    }
-
-    public void setMenuOpen(boolean value) {
-        this.menuOpen = value;
-    }
-
-    public boolean isProfileOpen() {
-        return profileOpen;
-    }
-
-    public void setProfileOpen(boolean value) {
-        this.profileOpen = value;
+    /**
+     * Provides access to the shared UI state store used by controllers.
+     *
+     * @return the UI state store instance
+     */
+    public UiStateStore getUiStateStore() {
+        return uiStateStore;
     }
 }
