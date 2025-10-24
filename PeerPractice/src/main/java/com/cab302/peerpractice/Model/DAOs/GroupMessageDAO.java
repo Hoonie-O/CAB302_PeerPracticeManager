@@ -8,17 +8,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * SQLite implementation of IGroupMessageDAO.
+ * <hr>
+ * SQLite implementation of group message Data Access Object.
+ *
+ * <p>This class provides concrete SQLite database operations for group message
+ * management, handling persistence and retrieval of messages sent to groups.
+ *
+ * <p> Key features include:
+ * <ul>
+ *   <li>Group message storage and retrieval</li>
+ *   <li>Message management by group ID</li>
+ *   <li>Automatic table creation on initialization</li>
+ *   <li>Chronological message ordering</li>
+ * </ul>
+ *
+ * @see GroupMessage
+ * @see IGroupMessageDAO
+ * @see SQLiteConnection
  */
 public class GroupMessageDAO implements IGroupMessageDAO {
 
+    /** <hr> Database connection instance for SQLite operations. */
     private final Connection connection;
 
+    /**
+     * <hr>
+     * Constructs a new GroupMessageDAO with database connection.
+     *
+     * <p>Initializes the SQLite connection and ensures the required
+     * database table exists by calling createTable().
+     *
+     * @throws SQLException if database connection or table creation fails
+     */
     public GroupMessageDAO() throws SQLException {
         this.connection = SQLiteConnection.getInstance();
         createTable();
     }
 
+    /**
+     * <hr>
+     * Creates the group_messages table if it doesn't exist.
+     *
+     * <p>Defines the database schema for storing group messages with
+     * appropriate foreign key constraints and indexes.
+     *
+     * @throws SQLException if table creation fails
+     */
     private void createTable() throws SQLException {
         try (Statement st = connection.createStatement()) {
             st.execute("CREATE TABLE IF NOT EXISTS group_messages (" +
@@ -33,6 +68,17 @@ public class GroupMessageDAO implements IGroupMessageDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Maps a database ResultSet row to a GroupMessage object.
+     *
+     * <p>Converts SQL result set data into a structured GroupMessage entity
+     * with proper type conversions for timestamp fields.
+     *
+     * @param rs the ResultSet containing database row data
+     * @return a populated GroupMessage object
+     * @throws SQLException if data extraction fails
+     */
     private GroupMessage mapRow(ResultSet rs) throws SQLException {
         return new GroupMessage(
                 rs.getString("message_id"),
@@ -43,6 +89,16 @@ public class GroupMessageDAO implements IGroupMessageDAO {
         );
     }
 
+    /**
+     * <hr>
+     * Adds a new group message to the database.
+     *
+     * <p>Persists a group message entity to the SQLite database with
+     * all required message attributes including sender, group, and timestamp.
+     *
+     * @param message the GroupMessage object to be stored
+     * @return true if the message was successfully added, false otherwise
+     */
     @Override
     public boolean addMessage(GroupMessage message) {
         String sql = "INSERT INTO group_messages (message_id, sender_id, group_id, content, timestamp) VALUES (?, ?, ?, ?, ?)";
@@ -59,6 +115,16 @@ public class GroupMessageDAO implements IGroupMessageDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Deletes a specific group message by its unique identifier.
+     *
+     * <p>Removes a single group message from the database using its
+     * unique message ID, ensuring precise message deletion.
+     *
+     * @param messageId the unique identifier of the message to delete
+     * @return true if the message was successfully deleted, false otherwise
+     */
     @Override
     public boolean deleteMessage(String messageId) {
         String sql = "DELETE FROM group_messages WHERE message_id = ?";
@@ -71,6 +137,16 @@ public class GroupMessageDAO implements IGroupMessageDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Retrieves a specific group message by its unique identifier.
+     *
+     * <p>Fetches a single group message from the database using its
+     * unique message ID, returning the complete message entity.
+     *
+     * @param messageId the unique identifier of the message to retrieve
+     * @return the GroupMessage object if found, null otherwise
+     */
     @Override
     public GroupMessage getMessageById(String messageId) {
         String sql = "SELECT * FROM group_messages WHERE message_id = ?";
@@ -85,6 +161,15 @@ public class GroupMessageDAO implements IGroupMessageDAO {
         return null;
     }
 
+    /**
+     * <hr>
+     * Retrieves all group messages from the database.
+     *
+     * <p>Fetches every group message stored in the database, ordered
+     * chronologically by timestamp for consistent historical viewing.
+     *
+     * @return a list of all GroupMessage objects in chronological order
+     */
     @Override
     public List<GroupMessage> getAllMessages() {
         List<GroupMessage> list = new ArrayList<>();
@@ -97,6 +182,16 @@ public class GroupMessageDAO implements IGroupMessageDAO {
         return list;
     }
 
+    /**
+     * <hr>
+     * Retrieves all messages for a specific group.
+     *
+     * <p>Fetches the complete message history for a particular group,
+     * ordered chronologically to provide a coherent conversation view.
+     *
+     * @param groupId the unique identifier of the group
+     * @return a list of GroupMessage objects for the specified group
+     */
     @Override
     public List<GroupMessage> getMessagesForGroup(int groupId) {
         List<GroupMessage> list = new ArrayList<>();
@@ -112,6 +207,16 @@ public class GroupMessageDAO implements IGroupMessageDAO {
         return list;
     }
 
+    /**
+     * <hr>
+     * Deletes all messages for a specific group.
+     *
+     * <p>Removes the entire message history for a particular group,
+     * typically used when a group is deleted or needs message clearance.
+     *
+     * @param groupId the unique identifier of the group
+     * @return true if the operation completed successfully, false otherwise
+     */
     @Override
     public boolean deleteMessagesForGroup(int groupId) {
         String sql = "DELETE FROM group_messages WHERE group_id = ?";

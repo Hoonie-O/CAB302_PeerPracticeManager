@@ -9,17 +9,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * SQLite implementation of IGroupFileDAO.
+ * <hr>
+ * SQLite implementation of group file Data Access Object.
+ *
+ * <p>This class provides concrete SQLite database operations for managing
+ * file uploads and attachments within groups, handling persistence and
+ * retrieval of files shared in group contexts.
+ *
+ * <p> Key features include:
+ * <ul>
+ *   <li>File metadata storage and management</li>
+ *   <li>Group-specific file organization and retrieval</li>
+ *   <li>Uploader tracking and file attribution</li>
+ *   <li>File deletion and cleanup operations</li>
+ * </ul>
+ *
+ * @see GroupFile
+ * @see IGroupFileDAO
+ * @see SQLiteConnection
  */
 public class GroupFileDAO implements IGroupFileDAO {
 
+    /** <hr> Database connection instance for SQLite operations. */
     private final Connection connection;
 
+    /**
+     * <hr>
+     * Constructs a new GroupFileDAO with database connection.
+     *
+     * <p>Initializes the SQLite connection and ensures the required
+     * database table exists by calling createTable() during construction.
+     *
+     * @throws SQLException if database connection or table creation fails
+     */
     public GroupFileDAO() throws SQLException {
         this.connection = SQLiteConnection.getInstance();
         createTable();
     }
 
+    /**
+     * <hr>
+     * Creates the group_files table if it doesn't exist.
+     *
+     * <p>Defines the database schema for storing group file metadata with
+     * appropriate foreign key constraints, file attributes, and indexing
+     * for efficient file retrieval and management.
+     *
+     * @throws SQLException if table creation fails
+     */
     private void createTable() throws SQLException {
         try (Statement st = connection.createStatement()) {
             st.execute("CREATE TABLE IF NOT EXISTS group_files (" +
@@ -38,6 +75,18 @@ public class GroupFileDAO implements IGroupFileDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Maps a database ResultSet row to a GroupFile object.
+     *
+     * <p>Converts SQL result set data into a structured GroupFile entity
+     * with proper type conversions for timestamp, file size, and other
+     * file attributes.
+     *
+     * @param rs the ResultSet containing database row data
+     * @return a populated GroupFile object
+     * @throws SQLException if data extraction fails
+     */
     private GroupFile mapRow(ResultSet rs) throws SQLException {
         return new GroupFile(
                 rs.getString("file_id"),
@@ -52,10 +101,21 @@ public class GroupFileDAO implements IGroupFileDAO {
         );
     }
 
+    /**
+     * <hr>
+     * Adds a new group file record to the database.
+     *
+     * <p>Persists file metadata to the SQLite database including file
+     * identification, group association, uploader information, and
+     * file characteristics for organized file management.
+     *
+     * @param file the GroupFile object to be stored
+     * @return true if the file record was successfully added, false otherwise
+     */
     @Override
     public boolean addFile(GroupFile file) {
         String sql = "INSERT INTO group_files (file_id, group_id, uploader_id, filename, filepath, file_size, mime_type, uploaded_at, description) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, file.getFileId());
             ps.setInt(2, file.getGroupId());
@@ -73,6 +133,16 @@ public class GroupFileDAO implements IGroupFileDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Deletes a specific group file record by its unique identifier.
+     *
+     * <p>Removes a single file metadata record from the database using its
+     * unique file ID, allowing for precise file management and cleanup.
+     *
+     * @param fileId the unique identifier of the file to delete
+     * @return true if the file record was successfully deleted, false otherwise
+     */
     @Override
     public boolean deleteFile(String fileId) {
         String sql = "DELETE FROM group_files WHERE file_id = ?";
@@ -85,6 +155,17 @@ public class GroupFileDAO implements IGroupFileDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Retrieves a specific group file record by its unique identifier.
+     *
+     * <p>Fetches a single file metadata record from the database using its
+     * unique file ID, returning the complete file entity with all
+     * associated file information.
+     *
+     * @param fileId the unique identifier of the file to retrieve
+     * @return the GroupFile object if found, null otherwise
+     */
     @Override
     public GroupFile getFileById(String fileId) {
         String sql = "SELECT * FROM group_files WHERE file_id = ?";
@@ -99,6 +180,17 @@ public class GroupFileDAO implements IGroupFileDAO {
         return null;
     }
 
+    /**
+     * <hr>
+     * Retrieves all files associated with a specific group.
+     *
+     * <p>Fetches the complete file list for a particular group, ordered
+     * by upload timestamp in descending order to show most recent
+     * files first for efficient file browsing.
+     *
+     * @param groupId the unique identifier of the group
+     * @return a list of GroupFile objects for the specified group
+     */
     @Override
     public List<GroupFile> getFilesForGroup(int groupId) {
         List<GroupFile> list = new ArrayList<>();
@@ -114,6 +206,17 @@ public class GroupFileDAO implements IGroupFileDAO {
         return list;
     }
 
+    /**
+     * <hr>
+     * Deletes all files associated with a specific group.
+     *
+     * <p>Removes the entire file history for a particular group,
+     * typically used when a group is deleted or requires complete
+     * file cleanup and data removal.
+     *
+     * @param groupId the unique identifier of the group
+     * @return true if the operation completed successfully, false otherwise
+     */
     @Override
     public boolean deleteFilesForGroup(int groupId) {
         String sql = "DELETE FROM group_files WHERE group_id = ?";
@@ -126,6 +229,17 @@ public class GroupFileDAO implements IGroupFileDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Retrieves all files uploaded by a specific user.
+     *
+     * <p>Fetches the complete file upload history for a particular user
+     * across all groups, ordered by upload timestamp in descending order
+     * to show most recent uploads first.
+     *
+     * @param userId the username of the uploader to fetch files for
+     * @return a list of GroupFile objects uploaded by the specified user
+     */
     @Override
     public List<GroupFile> getFilesByUploader(String userId) {
         List<GroupFile> list = new ArrayList<>();

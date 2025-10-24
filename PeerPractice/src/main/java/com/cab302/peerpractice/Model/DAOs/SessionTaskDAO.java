@@ -9,16 +9,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <hr>
  * Database storage implementation of ISessionTaskDAO for persistent task storage.
+ *
+ * <p>This implementation provides SQLite-based persistent storage for session tasks
+ * with comprehensive task management and querying capabilities.
+ *
+ * <p> Key features include:
+ * <ul>
+ *   <li>Persistent task storage with full CRUD operations</li>
+ *   <li>Task assignment and completion tracking</li>
+ *   <li>Flexible querying by session, user, and status</li>
+ *   <li>Overdue task detection and filtering</li>
+ *   <li>Automatic timestamp management</li>
+ * </ul>
+ *
+ * @see ISessionTaskDAO
+ * @see SessionTask
  */
 public class SessionTaskDAO implements ISessionTaskDAO {
+    /** <hr> SQLite database connection instance. */
     private final Connection connection;
 
+    /**
+     * <hr>
+     * Constructs a new SessionTaskDAO and initializes database tables.
+     *
+     * @param userDao the user DAO for user validation (currently unused but required by interface)
+     * @throws SQLException if database connection or table creation fails
+     */
     public SessionTaskDAO(IUserDAO userDao) throws SQLException {
         this.connection = SQLiteConnection.getInstance();
         createTables();
     }
 
+    /**
+     * <hr>
+     * Creates the necessary database tables if they don't exist.
+     *
+     * @throws SQLException if table creation fails
+     */
     private void createTables() throws SQLException {
         try (Statement st = connection.createStatement()) {
             st.execute("CREATE TABLE IF NOT EXISTS session_tasks (" +
@@ -36,6 +66,14 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Maps a database ResultSet row to a SessionTask object.
+     *
+     * @param rs the ResultSet containing task data
+     * @return a SessionTask object populated with data from the ResultSet
+     * @throws SQLException if database access error occurs
+     */
     private SessionTask mapRowToTask(ResultSet rs) throws SQLException {
         String taskId = rs.getString("task_id");
         String sessionId = rs.getString("session_id");
@@ -50,6 +88,12 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         return task;
     }
 
+    /**
+     * <hr>
+     * Adds a new task to the database.
+     *
+     * @param task the task to add
+     */
     @Override
     public void addTask(SessionTask task) {
         if (task == null) return;
@@ -76,6 +120,13 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Retrieves all tasks for a specific session.
+     *
+     * @param sessionId the ID of the session
+     * @return a list of tasks associated with the specified session
+     */
     @Override
     public List<SessionTask> getTasksForSession(String sessionId) {
         List<SessionTask> tasks = new ArrayList<>();
@@ -91,6 +142,13 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         return tasks;
     }
 
+    /**
+     * <hr>
+     * Retrieves a specific task by its ID.
+     *
+     * @param taskId the ID of the task to retrieve
+     * @return the task with the specified ID, or null if not found
+     */
     @Override
     public SessionTask getTaskById(String taskId) {
         try (PreparedStatement ps = connection.prepareStatement(
@@ -105,6 +163,13 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         return null;
     }
 
+    /**
+     * <hr>
+     * Updates an existing task in the database.
+     *
+     * @param updatedTask the task with updated information
+     * @return true if the task was updated successfully
+     */
     @Override
     public boolean updateTask(SessionTask updatedTask) {
         if (updatedTask == null) {
@@ -127,6 +192,13 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Removes a specific task from the database.
+     *
+     * @param taskId the ID of the task to remove
+     * @return true if the task was removed successfully
+     */
     @Override
     public boolean removeTask(String taskId) {
         try (PreparedStatement ps = connection.prepareStatement(
@@ -139,6 +211,13 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Removes all tasks associated with a specific session.
+     *
+     * @param sessionId the ID of the session whose tasks should be removed
+     * @return true if the operation completed successfully
+     */
     @Override
     public boolean removeAllTasksForSession(String sessionId) {
         if (sessionId == null) {
@@ -155,6 +234,13 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Retrieves all tasks assigned to a specific user.
+     *
+     * @param assigneeId the ID of the user
+     * @return a list of tasks assigned to the specified user
+     */
     @Override
     public List<SessionTask> getTasksForUser(String assigneeId) {
         List<SessionTask> tasks = new ArrayList<>();
@@ -170,6 +256,12 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         return tasks;
     }
 
+    /**
+     * <hr>
+     * Retrieves all overdue tasks (incomplete tasks with past deadlines).
+     *
+     * @return a list of overdue tasks
+     */
     @Override
     public List<SessionTask> getOverdueTasks() {
         List<SessionTask> tasks = new ArrayList<>();
@@ -185,6 +277,12 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         return tasks;
     }
 
+    /**
+     * <hr>
+     * Retrieves all completed tasks.
+     *
+     * @return a list of completed tasks
+     */
     @Override
     public List<SessionTask> getCompletedTasks() {
         List<SessionTask> tasks = new ArrayList<>();
@@ -199,6 +297,12 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         return tasks;
     }
 
+    /**
+     * <hr>
+     * Retrieves all tasks from the database.
+     *
+     * @return a list of all tasks
+     */
     @Override
     public List<SessionTask> getAllTasks() {
         List<SessionTask> tasks = new ArrayList<>();
@@ -211,6 +315,12 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         return tasks;
     }
 
+    /**
+     * <hr>
+     * Clears all tasks from the database.
+     *
+     * <p>Used primarily for testing cleanup.
+     */
     @Override
     public void clearAllTasks() {
         try (Statement st = connection.createStatement()) {
@@ -220,6 +330,12 @@ public class SessionTaskDAO implements ISessionTaskDAO {
         }
     }
 
+    /**
+     * <hr>
+     * Gets the total number of tasks in the database.
+     *
+     * @return the count of tasks
+     */
     @Override
     public int getTaskCount() {
         try (Statement st = connection.createStatement();
