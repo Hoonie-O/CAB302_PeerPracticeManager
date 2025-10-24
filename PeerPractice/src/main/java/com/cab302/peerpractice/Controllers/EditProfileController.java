@@ -228,9 +228,13 @@ public class EditProfileController extends BaseController {
                         "Your profile was saved successfully.");
                 onClose();
             } else {
-                showAlert(Alert.AlertType.NONE,
-                        "No changes",
-                        "Nothing to save.");
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Edit Profile");
+                a.setHeaderText("No changes");
+                a.setContentText("Nothing to save.");
+                a.getButtonTypes().setAll(ButtonType.OK);    // ensure an exit path
+                a.showAndWait();
+                onClose();
             }
         } catch (SQLException ex) {
             showAlert(Alert.AlertType.ERROR,

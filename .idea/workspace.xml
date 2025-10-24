@@ -6,13 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7b012881-acea-46f9-a8e0-c7f2da55003e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/AppContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/DefaultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/DefaultController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/FriendsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/FriendsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/GroupChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/GroupChatController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/GroupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/View.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/EditProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/PeerPractice/src/main/java/com/cab302/peerpractice/Controllers/EditProfileController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,14 +29,14 @@
     &quot;assignee&quot;: &quot;Hoonie-O&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://13bad37: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@github.com/Hoonie-O/CAB302_PeerPracticeManager",
-    "accountId": "8ef0a372-fbc0-4e43-a134-fd2ff73871ec"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Hoonie-O/CAB302_PeerPracticeManager.git&quot;,
+    &quot;accountId&quot;: &quot;30adaad7-4d7b-4504-a4fc-fea2d6d7e105&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -56,8 +50,13 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.PeerPracticeApplication.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in PeerPractice.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AvailabilityDAOTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AvailabilityTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.java in PeerPractice.executor&quot;: &quot;Coverage&quot;,
+    &quot;Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.4.0:javadoc].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.6.0:javadoc].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.PeerPractice [org.apache.maven.plugins:maven-javadoc-plugin:3.7.0:javadoc].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.PeerPractice [package].executor&quot;: &quot;Run&quot;,
     &quot;Maven.PeerPractice [test].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -70,7 +69,8 @@
     &quot;last_opened_file_path&quot;: &quot;C:/Users/HoonieG15/IdeaProjects/CAB302_PeerPracticeManager/PeerPractice/src/main/resources/com/cab302/peerpractice&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.3038529&quot;
+    &quot;project.structure.side.proportion&quot;: &quot;0.3038529&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -91,14 +91,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="All in PeerPractice" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PeerPractice" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="java in PeerPractice" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PeerPractice" />
       <option name="TEST_OBJECT" value="directory" />
@@ -109,7 +101,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.All in PeerPractice" />
         <item itemvalue="JUnit.java in PeerPractice" />
       </list>
     </recent_temporary>
@@ -129,15 +120,25 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1759114530672" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/PeerPracticeManagerApp$All_in_PeerPractice.ic" NAME="All in PeerPractice Coverage Results" MODIFIED="1759063198289" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$All_in_PeerPractice.ic" NAME="All in PeerPractice Coverage Results" MODIFIED="1760324281249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/CAB302_PeerPracticeManager$java_in_PeerPractice.ic" NAME="java in PeerPractice Coverage Results" MODIFIED="1760804952172" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>
