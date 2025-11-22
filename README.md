@@ -35,7 +35,7 @@ Developed by a team of five developers following **agile software engineering pr
 
 | Name | Role | Main Contributions |
 |------|------|--------------------|
-| **Nonso Nkire *** | Project Lead | Full-stack Development | Core functionality implementation, core UI finalisations, database intialaisation, overall team coordination |
+| **Nonso Nkire** | Project Lead | Full-stack Development | Core functionality implementation, core UI finalisations, database intialaisation, overall team coordination |
 | **Bailey Rossiter** | Full-Stack Developer | Database implementation, backend logic, frontend UI (JavaFX) |
 | *(Teammate Name* | *(Role)* | *(Contributions)* |
 | *(Teammate Name)* | *(Role)* | *(Contributions)* |
