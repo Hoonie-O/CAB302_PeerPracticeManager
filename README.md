@@ -37,9 +37,9 @@ Developed by a team of five developers following **agile software engineering pr
 |------|------|--------------------|
 | **Nonso Nkire** | Project Lead | Full-stack Development | Core functionality implementation, core UI finalisations, database intialaisation, overall team coordination |
 | **Bailey Rossiter** | Full-Stack Developer | Database implementation, backend logic, frontend UI (JavaFX) |
-| *(Teammate Name* | *(Role)* | *(Contributions)* |
-| *(Teammate Name)* | *(Role)* | *(Contributions)* |
-| *(Teammate Name)* | *(Role)* | *(Contributions)* |
+| **Seiji Sato** | Back-end Developer | Aided in core backend functionality involving notes and file sharing. Led test coverage suite during inital development stages |
+| **Holly Spain** | Back-end Developer | Worked on back-end functionality surrounding Friends and Notification features. Pioneered inital database research and implementation during early development. |
+| **Jihoon Oh** | Front-end Developer | Created intial UI mock-ups and layout. Implemented early user-necessary features including login, register, and forgot-password pages. |
 
 ---
 
